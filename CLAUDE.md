@@ -620,3 +620,86 @@ When uncertain:
 - When a task touches network-dependent tooling (package installs, the `shadcn` CLI, external APIs), check reachability first rather than assuming failure — but don't retry a confirmed policy-blocked host; work around it manually (as with shadcn/ui above) and say so.
 - If a requested change conflicts with something in this file (e.g., asks for a Pages Router pattern, a default export, or a new config file), flag the conflict and confirm before proceeding rather than silently picking one.
 - Keep this file up to date: if you introduce a new architectural pattern, a new top-level directory, or a new convention, add it here in the same change.
+
+# Product Development Governance
+
+## Product Documentation System
+
+This project uses dedicated product documentation files to maintain alignment between research, strategy, requirements, design, and engineering.
+
+The following files are considered the source of truth:
+
+- RESEARCH.md → User research and evidence
+- PRODUCT.md → Product strategy and direction
+- PRD.md → Feature requirements and execution details
+
+If these files do not exist, create the required file structure before major product work begins.
+
+Do not invent product decisions, user needs, or requirements without documenting the assumptions and evidence.
+
+---
+
+# RESEARCH.md
+
+## Purpose
+
+RESEARCH.md is the source of truth for:
+
+- User research
+- Customer insights
+- Behavioral evidence
+- User pain points
+- Validated assumptions
+- Research findings
+- Experiment results
+- Product discovery insights
+
+All user-centered product decisions should reference evidence documented in RESEARCH.md.
+
+---
+
+## Research Documentation Rules
+
+Before adding research insights:
+
+Document:
+
+- Research objective
+- Research method
+- Target users
+- Date conducted
+- Key findings
+- Behavioral observations
+- User quotes (when available)
+- Confidence level
+- Product implications
+
+Example structure:
+
+```md
+# Research Study Name
+
+## Objective
+
+What are we trying to understand?
+
+## Method
+
+How was research conducted?
+
+## Participants
+
+Who was involved?
+
+## Findings
+
+Key observations.
+
+## Evidence
+
+Supporting data, quotes, analytics, or observations.
+
+## Product Impact
+
+How this influences decisions.
+```
