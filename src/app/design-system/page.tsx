@@ -9,6 +9,14 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { HeartChartLogo } from "@/app/login/_components/heartchart-logo";
@@ -293,6 +301,26 @@ export default function DesignSystemPage() {
             <p className="text-sm">Generic shadcn/ui Card primitive.</p>
           </CardContent>
         </Card>
+      </Section>
+
+      <Section
+        title="Dialog"
+        description="White surface, rounded-2xl, shadow-2xl, with a grey (muted-foreground) close X in a size-11 hit target — modeled on the Figma modal chrome (AMFM Portal file, node 1829:19828). Theme-aware like the rest of the component library, not fixed-light."
+      >
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button variant="outline">Open dialog</Button>
+          </DialogTrigger>
+          <DialogContent>
+            <DialogHeader className="p-6 pr-14">
+              <DialogTitle>Dialog title</DialogTitle>
+              <DialogDescription>
+                Generic shadcn/ui-pattern Dialog primitive, built on
+                @radix-ui/react-dialog.
+              </DialogDescription>
+            </DialogHeader>
+          </DialogContent>
+        </Dialog>
       </Section>
     </div>
   );

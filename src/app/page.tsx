@@ -2,6 +2,7 @@ import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
 import { PhotoBackdrop } from "@/components/photo-backdrop";
+import { DposystemLearnMore } from "@/app/_components/dposystem-learn-more";
 
 const REVERSED_OUTLINE =
   "border-white/40 bg-transparent text-white hover:bg-white/10 hover:text-white";
@@ -33,6 +34,15 @@ export default function Home() {
             </a>
           </Button>
         </div>
+        <p className="max-w-lg text-sm text-gray-400">
+          DPOsystem is the operating system behind modern product
+          development. It connects product strategy, UX design, engineering
+          standards, and AI-assisted development into one unified framework.
+          Instead of using AI to simply generate code, DPOsystem provides
+          the context, governance, and standards needed to build
+          production-ready software that can scale.{" "}
+          <DposystemLearnMore />
+        </p>
       </div>
     </PhotoBackdrop>
   );
