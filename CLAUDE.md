@@ -230,6 +230,332 @@ src/
 - Keep `next.config.ts` minimal; don't add config for a hypothetical future need.
 - **Reuse before creating.** Before adding a new component, check whether an existing one in `src/components` or `src/components/ui` already covers it, and whether the pattern belongs in the design system (see Design system section above) rather than a one-off. Keep each component focused on a single responsibility, and separate data/business logic (fetching, mutations, derived state) from presentation markup rather than interleaving them in one file.
 
+# Component Governance
+
+The component system is a shared product foundation. Every component decision must prioritize consistency, scalability, maintainability, and reuse.
+
+Do not create new UI components casually.
+
+Before creating any new component, follow this governance process.
+
+---
+
+## Component Creation Process
+
+Before creating a new UI component:
+
+### 1. Search Existing Components
+
+First inspect the existing component library and codebase.
+
+Check:
+
+- Existing components
+- Shared UI primitives
+- Design system components
+- Utility components
+- Existing patterns
+- Similar implementations
+
+Reuse or extend existing components whenever possible.
+
+Do not create duplicate components that solve the same problem.
+
+---
+
+### 2. Check DESIGN.md Component Library
+
+`DESIGN.md` is the source of truth for approved design system components.
+
+Before implementation:
+
+- Verify whether the component already exists in the design system.
+- Follow documented component specifications.
+- Use existing tokens, patterns, and variants.
+- Maintain consistency with the approved UI language.
+
+If a component exists in DESIGN.md but not in code:
+
+→ Implement the documented component.
+
+If the design requirement cannot be supported:
+
+→ Update the system intentionally rather than creating an undocumented exception.
+
+---
+
+### 3. Determine If the Pattern Is Reusable
+
+A new component should only be created when it represents a repeatable UI pattern.
+
+Evaluate:
+
+- Will this pattern appear more than once?
+- Does it solve a common user interaction?
+- Does it have consistent behavior?
+- Will future features likely need this pattern?
+- Does extracting it improve maintainability?
+
+Avoid creating components for:
+
+- One-off layouts
+- Single-use decorative elements
+- Temporary prototypes
+- Components without reusable behavior
+
+Prefer composition over unnecessary abstraction.
+
+---
+
+### 4. Document New Components in DESIGN.md
+
+Every new reusable component must be documented in `DESIGN.md` before being considered complete.
+
+Documentation should include:
+
+- Component name
+- Purpose
+- When to use
+- When not to use
+- Usage guidelines
+- Variants
+- Properties/API expectations
+- Accessibility requirements
+- Responsive behavior
+- Supported states
+- Interaction behavior
+- Content guidelines
+- Examples when necessary
+
+The design system documentation and implementation must remain synchronized.
+
+---
+
+# Required Component Documentation Standard
+
+Every reusable component must define:
+
+## Purpose
+
+Explain:
+
+- What problem the component solves
+- Why it exists
+- The intended user experience
+
+Example:
+
+"Provides a consistent way for users to select a single option from a predefined list."
+
+---
+
+## Usage Guidelines
+
+Document:
+
+- Appropriate use cases
+- Incorrect use cases
+- Content requirements
+- Composition rules
+- Relationship to other components
+
+Example:
+
+"Use this component for selecting one option. Do not use it for navigation between pages."
+
+---
+
+## Variants
+
+Document all supported variations.
+
+Examples:
+
+- Size variations
+- Visual styles
+- Layout options
+- Content configurations
+- Behavioral differences
+
+Avoid creating unnecessary variants.
+
+Every variant must have a clear purpose.
+
+---
+
+## Accessibility Requirements
+
+Every component must define accessibility expectations.
+
+Consider:
+
+- Semantic HTML requirements
+- Keyboard interaction
+- Screen reader behavior
+- Focus management
+- ARIA requirements
+- Error handling
+- Color contrast
+- Motion preferences
+
+Accessibility must be built into the component architecture.
+
+---
+
+## Responsive Behavior
+
+Every component must define behavior across supported breakpoints.
+
+Document:
+
+- Mobile behavior
+- Tablet behavior
+- Desktop behavior
+- Content wrapping rules
+- Layout changes
+- Interaction changes
+
+Components must work across all supported device sizes.
+
+---
+
+## States
+
+Every interactive component must define all states.
+
+Required states include when applicable:
+
+- Default
+- Hover
+- Focus
+- Active
+- Selected
+- Disabled
+- Loading
+- Empty
+- Error
+- Success
+
+States must be implemented consistently across the design system.
+
+---
+
+# Component Architecture Rules
+
+Follow these principles:
+
+## Prefer Extension Over Duplication
+
+When a similar component exists:
+
+Prefer:
+
+- Adding a variant
+- Improving the existing component
+- Extending functionality
+
+Avoid:
+
+- Creating a second similar component
+- Forking components without reason
+- Copying styles between components
+
+---
+
+## Single Source of Truth
+
+Reusable components must have:
+
+- One implementation source
+- Shared design tokens
+- Consistent behavior
+- Centralized documentation
+
+Do not create isolated versions of shared UI patterns.
+
+---
+
+## Component Naming Standards
+
+Component names must:
+
+- Clearly communicate purpose
+- Match existing naming conventions
+- Avoid implementation details
+- Represent user-facing concepts
+
+Avoid vague names:
+
+❌ Box
+❌ Container2
+❌ NewCard
+❌ CustomThing
+
+Prefer meaningful names:
+
+✅ UserProfileCard
+✅ AssessmentSummary
+✅ NavigationMenu
+✅ StatusBadge
+
+---
+
+# Component Quality Checklist
+
+Before completing a new component, verify:
+
+## Design System Alignment
+
+☐ Exists in DESIGN.md or has been added
+☐ Uses approved tokens
+☐ Follows spacing and typography rules
+☐ Matches established patterns
+
+## Engineering Quality
+
+☐ Reusable architecture
+☐ Strong TypeScript typing
+☐ No unnecessary duplication
+☐ Clean component API
+☐ Maintainable implementation
+
+## Accessibility
+
+☐ Keyboard accessible
+☐ Screen reader compatible
+☐ Proper semantic structure
+☐ Focus states implemented
+
+## Responsive Design
+
+☐ Mobile behavior defined
+☐ Tablet behavior defined
+☐ Desktop behavior defined
+
+## Documentation
+
+☐ Purpose documented
+☐ Usage documented
+☐ Variants documented
+☐ States documented
+☐ Accessibility documented
+☐ Responsive behavior documented
+
+---
+
+# Component Governance Principle
+
+The goal is not to maximize the number of components.
+
+The goal is to create a durable, scalable design system where every component has a clear purpose, consistent behavior, and long-term value.
+
+When uncertain:
+
+1. Reuse existing components.
+2. Extend before creating.
+3. Document before standardizing.
+4. Prefer system consistency over individual implementation speed.
+
 ## Coding conventions
 
 - **TypeScript strict mode is on — keep it that way.** No `any` unless justified with a comment explaining why a real type isn't available. Prefer precise prop types over `React.ComponentProps<'div'>`-and-spread unless building a primitive that genuinely forwards all native props (as `Button` does).
