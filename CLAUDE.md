@@ -4,6 +4,189 @@
 
 Guidance for Claude Code (and any other AI agent) working in this repository.
 
+# Claude Code Project Configuration
+
+You are the primary AI engineering assistant for this repository.
+
+Before making any changes, read and follow:
+
+1. `DESIGN.md` — the source of truth for all design systems, UI patterns, tokens, components, interaction rules, responsive behavior, and visual standards.
+2. `CLAUDE.md` — the source of truth for engineering standards, architecture rules, coding practices, and implementation guidelines.
+
+These documents define the project standards. Do not override them without explicit instruction.
+
+---
+
+# Decision Making Hierarchy
+
+When making implementation decisions, follow this priority order:
+
+## 1. Existing Production Patterns
+
+Prefer existing project patterns over introducing new solutions.
+
+Before creating new:
+- components
+- utilities
+- architecture patterns
+- state management approaches
+- styling approaches
+- folder structures
+- API patterns
+- data models
+
+First evaluate whether the existing codebase already has a pattern that solves the requirement.
+
+Consistency is preferred over novelty.
+
+Never introduce a new pattern unless existing patterns cannot reasonably support the requirement.
+
+---
+
+## 2. DESIGN.md Requirements
+
+`DESIGN.md` is the authoritative source for product design implementation.
+
+All UI decisions must align with:
+
+- Design tokens
+- Component specifications
+- Layout rules
+- Typography standards
+- Spacing systems
+- Responsive behavior
+- Accessibility requirements
+- Interaction patterns
+- Brand guidelines
+
+If implementation conflicts with DESIGN.md, update the implementation to match DESIGN.md unless explicitly instructed otherwise.
+
+---
+
+## 3. CLAUDE.md Engineering Standards
+
+All code must follow the engineering standards defined in this file.
+
+Prioritize:
+
+- Maintainable architecture
+- Reusable components
+- Clear separation of concerns
+- Strong TypeScript practices
+- Scalable solutions
+- Clean code principles
+- Secure implementation patterns
+- Production readiness
+
+Avoid shortcuts that create technical debt.
+
+---
+
+## 4. Accessibility Requirements
+
+Accessibility is a core implementation requirement, not an optional enhancement.
+
+All features must consider:
+
+- WCAG compliance
+- Semantic HTML
+- Keyboard navigation
+- Screen reader support
+- Focus management
+- Color contrast
+- Form accessibility
+- Reduced motion preferences
+- Responsive usability
+
+Do not sacrifice accessibility for speed or convenience.
+
+---
+
+## 5. Performance Considerations
+
+Optimize when appropriate while maintaining maintainability.
+
+Consider:
+
+- Rendering performance
+- Bundle size
+- Network requests
+- Image optimization
+- Component re-rendering
+- Data fetching patterns
+- Loading states
+- Code splitting opportunities
+
+Avoid premature optimization that creates unnecessary complexity.
+
+---
+
+## 6. Developer Convenience
+
+Developer convenience is the lowest priority.
+
+Do not choose an implementation simply because it is faster to write if it:
+
+- creates technical debt
+- violates design standards
+- reduces accessibility
+- harms scalability
+- introduces inconsistency
+
+Optimize for long-term maintainability over short-term speed.
+
+---
+
+# Conflict Resolution Rules
+
+When requirements conflict:
+
+1. Follow the highest priority rule.
+2. Document significant tradeoffs.
+3. Ask for clarification when requirements cannot be reconciled.
+4. Never silently create exceptions.
+5. Prefer the smallest maintainable solution.
+
+Example:
+
+If a developer preference conflicts with DESIGN.md:
+→ Follow DESIGN.md.
+
+If a new library would simplify development but conflicts with existing architecture:
+→ Follow existing architecture.
+
+If an existing component cannot support a required accessibility improvement:
+→ Improve the component rather than creating a duplicate.
+
+---
+
+# Implementation Philosophy
+
+Build software as if it will be maintained by another engineering team years from now.
+
+Every implementation should be:
+
+- Production-ready
+- Scalable
+- Accessible
+- Consistent
+- Maintainable
+- Secure
+- Well-documented
+
+Avoid:
+
+- Quick hacks
+- Duplicate components
+- Temporary solutions
+- Unnecessary dependencies
+- One-off implementations
+- Over-engineering
+
+The goal is not simply to make the feature work.
+
+The goal is to build the correct system.
+
 ## Production Engineering Standards
 
 This project targets production-ready software: scalable, maintainable, accessible, secure, and performant, built to be evolved and maintained by future engineering teams — not prototype-quality code. Every section below exists in service of that goal; when a task is ambiguous, prefer the option that survives contact with a larger team and a longer timeline over the fastest thing that merely works today.
