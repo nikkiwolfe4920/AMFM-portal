@@ -149,8 +149,9 @@ Before writing code:
 
 1. Understand the existing architecture and identify impacted systems and dependencies.
 2. Review relevant documentation — `CLAUDE.md`, `DESIGN.md`, `PRODUCT.md`, `PRD.md`, and `RESEARCH.md` when applicable.
-3. Explain the proposed implementation approach when significant architectural decisions are required.
-4. Confirm assumptions when requirements are unclear.
+3. Determine whether existing patterns can support the requirement.
+4. Explain the proposed implementation approach when significant architectural decisions are required.
+5. Confirm assumptions when requirements are unclear.
 
 Do not implement without first understanding the existing system.
 
@@ -160,7 +161,11 @@ Do not implement without first understanding the existing system.
 
 Claude should:
 
+- Prefer existing patterns over new approaches.
+- Reuse existing components and utilities.
+- Maintain consistency with established architecture.
 - Preserve existing functionality.
+- Make the smallest maintainable change necessary.
 - Consider downstream impact before modifying shared systems.
 
 ---
@@ -169,14 +174,24 @@ Claude should:
 
 Do not:
 
+- Rewrite large sections of the application unnecessarily.
+- Introduce dependencies without justification.
 - Remove existing functionality without approval.
+- Create duplicate components or patterns.
+- Replace established architecture without evaluating alternatives.
 - Make assumptions about product requirements without documenting the evidence (see `RESEARCH.md`).
 
 ---
 
 ## AI Decision Principle
 
-Optimize for developer experience and user experience, alongside the maintainability, consistency, and production quality already required above.
+Optimize for:
+
+- Long-term maintainability
+- System consistency
+- Production quality
+- Developer experience
+- User experience
 
 The goal is not simply to complete tasks.
 
@@ -622,6 +637,210 @@ When uncertain:
 2. Extend before creating.
 3. Document before standardizing.
 4. Prefer system consistency over individual implementation speed.
+
+---
+
+# Testing Standards
+
+Production software requires appropriate testing coverage to ensure reliability, maintainability, and confidence during development.
+
+Testing is a required part of feature completion.
+
+---
+
+# Testing Requirements
+
+All production features should include appropriate testing based on complexity and user impact.
+
+Testing considerations include:
+
+- Unit tests for business logic
+- Component tests for reusable UI components
+- Integration tests for critical workflows
+- End-to-end tests for important user journeys
+
+---
+
+# Feature Completion Requirements
+
+Before considering a feature complete, verify:
+
+- Expected behavior works correctly
+- Error states are handled
+- Loading states are handled
+- Empty states are handled
+- Accessibility behavior is tested
+- Responsive behavior is tested
+- Edge cases are considered
+
+---
+
+# Testing Principles
+
+Prioritize:
+
+- Confidence over speed
+- Automated verification over manual assumptions
+- Critical user journeys over superficial coverage
+- Maintainable tests over excessive testing
+
+Tests should protect the system from regressions while remaining easy to understand and maintain.
+
+---
+
+# Security Standards
+
+Security is a core requirement of production software.
+
+All implementation decisions must consider data protection, application security, and safe engineering practices.
+
+---
+
+# Security Requirements
+
+Never:
+
+- Expose secrets or credentials
+- Hardcode API keys
+- Store sensitive information insecurely
+- Store sensitive user data unnecessarily on the client
+- Bypass authentication or authorization controls
+- Disable security protections for convenience
+
+---
+
+# Always
+
+- Use environment variables for secrets
+- Validate all user inputs
+- Sanitize user-generated content
+- Follow secure coding practices
+- Review third-party dependencies
+- Follow OWASP security principles
+
+---
+
+# Security Review
+
+Before production release, consider:
+
+- Authentication security
+- Authorization rules
+- Data exposure risks
+- Input validation
+- Dependency vulnerabilities
+- API security
+- Client-side security concerns
+
+Security must be considered throughout development, not added afterward.
+
+---
+
+# Git Standards
+
+Git workflow standards ensure maintainable collaboration, traceability, and safe deployment practices.
+
+---
+
+# Branch Strategy
+
+Use:
+
+- main = production branch
+- Feature branches = active development
+
+All changes should be developed through appropriate branches before reaching production.
+
+---
+
+# Commit Requirements
+
+Commits should:
+
+- Have clear descriptive messages
+- Represent logical units of work
+- Avoid unrelated changes
+- Keep history understandable
+
+Avoid:
+
+- Large unclear commits
+- Temporary experiments
+- Debug code
+- Unfinished implementations
+
+---
+
+# Pull Request Requirements
+
+Pull requests should include:
+
+- Summary of changes
+- Reason for implementation
+- Screenshots for UI changes
+- Testing performed
+- Known limitations or considerations
+
+Changes should be reviewed for quality, consistency, and production readiness before merging.
+
+---
+
+# Deployment Standards
+
+Production deployment requires verification that the application is stable, secure, accessible, and ready for users.
+
+---
+
+# Production Deployment Checklist
+
+Before deployment verify:
+
+## Build
+
+- Production build succeeds
+- No build errors exist
+- Dependencies are valid
+- Environment configuration is correct
+
+## Application Quality
+
+Verify:
+
+- Core user flows work
+- Error handling exists
+- Loading states work
+- Empty states work
+- Responsive behavior works
+- Accessibility requirements are met
+
+## Performance
+
+Review:
+
+- Page performance
+- Bundle size impact
+- Image optimization
+- Network requests
+- Rendering behavior
+
+## Production Configuration
+
+Confirm:
+
+- Environment variables are configured
+- Monitoring is enabled
+- Error tracking is configured
+- Analytics are configured when required
+
+---
+
+# Deployment Principle
+
+A successful deployment is not simply code reaching production.
+
+A successful deployment means the product is reliable, maintainable, secure, and ready for users.
+
+---
 
 ## Coding conventions
 
