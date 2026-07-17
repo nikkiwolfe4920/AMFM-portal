@@ -14,6 +14,10 @@ Guidance for Claude Code (and any other AI agent) working in this repository.
 
 Next.js 16 has real breaking changes vs. older training data. If something in `next/*` behaves unexpectedly, check `node_modules/next/dist/docs/` before assuming the API is wrong.
 
+## Design system
+
+**`DESIGN.md`** is the design token/convention reference (colors, type, spacing, radius, shadows, component standards) — read it before styling anything. **`/design-system`** (`src/app/design-system/page.tsx`) is a living, rendered view of the same tokens/primitives; if it and `DESIGN.md` disagree, one is stale and both need fixing in the same change. Both are derived from the Figma designs as screens are implemented — check them before adding a new color, spacing value, or primitive, since it likely already exists.
+
 ## Project structure
 
 ```
