@@ -92,6 +92,56 @@ Two custom tokens were added in `@theme inline` (Tailwind v4 auto-generates `sha
 
 Don't hand-roll either of these as an arbitrary `shadow-[...]` value at a call site; use the token.
 
+## Responsive design system & layout standards
+
+Single source of truth for responsive behavior across design and engineering. Every layout, component, and pattern must adapt across the breakpoints below using Tailwind's responsive utilities (`sm:`, `md:`, `lg:`, `xl:`, `2xl:`) — this section governs layout/breakpoint behavior; for the color/type/spacing/shadow tokens those layouts are built from, see Design tokens above.
+
+### Philosophy
+
+This project is mobile-first: build the unprefixed (mobile) layout first, then layer on `sm:`/`md:`/`lg:`/`xl:` overrides as the viewport grows — never the reverse. Responsive layouts must preserve usability, maintain visual hierarchy, prioritize content readability, avoid unnecessary layout shift between breakpoints, and stay accessible (see Accessibility rules below) at every size. Don't design a desktop layout first and retrofit mobile behavior afterward.
+
+### Breakpoints
+
+Use Tailwind's default breakpoints as-is — don't add a custom breakpoint without a design reference that needs one.
+
+| Breakpoint | Min width | Target devices |
+|---|---|---|
+| `sm` | 640px | Large phones (landscape) |
+| `md` | 768px | Tablets (portrait) |
+| `lg` | 1024px | Tablets (landscape), small laptops |
+| `xl` | 1280px | Desktops |
+| `2xl` | 1536px | Large / wide monitors |
+
+### Layout strategy by viewport
+
+- **Mobile (below `sm`, <640px)**: single-column layouts; cards full width; content stacks vertically; modals use full-screen or near-full-screen patterns; navigation collapses into a hamburger/menu; no horizontal scrolling; interactions sized for touch.
+- **Large phone (`sm`, 640–767px)**: still single-column by default; a two-column layout is allowed only where content stays readable at that width (small card pairs, compact metrics, simple comparisons) — don't force two columns onto content that needs the full width.
+- **Tablet (`md`, 768–1023px)**: two-column layouts allowed; sidebar patterns may start to appear; navigation can expand from condensed toward its full form; dashboards may pick up an extra column.
+- **Small desktop (`lg`, 1024–1279px)**: three-column layouts allowed; persistent (non-collapsing) horizontal navigation is expected; desktop information density is acceptable.
+- **Desktop / wide (`xl`+, 1280px and up)**: content sits in a centered max-width container rather than stretching edge-to-edge; four columns is the ceiling; navigation shows full labels, not icons-only.
+
+### Grid system
+
+All page-level layouts use Tailwind grid utilities, built mobile-first: define the single-column mobile base first, then add `sm:`/`md:`/`lg:`/`xl:` overrides — never start from a desktop grid and collapse it down for smaller viewports. Never exceed four columns at any breakpoint; content that needs more than four needs restructuring (pagination, a different pattern), not a fifth column. Gaps scale with viewport using the existing spacing scale (see Spacing above) rather than a fixed gap at every size:
+
+| Viewport | Columns | Gap | Tailwind pattern |
+|---|---|---|---|
+| Mobile (<640px) | 1 | `gap-4` (16px) | `grid-cols-1` |
+| Large phone (`sm`+) | 2 max | `gap-4` | `sm:grid-cols-2` |
+| Tablet (`md`+) | 2–3 | `gap-5` (20px) | `md:grid-cols-2` / `md:grid-cols-3` |
+| Small desktop (`lg`+) | 3–4 | `gap-6` (24px) | `lg:grid-cols-3` / `lg:grid-cols-4` |
+| Wide (`xl`+) | 4 max | `gap-6` | `xl:grid-cols-4` |
+
+### Standard responsive grid patterns
+
+Dashboard stats / metric cards — one column on mobile, two from `sm`, four from `lg`:
+
+```tsx
+<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
+```
+
+Reach for this pattern (or the 2–3 column variant from the table above) before inventing a new grid shape — check `/design-system` and existing routes for an equivalent layout first, per "Reuse before creating" in CLAUDE.md.
+
 ## Component standards
 
 - **All UI primitives live in `src/components/ui`** and must stay visually/structurally aligned with upstream shadcn/ui source (Radix primitive + `cva` variants + `cn()`), so future hand-added or CLI-generated components stay diffable against upstream. See CLAUDE.md's "Working with shadcn/ui in this repo" for how to add a new primitive given the CLI's registry host is unreachable here.
@@ -128,6 +178,7 @@ Don't hand-roll either of these as an arbitrary `shadow-[...]` value at a call s
 - Don't hardcode a color, spacing value, radius, or font that already has a token/utility — that's the fast path to visual drift between components. If a value is genuinely new (not expressible with an existing token), add the token (see "Adding a new color token" above) rather than inlining a raw value.
 - When a task needs a primitive shadcn/ui doesn't ship (or the CLI can't fetch here), prefer composing it from existing primitives first; only hand-write a new one under `src/components/ui` when composition genuinely can't express it (see CLAUDE.md).
 - When implementing a new Figma screen, check `/design-system` and this file first — most of the tokens/primitives you need likely already exist from `/login`. Only add new tokens for values that are genuinely new, following the same conversion/naming approach documented above.
+- Breakpoints, column counts, and grid gaps must follow the Responsive design system & layout standards section above — don't invent a one-off breakpoint, a fifth grid column, or a gap outside the spacing scale for a single screen.
 
 ## Known gaps
 
