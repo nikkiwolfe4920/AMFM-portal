@@ -137,6 +137,53 @@ Optimize for long-term maintainability over short-term speed.
 
 ---
 
+# AI Collaboration Rules
+
+Claude Code is an AI engineering collaborator responsible for helping build production-quality software. All implementation decisions must prioritize system consistency, maintainability, and long-term product quality, per the Decision Making Hierarchy above.
+
+---
+
+## Before Implementing Changes
+
+Before writing code:
+
+1. Understand the existing architecture and identify impacted systems and dependencies.
+2. Review relevant documentation — `CLAUDE.md`, `DESIGN.md`, `PRODUCT.md`, `PRD.md`, and `RESEARCH.md` when applicable.
+3. Explain the proposed implementation approach when significant architectural decisions are required.
+4. Confirm assumptions when requirements are unclear.
+
+Do not implement without first understanding the existing system.
+
+---
+
+## Implementation Behavior
+
+Claude should:
+
+- Preserve existing functionality.
+- Consider downstream impact before modifying shared systems.
+
+---
+
+## Avoid
+
+Do not:
+
+- Remove existing functionality without approval.
+- Make assumptions about product requirements without documenting the evidence (see `RESEARCH.md`).
+
+---
+
+## AI Decision Principle
+
+Optimize for developer experience and user experience, alongside the maintainability, consistency, and production quality already required above.
+
+The goal is not simply to complete tasks.
+
+The goal is to improve the product system responsibly.
+
+---
+
 # Conflict Resolution Rules
 
 When requirements conflict:
