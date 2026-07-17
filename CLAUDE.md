@@ -543,6 +543,26 @@ Before completing a new component, verify:
 
 ---
 
+## Design System Synchronization
+
+The implementation and DESIGN.md must remain synchronized.
+
+When creating or modifying:
+
+- Components
+- Tokens
+- Patterns
+- Layout systems
+- Interaction behaviors
+
+Update DESIGN.md documentation accordingly.
+
+No production component should exist without documented design system intent.
+
+DESIGN.md defines what the system should be. The codebase defines how the system is implemented. Both must evolve together.
+
+---
+
 # Component Governance Principle
 
 The goal is not to maximize the number of components.
