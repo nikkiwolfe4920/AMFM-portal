@@ -20,7 +20,7 @@ Defined once per theme (`:root` / `.dark`) as raw values, then exposed to Tailwi
 | `background` / `foreground` | `bg-background`, `text-foreground` | Page-level base surface and text |
 | `card` / `card-foreground` | `bg-card`, `text-card-foreground` | Raised content surfaces |
 | `popover` / `popover-foreground` | `bg-popover`, `text-popover-foreground` | Floating surfaces (dropdowns, popovers) |
-| `primary` / `primary-foreground` | `bg-primary`, `text-primary-foreground` | Primary actions, brand emphasis |
+| `primary` / `primary-foreground` | `bg-primary`, `text-primary-foreground` | Primary actions, brand emphasis — set to the HeartChart brand rust (`oklch(0.569 0.106 44.4)` light / `oklch(0.65 0.11 44.4)` dark), introduced with the login screen |
 | `secondary` / `secondary-foreground` | `bg-secondary`, `text-secondary-foreground` | Secondary actions |
 | `muted` / `muted-foreground` | `bg-muted`, `text-muted-foreground` | De-emphasized backgrounds/text |
 | `accent` / `accent-foreground` | `bg-accent`, `text-accent-foreground` | Hover/highlight states |
