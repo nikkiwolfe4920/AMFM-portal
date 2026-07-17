@@ -1,6 +1,7 @@
 import * as React from "react";
 import { Slot } from "@radix-ui/react-slot";
 import { cva, type VariantProps } from "class-variance-authority";
+import { Loader2Icon } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 
@@ -10,7 +11,7 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default:
-          "bg-primary text-primary-foreground border-2 border-white/12 shadow-button-inset hover:bg-primary/90",
+          "bg-primary text-primary-foreground border-2 border-white/12 shadow-button-inset hover:bg-text-brand focus-visible:border-white/12 focus-visible:ring-border-brand focus-visible:ring-4 focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:opacity-100 [&:disabled:not([data-loading])]:bg-muted [&:disabled:not([data-loading])]:border-border-secondary [&:disabled:not([data-loading])]:text-fg-disabled [&:disabled:not([data-loading])]:shadow-xs",
         destructive:
           "bg-destructive text-white shadow-xs hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/60",
         outline:
@@ -40,19 +41,41 @@ function Button({
   variant,
   size,
   asChild = false,
+  loading = false,
+  disabled,
+  children,
   ...props
 }: React.ComponentProps<"button"> &
   VariantProps<typeof buttonVariants> & {
     asChild?: boolean;
+    loading?: boolean;
   }) {
   const Comp = asChild ? Slot : "button";
+  const resolvedVariant = variant ?? "default";
 
   return (
     <Comp
       data-slot="button"
-      className={cn(buttonVariants({ variant, size, className }))}
+      className={cn(
+        buttonVariants({ variant, size, className }),
+        loading &&
+          resolvedVariant === "default" &&
+          "bg-text-brand hover:bg-text-brand"
+      )}
+      disabled={loading ? true : disabled}
+      aria-busy={loading || undefined}
+      data-loading={loading || undefined}
       {...props}
-    />
+    >
+      {asChild ? (
+        children
+      ) : (
+        <>
+          {loading && <Loader2Icon className="animate-spin" aria-hidden="true" />}
+          {children}
+        </>
+      )}
+    </Comp>
   );
 }
 
