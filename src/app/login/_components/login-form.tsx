@@ -57,8 +57,8 @@ export function LoginForm() {
         </Button>
       </div>
 
-      <Button type="submit" className="w-full" disabled={isSubmitting}>
-        {isSubmitting ? "Logging in..." : "Log in"}
+      <Button type="submit" className="w-full" loading={isSubmitting}>
+        Log in
       </Button>
     </form>
   );

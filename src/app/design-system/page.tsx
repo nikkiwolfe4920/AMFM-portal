@@ -247,7 +247,7 @@ export default function DesignSystemPage() {
 
       <Section
         title="Buttons"
-        description="Default and outline variants carry the brand skeuomorphic finish (shadow-button-inset + translucent inner border on default)."
+        description="Default and outline variants carry the brand skeuomorphic finish (shadow-button-inset + translucent inner border on default). Default's hover, focused, disabled, and loading states are modeled on Figma (node 3273:19658 and siblings) — hover/loading use the text-brand shade, focused uses a white-gap + border-brand ring, and disabled swaps to flat neutral tokens instead of an opacity fade."
       >
         <div className="flex flex-col gap-6">
           <div className="flex flex-wrap items-center gap-3">
@@ -266,15 +266,23 @@ export default function DesignSystemPage() {
               +
             </Button>
             <Button disabled>Disabled</Button>
+            <Button loading>Log in</Button>
           </div>
         </div>
       </Section>
 
-      <Section title="Form controls">
+      <Section
+        title="Form controls"
+        description="Input's focused state (2px border-brand border) and destructive state (border-destructive-subtle) are modeled on Figma (node 3272:19436 and siblings) — tab into the email field or click a field to see the focus ring live."
+      >
         <div className="grid max-w-sm gap-6">
           <div className="flex flex-col gap-1.5">
             <Label htmlFor="ds-email">Email</Label>
             <Input id="ds-email" type="email" placeholder="Enter your email" />
+          </div>
+          <div className="flex flex-col gap-1.5">
+            <Label htmlFor="ds-filled">Filled</Label>
+            <Input id="ds-filled" defaultValue="olivia@untitledui.com" />
           </div>
           <div className="flex flex-col gap-1.5">
             <Label htmlFor="ds-disabled">Disabled</Label>
