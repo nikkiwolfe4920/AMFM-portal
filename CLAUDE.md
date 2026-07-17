@@ -4,6 +4,10 @@
 
 Guidance for Claude Code (and any other AI agent) working in this repository.
 
+## Production Engineering Standards
+
+This project targets production-ready software: scalable, maintainable, accessible, secure, and performant, built to be evolved and maintained by future engineering teams — not prototype-quality code. Every section below exists in service of that goal; when a task is ambiguous, prefer the option that survives contact with a larger team and a longer timeline over the fastest thing that merely works today.
+
 ## Stack
 
 - **Next.js 16** (App Router, Turbopack, `src/` layout)
@@ -41,10 +45,19 @@ src/
 - **No business logic in `src/components/ui`.** Those files exist to be visual primitives matching upstream shadcn/ui source — keep them close to the original so future `shadcn` CLI-generated diffs stay easy to reconcile. Compose them into app-specific components elsewhere.
 - **Colocate route-specific code** (e.g., a form only used on one page) next to the route inside `src/app/**`, using private folders (`_components`, `_lib`) rather than leaking one-off code into shared `src/components` or `src/lib`.
 - Keep `next.config.ts` minimal; don't add config for a hypothetical future need.
+- **Reuse before creating.** Before adding a new component, check whether an existing one in `src/components` or `src/components/ui` already covers it, and whether the pattern belongs in the design system (see Design system section above) rather than a one-off. Keep each component focused on a single responsibility, and separate data/business logic (fetching, mutations, derived state) from presentation markup rather than interleaving them in one file.
 
 ## Coding conventions
 
 - **TypeScript strict mode is on — keep it that way.** No `any` unless justified with a comment explaining why a real type isn't available. Prefer precise prop types over `React.ComponentProps<'div'>`-and-spread unless building a primitive that genuinely forwards all native props (as `Button` does).
+- Give explicit types/interfaces to component props, API responses, data models, app state, and config objects — don't let them fall back to inferred or loosely-typed shapes:
+
+  ```ts
+  interface UserCardProps {
+    name: string
+    email: string
+  }
+  ```
 - **Styling is Tailwind utility classes**, composed with the `cn()` helper from `@/lib/utils` when merging conditional/variant classes. Don't hand-write CSS files or CSS-in-JS for things Tailwind already expresses well.
 - **Variant-driven components** (things with a `variant`/`size` prop) use `class-variance-authority` (`cva`), following the pattern in `src/components/ui/button.tsx`.
 - **Icons**: use `lucide-react`, matching the `iconLibrary` set in `components.json`.
@@ -69,6 +82,7 @@ src/
 - For UI changes, actually run the dev server and look at the result (or describe explicitly that you couldn't) rather than asserting it works from reading the code.
 - Don't add dependencies for something a few lines of code or an existing dependency already covers.
 - Don't create new abstractions (contexts, hooks, wrapper components) for a single use site — inline it until a second real use case shows up.
+- A feature isn't complete just because the happy path works. Before calling it done, confirm: responsive behavior across supported breakpoints; error, loading, and empty states are all handled (not just success); edge cases are considered; performance impact is evaluated (unnecessary re-renders, large payloads, N+1 fetches); security is reviewed (input validated at trust boundaries, no secrets/PII leaked to the client); and accessibility follows DESIGN.md's Accessibility rules (WCAG AA).
 
 ## AI collaboration instructions
 
