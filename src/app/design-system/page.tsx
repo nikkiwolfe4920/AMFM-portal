@@ -11,6 +11,7 @@ import {
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { HeartChartLogo } from "@/app/login/_components/heartchart-logo";
 
 function Section({
   title,
@@ -184,6 +185,16 @@ export default function DesignSystemPage() {
               ) : null}
             </div>
           ))}
+        </div>
+      </Section>
+
+      <Section
+        title="Brand mark"
+        description="The HeartChart wordmark, exported from Figma as public/heartchart-logo.svg. Rendered via next/image (unoptimized, since it's a pre-rasterized static asset)."
+      >
+        <div className="flex flex-col items-center gap-3 py-4">
+          <HeartChartLogo />
+          <p className="text-xs">Powered by AMFM.org</p>
         </div>
       </Section>
 
