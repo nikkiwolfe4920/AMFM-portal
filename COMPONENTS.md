@@ -86,7 +86,7 @@ No layout behavior of its own — width and stacking are controlled by the calle
 
 ### Visual examples
 
-All variants, sizes, and the disabled/loading states render at `/design-system/components#button`.
+All variants, sizes, and the disabled/loading states render at `/design-system/components#button`. `default`/`outline` also render live on `/signup` (primary CTA, Google button) and at `/design-system/patterns#auth-card-signup`.
 
 ---
 
@@ -143,7 +143,7 @@ Full-width by default (`w-full`) within its flex container; no breakpoint-specif
 
 ### Visual examples
 
-Default, filled, disabled, and invalid states render at `/design-system/components#input`.
+Default, filled, disabled, and invalid states render at `/design-system/components#input`. Also rendered live on `/signup`'s Name/Email/Password fields and at `/design-system/patterns#auth-card-signup`.
 
 ---
 
@@ -297,7 +297,7 @@ Inline text wraps naturally in its flex row; no breakpoint-specific behavior exp
 
 ### Visual examples
 
-Not yet rendered — no application code exists for this component.
+Not yet rendered — no application code exists for this component. The `/signup` implementation and its `/design-system/patterns#auth-card-signup` showcase both explicitly call out its omission (as a "not implemented" callout) rather than approximating it.
 
 ---
 
@@ -446,7 +446,7 @@ Decorative background image — no `alt` text needed (it's a CSS background, not
 
 ### Visual examples
 
-Rendered live on `/login` and `/`; referenced (not re-rendered full-bleed) at `/design-system/patterns`.
+Rendered live on `/login`, `/signup`, and `/`; referenced (not re-rendered full-bleed) at `/design-system/patterns`.
 
 ---
 
@@ -493,10 +493,11 @@ Fixed intrinsic width (`min-w-80`, inner `w-90 max-w-90`) — designed for the c
 ### Implementation rules
 
 - This is a *nested* shape that doesn't map onto the flat single-`<div>` `Card` primitive — kept colocated under `login/_components` rather than bent into `src/components/ui/card.tsx`. Build other auth-specific shapes next to the route that needs them, following this precedent, rather than generalizing `Card` to fit.
+- **Known follow-up**: `/signup` imports this component directly from `src/app/login/_components/auth-card.tsx` (a cross-route import) rather than duplicating it, since it's confirmed pixel-identical on both screens. Now that two real routes depend on it, it's a reasonable candidate to relocate to `src/components` per `CLAUDE.md`'s reuse-over-duplication guidance — deferred here to keep the sign-up implementation scoped to additive changes only. The same applies to `HeartChartLogo` and `GoogleIcon` below.
 
 ### Visual examples
 
-Rendered live on `/login`; referenced at `/design-system/patterns`.
+Rendered live on `/login` and `/signup` (imported from its current `login/_components` location — not yet relocated to a shared path; see Implementation rules); referenced at `/design-system/patterns#auth-card` and `#auth-card-signup`.
 
 ---
 
@@ -540,7 +541,7 @@ None (raster asset, not token-driven).
 
 ### Visual examples
 
-Rendered at `/design-system/foundations#brand-mark` and on `/login`.
+Rendered at `/design-system/foundations#brand-mark` and on `/login` and `/signup` (imported from its current `login/_components` location on `/signup` — see `AuthCard`'s Implementation rules).
 
 ---
 
@@ -584,7 +585,7 @@ Sized via `size-*` utility at the call site (`size-6` today); no intrinsic respo
 
 ### Visual examples
 
-Rendered on `/login`'s "Log in with Google" button.
+Rendered on `/login`'s "Log in with Google" button and `/signup`'s "Sign up with Google" button (imported from its current `login/_components` location on `/signup` — see `AuthCard`'s Implementation rules).
 
 ---
 

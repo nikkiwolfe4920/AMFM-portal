@@ -62,6 +62,66 @@ export default function PatternsPage() {
       </Section>
 
       <Section
+        id="auth-card-signup"
+        title="Auth card — sign up"
+        description="Same PhotoBackdrop + AuthCard + HeartChartLogo shell as the login pattern above, composed on /signup with a 3-field form (Name/Email/Password) and no trusted-device checkbox. Rendered here without the full-bleed PhotoBackdrop so it fits the page layout — see /signup for the live full-screen version."
+      >
+        <div className="bg-muted/30 flex justify-center rounded-lg border p-8">
+          <AuthCard>
+            <div className="flex w-full flex-col items-center gap-3 pb-4">
+              <HeartChartLogo />
+              <p className="text-xs">Powered by AMFM.org</p>
+            </div>
+            <Button variant="outline" className="text-text-secondary w-full gap-3">
+              <GoogleIcon className="size-6" />
+              Sign up with Google
+            </Button>
+            <div className="flex w-full items-center gap-2">
+              <div className="bg-border-secondary h-px flex-1" />
+              <span className="text-text-tertiary text-sm font-medium">or</span>
+              <div className="bg-border-secondary h-px flex-1" />
+            </div>
+            <div className="flex w-full flex-col gap-5">
+              <div className="flex flex-col gap-1.5">
+                <Label htmlFor="pattern-signup-name">Name</Label>
+                <Input id="pattern-signup-name" type="text" placeholder="Enter your name" />
+              </div>
+              <div className="flex flex-col gap-1.5">
+                <Label htmlFor="pattern-signup-email">Email</Label>
+                <Input id="pattern-signup-email" type="email" placeholder="Enter your email" />
+              </div>
+              <div className="flex flex-col gap-1.5">
+                <Label htmlFor="pattern-signup-password">Password</Label>
+                <Input id="pattern-signup-password" type="password" placeholder="Create a password" />
+              </div>
+            </div>
+            <Button className="w-full">Get started – It&apos;s Free</Button>
+            <div className="flex items-start justify-center gap-1 text-sm">
+              <span className="text-text-tertiary">Already have an account?</span>
+              <Link href="/login" className="text-text-brand font-semibold">
+                Log in
+              </Link>
+            </div>
+          </AuthCard>
+        </div>
+        <p className="text-muted-foreground text-xs">
+          Password requirement checklist from the Figma reference is{" "}
+          <span className="font-medium">not implemented</span> — its
+          &quot;met&quot; state has no Figma reference yet (see{" "}
+          <code className="bg-muted rounded px-1 py-0.5">
+            PasswordRequirementItem
+          </code>{" "}
+          in COMPONENTS.md, status Draft).
+        </p>
+        <Link
+          href="/signup"
+          className="text-text-brand text-sm font-medium hover:underline"
+        >
+          View live at /signup →
+        </Link>
+      </Section>
+
+      <Section
         id="learn-more-dialog"
         title="Learn-more dialog"
         description="Dialog + a story carousel, triggered from an inline text link — used for the homepage's DPOsystem blurb without navigating away."
