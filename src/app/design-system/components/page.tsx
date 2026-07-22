@@ -33,6 +33,7 @@ import { AmfmLogo } from "@/app/create-profile/_components/amfm-logo";
 import { BenefitListItem } from "@/app/create-profile/_components/benefit-list-item";
 import { PasswordRequirementItem } from "@/app/signup/_components/password-requirement-item";
 import { SignupSuccess } from "@/app/signup/_components/signup-success";
+import { GlobalNav } from "@/components/global-nav";
 
 import { ComponentShowcase } from "../_components/showcase";
 
@@ -388,6 +389,40 @@ export default function ComponentsPage() {
         >
           View full HeartChartSummary documentation →
         </Link>
+      </ComponentShowcase>
+
+      <ComponentShowcase
+        name="GlobalNav"
+        status="Draft"
+        purpose="The app's primary left-hand navigation rail — collapses to an 80px icon rail by default and expands to a 296px labeled panel on click, with a smooth animated morph between the two."
+        docsAnchor="globalnav"
+        figmaReference='AMFM Portal — collapsed node 2067:16268 ("Main Nav"), expanded node 3727:25276 ("Content")'
+        tokens={[
+          "bg-nav-surface-from",
+          "bg-nav-surface-to",
+          "border-nav-border",
+          "from-nav-active-from",
+          "to-nav-active-to",
+          "text-nav-foreground",
+          "text-nav-foreground-muted",
+          "text-nav-foreground-subtle",
+          "bg-nav-success",
+        ]}
+        states={["Collapsed (default)", "Expanded (open)", "Active item", "Hover", "Focus"]}
+      >
+        <div className="bg-nav-bg flex h-[950px] items-start gap-8 overflow-x-auto rounded-xl p-6">
+          <GlobalNav defaultOpen={false} />
+          <GlobalNav defaultOpen={true} />
+        </div>
+        <p className="text-muted-foreground mt-4 text-xs">
+          Click the &ldquo;amfm&rdquo; wordmark at the top of either rail to toggle it open/closed —
+          both instances render the same component, one starting collapsed and one starting
+          expanded (<code className="bg-muted rounded px-1 py-0.5">defaultOpen</code>). Click
+          outside a rail, or press <kbd className="bg-muted rounded px-1 py-0.5">Escape</kbd>, to
+          collapse it again. See{" "}
+          <code className="bg-muted rounded px-1 py-0.5">COMPONENTS.md#globalnav</code> for the
+          full contract, including why its destination routes are placeholders.
+        </p>
       </ComponentShowcase>
     </div>
   );
