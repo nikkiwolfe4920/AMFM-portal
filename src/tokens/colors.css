@@ -36,6 +36,13 @@
   --border-destructive-subtle: oklch(0.801 0.109 24.573);
   --fg-disabled: oklch(0.728 0.011 267.331);
 
+  /* Status colors — participation-level indicator (HeartChartSummary). Root-only:
+   * no dark-mode value has a Figma reference yet, see DESIGN.md Known gaps. */
+  --status-success: oklch(0.63 0.067 137.227);
+  --status-success-strong: oklch(0.558 0.058 136.633);
+  --status-warning: oklch(0.683 0.133 75.668);
+  --status-warning-subtle: oklch(0.793 0.117 80.029);
+
   --chart-1: oklch(0.646 0.222 41.116);
   --chart-2: oklch(0.6 0.118 184.704);
   --chart-3: oklch(0.398 0.07 227.392);
@@ -115,6 +122,10 @@
   --color-border-destructive-subtle: var(--border-destructive-subtle);
   --color-fg-disabled: var(--fg-disabled);
   --color-overlay: var(--overlay);
+  --color-status-success: var(--status-success);
+  --color-status-success-strong: var(--status-success-strong);
+  --color-status-warning: var(--status-warning);
+  --color-status-warning-subtle: var(--status-warning-subtle);
   --color-chart-1: var(--chart-1);
   --color-chart-2: var(--chart-2);
   --color-chart-3: var(--chart-3);

@@ -16,6 +16,7 @@ Human-readable index of the Figma file(s) and node references cited throughout `
 | `3273:19658` and siblings | "Primary" button set | `Button` — default/hover/focused/disabled/loading states (`COMPONENTS.md#button`) |
 | `3272:19436` and siblings | "Input" field set | `Input` — default/filled/focused/disabled/invalid states (`COMPONENTS.md#input`) |
 | `1829:19828` | Modal chrome reference | `Dialog` — surface shape, close control (`COMPONENTS.md#dialog`) |
+| `1993:36348` and variants (`1640:23457`/`1670:36217` Growing, `1670:36549` Low, `1670:36610` Exceptional) | "HeartChart Summary" dashboard card | `HeartChartSummary` — donut/scale states, action row (`COMPONENTS.md#heartchartsummary`) |
 
 ## Components without a Figma reference yet
 

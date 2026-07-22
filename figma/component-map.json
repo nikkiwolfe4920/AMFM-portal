@@ -58,5 +58,10 @@
     "figmaComponent": "",
     "documentation": "COMPONENTS.md#dposystemstory",
     "implementation": "src/app/_components/dposystem-story.tsx"
+  },
+  "HeartChartSummary": {
+    "figmaComponent": "AMFM Portal — node 1993:36348 (\"HeartChart Summary\" component set: Growing 1640:23457/1670:36217, Low 1670:36549, Exceptional 1670:36610)",
+    "documentation": "COMPONENTS.md#heartchartsummary",
+    "implementation": "src/components/heartchart-summary.tsx"
   }
 }
