@@ -359,28 +359,29 @@ Rendered at `/design-system/components#checkbox` and in the `/login` form.
 
 ## PasswordRequirementItem
 
-**Status**: Draft (not yet implemented — no application code exists for this component yet; this entry documents the validated design contract ahead of implementation, per the Figma → `DESIGN.md`/`COMPONENTS.md` → code pipeline in `CLAUDE.md`)
-**Source**: Not yet implemented
-**Figma**: AMFM Portal file, `Onboarding/sign up` (node `1909:25768`), nodes `1909:25225`–`1909:25229` ("Check icon" + requirement text, two instances)
+**Status**: Production Ready
+**Source**: `src/app/signup/_components/password-requirement-item.tsx`
+**Figma**: AMFM Portal file, `Onboarding/sign up` (node `1909:25768`), nodes `1909:25225`–`1909:25229` ("Check icon" + requirement text, two instances). Figma's own default-state screenshot only shows the two requirements unmet (empty password field) — the met-state color below is a deliberate product decision, not a pixel-sourced Figma value; see Implementation rules.
 
 ### Purpose
 
-Live-validation indicator for a single password rule (e.g. minimum length, required character class), giving real-time feedback on whether a requirement is currently satisfied while the user types a new password.
+Live-validation indicator for a single password rule (minimum length, required special character), giving real-time feedback on whether a requirement is currently satisfied while the user types a new password.
 
 ### Anatomy
 
-Circular status icon (`size-5`, `rounded-full`, containing a centered checkmark glyph) + adjacent requirement text. Rendered in a stack of 2+ (`gap-3`) directly beneath the password `Input`.
+Circular status icon (`size-5`, `rounded-full`, containing a centered checkmark glyph) + adjacent requirement text. Rendered in a stack of 2 (`gap-3`) directly beneath the password `Input`, wired to `SignupForm`'s live `password` state.
 
 ### Variants
 
-None — visual state should be derived from a `met: boolean` prop, not a caller-chosen variant (same precedent as `HeartChartSummary` deriving state from data rather than a manual variant).
+None — visual state is derived from a `met: boolean` prop, not a caller-chosen variant (same precedent as `HeartChartSummary` deriving state from data rather than a manual variant).
 
 ### States
 
 | State | Behavior |
 |---|---|
 | Unmet (confirmed) | Icon background `border`/`input` token (`#d5d7da` — this is Figma's `Colors/Foreground/fg-disabled_subtle` variable, which is a *different name but the same value* as the existing `border`/`input` token; do **not** add a separate `fg-disabled_subtle` token, and do not confuse it with the existing `fg-disabled` token, `#a4a7ae`, which is a different value entirely). Text uses `text-text-tertiary`. |
-| Met | **Not yet confirmed for this component specifically**, though a candidate visual reference now exists: the `check-circle` icon used by `BenefitListItem` (below), sourced from `Onboarding/Create Profile` (node `1909:25769`), is a filled/confirmed check-circle glyph and may represent the same "met" treatment this component is missing. Do not adopt it without explicit confirmation that the two components share the same semantic "confirmed" state — get sign-off (or a dedicated Figma reference on this component's own source frame) before implementing, per `IMPLEMENTATION.md`'s Figma-integration non-negotiables. |
+| Met | Icon background switches to `status-success` (`#76936b`) — the same token `HeartChartSummary` uses for its positive/"Growing"/"Exceptional" states, applied here by product decision rather than a Figma reference on this specific component (see Implementation rules). Text switches to `text-foreground` so the "you're good" state reads with more contrast/emphasis than the muted unmet text, not just a color swap. |
+| Both states | Checkmark glyph itself never changes (`lucide-react`'s `Check`, `size-3`, `text-white`) — only the circle fill and text color change, so the glyph shape isn't the only differentiator (see Accessibility requirements). |
 
 ### Properties / API
 
@@ -393,26 +394,84 @@ interface PasswordRequirementItemProps {
 
 ### Design tokens used
 
-`border`/`input` (unmet-state icon background), `text-text-tertiary` (unmet-state text), `radius-full` (built-in Tailwind `rounded-full`). Met-state tokens are undetermined pending a design reference — likely `status-success` by analogy with `HeartChartSummary`, but not confirmed.
+`bg-border` (unmet-state icon background — same token as `Input`'s default border), `bg-status-success` (met-state icon background), `text-text-tertiary` (unmet-state text), `text-foreground` (met-state text), built-in Tailwind `rounded-full`/`text-white`.
 
 ### Accessibility requirements
 
-- Icon is decorative (`aria-hidden`) — state must be conveyed via text and color together, never color alone (per `DESIGN.md` Accessibility standards), once the met state is designed.
-- Each item should be programmatically associated with the password field it validates (e.g. `aria-describedby` on the password `Input` referencing the checklist), so assistive tech users get the same live pass/fail feedback sighted users get from the color/icon change.
+- Icon is `aria-hidden="true"` — state is conveyed by the paired text + color change together, never color alone (per `DESIGN.md` Accessibility standards).
+- The password `Input` sets `aria-describedby` referencing the checklist's wrapping `id` (see `SignupForm`), so assistive tech users get the same live pass/fail feedback sighted users get from the color/icon change. The `Input`'s native `minLength`/`pattern` constraints mirror the same two rules, so a screen reader user who submits early also gets the browser's native constraint-validation message, not just the visual checklist.
 
 ### Responsive behavior
 
-Inline text wraps naturally in its flex row; no breakpoint-specific behavior expected.
+Inline text wraps naturally in its flex row; no breakpoint-specific behavior.
 
 ### Implementation rules
 
 - Don't reuse `Checkbox` for this — it's a read-only, derived-state indicator, not a togglable input.
-- Do not implement or ship this component until the "met" state has a real Figma reference — see States above.
-- See `BenefitListItem` (below) for a visually similar icon+text row pattern discovered on a separate Figma frame (`Onboarding/Create Profile`) — evaluate whether the two should share one generalized component before either evolves independently, rather than maintaining two near-duplicate icon+text list-item implementations.
+- **Met-state color is a product decision, not a Figma-verified value**: Figma's `Onboarding/sign up` frame only shows the checklist in its default (empty-password, both-unmet) state — there is no Figma screenshot of the met/confirmed state on this component. `status-success` was chosen by deliberate analogy with `HeartChartSummary`'s existing positive-state token (the same reasoning this entry previously flagged as "likely, but not confirmed") rather than left unbuilt, per explicit product direction to ship live validation feedback. Revisit if a real Figma reference for the met state is ever supplied and it specifies a different color.
+- Colocated under `src/app/signup/_components` (single use site, `SignupForm`) rather than `src/components`, matching `BenefitListItem`'s precedent below — promote to `src/components` only if a second real use site appears (e.g. a password-reset flow), per `CLAUDE.md`'s Component Creation Process.
+- See `BenefitListItem` (below) for a visually similar icon+text row pattern — the two remain intentionally separate (different icon size, different semantics: derived validation state vs. static always-confirmed benefit) rather than merged into one generalized component; revisit only if a real shared need emerges.
 
 ### Visual examples
 
-Not yet rendered — no application code exists for this component. The `/signup` implementation and its `/design-system/patterns#auth-card-signup` showcase both explicitly call out its omission (as a "not implemented" callout) rather than approximating it.
+Rendered at `/design-system/components#passwordrequirementitem` (both states shown explicitly) and live on `/signup`'s password field; referenced at `/design-system/patterns#auth-card-signup`.
+
+---
+
+## SignupSuccess
+
+**Status**: Draft (functionally complete and rendered, but has no Figma source — see Implementation rules)
+**Source**: `src/app/signup/_components/signup-success.tsx`
+**Figma**: No reference. `Onboarding/sign up` (node `1909:25768`) only defines the form's default state; the Figma file's Signup section (`Onboarding/sign up` → `Onboarding/Create Profile` → `Onboarding/Select Membership` → `Onboarding/payment info`) has no dedicated "sign-up succeeded" confirmation frame. Built by composing already-verified tokens/primitives to close the gap called out in `CLAUDE.md`'s Required Component Documentation Standard (every interactive component needs a documented Success state) — see Implementation rules before treating this as pixel-sourced.
+
+### Purpose
+
+Confirms that account creation succeeded and hands the user off to the next real step in the onboarding funnel (`/create-profile`) — the `SignupForm`'s previously-missing "Success" state (see `DESIGN.md`'s Interaction principles).
+
+### Anatomy
+
+Centered column: circular icon badge (`size-12`, `bg-status-success/10`, containing a `size-6` `CircleCheck`) → heading (personalized with the submitted name when present) → supporting copy → full-width primary `Button` (`asChild` `Link`) continuing to `/create-profile`.
+
+### Variants
+
+None — a single confirmation layout; `name` only changes the heading's personalization, not the structure.
+
+### States
+
+Static once rendered — this *is* `SignupForm`'s Success state, replacing the form/Google button/divider/login-link content inside `AuthCard` (see `SignupCardContent`). No further internal states of its own.
+
+### Properties / API
+
+```ts
+interface SignupSuccessProps {
+  name: string; // the submitted "Name" field value; first token is used in the heading
+}
+```
+
+### Design tokens used
+
+`bg-status-success/10` + `text-status-success` (icon badge — same token family as `PasswordRequirementItem`'s met state and `HeartChartSummary`'s positive states), `text-foreground` (heading), `text-text-tertiary` (supporting copy). `Button`'s existing `default` variant for the continue CTA — no new button styling.
+
+### Accessibility requirements
+
+- Root has `role="status"` so assistive tech announces the confirmation when it replaces the form in place (an in-page content swap, not a route navigation, so it needs an explicit live-region role to be noticed).
+- Icon is `aria-hidden="true"` — the heading and body text alone carry the meaning.
+- Heading is a real `<h1>` — this becomes the page's primary heading once the form is replaced (the form itself has no competing `<h1>`), keeping one-`h1`-per-view per `DESIGN.md` Accessibility standards.
+
+### Responsive behavior
+
+`w-full`, centered text and content — inherits `AuthCard`'s fixed intrinsic width; no breakpoint-specific behavior of its own.
+
+### Implementation rules
+
+- **No Figma source — flagged, not hidden.** Unlike every other component in this file, this one wasn't derived from a Figma frame; it was built to satisfy an explicit product requirement (a real Success state for the sign-up flow) in the absence of one. Status stays **Draft** for this reason, matching the precedent set by `AmfmLogo` (approximated pending a real asset) — replace/adjust once a real "sign-up success" Figma frame exists, rather than treating this layout as final.
+- Lives in `src/app/signup/_components` (single use site, `SignupCardContent`), matching `BenefitListItem`/`PasswordRequirementItem`'s colocation precedent.
+- The current submit flow (`SignupForm`) has no real backend — `onSuccess` fires immediately once the native form constraints (required fields, password `minLength`/`pattern`) pass. Wire this to a real API result before shipping to production; don't mistake the current behavior for a verified account-creation success.
+- Continue CTA targets `/create-profile`, the actual next screen in the Figma onboarding funnel (`Onboarding/sign up` → `Onboarding/Create Profile`) — not a generic "go to dashboard" link, since no dashboard route exists yet.
+
+### Visual examples
+
+Rendered at `/design-system/components#signupsuccess` and live on `/signup` after a successful submission; referenced at `/design-system/patterns#auth-card-signup-success`.
 
 ---
 
@@ -460,7 +519,7 @@ Inline text wraps naturally in its flex row; no breakpoint-specific behavior exp
 
 ### Implementation rules
 
-- **Merge candidate with `PasswordRequirementItem`** (still Draft/blocked — see that entry's Implementation rules above) — both are a circular icon + adjacent text row. Implemented standalone here rather than deferred further, since `BenefitListItem`'s only state (always-confirmed) has a real Figma reference and no dependency on `PasswordRequirementItem`'s still-unresolved "met" state; revisit consolidating the two if/when `PasswordRequirementItem` is unblocked. The icon-size difference (20px on `PasswordRequirementItem` vs. 24px here) would need reconciling as part of that future merge.
+- **Considered, and declined, as a merge candidate with `PasswordRequirementItem`** (above) — both are a circular icon + adjacent text row, but they differ semantically (derived two-state validation vs. static always-confirmed benefit) and visually (24px icon here vs. 20px on `PasswordRequirementItem`, plus a different icon glyph — `CircleCheck` vs. a plain `Check` in a colored circle). Kept as two separate implementations; revisit only if a real third use case makes a shared generalization worthwhile.
 - Colocated under `src/app/create-profile/_components` (single use site, `PricingCard`) rather than `src/components` — same precedent as `AuthCard`/`PricingCard` in this file; promote only if a second real use site appears, per `CLAUDE.md`'s Component Creation Process.
 
 ### Visual examples

@@ -32,6 +32,8 @@ import { GoogleIcon } from "@/app/login/_components/google-icon";
 import { HeartChartLogo } from "@/app/login/_components/heartchart-logo";
 import { DposystemStory } from "@/app/_components/dposystem-story";
 import { PricingCard } from "@/app/create-profile/_components/pricing-card";
+import { PasswordRequirementItem } from "@/app/signup/_components/password-requirement-item";
+import { SignupSuccess } from "@/app/signup/_components/signup-success";
 
 import { Section } from "../_components/showcase";
 
@@ -126,7 +128,20 @@ export default function PatternsPage() {
               </div>
               <div className="flex flex-col gap-1.5">
                 <Label htmlFor="pattern-signup-password">Password</Label>
-                <Input id="pattern-signup-password" type="password" placeholder="Create a password" />
+                <Input
+                  id="pattern-signup-password"
+                  type="password"
+                  defaultValue="Sunshine1"
+                  placeholder="Create a password"
+                />
+              </div>
+              <div className="flex w-full flex-col gap-3">
+                <PasswordRequirementItem met={true}>
+                  Must be at least 8 characters
+                </PasswordRequirementItem>
+                <PasswordRequirementItem met={false}>
+                  Must contain one special character
+                </PasswordRequirementItem>
               </div>
             </div>
             <Button className="w-full">Get started – It&apos;s Free</Button>
@@ -139,19 +154,39 @@ export default function PatternsPage() {
           </AuthCard>
         </div>
         <p className="text-muted-foreground text-xs">
-          Password requirement checklist from the Figma reference is{" "}
-          <span className="font-medium">not implemented</span> — its
-          &quot;met&quot; state has no Figma reference yet (see{" "}
+          The password field above is pre-filled (
+          <code className="bg-muted rounded px-1 py-0.5">Sunshine1</code>) to
+          show both checklist states at once —{" "}
           <code className="bg-muted rounded px-1 py-0.5">
             PasswordRequirementItem
           </code>{" "}
-          in COMPONENTS.md, status Draft).
+          is wired to the live <code className="bg-muted rounded px-1 py-0.5">password</code>{" "}
+          value on the real <code className="bg-muted rounded px-1 py-0.5">/signup</code> form;
+          see <code className="bg-muted rounded px-1 py-0.5">COMPONENTS.md#passwordrequirementitem</code>.
         </p>
         <Link
           href="/signup"
           className="text-text-brand text-sm font-medium hover:underline"
         >
           View live at /signup →
+        </Link>
+      </Section>
+
+      <Section
+        id="auth-card-signup-success"
+        title="Auth card — sign up success"
+        description="SignupForm's Success state: once the form's native validation passes and submission succeeds, SignupCardContent swaps the Google button/divider/form/login-link content for SignupSuccess inside the same AuthCard shell. Has no Figma reference — see COMPONENTS.md#signupsuccess."
+      >
+        <div className="bg-muted/30 flex justify-center rounded-lg border p-8">
+          <AuthCard>
+            <SignupSuccess name="Jordan Ellis" />
+          </AuthCard>
+        </div>
+        <Link
+          href="/signup"
+          className="text-text-brand text-sm font-medium hover:underline"
+        >
+          View live at /signup (submit the form) →
         </Link>
       </Section>
 

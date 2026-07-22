@@ -31,6 +31,8 @@ import { GoogleIcon } from "@/app/login/_components/google-icon";
 import { HeartChartSummary } from "@/components/heartchart-summary";
 import { AmfmLogo } from "@/app/create-profile/_components/amfm-logo";
 import { BenefitListItem } from "@/app/create-profile/_components/benefit-list-item";
+import { PasswordRequirementItem } from "@/app/signup/_components/password-requirement-item";
+import { SignupSuccess } from "@/app/signup/_components/signup-success";
 
 import { ComponentShowcase } from "../_components/showcase";
 
@@ -209,6 +211,49 @@ export default function ComponentsPage() {
             <Label htmlFor="ds-checkbox-disabled">Disabled</Label>
           </div>
         </div>
+      </ComponentShowcase>
+
+      <ComponentShowcase
+        name="PasswordRequirementItem"
+        status="Production Ready"
+        purpose="Live-validation indicator for a single password rule, giving real-time feedback on whether a requirement is currently satisfied while the user types a new password on /signup."
+        docsAnchor="passwordrequirementitem"
+        figmaReference='AMFM Portal — Onboarding/sign up node 1909:25768, nodes 1909:25225-1909:25229 ("Check icon" + requirement text). Figma only shows the unmet default state — the met-state status-success color is a product decision, see COMPONENTS.md.'
+        tokens={["bg-border", "bg-status-success", "text-text-tertiary", "text-foreground"]}
+        states={["Unmet", "Met"]}
+      >
+        <div className="flex max-w-sm flex-col gap-3">
+          <PasswordRequirementItem met={true}>
+            Must be at least 8 characters
+          </PasswordRequirementItem>
+          <PasswordRequirementItem met={false}>
+            Must contain one special character
+          </PasswordRequirementItem>
+        </div>
+        <p className="text-muted-foreground mt-4 text-xs">
+          Wired to the live <code className="bg-muted rounded px-1 py-0.5">password</code> field
+          value on <code className="bg-muted rounded px-1 py-0.5">/signup</code> — try typing a
+          password there to see both states update live.
+        </p>
+      </ComponentShowcase>
+
+      <ComponentShowcase
+        name="SignupSuccess"
+        status="Draft"
+        purpose="SignupForm's Success state — confirms account creation and hands the user off to /create-profile, the next real step in the onboarding funnel."
+        docsAnchor="signupsuccess"
+        figmaReference={null}
+        tokens={["bg-status-success/10", "text-status-success", "text-foreground", "text-text-tertiary"]}
+        states={["Static"]}
+      >
+        <div className="bg-muted/30 flex max-w-sm justify-center rounded-lg border p-8">
+          <SignupSuccess name="Jordan Ellis" />
+        </div>
+        <p className="text-muted-foreground mt-4 text-xs">
+          No Figma reference exists for a sign-up success screen — composed
+          from already-verified tokens/primitives instead of leaving the
+          success path unimplemented. See COMPONENTS.md#signupsuccess.
+        </p>
       </ComponentShowcase>
 
       <ComponentShowcase
