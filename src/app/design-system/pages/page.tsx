@@ -21,6 +21,13 @@ const PAGES = [
     builtFrom:
       "Auth card — sign up pattern (PhotoBackdrop + AuthCard + HeartChartLogo + GoogleIcon + Button/Input/Label). Password requirement checklist from Figma not implemented — see PasswordRequirementItem in COMPONENTS.md (Draft, missing \"met\" state reference).",
   },
+  {
+    href: "/create-profile",
+    title: "Create profile",
+    figma: 'AMFM Portal — Onboarding/Create Profile node 1909:25769',
+    builtFrom:
+      "PhotoBackdrop + Card (CardHeader/CardAction/CardContent/CardFooter) + HeartChartLogo + Button/Input/Label. Partial implementation — only the Church/Organization name, Location, and Average Weekly Attendance fields are built (plain Input, all Production Ready). The Website field (needs InputGroup), Your role / Your primary goal fields (need Select), the required-field asterisk marker (needs a Label variant), and the entire \"Free Membership\" pricing card (needs BenefitListItem, AmfmLogo, and PricingCard) are not implemented — all are Draft in COMPONENTS.md pending open design questions (a missing display-type-scale foundation, a blocked logo asset, and unconfirmed icon/UX decisions). See COMPONENTS.md for the full list.",
+  },
 ];
 
 export default function PagesIndexPage() {

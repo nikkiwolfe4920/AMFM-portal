@@ -86,7 +86,7 @@ No layout behavior of its own — width and stacking are controlled by the calle
 
 ### Visual examples
 
-All variants, sizes, and the disabled/loading states render at `/design-system/components#button`. `default`/`outline` also render live on `/signup` (primary CTA, Google button) and at `/design-system/patterns#auth-card-signup`.
+All variants, sizes, and the disabled/loading states render at `/design-system/components#button`. `default`/`outline` also render live on `/signup` (primary CTA, Google button), `/create-profile` (primary CTA), and at `/design-system/patterns#auth-card-signup` / `#create-profile-card`.
 
 ---
 
@@ -94,7 +94,7 @@ All variants, sizes, and the disabled/loading states render at `/design-system/c
 
 **Status**: Production Ready
 **Source**: `src/components/ui/input.tsx`
-**Figma**: AMFM Portal file, node `3272:19436` ("Input" field set) and siblings; also confirmed for the Name/Email/Password fields on the sign-up screen (`Onboarding/sign up`, nodes `1909:25220`–`1909:25222`), same treatment, no new variant
+**Figma**: AMFM Portal file, node `3272:19436` ("Input" field set) and siblings; also confirmed for the Name/Email/Password fields on the sign-up screen (`Onboarding/sign up`, nodes `1909:25220`–`1909:25222`) and the Church/Organization name, Location, and Average Weekly Attendance fields on `Onboarding/Create Profile` (node `1909:25769`, nodes `1909:25255`, `1909:25257`, `1909:25258`), same treatment, no new variant
 
 ### Purpose
 
@@ -143,7 +143,7 @@ Full-width by default (`w-full`) within its flex container; no breakpoint-specif
 
 ### Visual examples
 
-Default, filled, disabled, and invalid states render at `/design-system/components#input`. Also rendered live on `/signup`'s Name/Email/Password fields and at `/design-system/patterns#auth-card-signup`.
+Default, filled, disabled, and invalid states render at `/design-system/components#input`. Also rendered live on `/signup`'s Name/Email/Password fields, `/create-profile`'s Church/Organization name, Location, and Average Weekly Attendance fields, and at `/design-system/patterns#auth-card-signup` / `#create-profile-card`.
 
 ---
 
@@ -306,7 +306,7 @@ None — inline text, wraps naturally with its container.
 
 ### Visual examples
 
-Rendered paired with `Input` and `Checkbox` at `/design-system/components#input` and `#checkbox`.
+Rendered paired with `Input` and `Checkbox` at `/design-system/components#input` and `#checkbox`; also paired with `Input` on `/create-profile` (required-marker variant above not yet implemented there — see Variants).
 
 ---
 
@@ -475,6 +475,7 @@ Not yet rendered — no application code exists for this component yet.
 
 **Status**: Production Ready
 **Source**: `src/components/ui/card.tsx`
+**Figma**: AMFM Portal file, `Onboarding/Create Profile` (node `1909:25769`) — the modal shell (header with title/description + top-right `HeartChartLogo` accessory, content, footer) maps onto `Card`'s existing `CardHeader`(+`CardAction`)/`CardContent`/`CardFooter` anatomy with no changes to the primitive itself; used for `/create-profile`
 
 ### Purpose
 
@@ -498,7 +499,7 @@ Each sub-component is `React.ComponentProps<"div">` — no custom props beyond `
 
 ### Design tokens used
 
-`bg-card`, `text-card-foreground`, default `border`, `shadow-sm`.
+`bg-card`, `text-card-foreground`, default `border`, `shadow-sm`. On `/create-profile`, the call site overrides the default border/shadow via `className` (`border-none shadow-xl rounded-2xl`, and `border-t`/`border-b border-border-secondary` on `CardFooter`/`CardHeader` for section dividers) — all existing tokens/Tailwind built-ins, no new ones added (see Implementation rules).
 
 ### Accessibility requirements
 
@@ -506,15 +507,17 @@ Purely structural — accessibility depends on the semantic content placed insid
 
 ### Responsive behavior
 
-Fluid width by default (fills its container); no built-in breakpoint behavior — control max-width/columns at the call site (see `DESIGN.md` Grid system).
+Fluid width by default (fills its container); no built-in breakpoint behavior — control max-width/columns at the call site (see `DESIGN.md` Grid system). On `/create-profile`, the call site sets `w-full max-w-2xl` and collapses its 2-field row to one column below `sm` — both call-site concerns, not changes to `Card` itself.
 
 ### Implementation rules
 
 - Keep this primitive matching upstream shadcn/ui shape exactly — a flat single-surface card. Don't bend it to fit a non-flat shape (see `AuthCard` below for why that pattern lives elsewhere).
+- **`/create-profile` deliberately uses this theme-aware `Card` rather than the fixed-light `AuthCard` pattern** used by `/login`/`/signup` — `AuthCard`'s nested outer-shell/inner-bordered-panel anatomy doesn't match this frame's flat, section-divided shape (header/content/footer separated by full-width rules, no inner sub-panel), while `Card`'s existing `CardHeader`/`CardAction`/`CardContent`/`CardFooter` composition is an exact structural fit with zero modification to the primitive. This is a call-site decision, not a `Card` contract change — **flagged for design confirmation**: it means this onboarding screen will respond to `.dark` (unlike `/login`/`/signup`, which never do), which hasn't been visually verified against a dark-mode Figma reference. See `figma/figma-links.md` and the audit note on `/create-profile`.
+- The `Onboarding/Create Profile` Figma frame specifies a title/description in a serif "Financier Display" font not yet defined in `DESIGN.md` — `/create-profile` renders `CardTitle`/`CardDescription` with the existing approved type scale (`text-3xl font-semibold tracking-tight`, Tailwind defaults) instead of inventing that token. Revisit once `DESIGN.md` defines a display type scale.
 
 ### Visual examples
 
-Rendered at `/design-system/components#card`.
+Rendered at `/design-system/components#card` and at `/design-system/patterns#create-profile-card`; live on `/create-profile`.
 
 ---
 
@@ -675,7 +678,7 @@ Rendered live on `/login` and `/signup` (imported from its current `login/_compo
 
 **Status**: Production Ready
 **Source**: `src/app/login/_components/heartchart-logo.tsx`
-**Figma**: AMFM Portal file, node `1909:25767` ("Onboarding/login") and node `1909:25768` ("Onboarding/sign up", node `1909:25210`) — same logo + "Powered by AMFM.org" caption pairing confirmed on both screens
+**Figma**: AMFM Portal file, node `1909:25767` ("Onboarding/login") and node `1909:25768` ("Onboarding/sign up", node `1909:25210`) — same logo + "Powered by AMFM.org" caption pairing confirmed on both screens; also used standalone (no caption) in the `CardAction` slot on `Onboarding/Create Profile` (node `1909:25769`, node `1909:25247`) — confirms the caption pairing is composed by the caller, not built into the component
 
 ### Purpose
 
@@ -711,7 +714,7 @@ None (raster asset, not token-driven).
 
 ### Visual examples
 
-Rendered at `/design-system/foundations#brand-mark` and on `/login` and `/signup` (imported from its current `login/_components` location on `/signup` — see `AuthCard`'s Implementation rules).
+Rendered at `/design-system/foundations#brand-mark` and on `/login`, `/signup`, and `/create-profile` (imported from its current `login/_components` location — see `AuthCard`'s Implementation rules).
 
 ---
 
