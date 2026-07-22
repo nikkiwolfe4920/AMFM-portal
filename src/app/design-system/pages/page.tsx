@@ -14,6 +14,13 @@ const PAGES = [
     builtFrom:
       "Auth card pattern (PhotoBackdrop + AuthCard + HeartChartLogo + GoogleIcon + Button/Input/Label/Checkbox)",
   },
+  {
+    href: "/signup",
+    title: "Sign up",
+    figma: 'AMFM Portal — Onboarding/sign up node 1909:25768',
+    builtFrom:
+      "Auth card — sign up pattern (PhotoBackdrop + AuthCard + HeartChartLogo + GoogleIcon + Button/Input/Label). Password requirement checklist from Figma not implemented — see PasswordRequirementItem in COMPONENTS.md (Draft, missing \"met\" state reference).",
+  },
 ];
 
 export default function PagesIndexPage() {

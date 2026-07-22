@@ -16,7 +16,7 @@ Every component below is rendered live at **`/design-system`** (`src/app/design-
 
 **Status**: Production Ready
 **Source**: `src/components/ui/button.tsx`
-**Figma**: AMFM Portal file, node `3273:19658` ("Primary" button set) and siblings — see `figma/figma-links.md`
+**Figma**: AMFM Portal file, node `3273:19658` ("Primary" button set) and siblings; `default` variant also confirmed on the sign-up screen's primary CTA (`Onboarding/sign up`, node `1909:25231`) — see `figma/figma-links.md`
 
 ### Purpose
 
@@ -86,7 +86,7 @@ No layout behavior of its own — width and stacking are controlled by the calle
 
 ### Visual examples
 
-All variants, sizes, and the disabled/loading states render at `/design-system/components#button`.
+All variants, sizes, and the disabled/loading states render at `/design-system/components#button`. `default`/`outline` also render live on `/signup` (primary CTA, Google button) and at `/design-system/patterns#auth-card-signup`.
 
 ---
 
@@ -94,7 +94,7 @@ All variants, sizes, and the disabled/loading states render at `/design-system/c
 
 **Status**: Production Ready
 **Source**: `src/components/ui/input.tsx`
-**Figma**: AMFM Portal file, node `3272:19436` ("Input" field set) and siblings
+**Figma**: AMFM Portal file, node `3272:19436` ("Input" field set) and siblings; also confirmed for the Name/Email/Password fields on the sign-up screen (`Onboarding/sign up`, nodes `1909:25220`–`1909:25222`), same treatment, no new variant
 
 ### Purpose
 
@@ -143,7 +143,7 @@ Full-width by default (`w-full`) within its flex container; no breakpoint-specif
 
 ### Visual examples
 
-Default, filled, disabled, and invalid states render at `/design-system/components#input`.
+Default, filled, disabled, and invalid states render at `/design-system/components#input`. Also rendered live on `/signup`'s Name/Email/Password fields and at `/design-system/patterns#auth-card-signup`.
 
 ---
 
@@ -240,6 +240,64 @@ Fixed `size-4` at all breakpoints — a checkbox doesn't need responsive resizin
 ### Visual examples
 
 Rendered at `/design-system/components#checkbox` and in the `/login` form.
+
+---
+
+## PasswordRequirementItem
+
+**Status**: Draft (not yet implemented — no application code exists for this component yet; this entry documents the validated design contract ahead of implementation, per the Figma → `DESIGN.md`/`COMPONENTS.md` → code pipeline in `CLAUDE.md`)
+**Source**: Not yet implemented
+**Figma**: AMFM Portal file, `Onboarding/sign up` (node `1909:25768`), nodes `1909:25225`–`1909:25229` ("Check icon" + requirement text, two instances)
+
+### Purpose
+
+Live-validation indicator for a single password rule (e.g. minimum length, required character class), giving real-time feedback on whether a requirement is currently satisfied while the user types a new password.
+
+### Anatomy
+
+Circular status icon (`size-5`, `rounded-full`, containing a centered checkmark glyph) + adjacent requirement text. Rendered in a stack of 2+ (`gap-3`) directly beneath the password `Input`.
+
+### Variants
+
+None — visual state should be derived from a `met: boolean` prop, not a caller-chosen variant (same precedent as `HeartChartSummary` deriving state from data rather than a manual variant).
+
+### States
+
+| State | Behavior |
+|---|---|
+| Unmet (confirmed) | Icon background `border`/`input` token (`#d5d7da` — this is Figma's `Colors/Foreground/fg-disabled_subtle` variable, which is a *different name but the same value* as the existing `border`/`input` token; do **not** add a separate `fg-disabled_subtle` token, and do not confuse it with the existing `fg-disabled` token, `#a4a7ae`, which is a different value entirely). Text uses `text-text-tertiary`. |
+| Met | **Not yet designed.** The source Figma frame only shows the unmet state for both sample requirements — no success/met treatment (color, icon change) exists yet. Do not guess a color (e.g. a plain green swap) without a real Figma reference; get one before implementing, per `IMPLEMENTATION.md`'s Figma-integration non-negotiables. |
+
+### Properties / API
+
+```ts
+interface PasswordRequirementItemProps {
+  met: boolean;
+  children: React.ReactNode; // the requirement text
+}
+```
+
+### Design tokens used
+
+`border`/`input` (unmet-state icon background), `text-text-tertiary` (unmet-state text), `radius-full` (built-in Tailwind `rounded-full`). Met-state tokens are undetermined pending a design reference — likely `status-success` by analogy with `HeartChartSummary`, but not confirmed.
+
+### Accessibility requirements
+
+- Icon is decorative (`aria-hidden`) — state must be conveyed via text and color together, never color alone (per `DESIGN.md` Accessibility standards), once the met state is designed.
+- Each item should be programmatically associated with the password field it validates (e.g. `aria-describedby` on the password `Input` referencing the checklist), so assistive tech users get the same live pass/fail feedback sighted users get from the color/icon change.
+
+### Responsive behavior
+
+Inline text wraps naturally in its flex row; no breakpoint-specific behavior expected.
+
+### Implementation rules
+
+- Don't reuse `Checkbox` for this — it's a read-only, derived-state indicator, not a togglable input.
+- Do not implement or ship this component until the "met" state has a real Figma reference — see States above.
+
+### Visual examples
+
+Not yet rendered — no application code exists for this component. The `/signup` implementation and its `/design-system/patterns#auth-card-signup` showcase both explicitly call out its omission (as a "not implemented" callout) rather than approximating it.
 
 ---
 
@@ -345,6 +403,7 @@ Rendered at `/design-system/components#dialog` and via the homepage "Learn More"
 
 **Status**: Production Ready
 **Source**: `src/components/photo-backdrop.tsx`
+**Figma**: AMFM Portal file, node `1909:25767` ("Onboarding/login") and node `1909:25768` ("Onboarding/sign up") — both use the same two arbitrary blur values (`backdrop-blur-[20px]` content layer, `backdrop-blur-[8px]` overlay) and `bg-overlay`/85% scrim. **Not yet confirmed**: whether the sign-up screen's background photo is the same asset as `public/login-background.jpg` or a distinct export — verify before assuming this component needs no changes for a `/signup` route.
 
 ### Purpose
 
@@ -387,7 +446,7 @@ Decorative background image — no `alt` text needed (it's a CSS background, not
 
 ### Visual examples
 
-Rendered live on `/login` and `/`; referenced (not re-rendered full-bleed) at `/design-system/patterns`.
+Rendered live on `/login`, `/signup`, and `/`; referenced (not re-rendered full-bleed) at `/design-system/patterns`.
 
 ---
 
@@ -395,6 +454,7 @@ Rendered live on `/login` and `/`; referenced (not re-rendered full-bleed) at `/
 
 **Status**: Production Ready
 **Source**: `src/app/login/_components/auth-card.tsx`
+**Figma**: AMFM Portal file, node `1909:25767` ("Onboarding/login", card shell) and node `1909:25768` ("Onboarding/sign up", node `1909:25205` "WeDo Activity") — outer shell (`p-2`/`shadow-card`/`rounded-2xl`), inner panel (`px-6 pt-5 pb-4`/`rounded-md`/`border-black/10`), and content width (`w-90 max-w-90`) are pixel-exact matches on both screens
 
 ### Purpose
 
@@ -433,10 +493,11 @@ Fixed intrinsic width (`min-w-80`, inner `w-90 max-w-90`) — designed for the c
 ### Implementation rules
 
 - This is a *nested* shape that doesn't map onto the flat single-`<div>` `Card` primitive — kept colocated under `login/_components` rather than bent into `src/components/ui/card.tsx`. Build other auth-specific shapes next to the route that needs them, following this precedent, rather than generalizing `Card` to fit.
+- **Known follow-up**: `/signup` imports this component directly from `src/app/login/_components/auth-card.tsx` (a cross-route import) rather than duplicating it, since it's confirmed pixel-identical on both screens. Now that two real routes depend on it, it's a reasonable candidate to relocate to `src/components` per `CLAUDE.md`'s reuse-over-duplication guidance — deferred here to keep the sign-up implementation scoped to additive changes only. The same applies to `HeartChartLogo` and `GoogleIcon` below.
 
 ### Visual examples
 
-Rendered live on `/login`; referenced at `/design-system/patterns`.
+Rendered live on `/login` and `/signup` (imported from its current `login/_components` location — not yet relocated to a shared path; see Implementation rules); referenced at `/design-system/patterns#auth-card` and `#auth-card-signup`.
 
 ---
 
@@ -444,6 +505,7 @@ Rendered live on `/login`; referenced at `/design-system/patterns`.
 
 **Status**: Production Ready
 **Source**: `src/app/login/_components/heartchart-logo.tsx`
+**Figma**: AMFM Portal file, node `1909:25767` ("Onboarding/login") and node `1909:25768` ("Onboarding/sign up", node `1909:25210`) — same logo + "Powered by AMFM.org" caption pairing confirmed on both screens
 
 ### Purpose
 
@@ -479,7 +541,7 @@ None (raster asset, not token-driven).
 
 ### Visual examples
 
-Rendered at `/design-system/foundations#brand-mark` and on `/login`.
+Rendered at `/design-system/foundations#brand-mark` and on `/login` and `/signup` (imported from its current `login/_components` location on `/signup` — see `AuthCard`'s Implementation rules).
 
 ---
 
@@ -487,10 +549,11 @@ Rendered at `/design-system/foundations#brand-mark` and on `/login`.
 
 **Status**: Production Ready
 **Source**: `src/app/login/_components/google-icon.tsx`
+**Figma**: AMFM Portal file, node `1909:25767` ("Onboarding/login") and node `1909:25768` ("Onboarding/sign up", node `1909:25211`) — same `Button variant="outline"` + icon composition confirmed on both screens; only the label text differs ("Log in with Google" vs. "Sign up with Google")
 
 ### Purpose
 
-Google "G" mark for the "Log in with Google" button.
+Google "G" mark for the "Log in with Google" and "Sign up with Google" buttons.
 
 ### Anatomy
 
@@ -522,7 +585,7 @@ Sized via `size-*` utility at the call site (`size-6` today); no intrinsic respo
 
 ### Visual examples
 
-Rendered on `/login`'s "Log in with Google" button.
+Rendered on `/login`'s "Log in with Google" button and `/signup`'s "Sign up with Google" button (imported from its current `login/_components` location on `/signup` — see `AuthCard`'s Implementation rules).
 
 ---
 
