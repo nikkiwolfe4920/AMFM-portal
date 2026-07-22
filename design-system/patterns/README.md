@@ -5,6 +5,7 @@ Cross-component compositions — where multiple primitives from `components/` co
 | Pattern | Composed from | `COMPONENTS.md` entries | Used on |
 |---|---|---|---|
 | Auth card | `PhotoBackdrop` + `AuthCard` + `HeartChartLogo` + `Button`/`Input`/`Label`/`Checkbox` | [PhotoBackdrop](../../COMPONENTS.md#photobackdrop), [AuthCard](../../COMPONENTS.md#authcard) | `/login` |
+| Create profile card | `Card` + `HeartChartLogo` + `Button`/`Input`/`Label`/`Select`/`InputGroup` + `PricingCard` (`BenefitListItem` + `AmfmLogo`) | [Card](../../COMPONENTS.md#card), [Select](../../COMPONENTS.md#select), [InputGroup](../../COMPONENTS.md#inputgroup), [PricingCard](../../COMPONENTS.md#pricingcard) | `/create-profile` |
 | Learn-more dialog | `Dialog` + `DposystemLearnMore` + `DposystemStory` | [Dialog](../../COMPONENTS.md#dialog), [DposystemLearnMore](../../COMPONENTS.md#dposystemlearnmore), [DposystemStory](../../COMPONENTS.md#dposystemstory) | `/` |
 | Story carousel | `DposystemStory`'s ARIA carousel region + snap-scroll + keyboard nav | [DposystemStory](../../COMPONENTS.md#dposystemstory) | `/` (inside the Learn-more dialog) |
 | Responsive grid | Tailwind grid utilities per `DESIGN.md`'s Grid system table | [Layout/grid rules](../../DESIGN.md#layoutgrid-rules) | Not yet used on a live page — reference pattern for future dashboard/list screens |

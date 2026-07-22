@@ -18,13 +18,38 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import { InputGroup } from "@/components/ui/input-group";
 import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { AuthCard } from "@/app/login/_components/auth-card";
 import { GoogleIcon } from "@/app/login/_components/google-icon";
 import { HeartChartLogo } from "@/app/login/_components/heartchart-logo";
 import { DposystemStory } from "@/app/_components/dposystem-story";
+import { PricingCard } from "@/app/create-profile/_components/pricing-card";
 
 import { Section } from "../_components/showcase";
+
+const PATTERN_ROLE_OPTIONS = ["Senior Leader", "Pastor", "Ministry Leader", "Volunteer Leader", "Other"];
+const PATTERN_GOAL_OPTIONS = [
+  "Launch a marriage ministry",
+  "Start using HeartChart with couples",
+  "Help couples in crisis",
+  "Explore what AMFM can help us do",
+];
+const PATTERN_FREE_MEMBERSHIP_BENEFITS = [
+  "Give couples free access to HeartChart",
+  "Brand the experience with your church logo",
+  "See simple relationship-health insights",
+  "Add campuses, locations, or ministry teams",
+  "Get up and running in one Sunday",
+  "No credit card needed",
+];
 
 export default function PatternsPage() {
   return (
@@ -133,47 +158,103 @@ export default function PatternsPage() {
       <Section
         id="create-profile-card"
         title="Create profile card"
-        description='PhotoBackdrop + Card (CardHeader/CardAction/CardContent/CardFooter) + HeartChartLogo, composed on /create-profile. Uses the generic, theme-aware Card primitive rather than the fixed-light AuthCard pattern above — AuthCard’s nested outer-shell/inner-panel anatomy doesn’t match this wider, section-divided frame. Rendered here without the full-bleed PhotoBackdrop so it fits the page layout — see /create-profile for the live full-screen version.'
+        description='PhotoBackdrop + Card (CardHeader/CardAction/CardContent/CardFooter) + HeartChartLogo + full field set (Input/Select/InputGroup, all required) + PricingCard, composed on /create-profile. Uses the generic, theme-aware Card primitive rather than the fixed-light AuthCard pattern above — AuthCard’s nested outer-shell/inner-panel anatomy doesn’t match this wider, section-divided frame. Rendered here without the full-bleed PhotoBackdrop so it fits the page layout — see /create-profile for the live full-screen version.'
       >
         <div className="bg-muted/30 flex justify-center rounded-lg border p-8">
-          <Card className="w-full max-w-2xl rounded-2xl border-none shadow-xl">
+          <Card className="w-full max-w-4xl rounded-2xl border-none shadow-xl">
             <CardHeader className="border-border-secondary border-b">
-              <CardTitle className="text-3xl font-semibold tracking-tight">
+              <CardTitle className="font-display text-display-md text-foreground font-light">
                 Create profile
               </CardTitle>
-              <CardDescription>Help us personalize your experience</CardDescription>
+              <CardDescription className="text-text-tertiary">
+                Help us personalize your experience
+              </CardDescription>
               <CardAction>
                 <HeartChartLogo />
               </CardAction>
             </CardHeader>
-            <CardContent className="flex flex-col gap-5 pt-6">
-              <div className="flex flex-col gap-1.5">
-                <Label htmlFor="pattern-create-profile-org">
-                  Church or Organization name
-                </Label>
-                <Input
-                  id="pattern-create-profile-org"
-                  placeholder="Enter church or organization name"
-                />
-              </div>
-              <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+            <CardContent className="flex flex-col gap-10 pt-5 lg:flex-row lg:items-start">
+              <div className="flex flex-1 flex-col gap-5">
                 <div className="flex flex-col gap-1.5">
-                  <Label htmlFor="pattern-create-profile-location">Location</Label>
-                  <Input
-                    id="pattern-create-profile-location"
-                    placeholder="Enter your zip"
-                  />
-                </div>
-                <div className="flex flex-col gap-1.5">
-                  <Label htmlFor="pattern-create-profile-attendance">
-                    Average Weekly Attendance
+                  <Label htmlFor="pattern-create-profile-org" required>
+                    Church or Organization name
                   </Label>
                   <Input
-                    id="pattern-create-profile-attendance"
-                    type="number"
-                    placeholder="Enter a number"
+                    id="pattern-create-profile-org"
+                    placeholder="Enter church or organization name"
                   />
                 </div>
+                <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+                  <div className="flex flex-col gap-1.5">
+                    <Label htmlFor="pattern-create-profile-location" required>
+                      Location
+                    </Label>
+                    <Input
+                      id="pattern-create-profile-location"
+                      placeholder="Enter your zip"
+                    />
+                  </div>
+                  <div className="flex flex-col gap-1.5">
+                    <Label htmlFor="pattern-create-profile-attendance" required>
+                      Average Weekly Attendance
+                    </Label>
+                    <Input
+                      id="pattern-create-profile-attendance"
+                      type="number"
+                      placeholder="Enter a number"
+                    />
+                  </div>
+                </div>
+                <div className="flex flex-col gap-1.5">
+                  <Label htmlFor="pattern-create-profile-website" required>
+                    Website
+                  </Label>
+                  <InputGroup
+                    id="pattern-create-profile-website"
+                    addon="http://"
+                    placeholder="yourchurch.com"
+                  />
+                </div>
+                <div className="flex flex-col gap-1.5">
+                  <Label htmlFor="pattern-create-profile-role" required>
+                    Your role
+                  </Label>
+                  <Select>
+                    <SelectTrigger id="pattern-create-profile-role" className="w-full">
+                      <SelectValue placeholder="Select your role" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {PATTERN_ROLE_OPTIONS.map((option) => (
+                        <SelectItem key={option} value={option}>
+                          {option}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="flex flex-col gap-1.5">
+                  <Label htmlFor="pattern-create-profile-goal" required>
+                    Your primary goal
+                  </Label>
+                  <Select>
+                    <SelectTrigger id="pattern-create-profile-goal" className="w-full">
+                      <SelectValue placeholder="What's your main objective? " />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {PATTERN_GOAL_OPTIONS.map((option) => (
+                        <SelectItem key={option} value={option}>
+                          {option}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+              <div className="w-full lg:w-92 lg:shrink-0">
+                <PricingCard
+                  title="Free Membership"
+                  benefits={PATTERN_FREE_MEMBERSHIP_BENEFITS}
+                />
               </div>
             </CardContent>
             <CardFooter className="border-border-secondary justify-end border-t pt-6">
@@ -181,17 +262,6 @@ export default function PatternsPage() {
             </CardFooter>
           </Card>
         </div>
-        <p className="text-muted-foreground text-xs">
-          Website field, Your role / Your primary goal fields, the required-field
-          asterisk marker, and the &quot;Free Membership&quot; pricing card from the
-          Figma reference are <span className="font-medium">not implemented</span> —
-          they depend on <code className="bg-muted rounded px-1 py-0.5">Select</code>,{" "}
-          <code className="bg-muted rounded px-1 py-0.5">InputGroup</code>,{" "}
-          <code className="bg-muted rounded px-1 py-0.5">BenefitListItem</code>,{" "}
-          <code className="bg-muted rounded px-1 py-0.5">AmfmLogo</code>, and{" "}
-          <code className="bg-muted rounded px-1 py-0.5">PricingCard</code> (all
-          Draft in COMPONENTS.md).
-        </p>
         <Link
           href="/create-profile"
           className="text-text-brand text-sm font-medium hover:underline"

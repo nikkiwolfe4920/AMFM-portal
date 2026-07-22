@@ -63,5 +63,30 @@
     "figmaComponent": "AMFM Portal — node 1993:36348 (\"HeartChart Summary\" component set: Growing 1640:23457/1670:36217, Low 1670:36549, Exceptional 1670:36610)",
     "documentation": "COMPONENTS.md#heartchartsummary",
     "implementation": "src/components/heartchart-summary.tsx"
+  },
+  "Select": {
+    "figmaComponent": "AMFM Portal — Onboarding/Create Profile node 1909:25769, nodes 1909:25261 (\"Your role\") and 1909:25262 (\"Your primary goal\"); chevron-down icon node 10:338",
+    "documentation": "COMPONENTS.md#select",
+    "implementation": "src/components/ui/select.tsx"
+  },
+  "InputGroup": {
+    "figmaComponent": "AMFM Portal — Onboarding/Create Profile node 1909:25769, node 1909:25259 (\"Website\" field)",
+    "documentation": "COMPONENTS.md#inputgroup",
+    "implementation": "src/components/ui/input-group.tsx"
+  },
+  "BenefitListItem": {
+    "figmaComponent": "AMFM Portal — Onboarding/Create Profile node 1909:25769, check-circle icon node 10:6386, instances 1909:25272-1909:25275, 2852:117176, 2852:117164",
+    "documentation": "COMPONENTS.md#benefitlistitem",
+    "implementation": "src/app/create-profile/_components/benefit-list-item.tsx"
+  },
+  "PricingCard": {
+    "figmaComponent": "AMFM Portal — Onboarding/Create Profile node 1909:25769, node 1909:25264 (\"Pricing card\")",
+    "documentation": "COMPONENTS.md#pricingcard",
+    "implementation": "src/app/create-profile/_components/pricing-card.tsx"
+  },
+  "AmfmLogo": {
+    "figmaComponent": "AMFM Portal — Onboarding/Create Profile node 1909:25769, node 1909:25281 (\"Logo\") + node 1909:25280 (\"Powered by\" caption) — asset blocked, implemented as a text approximation",
+    "documentation": "COMPONENTS.md#amfmlogo",
+    "implementation": "src/app/create-profile/_components/amfm-logo.tsx"
   }
 }

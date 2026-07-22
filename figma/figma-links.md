@@ -17,6 +17,8 @@ Human-readable index of the Figma file(s) and node references cited throughout `
 | `3272:19436` and siblings | "Input" field set | `Input` — default/filled/focused/disabled/invalid states (`COMPONENTS.md#input`) |
 | `1829:19828` | Modal chrome reference | `Dialog` — surface shape, close control (`COMPONENTS.md#dialog`) |
 | `1993:36348` and variants (`1640:23457`/`1670:36217` Growing, `1670:36549` Low, `1670:36610` Exceptional) | "HeartChart Summary" dashboard card | `HeartChartSummary` — donut/scale states, action row (`COMPONENTS.md#heartchartsummary`) |
+| `Onboarding/Create Profile` (`1909:25769`) | `/create-profile` screen (full field set + pricing card) | `Card`, `Select` (`1909:25261` "Your role", `1909:25262` "Your primary goal"), `InputGroup` (`1909:25259` "Website"), `Label` required marker (e.g. `I1909:25255;7487:535320`), `BenefitListItem` (`10:6386` check-circle + instances `1909:25272`–`1909:25275`, `2852:117176`, `2852:117164`), `PricingCard` (`1909:25264`), `AmfmLogo` (`1909:25281` logo + `1909:25280` caption) — see `COMPONENTS.md` |
+| `10:338` | `chevron-down` icon component | `Select`'s trailing icon (`COMPONENTS.md#select`) |
 
 ## Components without a Figma reference yet
 
