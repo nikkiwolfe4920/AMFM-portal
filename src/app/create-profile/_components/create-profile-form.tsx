@@ -217,10 +217,13 @@ export function CreateProfileForm() {
         </div>
       </CardContent>
 
-      <CardFooter className="border-border-secondary justify-end border-t pt-6">
-        <Button type="submit" loading={isSubmitting}>
-          Start using HeartChart
-        </Button>
+      <CardFooter className="flex-col items-stretch gap-0 px-0 pt-8 pb-0">
+        <div className="border-border-secondary border-t" />
+        <div className="flex justify-end px-6 pb-6">
+          <Button type="submit" loading={isSubmitting}>
+            Start using HeartChart
+          </Button>
+        </div>
       </CardFooter>
     </form>
   );
