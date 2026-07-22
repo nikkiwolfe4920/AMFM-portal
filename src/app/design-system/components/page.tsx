@@ -18,6 +18,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { GoogleIcon } from "@/app/login/_components/google-icon";
+import { HeartChartSummary } from "@/components/heartchart-summary";
 
 import { ComponentShowcase } from "../_components/showcase";
 
@@ -182,6 +183,31 @@ export default function ComponentsPage() {
           <GoogleIcon className="size-6" />
           Log in with Google
         </Button>
+      </ComponentShowcase>
+
+      <ComponentShowcase
+        name="HeartChartSummary"
+        status="Draft"
+        purpose="Church-wide HeartChart participation snapshot for an admin dashboard — completion count, percentage, and where it falls on the Early/Active/Strong/Exceptional scale."
+        docsAnchor="heartchartsummary"
+        figmaReference='AMFM Portal — node 1993:36348 ("HeartChart Summary" component set)'
+        tokens={[
+          "status-success",
+          "status-success-strong",
+          "status-warning",
+          "status-warning-subtle",
+          "shadow-card",
+          "border-border-secondary",
+          "bg-muted/50",
+          "text-text-tertiary",
+        ]}
+        states={["Low", "Growing", "Exceptional"]}
+      >
+        <div className="flex flex-col gap-6">
+          <HeartChartSummary percentage={1} completedCount={7} totalAttenders={2800} />
+          <HeartChartSummary percentage={58} completedCount={1512} totalAttenders={2800} />
+          <HeartChartSummary percentage={100} completedCount={2912} totalAttenders={2800} />
+        </div>
       </ComponentShowcase>
     </div>
   );

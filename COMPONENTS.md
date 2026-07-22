@@ -617,3 +617,97 @@ Slide height is `h-[min(70vh,560px)]`; slide content padding scales `px-6 py-8` 
 ### Visual examples
 
 Rendered on `/` via `DposystemLearnMore`; referenced at `/design-system/patterns#carousel`.
+
+---
+
+## HeartChartSummary
+
+**Status**: Draft
+**Source**: `src/components/heartchart-summary.tsx`
+**Figma**: AMFM Portal file, node `1993:36348` ("HeartChart Summary" component set — "Growing" `1640:23457`/`1670:36217`, "Low" `1670:36549`, "Exceptional" `1670:36610` variants) — see `figma/figma-links.md`
+
+### Purpose
+
+Church-wide HeartChart participation snapshot for an admin dashboard: how many individuals have completed the HeartChart assessment out of the church's total attenders, and where that participation level falls on an Early → Active → Strong → Exceptional scale. Gives a church admin an at-a-glance read on engagement plus one-tap entry points into related actions (a contextual tip, historical trend, and the share link for driving more completions).
+
+### Anatomy
+
+- Outer elevated card (`shadow-card`, `rounded-2xl`) → bordered "Respondent snapshot" panel
+  - `HeartChartLogo` (reused, top-left)
+  - "Live Data" badge (dot + label, top-right, absolutely positioned)
+  - Stat row: donut chart (percentage in its center) + big stat number/"Individual(s)" label + supporting attendee-count sentence
+  - Participation scale panel (muted sub-panel):
+    - Eyebrow label ("CHURCH-WIDE PARTICIPATION LEVEL")
+    - Segmented scale bar — 4 fixed labeled segments (Early / Active / Strong / Exceptional), one highlighted per participation level, with a triangular marker positioned at the exact `percentage` over the bar
+    - Action row — three `Button` (`variant="outline" size="sm"`) instances: "Quick Tip" (lightbulb), "Last 4 Weeks" (trending line), "Share Your Link" (QR code)
+
+### Variants
+
+None (`variant` prop) — visual treatment is entirely driven by the derived participation level (see States), not a caller-chosen variant. This intentionally diverges from the Figma component, which exposes the level as a manually-set `state` variant (`Growing`/`Low`/`Execptional`, the latter a Figma typo corrected here to `Exceptional`) — see Implementation rules for why.
+
+### States
+
+Participation level is **derived from the `percentage` prop**, not passed in directly, using the thresholds from Figma's own dev annotations on node `1640:23474`:
+
+| `percentage` | Level | Highlighted segment | Color | Number/text color |
+|---|---|---|---|---|
+| 0 | "Early" (no visual design yet — see `DESIGN.md` Known gaps) | Early *(fallback)* | Neutral (`status-warning` fallback) | `status-warning` *(fallback)* |
+| 1–44 | Low | Active | `status-warning-subtle` → `status-warning` gradient | `status-warning` |
+| 45–74 | Growing | Strong | `status-success-strong` → `status-success` gradient | `status-success` |
+| 75–100 | Exceptional | Exceptional | `status-success-strong` → `status-success` gradient | `status-success` |
+
+Other states:
+
+| State | Behavior |
+|---|---|
+| Default | As above — the component has no loading/empty/error state of its own; it's a pure presentational read of caller-supplied numbers. Caller owns the loading/error UI while fetching the underlying stats (see Implementation rules). |
+| Action buttons | Each of the three `Button` instances is optional-callback-driven (`onQuickTip`/`onViewLastFourWeeks`/`onShareLink`); a button renders (and is disabled-looking is *not* applied) regardless of whether a handler is passed — see Implementation rules. |
+
+### Properties / API
+
+```ts
+interface HeartChartSummaryProps {
+  /** 0–100. Independent of completedCount/totalAttenders — see Implementation rules. */
+  percentage: number;
+  completedCount: number;
+  totalAttenders: number;
+  onQuickTip?: () => void;
+  onViewLastFourWeeks?: () => void;
+  onShareLink?: () => void;
+  className?: string;
+}
+```
+
+### Design tokens used
+
+`shadow-card`, `rounded-2xl`/`rounded-md`, `bg-background`, `border` (outer/inner card hairlines, participation-level sub-panel border) + `bg-muted/50` (participation-level sub-panel, badge — `bg-muted/50` reused per `Input`'s established `#fafafa`-over-white precedent, not a new gray token), `text-foreground` (labels, number captions, badge text), `text-muted-foreground`/`bg-muted-foreground` (supporting sentence, "Individuals" caption, inactive bar-segment text, marker/blend-tint), `bg-muted` (inactive bar segments), `status-success`/`status-success-strong`, `status-warning`/`status-warning-subtle` (new — see `DESIGN.md` Color tokens and Known gaps). `Button`'s own tokens for the three action buttons (see `Button` above).
+
+**Deliberately not using `text-text-secondary`/`text-text-tertiary`/`fg-disabled`/`border-secondary`/`border-black/10`**, even though several are closer pixel matches to Figma's exact grays — `DESIGN.md`'s "Auth/onboarding surfaces are theme-fixed" section scopes those specifically to the fixed-light auth surface family (root-only, no `.dark` value by design). This card is a themed dashboard surface, not a fixed-light one, so reusing them left inactive scale segments, borders, and marker/tint colors stuck in their light-mode value under `.dark` — confirmed by actually toggling `.dark` during implementation and seeing bright, undarkened elements against an otherwise-dark card. Swapped to the equivalent theme-aware generic tokens (`foreground`/`muted-foreground`/`muted`/`border`) instead; this trades a small amount of pixel-exactness against the light-only Figma reference for correct, verified dark-mode behavior, per `IMPLEMENTATION.md`'s "No unverified dark mode" non-negotiable.
+
+### Accessibility requirements
+
+- The donut chart and segmented scale bar are supplementary visualizations of the same numbers already rendered as text (the big stat number, the attendee sentence, the segment labels) — screen reader users get the full picture from the text content alone; the SVG donut is marked `aria-hidden` and the scale bar's decorative marker is `aria-hidden`, so nothing is announced twice or announced as an unlabeled graphic.
+- "Live Data" badge conveys status via the dot + text label together, not color alone (see `DESIGN.md` Accessibility standards — color is never the only signal).
+- The highlighted scale segment is distinguished by both a fill color *and* its position/gradient — not color alone — but since all 4 segment labels are always visible as text regardless of which is active, the active state is also conveyed redundantly through the marker's position, satisfying the same principle from a second angle.
+- All three action buttons render through `Button`, inheriting its keyboard focus, focus-visible ring, and `aria-label` conventions; each has a visible text label (not icon-only), so no extra `aria-label` is required.
+
+### Responsive behavior
+
+- Not yet responsive below its Figma-authored desktop width (the source frame is a fixed `564px`) — this is a known follow-up, not a deliberate fixed-width decision like `AuthCard`. Before shipping into a real dashboard route, verify against `DESIGN.md`'s Layout/grid rules (mobile-first, single column below `sm`) and add `sm:`/`md:` breakpoint handling for the stat row (donut + numbers) and the 3-button action row (which will need to wrap or stack on narrow viewports) — flagged here rather than guessed, since no dashboard route or Figma mobile frame exists yet to verify against.
+- The card itself is otherwise fluid-width (`w-full`) so it can be dropped into a responsive grid per `DESIGN.md`'s Grid system once a consuming page exists.
+
+### Implementation rules
+
+- **`percentage` drives derived participation level, not a caller-set `state` prop.** Figma's component exposes the level as a manually chosen variant, but its own dev annotations document the exact thresholds (0 / 1–44 / 45–74 / 75+) that produce it — deriving from `percentage` is a single source of truth and can't drift out of sync the way two independently-set props could.
+- **`percentage` is independent of `completedCount`/`totalAttenders`** — don't compute it as `completedCount / totalAttenders`. Figma's own content annotation says percentage is "of HeartCharts completed divided by the total number of people in the church," a different (larger) denominator than the "attenders" figure shown in the supporting sentence, and the "Exceptional" example shows `completedCount` (2,912) exceeding `totalAttenders` (2,800) while `percentage` still caps at 100 — treat all three as independent caller-supplied numbers, cap `percentage` display at 100 defensively, and pluralize "Individual"/"Individuals" off of `completedCount` rather than requiring a separate label prop.
+- **Marker position is computed from `percentage` as a continuous value** (`left: ${percentage}%` over the bar, translated to center on the point), not Figma's fixed per-variant pixel offsets — the fixed offsets were authored against Figma's static 564px frame and would break the moment the card is responsive or fed a percentage that isn't one of the three sample values.
+- Reuse `Button` (`variant="outline" size="sm"`) for the three action buttons rather than hand-rolling button markup — their border/shadow/focus/hover treatment already matches Figma's skeuomorphic button reference exactly (`shadow-button-inset` is pixel-for-pixel Figma's "shadow-xs-skeuomorphic" effect).
+- Icons: `lucide-react`'s `Lightbulb`, `TrendingUp`, `QrCode` for Quick Tip / Last 4 Weeks / Share Your Link respectively (matching `iconLibrary` in `components.json`) — Figma's own icon names are `lightbulb-02`, `line-chart-up-02`, `qr-code-01`; these are the closest stable `lucide-react` equivalents, not pixel-identical to Figma's icon set (same category of approximation as `GoogleIcon`).
+- Donut chart is a hand-built SVG (stroke-based ring, not a fetched/rasterized asset) so it can respond to an arbitrary `percentage` value — Figma's version is a set of pre-rendered PNGs per sample state, which can't generalize to real data. Track ring uses `stroke-muted`; the value arc uses `stroke-status-success`/`stroke-status-warning` per the derived level. Marked `aria-hidden` (see Accessibility).
+- Single use site today (no consuming dashboard route yet) — colocated at `src/components` rather than a route's `_components` because it's an app-level (not route-specific) business component per `CLAUDE.md`'s structure guidance, and is expected to be consumed by a future dashboard route. Internal helpers (the donut renderer, the scale bar) are kept as unexported functions in the same file rather than extracted, per `CLAUDE.md`'s anti-premature-abstraction guidance — extract to shared primitives only once a second real chart/scale-bar use case appears.
+- Don't skip the `Known gaps` items above (no dark-mode tokens, approximated donut track color, no 0%-state design, unverified responsive behavior) when promoting this component out of `Draft` — resolve them for real or get explicit product sign-off to ship without them.
+- The outer shell (`p-2 shadow-card rounded-2xl` wrapping an inner bordered `rounded-md` panel) is the same nested-card shape as `AuthCard`, built locally rather than importing/extending it — `AuthCard` is intentionally route-colocated and fixed-width for the auth surface specifically, and (being fixed-light) uses `border-black/10` for its inner hairline where this component uses the theme-aware `border` instead (see the token-choice note above). This is now the *second* real instance of the nested-shell shape; if a third appears, extract it into a shared primitive (e.g. under `src/components`) instead of a third copy-paste.
+
+### Visual examples
+
+Rendered at `/design-system/components#heartchartsummary` (Low / Growing / Exceptional sample states). Not yet rendered in a real dashboard route — no such route exists in the app yet.

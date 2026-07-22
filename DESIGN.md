@@ -60,6 +60,10 @@ Defined once per theme (`:root` / `.dark`) as raw values in `src/tokens/colors.c
 | `border-destructive-subtle` | `border-border-destructive-subtle` | Lighter error border tier — `#fda29b` — distinct from `destructive` (which is the saturated fill/ring shade). Not reproducible as an opacity of `destructive` (chroma/hue don't line up cleanly), so it's a real second token, analogous to `border`/`border-secondary`. |
 | `fg-disabled` | `text-fg-disabled` | Disabled-state label text — `#a4a7ae`. Distinct from `muted-foreground` (a different, warmer gray per Figma). |
 | `overlay` | `bg-overlay` | Dark scrim tint used over background photography — `#0a0d12` |
+| `status-success` | `text-status-success`, `from-status-success`, `to-status-success` | Positive participation-level indicator (HeartChartSummary's "Growing"/"Exceptional" states) — `#76936b` |
+| `status-success-strong` | `from-status-success-strong` | Darker anchor for the success-state gradient bar — `#647c5a` |
+| `status-warning` | `text-status-warning`, `to-status-warning` | Low-participation-level indicator (HeartChartSummary's "Low" state) — `#c88c23`. Deliberately the *darker* of the two warning shades (unlike `status-success`, which is the lighter of its pair) — Figma uses the darker tone for text/emphasis here since the lighter tone alone doesn't meet contrast on white. |
+| `status-warning-subtle` | `from-status-warning-subtle` | Lighter anchor for the warning-state gradient bar — `#e3b35e` |
 | `chart-1` … `chart-5` | `bg-chart-1`, `text-chart-2`, etc. | Data visualization palette |
 | `sidebar*` | `bg-sidebar`, `text-sidebar-foreground`, etc. | Sidebar-specific surface/text/border/ring, kept separate from the main surface so a sidebar can theme independently |
 
@@ -188,5 +192,8 @@ Reach for this pattern (or the 2–3 column variant from the table above) before
 
 ## Known gaps
 
+- **`status-success`/`status-warning` (and their paired `-strong`/`-subtle` shades) are root-only** — the `HeartChartSummary` Figma component (node `1993:36348`) has no dark-mode variant, so there's no dark-theme reference value to add yet. `HeartChartSummary` otherwise participates in the themed app shell (unlike `AuthCard`'s deliberate fixed-light surface), so this is a real gap, not a design decision — add `.dark` values once a dark-mode Figma reference exists, per `COMPONENTS.md#heartchartsummary`.
+- **`HeartChartSummary`'s donut-chart track color is approximated**, not sourced from a token — Figma renders the pie chart as pre-rendered raster PNGs (baked-in colors, not exposed as CSS/variables in the design-to-code export), so the neutral track ring uses `stroke-muted` and the value arc reuses `status-success`/`status-warning` by inference from the rendered screenshot rather than an extracted hex value. Revisit if Figma ever exposes the chart as vector/variable-driven.
+- **`HeartChartSummary` has no visual design for 0% ("Early"/no-engagement) participation** — the Figma component only defines "Low", "Growing", and "Exceptional" variants (1–44%, 45–74%, 75–100%), despite its own dev annotations naming a fourth "No Engagement — Starting" tier at 0%. Implemented conservatively by falling back to the "Low" visual treatment at 0%, per `IMPLEMENTATION.md`'s Figma-integration guidance — flag for a real design once/if a 0% state is designed.
 - The `/login` background photograph (previously blocked on the Figma asset host being unreachable) has since been resolved: the photo was supplied directly and committed to `public/login-background.jpg`. It now renders via `PhotoBackdrop` (see `COMPONENTS.md`). The "Log in with Google" icon remains a hand-authored SVG rather than a fetched raster — reasonably close to the Google "G" mark, not pixel-identical to the Figma source.
 - The HeartChart wordmark logo (previously in this same boat) has since been resolved: the exported asset was supplied directly and committed to `public/heartchart-logo.svg` (see `COMPONENTS.md`).
