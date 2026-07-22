@@ -28,6 +28,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { GoogleIcon } from "@/app/login/_components/google-icon";
+import { GlobalNav } from "@/components/global-nav";
 import { HeartChartSummary } from "@/components/heartchart-summary";
 import { AmfmLogo } from "@/app/create-profile/_components/amfm-logo";
 import { BenefitListItem } from "@/app/create-profile/_components/benefit-list-item";
@@ -356,6 +357,40 @@ export default function ComponentsPage() {
         <p className="text-muted-foreground mt-4 text-xs">
           Hand-authored text approximation — the real exported asset is blocked by this
           environment&apos;s network policy (see <code className="bg-muted rounded px-1 py-0.5">COMPONENTS.md#amfmlogo</code>).
+        </p>
+      </ComponentShowcase>
+
+      <ComponentShowcase
+        name="GlobalNav"
+        status="Draft"
+        purpose="The app's persistent left-hand navigation rail — church/tools links, footer utilities, and account card. Collapses to an icon-only 80px rail by default and expands to a full 296px rail on tap/click of its edge toggle."
+        docsAnchor="globalnav"
+        figmaReference='AMFM Portal — node 2067:16268 ("Main Nav", collapsed default) and node 3727:25276 ("Content", exposed/open)'
+        tokens={[
+          "bg-sidebar",
+          "bg-sidebar-surface",
+          "text-sidebar-foreground",
+          "text-sidebar-foreground-secondary",
+          "text-sidebar-foreground-tertiary",
+          "border-sidebar-border",
+          "border-sidebar-border-secondary",
+          "from-sidebar-gradient-from",
+          "to-sidebar-gradient-to",
+          "from-sidebar-active-from",
+          "to-sidebar-active-to",
+          "bg-sidebar-online-indicator",
+        ]}
+        states={["Collapsed", "Expanded", "Active item", "Hover", "Focus"]}
+      >
+        <div className="flex h-[960px] items-stretch rounded-lg border bg-muted/30 p-6">
+          <GlobalNav name="Olivia Rhye" email="olivia@untitledui.com" online />
+        </div>
+        <p className="mt-4 text-xs text-muted-foreground">
+          Click the small chevron on the rail&apos;s right edge (or tab to it and press
+          Enter/Space) to expand — defaults to the collapsed state per Figma. No
+          consuming route exists yet (no dashboard shell), so this renders standalone
+          here; see COMPONENTS.md#globalnav for known gaps (icon approximations, the
+          hand-authored logo mark, and placeholder routes for pages not yet built).
         </p>
       </ComponentShowcase>
 

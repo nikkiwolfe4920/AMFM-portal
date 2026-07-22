@@ -1112,3 +1112,93 @@ The referenced frame provides only a fixed desktop composition (`368px` fixed-wi
 ### Visual examples
 
 Rendered live as the "Free Membership" card on `/create-profile`; referenced at `/design-system/patterns#create-profile-card`.
+
+---
+
+## GlobalNav
+
+**Status**: Draft (functionally complete and pixel-matched to both Figma frames; no consuming route yet — see Implementation rules)
+**Source**: `src/components/global-nav.tsx`
+**Figma**: AMFM Portal file, node `2067:16268` ("Main Nav", collapsed default — instance `2065:13660` "Sidebar navigation") and node `3727:25276` ("Content", exposed/open state)
+
+### Purpose
+
+The app's persistent left-hand navigation — church/tools links, footer utilities, and an account card — the single global wayfinding surface every authenticated screen is expected to render alongside. Defaults to an icon-only 80px rail (collapsed) and expands to a full 296px rail with labels on tap/click, so the rail can stay unobtrusive by default without hiding navigation behind a menu.
+
+### Anatomy
+
+- Root `<nav aria-label="Global">` — rounded-2xl dark glass panel (gradient + `backdrop-blur-[20px]`), width animates between the two states
+- A small circular edge toggle `<button>` straddling the top-right border (chevron rotates 180° between states)
+- Header: `GlobalNavLogo` — crossfades between the collapsed "amfm" wordmark and the expanded wordmark + tagline lockup
+- Two nav sections (`GlobalNavSectionHeading` + a list of `GlobalNavLink`): "Your Church"/"Church" (Home, Our Data Dashboard, Our Marriage Champions, HeartChart Resources, Training) and "Ministry Tools"/"Tools" (Loveology, Marriage Ministry Profile, Assessments, Small Groups, Date Night Kits, Speaker Collective, Counseling Network, WeDo) — the nav-items region scrolls internally (`overflow-y-auto`) if the viewport is shorter than the full list
+- Footer: two `GlobalNavLink`s (Refer a Leader, Support) + `GlobalNavAccountCard` (avatar with online dot, name/email, account chevron)
+
+### Variants
+
+None (`variant` prop) — the collapsed/expanded shape is internal state (see States), not a caller-chosen variant, matching `HeartChartSummary`'s precedent of deriving presentation from state rather than exposing every visual permutation as a prop.
+
+### States
+
+| State | Behavior |
+|---|---|
+| Collapsed (default) | `w-20` (80px). Section headings render centered short labels ("Church"/"Tools"). Every `GlobalNavLink` label and the account card's name/email/chevron collapse to `max-w-0 opacity-0` (still in the DOM, just visually hidden — see Accessibility). Logo shows the wordmark alone. |
+| Expanded | `w-74` (296px), toggled by the edge button. Section headings show their full text ("Your Church"/"Ministry Tools"), every label reveals via the max-width/opacity transition (see Implementation rules), logo crossfades to the wordmark + tagline lockup, account card reveals name/email + a chevron affordance. |
+| Active item | Derived by comparing `usePathname()` to the item's `href` (only ever true for "Home" today — see Implementation rules) — gradient pill (`from-sidebar-active-from to-sidebar-active-to`), icon at `opacity-70`, label in `text-sidebar-foreground` (white) instead of `text-sidebar-foreground-secondary`. Matches Figma's literal "Home" sample exactly (including the `opacity-70` icon treatment, which is a real Figma value, not a guess). |
+| Hover (inactive item) | `hover:bg-sidebar-accent` — a subtle `white/4%` fill. **Not Figma-sourced**: neither exported frame shows a hover state; this is a product decision to satisfy `DESIGN.md`'s "every interactive control has a visible hover... treatment" (see Implementation rules). |
+| Focus | `focus-visible:ring-2 focus-visible:ring-sidebar-ring` on every link/button — visible against the dark surface, reusing `border-brand`'s value for app-wide focus-color consistency. |
+| Toggle button | Chevron rotates 180° (`rotate-180` ↔ `rotate-0`) over the same 300ms as the width transition; `aria-expanded`/`aria-label` swap between "Expand navigation"/"Collapse navigation". |
+
+### Properties / API
+
+```ts
+interface GlobalNavProps {
+  name: string;
+  email: string;
+  /** Falls back to an initials avatar when omitted (empty-state handling — no photo asset is fetchable, see Implementation rules). */
+  avatarUrl?: string;
+  /** Presence dot on the avatar — presentational only, no real presence backend wired up yet. */
+  online?: boolean;
+  /** Whether the rail starts expanded. Defaults to false (the Figma-specified collapsed default). */
+  defaultExpanded?: boolean;
+  /** Fires when the account card is activated. No account menu exists yet — see Implementation rules. */
+  onAccountClick?: () => void;
+  className?: string;
+}
+```
+
+Nav content (sections, items, footer links) is an internal fixed list, not a caller-supplied prop — matching `DposystemStory`'s "single use site, not designed to be re-parameterized" precedent; parameterize it only once a second real consumer needs different links.
+
+### Design tokens used
+
+`bg-sidebar`, `bg-sidebar-surface`, `text-sidebar-foreground`, `text-sidebar-foreground-secondary`, `text-sidebar-foreground-tertiary`, `border-sidebar-border`, `border-sidebar-border-secondary`, `from-sidebar-gradient-from`/`to-sidebar-gradient-to` (rail background), `from-sidebar-active-from`/`to-sidebar-active-to` (active pill), `bg-sidebar-accent` (hover), `ring-sidebar-ring` (focus), `bg-sidebar-online-indicator` — all new, added to `src/tokens/colors.css` for this component; see `DESIGN.md`'s Color tokens table and "GlobalNav is a fixed-dark surface" section for the full rationale (values are Figma's dark-mode text/gray scale converted to `oklch()`, defined identically in `:root` and `.dark`). Radius: `rounded-2xl` (outer rail, exact match), `rounded-sm` (nav-item pill, exact match), `rounded-xl` (account card/toggle button — Figma's `12px` is a near-match per `PricingCard`'s established radius-scale precedent, not an arbitrary value).
+
+### Accessibility requirements
+
+- Root is a real `<nav aria-label="Global">` landmark; every item is a real `<a>`/Next `Link` (external items get `target="_blank" rel="noopener noreferrer"`), never a `<div onClick>`.
+- **Labels stay in the DOM at all times, even collapsed** — relying on `max-width:0`/`overflow:hidden` alone to hide text is not a robust accessible-name strategy across screen readers, so every link/button also carries an explicit `aria-label` (the link's `aria-label={item.label}`, the account button's `aria-label={`${name} account`}`) that doesn't depend on the collapsed/expanded visual state.
+- Every link also sets a native `title` attribute as a cheap hover hint for sighted mouse users when collapsed (no custom Tooltip primitive was introduced for this — see Implementation rules).
+- Active item sets `aria-current="page"` in addition to its visual treatment (never color/gradient alone).
+- The account card is a single real `<button>`, not a button nesting a second button — see Implementation rules for why (Figma's own export nests two interactive elements, which is invalid HTML).
+- Toggle button has `aria-expanded`/`aria-controls`/`aria-label` reflecting current state; fully keyboard-operable (native `<button>`, no custom key handling needed).
+- All animated transitions carry `motion-reduce:transition-none` per `DESIGN.md`'s Motion rules.
+
+### Responsive behavior
+
+Not yet adapted for mobile/tablet — the Figma reference only defines a fixed-desktop persistent rail (matching `DESIGN.md`'s "Small desktop (`lg`+): persistent (non-collapsing) horizontal navigation is expected" guidance for this breakpoint tier), and no mobile Figma frame exists for this component (same category of gap as `HeartChartSummary`'s). The rail fills its container's height (`h-full`) — the consuming layout must give it a definite height (e.g. `h-screen`/`h-dvh`). Before shipping into a real app shell, add a mobile pattern (e.g. collapse into a sheet/hamburger per `DESIGN.md`'s "navigation collapses into a hamburger/menu" mobile rule) — flagged here rather than guessed.
+
+### Implementation rules
+
+- **Collapse/expand is uncontrolled internal state** (`useState(defaultExpanded)`), not a controlled `expanded`/`onExpandedChange` prop pair — no caller needs to observe/drive it externally yet; add controlled mode only once a real use case needs it, per `CLAUDE.md`'s anti-premature-abstraction guidance.
+- **The width/label reveal transition** is the pattern documented in `DESIGN.md` Motion rules — width animates on the root, every label independently animates `max-width`+`opacity` (never `width:auto`), and expand/collapse are staggered in opposite order so text never wraps or gets clipped mid-transition. Reuse this exact pattern for any future collapsible surface rather than re-deriving a different technique.
+- **The root nav does not set `overflow-hidden`** — it did in an early draft, and that clipped the floating edge-toggle button (which deliberately sits half outside the rail's own box via `-right-3`). Every place inner content could otherwise overflow (nav-item labels, account card text) already has its own scoped `overflow-hidden`, so the root doesn't need one; don't re-add it without re-checking the toggle button still renders in full.
+- **Icons are the closest stable `lucide-react` equivalents to Figma's Untitled-UI icon set**, not pixel traces (same tier of approximation as `GoogleIcon`/`HeartChartSummary`'s icons) — `Home`, `Grid2x2`, `Trophy`, `FileHeart`, `BookOpen`, `Atom`, `Presentation`, `List`, `Blend` (for `intersect-three`), `Heart`, `Users`, `Network`, `HeartHandshake` (for `WeDo`), `Send`, `LifeBuoy`, `ChevronsUpDown`, `ChevronLeft`. See `DESIGN.md` Known gaps.
+- **The header lockup is a hand-authored text approximation**, not the real exported Figma vector (same network-policy block as `AmfmLogo` — see `DESIGN.md` Known gaps) — collapsed shows just "amfm"; expanded adds a small stacked caption ("Association of Marriage & Family Ministries"). Replace with the real asset if/when it becomes available, per `HeartChartLogo`'s precedent.
+- **Most item routes are placeholders** — only `Marriage Ministry Profile` (`https://amfm.org/mmp`) and `WeDo` (`https://wedowedo.com`) are real hrefs confirmed from Figma's own export; every other item (e.g. `/dashboard`, `/champions`, `/heartchart-resources`) points at a plausible but not-yet-built route. Active-state highlighting therefore only ever fires for "Home" today — expected, not a bug, until those pages exist.
+- **The edge toggle button, the hover fill, and most item routes have no Figma reference** — flagged in `DESIGN.md` Known gaps rather than left silently undocumented, per this project's established pattern for `SignupSuccess`/`PasswordRequirementItem`'s "met" state.
+- **The account card is a single `<button>`, not a button nested inside a button.** Figma's own design-to-code export wraps both the whole card *and* its inner chevron-selector control in separate `<button>` elements — the same category of export artifact already documented for `InputGroup`/`Select` (a `<button>` cannot legally contain another interactive element). Implemented as one real button (`onAccountClick`) with the chevron as a decorative (`aria-hidden`) icon, since both would trigger the same action anyway. No account menu is wired up yet — `onAccountClick` is a plain callback prop, same "renders regardless of whether a handler is passed" precedent as `HeartChartSummary`'s action buttons.
+- **No avatar photo asset was fetchable** (same blocked-host issue as `AmfmLogo`) — rather than hardcode a fake photo URL, `avatarUrl` is optional and the component falls back to a real, intentional initials avatar (derived from `name`) when omitted. This is a genuine empty-state design, not a placeholder hack; pass a real `avatarUrl` once user photos exist.
+- Colocated at `src/components` (not a route's `_components`) since it's an app-level, cross-route component by definition — same precedent as `HeartChartSummary`.
+
+### Visual examples
+
+Rendered at `/design-system/components#globalnav` (both collapsed and expanded states, live-toggleable). Not yet rendered in a real app shell — no dashboard/authenticated layout exists in this codebase yet for it to persist alongside.

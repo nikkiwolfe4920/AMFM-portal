@@ -49,14 +49,27 @@
   --chart-4: oklch(0.828 0.189 84.429);
   --chart-5: oklch(0.769 0.188 70.08);
 
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
+  /* GlobalNav — fixed-dark surface, same values in :root and .dark (see
+   * DESIGN.md "Global navigation is a fixed-dark surface"). Values are the
+   * dark-mode step of Figma's text/gray scale, distinct from the light-mode
+   * steps `text-secondary`/`text-tertiary` above already capture. */
+  --sidebar: oklch(0.163 0.009 264.284);
+  --sidebar-foreground: oklch(0.976 0 89.876);
+  --sidebar-foreground-secondary: oklch(0.855 0.004 271.363);
+  --sidebar-foreground-tertiary: oklch(0.675 0.008 260.731);
+  --sidebar-surface: oklch(0.199 0.011 260.661);
   --sidebar-primary: oklch(0.205 0 0);
   --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  --sidebar-accent: oklch(1 0 89.876 / 4%);
+  --sidebar-accent-foreground: oklch(0.976 0 89.876);
+  --sidebar-border: oklch(1 0 89.876 / 8%);
+  --sidebar-border-secondary: oklch(0.269 0.018 266.3);
+  --sidebar-ring: oklch(0.642 0.101 44.483);
+  --sidebar-gradient-from: oklch(0.23 0.021 264.037 / 90%);
+  --sidebar-gradient-to: oklch(0.182 0.022 263.788 / 90%);
+  --sidebar-active-from: oklch(0.46 0.017 264.389);
+  --sidebar-active-to: oklch(0.565 0.017 264.434);
+  --sidebar-online-indicator: oklch(0.758 0.153 157.185);
 }
 
 .dark {
@@ -85,14 +98,24 @@
   --chart-4: oklch(0.627 0.265 303.9);
   --chart-5: oklch(0.645 0.246 16.439);
 
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
+  /* Fixed-dark surface — identical to :root, see the :root block above. */
+  --sidebar: oklch(0.163 0.009 264.284);
+  --sidebar-foreground: oklch(0.976 0 89.876);
+  --sidebar-foreground-secondary: oklch(0.855 0.004 271.363);
+  --sidebar-foreground-tertiary: oklch(0.675 0.008 260.731);
+  --sidebar-surface: oklch(0.199 0.011 260.661);
   --sidebar-primary: oklch(0.488 0.243 264.376);
   --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
+  --sidebar-accent: oklch(1 0 89.876 / 4%);
+  --sidebar-accent-foreground: oklch(0.976 0 89.876);
+  --sidebar-border: oklch(1 0 89.876 / 8%);
+  --sidebar-border-secondary: oklch(0.269 0.018 266.3);
+  --sidebar-ring: oklch(0.642 0.101 44.483);
+  --sidebar-gradient-from: oklch(0.23 0.021 264.037 / 90%);
+  --sidebar-gradient-to: oklch(0.182 0.022 263.788 / 90%);
+  --sidebar-active-from: oklch(0.46 0.017 264.389);
+  --sidebar-active-to: oklch(0.565 0.017 264.434);
+  --sidebar-online-indicator: oklch(0.758 0.153 157.185);
 }
 
 @theme inline {
@@ -133,10 +156,19 @@
   --color-chart-5: var(--chart-5);
   --color-sidebar: var(--sidebar);
   --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-foreground-secondary: var(--sidebar-foreground-secondary);
+  --color-sidebar-foreground-tertiary: var(--sidebar-foreground-tertiary);
+  --color-sidebar-surface: var(--sidebar-surface);
   --color-sidebar-primary: var(--sidebar-primary);
   --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
   --color-sidebar-accent: var(--sidebar-accent);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-border-secondary: var(--sidebar-border-secondary);
   --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-gradient-from: var(--sidebar-gradient-from);
+  --color-sidebar-gradient-to: var(--sidebar-gradient-to);
+  --color-sidebar-active-from: var(--sidebar-active-from);
+  --color-sidebar-active-to: var(--sidebar-active-to);
+  --color-sidebar-online-indicator: var(--sidebar-online-indicator);
 }

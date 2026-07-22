@@ -88,5 +88,10 @@
     "figmaComponent": "AMFM Portal — Onboarding/Create Profile node 1909:25769, node 1909:25281 (\"Logo\") + node 1909:25280 (\"Powered by\" caption) — asset blocked, implemented as a text approximation",
     "documentation": "COMPONENTS.md#amfmlogo",
     "implementation": "src/app/create-profile/_components/amfm-logo.tsx"
+  },
+  "GlobalNav": {
+    "figmaComponent": "AMFM Portal — node 2067:16268 (\"Main Nav\", collapsed default) and node 3727:25276 (\"Content\", exposed/open) — icon set and header lockup asset blocked, implemented as lucide-react/text approximations; toggle interaction and most item routes are product decisions",
+    "documentation": "COMPONENTS.md#globalnav",
+    "implementation": "src/components/global-nav.tsx"
   }
 }
