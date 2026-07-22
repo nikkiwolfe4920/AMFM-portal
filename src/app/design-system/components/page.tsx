@@ -201,7 +201,7 @@ export default function ComponentsPage() {
           "shadow-card",
           "border-border-secondary",
           "bg-muted/50",
-          "text-text-tertiary",
+          "text-muted-foreground",
         ]}
         states={["Low", "Growing", "Exceptional"]}
       >

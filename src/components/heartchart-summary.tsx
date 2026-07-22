@@ -33,6 +33,26 @@ function getTone(level: ParticipationLevel): "success" | "warning" {
   return level === "growing" || level === "exceptional" ? "success" : "warning";
 }
 
+/**
+ * Value range each level covers, per the same Figma dev annotation as
+ * getParticipationLevel. Used to place the marker at its position *within*
+ * the active quarter-segment (not naively at `percentage`% of the full bar)
+ * — see ParticipationScale.
+ */
+const LEVEL_RANGES: Record<ParticipationLevel, { min: number; max: number }> = {
+  early: { min: 0, max: 0 },
+  low: { min: 1, max: 44 },
+  growing: { min: 45, max: 74 },
+  exceptional: { min: 75, max: 100 },
+};
+
+function getMarkerPosition(percentage: number, level: ParticipationLevel): number {
+  const segmentIndex = SCALE_SEGMENTS.findIndex((segment) => segment.level === level);
+  const { min, max } = LEVEL_RANGES[level];
+  const withinSegment = max === min ? 0 : (percentage - min) / (max - min);
+  return (segmentIndex + withinSegment) * 25;
+}
+
 interface HeartChartSummaryProps {
   /** 0–100. Independent of completedCount/totalAttenders — see COMPONENTS.md. */
   percentage: number;
@@ -95,17 +115,32 @@ export function HeartChartSummary({
             <ParticipationScale percentage={clampedPercentage} level={level} />
             <div className="flex w-full flex-wrap items-center justify-between gap-3 pt-1">
               <div className="flex flex-wrap items-center gap-3">
-                <Button variant="outline" size="sm" onClick={onQuickTip}>
-                  <Lightbulb />
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="h-auto gap-1 px-3 py-2 text-muted-foreground has-[>svg]:px-3"
+                  onClick={onQuickTip}
+                >
+                  <Lightbulb className="size-5" />
                   Quick Tip
                 </Button>
-                <Button variant="outline" size="sm" onClick={onViewLastFourWeeks}>
-                  <TrendingUp />
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="h-auto gap-1 px-3 py-2 text-muted-foreground has-[>svg]:px-3"
+                  onClick={onViewLastFourWeeks}
+                >
+                  <TrendingUp className="size-5" />
                   Last 4 Weeks
                 </Button>
               </div>
-              <Button variant="outline" size="sm" onClick={onShareLink}>
-                <QrCode />
+              <Button
+                variant="outline"
+                size="sm"
+                className="h-auto gap-1 px-3 py-2 text-muted-foreground has-[>svg]:px-3"
+                onClick={onShareLink}
+              >
+                <QrCode className="size-5" />
                 Share Your Link
               </Button>
             </div>
@@ -141,7 +176,14 @@ function ParticipationDonut({
   return (
     <div className="relative size-[90px] shrink-0" aria-hidden>
       <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} className="-rotate-90">
-        <circle cx={size / 2} cy={size / 2} r={radius} strokeWidth={strokeWidth} className="stroke-muted" fill="none" />
+        <circle
+          cx={size / 2}
+          cy={size / 2}
+          r={radius}
+          strokeWidth={strokeWidth}
+          className="stroke-border-secondary"
+          fill="none"
+        />
         <circle
           cx={size / 2}
           cy={size / 2}
@@ -154,7 +196,7 @@ function ParticipationDonut({
           className={tone === "success" ? "stroke-status-success" : "stroke-status-warning"}
         />
       </svg>
-      <span className="absolute inset-0 flex items-center justify-center text-base font-medium text-foreground">
+      <span className="absolute inset-0 flex items-center justify-center text-base font-medium text-muted-foreground">
         {Math.round(percentage)}%
       </span>
     </div>
@@ -173,15 +215,19 @@ function ParticipationScale({
     tone === "success"
       ? "bg-gradient-to-t from-status-success-strong to-status-success"
       : "bg-gradient-to-b from-status-warning-subtle to-status-warning";
+  const markerPosition = getMarkerPosition(percentage, level);
 
   return (
     <div className="relative flex h-9 w-full items-start">
       <div
         aria-hidden
-        className="absolute top-[-8px] z-[3] h-[18px] w-3 -translate-x-1/2"
-        style={{ left: `${percentage}%` }}
+        className="absolute top-[-8px] bottom-[3px] z-[3] w-3 -translate-x-1/2"
+        style={{ left: `${markerPosition}%` }}
       >
-        <div className="mx-auto size-0 border-x-[6px] border-t-[8px] border-x-transparent border-t-muted-foreground" />
+        <div className="mx-auto flex h-full w-3 flex-col items-center">
+          <div className="size-0 shrink-0 border-x-[6px] border-t-[8px] border-x-transparent border-t-muted-foreground" />
+          <div className="w-[1.5px] flex-1 bg-muted-foreground" />
+        </div>
       </div>
       <div className="relative z-[2] flex h-full w-full overflow-hidden rounded-full">
         <div aria-hidden className="pointer-events-none absolute inset-0 rounded-full bg-muted-foreground mix-blend-overlay" />
