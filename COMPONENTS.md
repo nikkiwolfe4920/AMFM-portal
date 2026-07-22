@@ -16,7 +16,7 @@ Every component below is rendered live at **`/design-system`** (`src/app/design-
 
 **Status**: Production Ready
 **Source**: `src/components/ui/button.tsx`
-**Figma**: AMFM Portal file, node `3273:19658` ("Primary" button set) and siblings; `default` variant also confirmed on the sign-up screen's primary CTA (`Onboarding/sign up`, node `1909:25231`) — see `figma/figma-links.md`
+**Figma**: AMFM Portal file, node `3273:19658` ("Primary" button set) and siblings; `default` variant also confirmed on the sign-up screen's primary CTA (`Onboarding/sign up`, node `1909:25231`) and on the "Start using HeartChart" CTA on `Onboarding/Create Profile` (node `1909:25769`) — see `figma/figma-links.md`
 
 ### Purpose
 
@@ -147,6 +147,119 @@ Default, filled, disabled, and invalid states render at `/design-system/componen
 
 ---
 
+## InputGroup
+
+**Status**: Draft (not yet implemented — no application code exists for this component yet; this entry documents the validated design contract ahead of implementation, per the Figma → `DESIGN.md`/`COMPONENTS.md` → code pipeline in `CLAUDE.md`)
+**Source**: Not yet implemented
+**Figma**: AMFM Portal file, `Onboarding/Create Profile` (node `1909:25769`), node `1909:25259` ("Website" field — leading `http://` add-on)
+
+### Purpose
+
+Pairs an `Input` with a fixed, non-editable leading (or trailing) add-on — e.g. a URL scheme prefix — rendered as one visually continuous control instead of two separate fields.
+
+### Anatomy
+
+Wrapper `div` carrying the shared border/shadow/radius → add-on slot (`rounded-l-md` corner only, non-interactive, `text-text-tertiary`) → `Input` (`rounded-r-md` corner only, transparent border on the shared edge so the two segments read as one control).
+
+### Variants
+
+`addonPosition`: `"leading"` (validated — see Figma reference above) | `"trailing"` (not yet evidenced by any Figma reference — do not implement until a real use case appears, per `CLAUDE.md`'s anti-premature-abstraction guidance).
+
+### States
+
+Inherits `Input`'s default/focus/invalid/disabled states in full (see `Input` above) — the add-on segment itself has no interactive state of its own.
+
+### Properties / API
+
+```ts
+interface InputGroupProps extends React.ComponentProps<"input"> {
+  addon: React.ReactNode;
+  addonPosition?: "leading" | "trailing"; // default "leading"
+}
+```
+
+### Design tokens used
+
+`border-input`, `bg-background`, `text-text-tertiary` (add-on text), `shadow-xs`, `radius-md` — all existing tokens; no new tokens required.
+
+### Accessibility requirements
+
+- The add-on text (e.g. `http://`) must be `aria-hidden="true"` — it's a formatting affordance, not a second field; the accessible name must come entirely from the paired `Label`/`htmlFor` on the real `<input>`.
+- Do not wrap the control in a `<button>` — Figma's auto-generated design-to-code export wraps this field in a `<button>` element, which is an export artifact, not a real interaction; a `<button>` cannot legally contain a text `<input>` and would break native typing/focus behavior.
+
+### Responsive behavior
+
+Full width (`w-full`) like `Input`; the add-on segment's width is intrinsic to its content and does not scale with breakpoint.
+
+### Implementation rules
+
+- Compose around the existing `Input` primitive — reuse its exact token set rather than re-declaring border/shadow/radius values, so a future `Input` token change propagates automatically.
+- Do not implement the `"trailing"` variant speculatively; add it only once a second real Figma reference exists.
+
+### Visual examples
+
+Not yet rendered — no application code exists for this component yet.
+
+---
+
+## Select
+
+**Status**: Draft (not yet implemented — no application code exists for this component yet; `src/components/ui` has no `select.tsx`)
+**Source**: Not yet implemented
+**Figma**: AMFM Portal file, `Onboarding/Create Profile` (node `1909:25769`), nodes `1909:25261` ("Your role") and `1909:25262` ("Your primary goal"); trailing icon references the `chevron-down` Figma component (node `10:338`)
+
+### Purpose
+
+Single-choice selection from an enumerated option list, styled to match `Input` so the two read as one form-control family — used on the referenced frame for "Your role" (~40 options) and "Your primary goal" (23 options).
+
+### Anatomy
+
+Trigger styled identically to `Input` (border, radius, `shadow-xs`, matching padding) → placeholder or selected-value text → trailing chevron-down icon → on open, a listbox popover of options.
+
+### Variants
+
+None beyond placeholder vs. filled text color — content (the option list) is caller-supplied per field, not a component variant.
+
+### States
+
+| State | Behavior |
+|---|---|
+| Placeholder | `text-muted-foreground`, matching `Input`'s placeholder color |
+| Filled | `text-foreground` |
+| Open | Radix `Select`'s native open state; chevron rotates |
+| Focused | `focus-visible:border-2 focus-visible:border-border-brand`, matching `Input`'s focus treatment exactly |
+| Disabled | Matches `Input`'s disabled treatment (`disabled:bg-muted/50`, `disabled:text-muted-foreground`) |
+| Invalid | `aria-invalid:border-border-destructive-subtle`, matching `Input` |
+
+### Properties / API
+
+Standard Radix `Select.Root` / `Select.Trigger` / `Select.Content` / `Select.Item` props (`value`, `onValueChange`, `disabled`, etc.) — no custom props needed beyond styling; options are supplied as children, not a fixed internal list.
+
+### Design tokens used
+
+`border-input`, `bg-background`, `placeholder:text-muted-foreground`, `border-border-brand` (focus), `border-border-destructive-subtle` (invalid), `bg-muted/50` + `text-muted-foreground` (disabled), `shadow-xs`, `radius-md` — the identical token set `Input` uses, plus `lucide-react`'s `ChevronDown` icon (matching `iconLibrary` in `components.json`; closest stable equivalent to Figma's `chevron-down` component).
+
+### Accessibility requirements
+
+- Must be built on Radix's `Select` primitive (full listbox ARIA pattern: keyboard arrow/Home/End navigation, typeahead, `aria-expanded`/`aria-activedescendant`) — do not hand-roll a `div`-based dropdown, per `DESIGN.md`'s Accessibility standards on custom widgets.
+- Popover content must cap height and scroll internally for long option lists (confirmed up to ~40 items on this frame) rather than overflow the viewport.
+- Do not wrap the trigger in an extraneous `<button>` beyond what Radix's `Select.Trigger` itself renders — see the same Figma design-to-code export caveat noted under `InputGroup`.
+
+### Responsive behavior
+
+Full width (`w-full`) like `Input`; no breakpoint-specific behavior of its own.
+
+### Implementation rules
+
+- Hand-author `src/components/ui/select.tsx` from `@radix-ui/react-select` + `cva`, matching upstream shadcn/ui's `select` shape and this project's `Input` token set, per `CLAUDE.md`'s shadcn-CLI-unreachable workflow (`ui.shadcn.com` unreachable from this environment).
+- Given the option counts on the referenced frame (~40 and 23 items), evaluate with product/design whether a searchable combobox variant is warranted before shipping the plain-listbox version for these two specific fields — flagged as a UX consideration, not a blocking requirement for the primitive itself.
+
+### Visual examples
+
+Not yet rendered — no application code exists for this component yet.
+
+---
+
 ## Label
 
 **Status**: Production Ready
@@ -162,7 +275,9 @@ Radix `Label.Root` wrapping text (and optionally an inline control, e.g. paired 
 
 ### Variants
 
-None.
+None in the current implementation.
+
+**Validated new variant (Draft — not yet implemented):** a required-field marker, seen on every field of `Onboarding/Create Profile` (node `1909:25769`, e.g. nodes `I1909:25255;7487:535320` etc.) — a `*` glyph appended after the label text. Figma's variable for this glyph (`text-brand-tertiary (600)`, `#aa6140`) resolves to the exact same hex as the existing `primary` token, so **no new color token is needed** — implement as a `required?: boolean` prop rendering `<span aria-hidden="true" className="text-primary">*</span>` after `children`. Real required-ness must still be carried by the paired control's native `required` attribute (already the established pattern in `SignupForm`), not by the visual glyph alone.
 
 ### States
 
@@ -170,15 +285,16 @@ Inherits `peer-disabled`/`group-data-[disabled=true]` styling (fades + `cursor-n
 
 ### Properties / API
 
-`React.ComponentProps<typeof LabelPrimitive.Root>` — forwards every Radix `Label` prop, most commonly `htmlFor`.
+`React.ComponentProps<typeof LabelPrimitive.Root>` — forwards every Radix `Label` prop, most commonly `htmlFor`. Pending the required-marker addition above: `& { required?: boolean }`.
 
 ### Design tokens used
 
-`text-text-secondary` (distinct tier from body `text-foreground`).
+`text-text-secondary` (distinct tier from body `text-foreground`). Required marker (Draft): `text-primary` (see Variants above — reuses the existing token, not a new one).
 
 ### Accessibility requirements
 
 - Always set `htmlFor` pointing at the control's `id`, or wrap the control, so screen readers announce the association.
+- Required marker (Draft): the visual `*` glyph must be `aria-hidden="true"`; required-ness is conveyed to assistive tech via the paired control's native `required` attribute, not the glyph.
 
 ### Responsive behavior
 
@@ -266,7 +382,7 @@ None — visual state should be derived from a `met: boolean` prop, not a caller
 | State | Behavior |
 |---|---|
 | Unmet (confirmed) | Icon background `border`/`input` token (`#d5d7da` — this is Figma's `Colors/Foreground/fg-disabled_subtle` variable, which is a *different name but the same value* as the existing `border`/`input` token; do **not** add a separate `fg-disabled_subtle` token, and do not confuse it with the existing `fg-disabled` token, `#a4a7ae`, which is a different value entirely). Text uses `text-text-tertiary`. |
-| Met | **Not yet designed.** The source Figma frame only shows the unmet state for both sample requirements — no success/met treatment (color, icon change) exists yet. Do not guess a color (e.g. a plain green swap) without a real Figma reference; get one before implementing, per `IMPLEMENTATION.md`'s Figma-integration non-negotiables. |
+| Met | **Not yet confirmed for this component specifically**, though a candidate visual reference now exists: the `check-circle` icon used by `BenefitListItem` (below), sourced from `Onboarding/Create Profile` (node `1909:25769`), is a filled/confirmed check-circle glyph and may represent the same "met" treatment this component is missing. Do not adopt it without explicit confirmation that the two components share the same semantic "confirmed" state — get sign-off (or a dedicated Figma reference on this component's own source frame) before implementing, per `IMPLEMENTATION.md`'s Figma-integration non-negotiables. |
 
 ### Properties / API
 
@@ -294,10 +410,64 @@ Inline text wraps naturally in its flex row; no breakpoint-specific behavior exp
 
 - Don't reuse `Checkbox` for this — it's a read-only, derived-state indicator, not a togglable input.
 - Do not implement or ship this component until the "met" state has a real Figma reference — see States above.
+- See `BenefitListItem` (below) for a visually similar icon+text row pattern discovered on a separate Figma frame (`Onboarding/Create Profile`) — evaluate whether the two should share one generalized component before either evolves independently, rather than maintaining two near-duplicate icon+text list-item implementations.
 
 ### Visual examples
 
 Not yet rendered — no application code exists for this component. The `/signup` implementation and its `/design-system/patterns#auth-card-signup` showcase both explicitly call out its omission (as a "not implemented" callout) rather than approximating it.
+
+---
+
+## BenefitListItem
+
+**Status**: Draft (not yet implemented — no application code exists for this component yet; this entry documents the validated design contract ahead of implementation, per the Figma → `DESIGN.md`/`COMPONENTS.md` → code pipeline in `CLAUDE.md`)
+**Source**: Not yet implemented
+**Figma**: AMFM Portal file, `Onboarding/Create Profile` (node `1909:25769`), `check-circle` icon component (node `10:6386`); six instances at nodes `1909:25272`–`1909:25275`, `2852:117176`, `2852:117164`
+
+### Purpose
+
+Confirms an included benefit/feature in a list (e.g. the "Free Membership" pricing card, see `PricingCard` below) — a static, always-affirmative icon+text row, distinct from `PasswordRequirementItem`'s derived-state validation row.
+
+### Anatomy
+
+`size-6` (24px) circular check icon + adjacent flex-1 text, stacked in a `gap-3` list.
+
+### Variants
+
+None evidenced — every instance on the referenced frame renders the same "confirmed" visual treatment; no unmet/negative variant exists in this context.
+
+### States
+
+Single static state only (always-confirmed) — this component has no interactive or derived state, unlike `PasswordRequirementItem`.
+
+### Properties / API
+
+```ts
+interface BenefitListItemProps {
+  children: React.ReactNode; // the benefit text
+}
+```
+
+### Design tokens used
+
+Icon fill color **not yet confirmed** against a named token (visually a brand/success tone in the Figma screenshot) — verify against `primary` or a `status-success`-family token before implementing; do not guess. Text uses `text-text-tertiary` (existing token).
+
+### Accessibility requirements
+
+Icon is decorative (`aria-hidden="true"`) — the adjacent text alone conveys the benefit; do not double-announce via an icon `aria-label`, consistent with `HeartChartSummary`'s existing icon/text precedent (see below).
+
+### Responsive behavior
+
+Inline text wraps naturally in its flex row; no breakpoint-specific behavior expected.
+
+### Implementation rules
+
+- **Merge candidate with `PasswordRequirementItem`** (see that entry's Implementation rules above) — both are a circular icon + adjacent text row; before implementing either, evaluate consolidating into one shared, more general component (e.g. driven by a `state: "unmet" | "met"` prop or similar) rather than shipping two near-duplicate list-item components. Reconcile the icon-size difference (20px on `PasswordRequirementItem` vs. 24px here) as part of that evaluation.
+- Confirm the icon's fill color against a named `DESIGN.md` token before implementing (see Design tokens used above) — do not inline a color that hasn't been traced to a token, per `DESIGN.md`'s "Tokens over instances" brand principle.
+
+### Visual examples
+
+Not yet rendered — no application code exists for this component yet.
 
 ---
 
@@ -403,7 +573,7 @@ Rendered at `/design-system/components#dialog` and via the homepage "Learn More"
 
 **Status**: Production Ready
 **Source**: `src/components/photo-backdrop.tsx`
-**Figma**: AMFM Portal file, node `1909:25767` ("Onboarding/login") and node `1909:25768` ("Onboarding/sign up") — both use the same two arbitrary blur values (`backdrop-blur-[20px]` content layer, `backdrop-blur-[8px]` overlay) and `bg-overlay`/85% scrim. **Not yet confirmed**: whether the sign-up screen's background photo is the same asset as `public/login-background.jpg` or a distinct export — verify before assuming this component needs no changes for a `/signup` route.
+**Figma**: AMFM Portal file, node `1909:25767` ("Onboarding/login"), node `1909:25768` ("Onboarding/sign up"), and node `1909:25769` ("Onboarding/Create Profile") — all three use the same two arbitrary blur values (`backdrop-blur-[20px]` content layer, `backdrop-blur-[8px]` overlay) and `bg-overlay`/85% scrim. **Not yet confirmed**: whether the sign-up/Create Profile screens' background photos are the same asset as `public/login-background.jpg` or distinct exports — verify before assuming this component needs no changes for those routes.
 
 ### Purpose
 
@@ -586,6 +756,51 @@ Sized via `size-*` utility at the call site (`size-6` today); no intrinsic respo
 ### Visual examples
 
 Rendered on `/login`'s "Log in with Google" button and `/signup`'s "Sign up with Google" button (imported from its current `login/_components` location on `/signup` — see `AuthCard`'s Implementation rules).
+
+---
+
+## AmfmLogo
+
+**Status**: Draft (blocked — source asset not yet available; not yet implemented)
+**Source**: Not yet implemented
+**Figma**: AMFM Portal file, `Onboarding/Create Profile` (node `1909:25769`), node `1909:25281` ("Logo") + node `1909:25280` ("Powered by" caption text)
+
+### Purpose
+
+Renders the AMFM ministry wordmark with a "Powered by" caption — the inverse pairing of `HeartChartLogo`'s existing "Powered by AMFM.org" caption (this is AMFM's own mark, not HeartChart's, used as a footer credit inside the "Free Membership" pricing card — see `PricingCard` below).
+
+### Anatomy
+
+"Powered by" caption text (`text-xs`, `font-medium`, `tracking-[0.24px]`, `text-text-tertiary`) + adjacent logo mark.
+
+### Variants / States
+
+None — a static image + caption pairing, matching `HeartChartLogo`'s precedent.
+
+### Properties / API
+
+No props expected — fixed intrinsic size (Figma reports the logo mark at a `137:26` aspect ratio within a `126×24` box), matching `HeartChartLogo`'s no-props pattern.
+
+### Design tokens used
+
+`text-text-tertiary`, `text-xs` (existing tokens); the logo itself is a raster/vector asset, not token-driven.
+
+### Accessibility requirements
+
+Will need `alt="AMFM"` (or the organization's full name) on the rendered image, matching `HeartChartLogo`'s `alt="HeartChart"` precedent — don't ship without it.
+
+### Responsive behavior
+
+Expected to scale proportionally like `HeartChartLogo` (`h-* w-auto`); no breakpoint-specific sizing evidenced.
+
+### Implementation rules
+
+- **Blocked**: Figma currently only serves this asset via a temporary, time-limited MCP asset URL — the same class of gap `DESIGN.md`'s "Known gaps" section already resolved for the HeartChart wordmark logo and the `/login` background photo (both required the real exported asset to be supplied and committed to `public/` before implementation). Do not approximate this logo in code (e.g. redrawing it as SVG paths) — wait for the real exported asset, per `HeartChartLogo`'s existing "don't re-derive this from code" rule.
+- Do not implement until the asset is committed to `public/`.
+
+### Visual examples
+
+Not yet rendered — blocked on asset availability.
 
 ---
 
@@ -779,3 +994,58 @@ interface HeartChartSummaryProps {
 ### Visual examples
 
 Rendered at `/design-system/components#heartchartsummary` (Low / Growing / Exceptional sample states), with a dedicated showcase page at `/design-system/components/heart-chart` (props table, accessibility notes, responsive behavior, and Figma reference in full). Not yet rendered in a real dashboard route — no such route exists in the app yet.
+
+---
+
+## PricingCard
+
+**Status**: Draft (not yet implemented; single confirmed use site so far — does not yet meet `CLAUDE.md`'s reusability bar for a `src/components` primitive, see Implementation rules)
+**Source**: Not yet implemented
+**Figma**: AMFM Portal file, `Onboarding/Create Profile` (node `1909:25769`), node `1909:25264` ("Pricing card")
+
+### Purpose
+
+Highlights a plan tier's included features alongside a form, ending in a "Powered by" credit — seen on the referenced frame as the "Free Membership" panel next to the profile-setup form.
+
+### Anatomy
+
+2px brand-bordered card → header (title, serif display type — see Implementation rules) → content (`BenefitListItem` list, see above) → divider → centered `AmfmLogo`/"Powered by" footer (see above).
+
+### Variants
+
+None evidenced — single tier ("Free Membership") on the referenced frame; a multi-tier variant surface is speculative and not yet warranted.
+
+### States
+
+None of its own — a static content panel; no interactive states.
+
+### Properties / API
+
+```ts
+interface PricingCardProps {
+  title: string;
+  benefits: string[]; // rendered via BenefitListItem
+}
+```
+Not yet finalized — speculative pending a second real use site, per Implementation rules.
+
+### Design tokens used
+
+`border-border-brand` (2px card border, existing token). Title typography uses the serif display scale (`Financier Display`, `display-sm`/30px) flagged by the design system audit as **not yet added to `DESIGN.md`** — do not implement this component's header until that foundation gap is resolved in `DESIGN.md` (out of scope for this documentation-only update).
+
+### Accessibility requirements
+
+Card title should be a real heading element at the correct level for its position in the page's heading hierarchy (see `DESIGN.md` Accessibility standards — semantic structure); inherits `BenefitListItem`'s and `AmfmLogo`'s accessibility requirements for its content.
+
+### Responsive behavior
+
+Not yet evidenced — the referenced frame provides only a fixed desktop composition (`368px` fixed-width column alongside the form) with no mobile/tablet Figma reference, the same category of gap already tracked for `HeartChartSummary`. Needs explicit mobile-stacking behavior defined (per `DESIGN.md`'s mobile-first grid rules) before shipping, not guessed.
+
+### Implementation rules
+
+- **Single use site today** — per `CLAUDE.md`'s Component Creation Process ("will this pattern appear more than once?"), this does not yet meet the bar for promotion to `src/components`. If implemented, keep it route-colocated (e.g. under the eventual profile-setup/onboarding route's `_components`), following the same precedent as `AuthCard`/`DposystemLearnMore`, and only promote it to a shared primitive if a second real pricing/plan screen appears.
+- Depends on the unresolved `Financier Display` type-scale foundation gap and the `AmfmLogo` asset block above — do not implement ahead of those being resolved.
+
+### Visual examples
+
+Not yet rendered — no application code exists for this component yet.
