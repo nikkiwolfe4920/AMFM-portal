@@ -18,9 +18,19 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import { InputGroup } from "@/components/ui/input-group";
 import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { GoogleIcon } from "@/app/login/_components/google-icon";
 import { HeartChartSummary } from "@/components/heartchart-summary";
+import { AmfmLogo } from "@/app/create-profile/_components/amfm-logo";
+import { BenefitListItem } from "@/app/create-profile/_components/benefit-list-item";
 
 import { ComponentShowcase } from "../_components/showcase";
 
@@ -83,8 +93,9 @@ export default function ComponentsPage() {
           "border-border-destructive-subtle",
           "bg-muted/50",
           "text-text-secondary",
+          "text-primary",
         ]}
-        states={["Default", "Filled", "Focused", "Disabled", "Invalid"]}
+        states={["Default", "Filled", "Focused", "Disabled", "Invalid", "Required"]}
       >
         <div className="grid max-w-sm gap-6">
           <div className="flex flex-col gap-1.5">
@@ -102,6 +113,79 @@ export default function ComponentsPage() {
           <div className="flex flex-col gap-1.5">
             <Label htmlFor="ds-invalid">Invalid</Label>
             <Input id="ds-invalid" aria-invalid defaultValue="not-an-email" />
+          </div>
+          <div className="flex flex-col gap-1.5">
+            <Label htmlFor="ds-required" required>
+              Required field
+            </Label>
+            <Input id="ds-required" required placeholder="Enter a value" />
+          </div>
+        </div>
+      </ComponentShowcase>
+
+      <ComponentShowcase
+        name="Select"
+        status="Production Ready"
+        purpose='Single-choice selection from an enumerated option list, styled to match Input so the two read as one form-control family — used for "Your role" and "Your primary goal" on /create-profile.'
+        docsAnchor="select"
+        figmaReference='AMFM Portal — Onboarding/Create Profile node 1909:25769, nodes 1909:25261 ("Your role") and 1909:25262 ("Your primary goal"); chevron-down icon node 10:338'
+        tokens={[
+          "border-input",
+          "bg-background",
+          "border-border-brand",
+          "border-border-destructive-subtle",
+          "bg-muted/50",
+          "shadow-xs",
+        ]}
+        states={["Placeholder", "Filled", "Open", "Focused", "Disabled", "Invalid"]}
+      >
+        <div className="grid max-w-sm gap-6">
+          <div className="flex flex-col gap-1.5">
+            <Label htmlFor="ds-select-role">Your role</Label>
+            <Select>
+              <SelectTrigger id="ds-select-role" className="w-full">
+                <SelectValue placeholder="Select your role" />
+              </SelectTrigger>
+              <SelectContent>
+                {["Senior Leader", "Pastor", "Ministry Leader", "Volunteer Leader", "Other"].map(
+                  (option) => (
+                    <SelectItem key={option} value={option}>
+                      {option}
+                    </SelectItem>
+                  )
+                )}
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="flex flex-col gap-1.5">
+            <Label htmlFor="ds-select-disabled">Disabled</Label>
+            <Select disabled>
+              <SelectTrigger id="ds-select-disabled" className="w-full">
+                <SelectValue placeholder="Disabled select" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="placeholder">Placeholder</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+      </ComponentShowcase>
+
+      <ComponentShowcase
+        name="InputGroup"
+        status="Production Ready"
+        purpose='Pairs an Input with a fixed, non-editable leading add-on — e.g. a URL scheme prefix — used for the "Website" field on /create-profile.'
+        docsAnchor="inputgroup"
+        figmaReference='AMFM Portal — Onboarding/Create Profile node 1909:25769, node 1909:25259 ("Website" field)'
+        tokens={["border-input", "bg-background", "text-text-tertiary", "border-border-brand", "shadow-xs"]}
+        states={["Default", "Focused", "Disabled", "Invalid"]}
+      >
+        <div className="grid max-w-sm gap-6">
+          <div className="flex flex-col gap-1.5">
+            <Label htmlFor="ds-website" required>
+              Website
+            </Label>
+            <InputGroup id="ds-website" addon="http://" placeholder="yourchurch.com" required />
           </div>
         </div>
       </ComponentShowcase>
@@ -124,6 +208,22 @@ export default function ComponentsPage() {
             <Checkbox id="ds-checkbox-disabled" disabled />
             <Label htmlFor="ds-checkbox-disabled">Disabled</Label>
           </div>
+        </div>
+      </ComponentShowcase>
+
+      <ComponentShowcase
+        name="BenefitListItem"
+        status="Production Ready"
+        purpose='Confirms an included benefit/feature in a static list — e.g. the "Free Membership" pricing card on /create-profile.'
+        docsAnchor="benefitlistitem"
+        figmaReference='AMFM Portal — Onboarding/Create Profile node 1909:25769, check-circle icon node 10:6386, instances 1909:25272-1909:25275, 2852:117176, 2852:117164'
+        tokens={["text-primary", "text-text-tertiary"]}
+        states={["Static"]}
+      >
+        <div className="flex max-w-sm flex-col gap-3">
+          <BenefitListItem>Give couples free access to HeartChart</BenefitListItem>
+          <BenefitListItem>Brand the experience with your church logo</BenefitListItem>
+          <BenefitListItem>No credit card needed</BenefitListItem>
         </div>
       </ComponentShowcase>
 
@@ -196,6 +296,22 @@ export default function ComponentsPage() {
           <GoogleIcon className="size-6" />
           Log in with Google
         </Button>
+      </ComponentShowcase>
+
+      <ComponentShowcase
+        name="AmfmLogo"
+        status="Draft"
+        purpose='Renders the AMFM ministry wordmark with a "Powered by" caption — the footer credit inside the "Free Membership" pricing card on /create-profile.'
+        docsAnchor="amfmlogo"
+        figmaReference='AMFM Portal — Onboarding/Create Profile node 1909:25769, node 1909:25281 ("Logo") + node 1909:25280 ("Powered by" caption)'
+        tokens={["text-text-tertiary", "text-xs", "font-display"]}
+        states={["Static"]}
+      >
+        <AmfmLogo />
+        <p className="text-muted-foreground mt-4 text-xs">
+          Hand-authored text approximation — the real exported asset is blocked by this
+          environment&apos;s network policy (see <code className="bg-muted rounded px-1 py-0.5">COMPONENTS.md#amfmlogo</code>).
+        </p>
       </ComponentShowcase>
 
       <ComponentShowcase

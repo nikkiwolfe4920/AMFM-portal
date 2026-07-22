@@ -1,18 +1,32 @@
 /*
  * Typography tokens — see DESIGN.md "Typography".
- * Fonts (Geist / Geist Mono) are loaded via next/font/google in
+ * Fonts (Geist / Geist Mono / Fraunces) are loaded via next/font/google in
  * src/app/layout.tsx, which exposes them as the --font-geist-sans /
- * --font-geist-mono custom properties. This file only maps those into
- * Tailwind's --font-sans / --font-mono theme keys, and overrides the
- * xs/sm/base line-heights to fixed pixel values (not font-size ratios) to
- * match the brand type scale.
+ * --font-geist-mono / --font-fraunces custom properties. This file only maps
+ * those into Tailwind's --font-sans / --font-mono / --font-display theme
+ * keys, and overrides line-heights to fixed pixel values (not font-size
+ * ratios) to match the brand type scale.
+ *
+ * --font-display (Fraunces) is a substitute for Figma's "Financier Display"
+ * (a licensed Klim Type Foundry face, unavailable via next/font/google) —
+ * same deliberate approximation precedent as Geist standing in for Inter
+ * below: Fraunces is a warm, editorial high-contrast serif available at the
+ * light (300) and regular (400) weights the Figma source uses, matching
+ * DESIGN.md's "warm, editorial, trustworthy" brand principle. Use only for
+ * the display-sm/display-md scale below — never as a body font.
  */
 
 @theme inline {
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --font-display: var(--font-fraunces);
 
   --text-xs--line-height: 1.25rem;
   --text-sm--line-height: 1.375rem;
   --text-base--line-height: 1.625rem;
+
+  --text-display-sm: 1.875rem;
+  --text-display-sm--line-height: 2.375rem;
+  --text-display-md: 2.25rem;
+  --text-display-md--line-height: 2.5rem;
 }

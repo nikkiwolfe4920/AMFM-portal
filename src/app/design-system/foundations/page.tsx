@@ -71,6 +71,19 @@ const TYPE_SCALE = [
   { name: "text-3xl", className: "text-3xl", hint: "30px" },
 ];
 
+const DISPLAY_TYPE_SCALE = [
+  {
+    name: "text-display-sm",
+    className: "font-display text-display-sm font-normal",
+    hint: "30px / 38px — PricingCard title",
+  },
+  {
+    name: "text-display-md",
+    className: "font-display text-display-md font-light",
+    hint: "36px / 40px — CardTitle on /create-profile",
+  },
+];
+
 const SPACING_SCALE = [
   { n: 1, className: "w-1" },
   { n: 2, className: "w-2" },
@@ -139,6 +152,26 @@ export default function FoundationsPage() {
                   {type.hint}
                 </span>
               ) : null}
+            </div>
+          ))}
+        </div>
+      </Section>
+
+      <Section
+        id="display-typography"
+        title="Display typography"
+        description="Fraunces (font-display) via next/font/google — substitutes for Figma's licensed 'Financier Display' face, same approximation precedent as Geist/Inter above. Only pair with the Figma-specified weight (font-light for display-md, font-normal for display-sm); never use font-display with the body type scale."
+      >
+        <div className="flex flex-col gap-4">
+          {DISPLAY_TYPE_SCALE.map((type) => (
+            <div key={type.name} className="flex items-baseline gap-4">
+              <span className="text-muted-foreground w-32 shrink-0 font-mono text-xs">
+                {type.name}
+              </span>
+              <span className={type.className}>Create profile</span>
+              <span className="text-muted-foreground ml-auto shrink-0 text-xs">
+                {type.hint}
+              </span>
             </div>
           ))}
         </div>

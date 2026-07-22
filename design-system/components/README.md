@@ -16,6 +16,12 @@ Index into `COMPONENTS.md`'s component entries. Full contracts (anatomy, variant
 | GoogleIcon | [GoogleIcon](../../COMPONENTS.md#googleicon) | `src/app/login/_components/google-icon.tsx` | Production Ready |
 | DposystemLearnMore | [DposystemLearnMore](../../COMPONENTS.md#dposystemlearnmore) | `src/app/_components/dposystem-learn-more.tsx` | Production Ready |
 | DposystemStory | [DposystemStory](../../COMPONENTS.md#dposystemstory) | `src/app/_components/dposystem-story.tsx` | Production Ready |
+| HeartChartSummary | [HeartChartSummary](../../COMPONENTS.md#heartchartsummary) | `src/components/heartchart-summary.tsx` | Draft |
+| Select | [Select](../../COMPONENTS.md#select) | `src/components/ui/select.tsx` | Production Ready |
+| InputGroup | [InputGroup](../../COMPONENTS.md#inputgroup) | `src/components/ui/input-group.tsx` | Production Ready |
+| BenefitListItem | [BenefitListItem](../../COMPONENTS.md#benefitlistitem) | `src/app/create-profile/_components/benefit-list-item.tsx` | Production Ready |
+| PricingCard | [PricingCard](../../COMPONENTS.md#pricingcard) | `src/app/create-profile/_components/pricing-card.tsx` | Production Ready |
+| AmfmLogo | [AmfmLogo](../../COMPONENTS.md#amfmlogo) | `src/app/create-profile/_components/amfm-logo.tsx` | Draft (text approximation, asset blocked) |
 
 See `figma/component-map.json` for each component's Figma reference and `figma/figma-links.md` for the human-readable version.
 
