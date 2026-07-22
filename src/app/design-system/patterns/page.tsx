@@ -3,7 +3,6 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import {
   Card,
-  CardAction,
   CardContent,
   CardDescription,
   CardFooter,
@@ -193,20 +192,23 @@ export default function PatternsPage() {
       <Section
         id="create-profile-card"
         title="Create profile card"
-        description='PhotoBackdrop + Card (CardHeader/CardAction/CardContent/CardFooter) + HeartChartLogo + full field set (Input/Select/InputGroup, all required) + PricingCard, composed on /create-profile. Uses the generic, theme-aware Card primitive rather than the fixed-light AuthCard pattern above — AuthCard’s nested outer-shell/inner-panel anatomy doesn’t match this wider, section-divided frame. Rendered here without the full-bleed PhotoBackdrop so it fits the page layout — see /create-profile for the live full-screen version.'
+        description='PhotoBackdrop + Card (CardHeader/CardContent/CardFooter, restyled to a flush flex layout — see COMPONENTS.md#card) + HeartChartLogo + full field set (Input/Select/InputGroup, all required) + PricingCard, composed on /create-profile. Uses the generic, theme-aware Card primitive rather than the fixed-light AuthCard pattern above — AuthCard’s nested outer-shell/inner-panel anatomy doesn’t match this wider, section-divided frame. Rendered here without the full-bleed PhotoBackdrop so it fits the page layout — see /create-profile for the live full-screen version.'
       >
         <div className="bg-muted/30 flex justify-center rounded-lg border p-8">
-          <Card className="w-full max-w-4xl rounded-2xl border-none shadow-xl">
-            <CardHeader className="border-border-secondary border-b">
-              <CardTitle className="font-display text-display-md text-foreground font-light">
-                Create profile
-              </CardTitle>
-              <CardDescription className="text-text-tertiary">
-                Help us personalize your experience
-              </CardDescription>
-              <CardAction>
+          <Card className="w-full max-w-4xl gap-0 rounded-2xl border-none py-0 shadow-xl">
+            <CardHeader className="flex flex-col gap-0 px-6 pt-6">
+              <div className="flex w-full items-center gap-4">
+                <div className="flex flex-1 flex-col gap-0.5">
+                  <CardTitle className="font-display text-display-md leading-[2.5rem] text-foreground font-light">
+                    Create profile
+                  </CardTitle>
+                  <CardDescription className="text-text-tertiary">
+                    Help us personalize your experience
+                  </CardDescription>
+                </div>
                 <HeartChartLogo />
-              </CardAction>
+              </div>
+              <div className="border-border-secondary mt-5 w-full border-t" />
             </CardHeader>
             <CardContent className="flex flex-col gap-10 pt-5 lg:flex-row lg:items-start">
               <div className="flex flex-1 flex-col gap-5">
@@ -292,8 +294,11 @@ export default function PatternsPage() {
                 />
               </div>
             </CardContent>
-            <CardFooter className="border-border-secondary justify-end border-t pt-6">
-              <Button>Start using HeartChart</Button>
+            <CardFooter className="flex-col items-stretch gap-0 px-0 pt-8 pb-0">
+              <div className="border-border-secondary border-t" />
+              <div className="flex justify-end px-6 pb-6">
+                <Button>Start using HeartChart</Button>
+              </div>
             </CardFooter>
           </Card>
         </div>
