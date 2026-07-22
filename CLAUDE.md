@@ -10,10 +10,12 @@ You are the primary AI engineering assistant for this repository.
 
 Before making any changes, read and follow:
 
-1. `DESIGN.md` — the source of truth for all design systems, UI patterns, tokens, components, interaction rules, responsive behavior, and visual standards.
-2. `CLAUDE.md` — the source of truth for engineering standards, architecture rules, coding practices, and implementation guidelines.
+1. `DESIGN.md` — the source of truth for design foundations: brand principles, visual language, tokens, layout/grid, breakpoints, motion, and accessibility standards.
+2. `COMPONENTS.md` — the source of truth for component contracts: anatomy, variants, states, props, tokens used, accessibility, responsive behavior, Figma reference, and status for every component.
+3. `IMPLEMENTATION.md` — the AI-facing implementation loop and non-negotiables for turning the above into code.
+4. `CLAUDE.md` — the source of truth for engineering standards, architecture rules, coding practices, and implementation guidelines.
 
-These documents define the project standards. Do not override them without explicit instruction.
+These documents define the project standards, in the pipeline `Figma Design Standards → DESIGN.md → COMPONENTS.md → React Components → /design-system Visual Validation`. Do not override them without explicit instruction.
 
 ---
 
@@ -257,7 +259,7 @@ This project targets production-ready software: scalable, maintainable, accessib
 
 - **Next.js 16** (App Router, Turbopack, `src/` layout)
 - **TypeScript** (strict mode)
-- **Tailwind CSS v4** (CSS-first config — no `tailwind.config.js`; theme lives in `src/app/globals.css`)
+- **Tailwind CSS v4** (CSS-first config — no `tailwind.config.js`; theme tokens live in `src/tokens/*.css`, imported into `src/app/globals.css`)
 - **shadcn/ui** (`new-york` style, `neutral` base color) — components are vendored into `src/components/ui`, not installed as a package
 - **ESLint 9** flat config (`eslint-config-next`)
 
@@ -265,22 +267,35 @@ Next.js 16 has real breaking changes vs. older training data. If something in `n
 
 ## Design system
 
-**`DESIGN.md`** is the design token/convention reference (colors, type, spacing, radius, shadows, component standards) — read it before styling anything. **`/design-system`** (`src/app/design-system/page.tsx`) is a living, rendered view of the same tokens/primitives; if it and `DESIGN.md` disagree, one is stale and both need fixing in the same change. Both are derived from the Figma designs as screens are implemented — check them before adding a new color, spacing value, or primitive, since it likely already exists.
+This repo implements an AI-ready design system pipeline: `Figma Design Standards → DESIGN.md → COMPONENTS.md → React Components → /design-system Visual Validation`.
+
+- **`DESIGN.md`** — design foundations only (brand principles, visual language, color/type/spacing/radius/shadow tokens, layout/grid, breakpoints, motion, accessibility standards, interaction principles). Read it before styling anything.
+- **`COMPONENTS.md`** — the component behavior contract (anatomy, variants, states, props, tokens used, accessibility, responsive behavior, Figma reference, status) for every component in `src/components`. Read it before creating or modifying a component.
+- **`IMPLEMENTATION.md`** — the AI implementation loop and non-negotiables tying the above together.
+- **`/design-system`** (`src/app/design-system/{foundations,components,patterns,pages}`) is the living, rendered visual validation layer for `DESIGN.md` and `COMPONENTS.md` — it renders the actual tokens and primitives, not a description of them. If it disagrees with either file, one is stale and both need fixing in the same change.
+- **`design-system/`** (repo root) is a documentation-content index mirroring the same four categories — it links into `DESIGN.md`/`COMPONENTS.md` rather than duplicating them; see `design-system/README.md`.
+- **`figma/component-map.json`** and **`figma/figma-links.md`** hold the Figma file/node references cited throughout `DESIGN.md`/`COMPONENTS.md`.
+
+All of the above are derived from the Figma designs as screens are implemented — check them before adding a new color, spacing value, or primitive, since it likely already exists.
 
 ## Project structure
 
 ```
 src/
   app/            # App Router routes, layouts, globals.css
+    design-system/  # /design-system: foundations, components, patterns, pages subroutes
   components/
     ui/           # shadcn/ui primitives (generated/vendored — see below)
+  tokens/         # colors.css, typography.css, spacing.css, radius.css, shadows.css, motion.css
+                  # — imported into globals.css, maps 1:1 to DESIGN.md's Design tokens section
   lib/
     utils.ts      # cn() and other framework-agnostic helpers
 ```
 
 - New routes/pages go under `src/app`, following App Router conventions (`page.tsx`, `layout.tsx`, `loading.tsx`, `route.ts`, etc.).
 - Non-UI-primitive, app-specific components go in `src/components` (not `src/components/ui`).
-- Shared, non-React utilities go in `src/lib`.
+- Shared, non-React utilities go in `src/lib` — this is the established location; don't introduce a parallel `src/utils`.
+- Design tokens go in `src/tokens/*.css`, imported into `src/app/globals.css` — this is Tailwind v4's CSS-first config split across files, not a parallel token system; see `DESIGN.md`.
 - Import via the `@/*` path alias (maps to `src/*`) — never use deep relative paths like `../../../lib/utils`.
 
 ## Architecture rules
@@ -325,18 +340,18 @@ Do not create duplicate components that solve the same problem.
 
 ---
 
-### 2. Check DESIGN.md Component Library
+### 2. Check COMPONENTS.md Component Library
 
-`DESIGN.md` is the source of truth for approved design system components.
+`COMPONENTS.md` is the source of truth for approved design system components; `DESIGN.md` holds the underlying tokens those components consume.
 
 Before implementation:
 
-- Verify whether the component already exists in the design system.
-- Follow documented component specifications.
-- Use existing tokens, patterns, and variants.
+- Verify whether the component already exists in `COMPONENTS.md`.
+- Follow the documented component contract (anatomy, variants, states, props).
+- Use existing tokens (from `DESIGN.md`/`src/tokens`), patterns, and variants.
 - Maintain consistency with the approved UI language.
 
-If a component exists in DESIGN.md but not in code:
+If a component exists in COMPONENTS.md but not in code:
 
 → Implement the documented component.
 
@@ -369,9 +384,9 @@ Prefer composition over unnecessary abstraction.
 
 ---
 
-### 4. Document New Components in DESIGN.md
+### 4. Document New Components in COMPONENTS.md
 
-Every new reusable component must be documented in `DESIGN.md` before being considered complete.
+Every new reusable component must be documented in `COMPONENTS.md` before being considered complete.
 
 Documentation should include:
 
@@ -568,8 +583,8 @@ Before completing a new component, verify:
 
 ## Design System Alignment
 
-☐ Exists in DESIGN.md or has been added
-☐ Uses approved tokens
+☐ Exists in COMPONENTS.md or has been added
+☐ Uses approved tokens (DESIGN.md / src/tokens)
 ☐ Follows spacing and typography rules
 ☐ Matches established patterns
 
@@ -607,21 +622,18 @@ Before completing a new component, verify:
 
 ## Design System Synchronization
 
-The implementation and DESIGN.md must remain synchronized.
+The implementation, `DESIGN.md`, and `COMPONENTS.md` must remain synchronized.
 
 When creating or modifying:
 
-- Components
-- Tokens
-- Patterns
-- Layout systems
-- Interaction behaviors
+- Components → update `COMPONENTS.md`
+- Tokens, layout systems, motion, accessibility principles → update `DESIGN.md`
+- Patterns → update `COMPONENTS.md` and `design-system/patterns/README.md`
+- Interaction behaviors → update `DESIGN.md`'s Interaction principles and the relevant `COMPONENTS.md` entry's States
 
-Update DESIGN.md documentation accordingly.
+No production component should exist without documented design system intent, validated live at `/design-system`.
 
-No production component should exist without documented design system intent.
-
-DESIGN.md defines what the system should be. The codebase defines how the system is implemented. Both must evolve together.
+`DESIGN.md` defines the foundations the system is built from. `COMPONENTS.md` defines what each component should be. The codebase defines how the system is implemented. All three must evolve together — see `IMPLEMENTATION.md`.
 
 ---
 
@@ -867,7 +879,7 @@ A successful deployment means the product is reliable, maintainable, secure, and
 1. Check whether it can be composed from primitives already in `src/components/ui` first.
 2. If a genuinely new primitive is needed, write it by hand in `src/components/ui/<name>.tsx`, matching upstream shadcn/ui's source and conventions (Radix primitive + `cva` variants + `cn()`, `data-slot` attributes, named exports) as closely as possible, so it stays a drop-in match if the CLI is ever runnable again.
 3. Register it in `components.json`'s implied structure — i.e., keep it under `src/components/ui`, not elsewhere.
-4. Update `src/app/globals.css` theme tokens only if the new component needs CSS variables that don't already exist; don't invent parallel/duplicate tokens.
+4. Update the relevant `src/tokens/*.css` file only if the new component needs CSS variables that don't already exist; don't invent parallel/duplicate tokens. Add the component's contract to `COMPONENTS.md` in the same change.
 
 ## Development standards
 
@@ -877,7 +889,7 @@ A successful deployment means the product is reliable, maintainable, secure, and
 - For UI changes, actually run the dev server and look at the result (or describe explicitly that you couldn't) rather than asserting it works from reading the code.
 - Don't add dependencies for something a few lines of code or an existing dependency already covers.
 - Don't create new abstractions (contexts, hooks, wrapper components) for a single use site — inline it until a second real use case shows up.
-- A feature isn't complete just because the happy path works. Before calling it done, confirm: responsive behavior across supported breakpoints; error, loading, and empty states are all handled (not just success); edge cases are considered; performance impact is evaluated (unnecessary re-renders, large payloads, N+1 fetches); security is reviewed (input validated at trust boundaries, no secrets/PII leaked to the client); and accessibility follows DESIGN.md's Accessibility rules (WCAG AA).
+- A feature isn't complete just because the happy path works. Before calling it done, confirm: responsive behavior across supported breakpoints; error, loading, and empty states are all handled (not just success); edge cases are considered; performance impact is evaluated (unnecessary re-renders, large payloads, N+1 fetches); security is reviewed (input validated at trust boundaries, no secrets/PII leaked to the client); and accessibility follows DESIGN.md's Accessibility standards (WCAG AA).
 
 ## AI collaboration instructions
 

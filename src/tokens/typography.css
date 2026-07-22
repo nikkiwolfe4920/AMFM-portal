@@ -1,0 +1,18 @@
+/*
+ * Typography tokens — see DESIGN.md "Typography".
+ * Fonts (Geist / Geist Mono) are loaded via next/font/google in
+ * src/app/layout.tsx, which exposes them as the --font-geist-sans /
+ * --font-geist-mono custom properties. This file only maps those into
+ * Tailwind's --font-sans / --font-mono theme keys, and overrides the
+ * xs/sm/base line-heights to fixed pixel values (not font-size ratios) to
+ * match the brand type scale.
+ */
+
+@theme inline {
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+
+  --text-xs--line-height: 1.25rem;
+  --text-sm--line-height: 1.375rem;
+  --text-base--line-height: 1.625rem;
+}

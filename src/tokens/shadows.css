@@ -1,0 +1,14 @@
+/*
+ * Shadow tokens — see DESIGN.md "Shadows".
+ * Tailwind's built-in shadow-xs…shadow-2xl cover generic elevation; these
+ * two custom tokens exist for the branded auth surface and button finish.
+ */
+
+@theme inline {
+  --shadow-card: 0px 12px 16px -4px oklch(0.158 0.012 260.622 / 8%),
+    0px 4px 6px -2px oklch(0.158 0.012 260.622 / 3%),
+    0px 2px 2px -1px oklch(0.158 0.012 260.622 / 4%);
+  --shadow-button-inset: 0px 1px 2px 0px oklch(0.158 0.012 260.622 / 5%),
+    inset 0px 0px 0px 1px oklch(0.158 0.012 260.622 / 18%),
+    inset 0px -2px 0px 0px oklch(0.158 0.012 260.622 / 5%);
+}
