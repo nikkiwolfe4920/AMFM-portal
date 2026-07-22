@@ -1,0 +1,8 @@
+/*
+ * Spacing tokens — see DESIGN.md "Spacing".
+ * No custom spacing scale is defined: Tailwind v4's default spacing scale
+ * (multiples of 0.25rem) already covers every spacing value verified
+ * against the Figma source. This file is the designated home for spacing
+ * tokens — add an override here only when a genuinely new value can't be
+ * expressed by the default scale, and document it in DESIGN.md.
+ */

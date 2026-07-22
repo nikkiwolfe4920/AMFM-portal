@@ -1,0 +1,62 @@
+{
+  "Button": {
+    "figmaComponent": "AMFM Portal — node 3273:19658 (\"Primary\" button set) and sibling nodes",
+    "documentation": "COMPONENTS.md#button",
+    "implementation": "src/components/ui/button.tsx"
+  },
+  "Input": {
+    "figmaComponent": "AMFM Portal — node 3272:19436 (\"Input\" field set) and sibling nodes",
+    "documentation": "COMPONENTS.md#input",
+    "implementation": "src/components/ui/input.tsx"
+  },
+  "Label": {
+    "figmaComponent": "",
+    "documentation": "COMPONENTS.md#label",
+    "implementation": "src/components/ui/label.tsx"
+  },
+  "Checkbox": {
+    "figmaComponent": "AMFM Portal — Onboarding/login node 1909:25767 (\"trusted device\" control)",
+    "documentation": "COMPONENTS.md#checkbox",
+    "implementation": "src/components/ui/checkbox.tsx"
+  },
+  "Card": {
+    "figmaComponent": "",
+    "documentation": "COMPONENTS.md#card",
+    "implementation": "src/components/ui/card.tsx"
+  },
+  "Dialog": {
+    "figmaComponent": "AMFM Portal — node 1829:19828 (modal chrome reference)",
+    "documentation": "COMPONENTS.md#dialog",
+    "implementation": "src/components/ui/dialog.tsx"
+  },
+  "PhotoBackdrop": {
+    "figmaComponent": "AMFM Portal — Onboarding/login node 1909:25767 (background photo treatment)",
+    "documentation": "COMPONENTS.md#photobackdrop",
+    "implementation": "src/components/photo-backdrop.tsx"
+  },
+  "AuthCard": {
+    "figmaComponent": "AMFM Portal — Onboarding/login node 1909:25767 (card shell)",
+    "documentation": "COMPONENTS.md#authcard",
+    "implementation": "src/app/login/_components/auth-card.tsx"
+  },
+  "HeartChartLogo": {
+    "figmaComponent": "AMFM Portal — Onboarding/login node 1909:25767 (exported wordmark asset)",
+    "documentation": "COMPONENTS.md#heartchartlogo",
+    "implementation": "src/app/login/_components/heartchart-logo.tsx"
+  },
+  "GoogleIcon": {
+    "figmaComponent": "",
+    "documentation": "COMPONENTS.md#googleicon",
+    "implementation": "src/app/login/_components/google-icon.tsx"
+  },
+  "DposystemLearnMore": {
+    "figmaComponent": "",
+    "documentation": "COMPONENTS.md#dposystemlearnmore",
+    "implementation": "src/app/_components/dposystem-learn-more.tsx"
+  },
+  "DposystemStory": {
+    "figmaComponent": "",
+    "documentation": "COMPONENTS.md#dposystemstory",
+    "implementation": "src/app/_components/dposystem-story.tsx"
+  }
+}

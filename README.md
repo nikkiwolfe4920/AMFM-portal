@@ -1,4 +1,22 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# AMFM Portal
+
+A [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app), built around an AI-ready design system pipeline:
+
+```
+Figma Design Standards → DESIGN.md → COMPONENTS.md → React Components → /design-system Visual Validation
+```
+
+## Design system docs
+
+| File / folder | Purpose |
+|---|---|
+| [`DESIGN.md`](./DESIGN.md) | Design foundations — brand principles, visual language, tokens, layout/grid, breakpoints, motion, accessibility standards |
+| [`COMPONENTS.md`](./COMPONENTS.md) | Component contracts — anatomy, variants, states, props, tokens, accessibility, responsive behavior, Figma reference, status |
+| [`IMPLEMENTATION.md`](./IMPLEMENTATION.md) | AI implementation loop and non-negotiables |
+| [`design-system/`](./design-system) | Documentation-content index mirroring foundations/components/patterns/pages |
+| [`figma/`](./figma) | Figma file/node references (`figma-links.md`) and the machine-readable component map (`component-map.json`) |
+| `/design-system` (running app) | Live, rendered visual validation of `DESIGN.md`/`COMPONENTS.md` — see `src/app/design-system/` |
+| [`CLAUDE.md`](./CLAUDE.md) / [`AGENTS.md`](./AGENTS.md) | Engineering standards and AI agent guidance for this repo |
 
 ## Getting Started
 

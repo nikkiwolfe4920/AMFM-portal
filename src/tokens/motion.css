@@ -1,0 +1,9 @@
+/*
+ * Motion tokens — see DESIGN.md "Motion".
+ * Enter/exit transitions use tw-animate-css utility classes
+ * (animate-in/animate-out, fade-in-0/fade-out-0, zoom-in-95/zoom-out-95)
+ * directly at call sites (e.g. Dialog) rather than custom @theme motion
+ * tokens. This file is the designated home for future duration/easing
+ * tokens once a Figma reference introduces one — don't hand-roll a
+ * transition duration at a call site in the meantime.
+ */
