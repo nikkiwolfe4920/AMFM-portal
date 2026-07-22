@@ -1115,3 +1115,81 @@ The referenced frame provides only a fixed desktop composition (`368px` fixed-wi
 ### Visual examples
 
 Rendered live as the "Free Membership" card on `/create-profile`; referenced at `/design-system/patterns#create-profile-card`.
+
+---
+
+## GlobalNav
+
+**Status**: Draft (functionally complete and pixel-matched to both referenced Figma states, but its destination routes are placeholders and it isn't wired into a real app-shell layout yet — see Implementation rules)
+**Source**: `src/components/global-nav.tsx`
+**Figma**: AMFM Portal file — collapsed/default state, node `2067:16268` ("Main Nav", 80px icon rail); expanded/exposed state, node `3727:25276` ("Content", 296px labeled panel). Both are the *same* nav, collapsed vs. open — no separate mobile reference exists for either (see Responsive behavior).
+
+### Purpose
+
+The app's primary left-hand navigation rail — persistent access to the church's core sections ("Your Church": Home, dashboard, champions, resources, training) and ministry tools (Loveology, assessments, small groups, etc.), plus account access, collapsed to an icon-only 80px rail by default and expanding to a labeled 296px panel on click.
+
+### Anatomy
+
+`<nav>` (root chrome: `rounded-2xl`, gradient background, `backdrop-blur-2xl`, hairline border) →
+- **Header**: a single `<button>` wrapping the "amfm" wordmark, doubling as the open/collapse toggle (see States).
+- **Navigation** (scrollable): two `NavSection`s ("Your Church"/"Church" and "Ministry Tools"/"Tools" — see Implementation rules for why the heading text itself changes between states), each a subheading + a list of `NavItem`s (icon + label).
+- **Footer**: two more `NavItem`s ("Refer a Leader", "Support") + an account card (avatar with online indicator, name/email, and a chevron affordance).
+
+### Variants
+
+None — a single component with two states (see below), not caller-chosen variants.
+
+### States
+
+| State | Behavior |
+|---|---|
+| Collapsed (default) | `w-20` (80px). Every item shows its icon only — labels stay mounted in the DOM (so screen readers always announce the full label) but are visually collapsed via `max-width:0` + `opacity:0`, not removed or `aria-hidden`. Section headings show their short form ("Church"/"Tools"), centered. The header shows the compact wordmark only. The account card shows only the avatar, centered. |
+| Expanded (open) | `w-74` (296px), triggered by clicking the header wordmark (see Implementation rules — no separate toggle chrome exists in either Figma reference). Every item's label grows in (`max-width`/`opacity` transition). Section headings switch to their long form ("Your Church"/"Ministry Tools"), left-aligned. The header cross-fades to the full wordmark + tagline lockup. The account card grows to show name, email, and a `ChevronsUpDown` affordance. |
+| Active item (e.g. "Home") | `bg-gradient-to-r from-nav-active-from to-nav-active-to` pill, `text-nav-foreground` label, icon at `opacity-70` — present in **both** collapsed and expanded states, matching both Figma references exactly. Also sets `aria-current="page"`. `active` is currently hardcoded per nav-data item (only "Home"); wiring it to the real current route (e.g. via `usePathname()`) is a caller-side follow-up once real routes exist — see Implementation rules. |
+| Hover / Focus | Not pixel-sourced (Figma shows only default/active) — added by product decision per `DESIGN.md`'s Interaction principles ("every interactive control has a visible hover/focus treatment"): `hover:bg-white/5` on inactive items, `focus-visible:ring-ring/50 focus-visible:ring-[3px]` on every interactive element (header toggle, items, account card). |
+| External link (Marriage Ministry Profile, WeDo) | `target="_blank" rel="noopener noreferrer"` plus a `sr-only` "(opens in a new tab)" suffix on the label — not a Figma-visible affordance, added for accessibility. |
+
+### Properties / API
+
+```ts
+interface GlobalNavProps {
+  className?: string;
+  defaultOpen?: boolean; // uncontrolled initial state; defaults to collapsed, matching Figma's default
+}
+```
+
+Uncontrolled by design (internal `useState`) — no controlled `open`/`onOpenChange` pair exists yet since there's only one real call site (the `/design-system` demo); add one if/when a second consumer needs to control it externally (e.g. an app shell that also needs to know nav state for its own layout), per `CLAUDE.md`'s anti-premature-abstraction guidance.
+
+### Design tokens used
+
+`nav-bg`, `nav-surface-from`/`nav-surface-to` (chrome gradient, `/90` opacity), `nav-border`, `nav-active-from`/`nav-active-to` (active-item gradient), `nav-foreground`, `nav-foreground-muted`, `nav-foreground-subtle`, `nav-success` (online indicator) — see `DESIGN.md` Color tokens for the full table and why these are independent, theme-fixed tokens rather than reusing coincidentally-equal swappable ones (`muted-foreground`, `text-tertiary`, `foreground`). Also `border-white/8` (outer chrome border, a Tailwind opacity modifier — no new token needed), `backdrop-blur-2xl` (Tailwind's built-in 40px blur, exactly matching Figma's "Backdrop blurs/backdrop-blur-xl" effect radius — Figma's own name for this effect doesn't line up with Tailwind's `blur-xl`/24px, but the *value* does match `blur-2xl`/40px, so no arbitrary blur value was needed, unlike `PhotoBackdrop`'s `backdrop-blur-[20px]`/`[8px]`), `w-20`/`w-74`/`max-w-40`/`max-w-60` (Tailwind v4's dynamic spacing-scale utilities — real scale values, not arbitrary/bracketed ones, since Tailwind v4 generates any `w-<n>`/`max-w-<n>` from the shared `--spacing` variable).
+
+### Accessibility requirements
+
+- Root is a real `<nav aria-label="Main">` landmark.
+- **Labels stay in the accessibility tree at every width** — collapsing a label to `max-width:0`/`opacity:0` (rather than `display:none`/`aria-hidden`) means screen reader users get full item labels regardless of the sighted/visual collapsed state; this is a deliberate accessibility improvement over needing a duplicate `aria-label` per icon.
+- The two section-heading variants ("Church" vs "Your Church", etc.) use `aria-hidden` on whichever one is visually hidden at a given time, so assistive tech isn't announced both simultaneously.
+- Header toggle button carries `aria-expanded` and an explicit `aria-label` ("Expand navigation"/"Collapse navigation"); the wordmark inside it is `aria-hidden` since the button's accessible name is its action, not the brand name.
+- Every focusable element keeps a visible `focus-visible` ring — see States above.
+- Active item sets `aria-current="page"`.
+- Clicking outside the expanded panel, or pressing `Escape`, closes it (`pointerdown`/`keydown` listeners scoped to while `open` is true) — standard flyout/disclosure behavior, keyboard-operable without a mouse.
+- External links get `rel="noopener noreferrer"` and an `sr-only` "(opens in a new tab)" cue.
+
+### Responsive behavior
+
+Both Figma references are desktop-only (80px/296px fixed rail widths); no mobile/tablet reference exists for either state. The component itself doesn't assume a viewport-based collapse — it's `h-full` and lets its container decide breakpoint behavior (see Implementation rules on positioning). The scrollable nav-items region (`overflow-y-auto`) prevents the rail from ever exceeding its container's height on short viewports, but a dedicated mobile pattern (e.g. a bottom bar or hamburger-triggered drawer) is not implemented — flag for design once a mobile reference exists, same category of gap as `Card`/`PricingCard`'s `/create-profile` layout.
+
+### Implementation rules
+
+- **Toggle trigger**: neither Figma reference shows a dedicated chevron/hamburger control — clicking the header wordmark is the toggle, chosen specifically so no new visual chrome is introduced beyond what's pixel-referenced, while still satisfying "opens on tap/click." Don't add a separate visible toggle affordance without a real Figma reference for one.
+- **Same markup, animated, not two swapped renders**: every collapsed/expanded difference (labels, section headings, wordmark, account-card text) is implemented as one continuously-mounted DOM tree with `transition-[width]` (root) and `transition-[max-width,opacity,padding,gap]` (content) — never a conditional swap between two different JSX trees — so the collapse/expand reads as one smooth morph. See `DESIGN.md` Motion rules.
+- **Icons are `lucide-react` "closest stable equivalent" substitutes**, not traced Untitled-UI SVGs, matching the precedent set by `Select`'s `ChevronDown` and `BenefitListItem`'s `CircleCheck`. Two are worth flagging specifically since Figma's own component-description tags didn't match their rendered glyph (verified by screenshotting each node directly rather than trusting the tags): "Loveology" renders as a `»` double-chevron in Figma, not an atom/molecule as its Figma description tags suggested — mapped to `ChevronsRight`. "Small Groups" ("intersect-three") renders as three overlapping circles, not a lightning bolt as its tags suggested — mapped to `Blend`. "WeDo"'s heart-with-swirl glyph has no close `lucide-react` equivalent; `HeartHandshake` was chosen for semantic fit (partnership/community), not pixel similarity.
+- **Wordmark is a hand-authored text approximation**, same tier and same underlying cause as `AmfmLogo` (Figma's asset host is blocked by this environment's network policy) — kept as a separate implementation from `AmfmLogo` rather than reused, since the composition differs (no "Powered by" prefix here) and this one uses the nav-fixed-dark tokens instead of `AmfmLogo`'s auth-fixed-light tokens.
+- **Account-card avatar renders initials ("OR"), not the real photo** — same asset-availability gap as the wordmark; replace both with real exported assets once available, per `HeartChartLogo`'s "don't re-derive this from code" precedent (revisit, don't leave the approximation as permanent).
+- **Destination routes are placeholders** — only `/` (Home) and the two external URLs (`https://amfm.org/mmp`, `https://wedowedo.com`, taken directly from the Figma reference's own `href`/`target` attributes) are real. Every other internal `href` (`/dashboard`, `/marriage-champions`, etc.) is a placeholder path pending real routes — don't mistake these for a verified IA.
+- **Doesn't assume its own screen position**: unlike `PhotoBackdrop`, `GlobalNav` doesn't hardcode `fixed`/`absolute` positioning — it fills its container (`h-full`) and lets the caller decide (e.g. wrap it in `fixed inset-y-4 left-4 z-40` in a real app shell, so the expand transition overlays content rather than reflowing it). Not yet wired into `src/app/layout.tsx` or any route, since no authenticated dashboard shell exists yet — see `DESIGN.md` Known gaps.
+- Colocated at `src/components/global-nav.tsx` (not `src/components/ui`) since it carries real business logic (open/close state, click-outside/`Escape` handling) beyond a visual primitive, per `CLAUDE.md`'s "No business logic in `src/components/ui`."
+
+### Visual examples
+
+Rendered live (both states, interactively toggleable) at `/design-system/components#globalnav`.

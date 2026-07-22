@@ -43,6 +43,24 @@
   --status-warning: oklch(0.683 0.133 75.668);
   --status-warning-subtle: oklch(0.793 0.117 80.029);
 
+  /* GlobalNav tokens — fixed-dark surface, defined once (not swapped in .dark),
+   * same rationale as the auth/onboarding fixed-light tokens above but inverted:
+   * the nav always renders dark chrome regardless of the app's light/dark toggle,
+   * see DESIGN.md "Visual language". Some values are numerically coincidental
+   * with theme-swappable tokens elsewhere (e.g. nav-active-to == muted-foreground,
+   * nav-active-from == text-tertiary, nav-surface-from == foreground) — kept as
+   * independent fixed tokens anyway so they don't invert when .dark is toggled. */
+  --nav-bg: oklch(0.163 0.009 264.284); /* #0c0e12 */
+  --nav-surface-from: oklch(0.23 0.021 264.037); /* #181d27 */
+  --nav-surface-to: oklch(0.182 0.022 263.788); /* #0d121c */
+  --nav-border: oklch(0.269 0.018 266.3); /* #22262f */
+  --nav-active-from: oklch(0.46 0.017 264.389); /* #535862 */
+  --nav-active-to: oklch(0.565 0.017 264.434); /* #717680 */
+  --nav-foreground: oklch(0.976 0 89.876); /* #f7f7f7 */
+  --nav-foreground-muted: oklch(0.855 0.004 271.363); /* #cecfd2 */
+  --nav-foreground-subtle: oklch(0.675 0.008 260.731); /* #94979c */
+  --nav-success: oklch(0.758 0.153 157.185); /* #47cd89 */
+
   --chart-1: oklch(0.646 0.222 41.116);
   --chart-2: oklch(0.6 0.118 184.704);
   --chart-3: oklch(0.398 0.07 227.392);
@@ -126,6 +144,16 @@
   --color-status-success-strong: var(--status-success-strong);
   --color-status-warning: var(--status-warning);
   --color-status-warning-subtle: var(--status-warning-subtle);
+  --color-nav-bg: var(--nav-bg);
+  --color-nav-surface-from: var(--nav-surface-from);
+  --color-nav-surface-to: var(--nav-surface-to);
+  --color-nav-border: var(--nav-border);
+  --color-nav-active-from: var(--nav-active-from);
+  --color-nav-active-to: var(--nav-active-to);
+  --color-nav-foreground: var(--nav-foreground);
+  --color-nav-foreground-muted: var(--nav-foreground-muted);
+  --color-nav-foreground-subtle: var(--nav-foreground-subtle);
+  --color-nav-success: var(--nav-success);
   --color-chart-1: var(--chart-1);
   --color-chart-2: var(--chart-2);
   --color-chart-3: var(--chart-3);
