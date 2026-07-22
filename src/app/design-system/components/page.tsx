@@ -132,7 +132,7 @@ export default function ComponentsPage() {
         status="Production Ready"
         purpose="Generic raised content surface for grouping related content — the base shadcn/ui Card, unmodified from upstream shape."
         docsAnchor="card"
-        figmaReference={null}
+        figmaReference='AMFM Portal — Onboarding/Create Profile node 1909:25769 (modal shell, header/content/footer)'
         tokens={["bg-card", "text-card-foreground", "border", "shadow-sm"]}
         states={["Default"]}
       >
@@ -145,6 +145,17 @@ export default function ComponentsPage() {
             <p className="text-sm">Generic shadcn/ui Card primitive.</p>
           </CardContent>
         </Card>
+        <p className="text-muted-foreground mt-4 text-xs">
+          See{" "}
+          <Link
+            href="/design-system/patterns#create-profile-card"
+            className="text-text-brand hover:underline"
+          >
+            the Create profile card pattern
+          </Link>{" "}
+          for this component composed with a header divider, <code className="bg-muted rounded px-1 py-0.5">CardAction</code>,
+          and footer — live on <code className="bg-muted rounded px-1 py-0.5">/create-profile</code>.
+        </p>
       </ComponentShowcase>
 
       <ComponentShowcase
