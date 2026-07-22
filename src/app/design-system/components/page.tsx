@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import {
   Card,
   CardContent,
@@ -208,6 +210,12 @@ export default function ComponentsPage() {
           <HeartChartSummary percentage={58} completedCount={1512} totalAttenders={2800} />
           <HeartChartSummary percentage={100} completedCount={2912} totalAttenders={2800} />
         </div>
+        <Link
+          href="/design-system/components/heart-chart"
+          className="text-primary text-sm font-medium underline underline-offset-4"
+        >
+          View full HeartChartSummary documentation →
+        </Link>
       </ComponentShowcase>
     </div>
   );

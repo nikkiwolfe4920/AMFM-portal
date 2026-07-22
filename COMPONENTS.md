@@ -710,4 +710,4 @@ interface HeartChartSummaryProps {
 
 ### Visual examples
 
-Rendered at `/design-system/components#heartchartsummary` (Low / Growing / Exceptional sample states). Not yet rendered in a real dashboard route — no such route exists in the app yet.
+Rendered at `/design-system/components#heartchartsummary` (Low / Growing / Exceptional sample states), with a dedicated showcase page at `/design-system/components/heart-chart` (props table, accessibility notes, responsive behavior, and Figma reference in full). Not yet rendered in a real dashboard route — no such route exists in the app yet.
