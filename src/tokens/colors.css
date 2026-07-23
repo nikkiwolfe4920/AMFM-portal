@@ -57,6 +57,21 @@
   --status-warning: oklch(0.683 0.133 75.668);
   --status-warning-subtle: oklch(0.793 0.117 80.029);
 
+  /* StatusTag pill palette (Our Marriage Champions, node 3724:23444) — a
+   * 3-tier bg/border/text badge system, distinct from the single-shade
+   * status-success/status-warning/destructive tokens above (those are built
+   * for text/gradient fills, not bordered pill backgrounds). Root-only, same
+   * rationale as the tokens above: no dark-mode Figma reference exists yet. */
+  --badge-success-bg: oklch(0.979 0.022 160.244); /* #ecfdf3 */
+  --badge-success-border: oklch(0.896 0.089 157.586); /* #abefc6 */
+  --badge-success-text: oklch(0.499 0.117 157.07); /* #067647 */
+  --badge-error-bg: oklch(0.972 0.012 23.703); /* #fef3f2 */
+  --badge-error-border: oklch(0.89 0.056 22.345); /* #fecdca */
+  --badge-error-text: oklch(0.5 0.182 29.513); /* #b42318 */
+  --badge-warning-bg: oklch(0.985 0.02 91.579); /* #fffaeb */
+  --badge-warning-border: oklch(0.911 0.111 90.275); /* #fedf89 */
+  --badge-warning-text: oklch(0.539 0.156 42.994); /* #b54708 */
+
   /* GlobalNav tokens — fixed-dark surface, defined once (not swapped in .dark),
    * same rationale as the auth/onboarding fixed-light tokens above but inverted:
    * the nav always renders dark chrome regardless of the app's light/dark toggle,
@@ -173,6 +188,15 @@
   --color-status-success-strong: var(--status-success-strong);
   --color-status-warning: var(--status-warning);
   --color-status-warning-subtle: var(--status-warning-subtle);
+  --color-badge-success-bg: var(--badge-success-bg);
+  --color-badge-success-border: var(--badge-success-border);
+  --color-badge-success-text: var(--badge-success-text);
+  --color-badge-error-bg: var(--badge-error-bg);
+  --color-badge-error-border: var(--badge-error-border);
+  --color-badge-error-text: var(--badge-error-text);
+  --color-badge-warning-bg: var(--badge-warning-bg);
+  --color-badge-warning-border: var(--badge-warning-border);
+  --color-badge-warning-text: var(--badge-warning-text);
   --color-nav-bg: var(--nav-bg);
   --color-nav-surface-from: var(--nav-surface-from);
   --color-nav-surface-to: var(--nav-surface-to);

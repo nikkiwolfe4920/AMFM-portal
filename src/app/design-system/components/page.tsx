@@ -42,6 +42,15 @@ import { ElevatedCard } from "@/components/elevated-card";
 import { TopHero } from "@/components/top-hero";
 import { CourseCard } from "@/components/course-card";
 import { FooterCta } from "@/components/footer-cta";
+import { StatusTag } from "@/components/ui/status-tag";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHeader,
+  TableHeaderCell,
+  TableRow,
+} from "@/components/ui/table";
 
 import { ComponentShowcase } from "../_components/showcase";
 
@@ -673,6 +682,89 @@ export default function ComponentsPage() {
           full list of open items). View live at{" "}
           <Link href="/welcome" className="text-text-brand hover:underline">
             /welcome
+          </Link>
+          .
+        </p>
+      </ComponentShowcase>
+
+      <ComponentShowcase
+        name="StatusTag"
+        status="Draft"
+        purpose='Small pill indicating a discrete, color-coded state (e.g. "Yes"/"No"/"Invited") — introduced for the Champion Training, Completed MMP, and Status columns on /marriage-champions.'
+        docsAnchor="statustag"
+        figmaReference='AMFM Portal — "Our Marriage Champions / Populated" (node 3724:23444), Table cell instances'
+        tokens={[
+          "bg-badge-success-bg",
+          "border-badge-success-border",
+          "text-badge-success-text",
+          "bg-badge-error-bg",
+          "border-badge-error-border",
+          "text-badge-error-text",
+          "bg-badge-warning-bg",
+          "border-badge-warning-border",
+          "text-badge-warning-text",
+        ]}
+        states={["success", "error", "warning"]}
+      >
+        <div className="flex flex-wrap items-center gap-3">
+          <StatusTag variant="success">Yes</StatusTag>
+          <StatusTag variant="error">No</StatusTag>
+          <StatusTag variant="warning">Invited</StatusTag>
+        </div>
+        <p className="text-muted-foreground mt-4 text-xs">
+          The Figma reference shows the Status column&apos;s default (&quot;Active&quot;) state
+          as plain text, not a pill — a 4th variant was not invented for it, see{" "}
+          <code className="bg-muted rounded px-1 py-0.5">COMPONENTS.md#statustag</code>. Root-only
+          tokens for now — no dark-mode Figma reference exists yet. View live at{" "}
+          <Link href="/marriage-champions" className="text-text-brand hover:underline">
+            /marriage-champions
+          </Link>
+          .
+        </p>
+      </ComponentShowcase>
+
+      <ComponentShowcase
+        name="Table"
+        status="Draft"
+        purpose="Tabular, multi-column record data with mixed cell content (text, an embedded Select, a StatusTag, a row action) — introduced for the team member roster on /marriage-champions."
+        docsAnchor="table"
+        figmaReference='AMFM Portal — "Our Marriage Champions / Populated" (node 3724:23444), Table frame'
+        tokens={["border-border-secondary", "text-text-secondary", "text-foreground", "text-muted-foreground"]}
+        states={["Default"]}
+      >
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHeaderCell>Name</TableHeaderCell>
+              <TableHeaderCell>Campus</TableHeaderCell>
+              <TableHeaderCell>Status</TableHeaderCell>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            <TableRow>
+              <TableCell className="font-semibold">Olivia Rhye</TableCell>
+              <TableCell className="text-muted-foreground">North Campus</TableCell>
+              <TableCell>
+                <span className="text-muted-foreground">Active</span>
+              </TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell className="font-semibold">Natali Craig</TableCell>
+              <TableCell className="text-muted-foreground">West Campus</TableCell>
+              <TableCell>
+                <StatusTag variant="warning">Invited</StatusTag>
+              </TableCell>
+            </TableRow>
+          </TableBody>
+        </Table>
+        <p className="text-muted-foreground mt-4 text-xs">
+          Row hover/focus, empty state, and mobile/tablet responsive behavior are not evidenced in
+          the Figma reference — falls back to horizontal scroll on narrow viewports rather than a
+          guessed collapse pattern, see{" "}
+          <code className="bg-muted rounded px-1 py-0.5">COMPONENTS.md#table</code>. View the full
+          roster (with Select and StatusTag cells) live at{" "}
+          <Link href="/marriage-champions" className="text-text-brand hover:underline">
+            /marriage-champions
           </Link>
           .
         </p>
