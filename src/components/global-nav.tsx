@@ -3,6 +3,7 @@
 import * as React from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import {
   Blend,
   Building2,
@@ -40,17 +41,17 @@ interface NavLinkItem {
   label: string;
   href: string;
   icon: LucideIcon;
-  active?: boolean;
   external?: boolean;
 }
 
 /**
  * Placeholder routes — no dashboard/IA has been built yet for most of these
- * destinations (see COMPONENTS.md#globalnav Implementation rules). "Home"
- * and the two external URLs are the only real, verified destinations.
+ * destinations (see COMPONENTS.md#globalnav Implementation rules). "Home",
+ * "Our Marriage Champions", and the two external URLs are the only real,
+ * verified destinations.
  */
 const CHURCH_LINKS: NavLinkItem[] = [
-  { label: "Home", href: "/", icon: Home, active: true },
+  { label: "Home", href: "/", icon: Home },
   { label: "Our Data Dashboard", href: "/dashboard", icon: LayoutGrid },
   { label: "Our Marriage Champions", href: "/marriage-champions", icon: Trophy },
   { label: "HeartChart Resources", href: "/heartchart-resources", icon: FileHeart },
@@ -101,6 +102,12 @@ interface GlobalNavProps {
   className?: string;
   /** Uncontrolled initial state — defaults to collapsed, matching the Figma default. */
   defaultOpen?: boolean;
+  /**
+   * Overrides the route-derived active item, e.g. so `/design-system` can
+   * demo the active state regardless of which page it's rendered on. Real
+   * call sites should omit this and let `usePathname()` decide.
+   */
+  activeHref?: string;
 }
 
 /**
@@ -108,7 +115,7 @@ interface GlobalNavProps {
  * by default and expands to a 296px labeled panel on hover (or keyboard
  * focus) — see COMPONENTS.md#globalnav for the full contract.
  */
-export function GlobalNav({ className, defaultOpen = false }: GlobalNavProps) {
+export function GlobalNav({ className, defaultOpen = false, activeHref }: GlobalNavProps) {
   const [open, setOpen] = React.useState(defaultOpen);
   const rootRef = React.useRef<HTMLElement>(null);
   const hoveredRef = React.useRef(defaultOpen);
@@ -197,19 +204,21 @@ export function GlobalNav({ className, defaultOpen = false }: GlobalNavProps) {
             headingOpen="Your Church"
             headingClosed="Church"
             items={CHURCH_LINKS}
+            activeHref={activeHref}
           />
           <NavSection
             open={open}
             headingOpen="Ministry Tools"
             headingClosed="Tools"
             items={TOOLS_LINKS}
+            activeHref={activeHref}
           />
         </div>
       </div>
       <div className="flex shrink-0 flex-col gap-4 px-4 pb-6">
         <div className="flex flex-col">
           {FOOTER_LINKS.map((item) => (
-            <NavItem key={item.label} item={item} open={open} />
+            <NavItem key={item.label} item={item} open={open} activeHref={activeHref} />
           ))}
         </div>
         <NavAccountCard open={open} onMenuOpenChange={handleAccountMenuOpenChange} />
@@ -277,11 +286,13 @@ function NavSection({
   headingOpen,
   headingClosed,
   items,
+  activeHref,
 }: {
   open: boolean;
   headingOpen: string;
   headingClosed: string;
   items: NavLinkItem[];
+  activeHref?: string;
 }) {
   return (
     <div className="flex flex-col">
@@ -316,15 +327,25 @@ function NavSection({
       </div>
       <div className="flex flex-col px-4 pb-5">
         {items.map((item) => (
-          <NavItem key={item.label} item={item} open={open} />
+          <NavItem key={item.label} item={item} open={open} activeHref={activeHref} />
         ))}
       </div>
     </div>
   );
 }
 
-function NavItem({ item, open }: { item: NavLinkItem; open: boolean }) {
-  const { label, href, icon: Icon, active, external } = item;
+function NavItem({
+  item,
+  open,
+  activeHref,
+}: {
+  item: NavLinkItem;
+  open: boolean;
+  activeHref?: string;
+}) {
+  const { label, href, icon: Icon, external } = item;
+  const pathname = usePathname();
+  const active = (activeHref ?? pathname) === href;
 
   return (
     <Link

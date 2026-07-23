@@ -651,7 +651,7 @@ export default function ComponentsPage() {
         states={["Collapsed (default)", "Expanded (hover/focus)", "Active item", "Hover", "Focus", "Account menu open"]}
       >
         <div className="bg-nav-bg flex h-[950px] items-start rounded-xl p-6">
-          <GlobalNav />
+          <GlobalNav activeHref="/marriage-champions" />
         </div>
         <p className="text-muted-foreground mt-4 text-xs">
           Hover the rail (or Tab into it) to expand it — move the pointer away, or press{" "}
