@@ -28,6 +28,8 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
+import { FellowshipOfTheParksLogo } from "./_components/fellowship-of-the-parks-logo";
+
 type ProfileType = "church-leader" | "marriage-champion";
 
 interface TeamMember {
@@ -69,9 +71,14 @@ export default function MarriageChampionsPage() {
 
       <div className="flex min-w-0 flex-1 flex-col">
         <main className="min-w-0 flex-1 p-8">
-          <h1 className="font-display text-display-md text-foreground font-light">
-            Our Marriage Champions
-          </h1>
+          <div className="flex w-full flex-wrap items-center gap-4">
+            <h1 className="font-display text-display-md text-foreground min-w-[320px] shrink-0 font-light">
+              Our Marriage Champions
+            </h1>
+            <div className="flex flex-1 justify-end">
+              <FellowshipOfTheParksLogo />
+            </div>
+          </div>
 
           <ElevatedCard className="mt-8" innerClassName="p-8">
             <CardHeader className="flex flex-col gap-4 border-b px-0 pb-6 sm:flex-row sm:items-start sm:justify-between">
