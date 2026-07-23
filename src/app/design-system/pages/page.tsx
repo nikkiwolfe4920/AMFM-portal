@@ -64,10 +64,10 @@ export default function PagesIndexPage() {
                 View live →
               </Link>
             </div>
-            <p className="text-muted-foreground text-sm">
+            <p className="text-muted-foreground max-w-3xl text-sm">
               <span className="font-medium">Figma:</span> {page.figma}
             </p>
-            <p className="text-muted-foreground text-sm">
+            <p className="text-muted-foreground max-w-3xl text-sm">
               <span className="font-medium">Built from:</span> {page.builtFrom}
             </p>
           </div>
