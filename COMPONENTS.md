@@ -16,7 +16,7 @@ Every component below is rendered live at **`/design-system`** (`src/app/design-
 
 **Status**: Production Ready
 **Source**: `src/components/ui/button.tsx`
-**Figma**: AMFM Portal file, node `3273:19658` ("Primary" button set) and siblings; `default` variant also confirmed on the sign-up screen's primary CTA (`Onboarding/sign up`, node `1909:25231`) and on the "Start using HeartChart" CTA on `Onboarding/Create Profile` (node `1909:25769`) — see `figma/figma-links.md`
+**Figma**: AMFM Portal file, node `3273:19658` ("Primary" button set) and siblings; `default` variant also confirmed on the sign-up screen's primary CTA (`Onboarding/sign up`, node `1909:25231`), on the "Start using HeartChart" CTA on `Onboarding/Create Profile` (node `1909:25769`), and on the "Get Started" CTA on `Onboarding/First run church admin` (node `1894:16263`, within `1909:25772`) — the latter confirms the `default` variant's exact border/shadow-inset spec (`border-white/12`, `shadow-button-inset`) also holds unmodified on a dark, photo-background surface, not only the light auth-card surface previously verified, and confirms the icon-leading composition (`arrow-right` + label) already covered by this component's anatomy — see `figma/figma-links.md`
 
 ### Purpose
 
@@ -1315,3 +1315,87 @@ Both Figma references are desktop-only (80px/296px fixed rail widths); no mobile
 ### Visual examples
 
 Rendered live as a single instance (collapsed by default) at `/design-system/components#globalnav` — hover it (or Tab into it) to see the expanded state, and click the avatar/name to see the account menu. Previously `/design-system` rendered two side-by-side instances (one forced open via `defaultOpen`) to show both rail states at once; consolidated to one instance per the task that introduced hover-to-expand, since hovering the single instance now demonstrates both states directly.
+
+---
+
+## VideoPlayer
+
+**Status**: Not Implemented — identified and contract-documented via a design system audit of `Onboarding/First run church admin`; no code exists yet (see Implementation rules before building)
+**Source**: None yet
+**Figma**: AMFM Portal file, node `1894:16438` ("Video player 16:9"), within `Onboarding/First run church admin` (node `1909:25772`) — first appearance of any video-playback UI in the file (distinct from `DposystemStory`, which has no audio/video playback of its own)
+
+### Purpose
+
+Plays an embedded video with a branded poster/paused state and a persistent scrubber control bar — used on the first-run welcome screen to play a personalized church-admin introduction video ahead of the "Get Started" CTA.
+
+### Anatomy
+
+- Outer container: 16:9 aspect box, `rounded-2xl`, hairline border, elevated drop shadow (see Design tokens)
+- Poster image, `object-cover`, fills the container
+- Centered play-button overlay: `size-16` circle, `backdrop-blur-[8px]`, translucent dark fill, centered play glyph (20px)
+- Bottom gradient action bar (`bg-gradient-to-b from-transparent to-black/30`, `pt-10 pb-4 px-5`):
+  - Play/pause icon button (16px icon, 8px padding, `rounded-sm`)
+  - Volume icon button (same treatment)
+  - Elapsed-time label (`text-xs font-semibold text-white`)
+  - Progress/scrubber track (`backdrop-blur-[4px]`, translucent white, `rounded-full`) with separate buffered- and played-progress fills
+  - Remaining-time label
+  - Maximize/fullscreen icon button
+
+### Variants
+
+None evidenced — the referenced frame shows only one visual treatment (paused, poster visible, 0:00 elapsed).
+
+### States
+
+Only the default/paused state has a Figma reference. The following are real states this control will need but have **no Figma source to build against yet** — flag for design before shipping, same category of gap as `HeartChartSummary`'s missing 0% state:
+
+| State | Behavior |
+|---|---|
+| Default / paused | Poster visible, play-button overlay shown, elapsed time `00:00` — the only state with a Figma reference |
+| Playing | Undesigned — icon swap (play → pause), progress fill advancing, overlay play button presumably hidden |
+| Buffering | An empty "Buffering progress" layer exists in the Figma export (0-width in the static frame) but its visual behavior is undesigned |
+| Hover / focus (transport buttons) | Undesigned |
+| Fullscreen | Undesigned |
+
+### Properties / API (proposed — not yet implemented)
+
+```ts
+interface VideoPlayerProps {
+  src: string;
+  poster: string;
+  title: string; // accessible name for the player region
+}
+```
+
+Needs product/engineering input on whether this wraps a native `<video>` element or an external embed before finalizing — the video is a produced piece (not confirmed as a local file), so the source mechanism isn't settled.
+
+### Design tokens used
+
+- `backdrop-blur-[8px]` — reuse, exact match to `PhotoBackdrop`'s existing overlay blur value.
+- `backdrop-blur-[4px]` — new arbitrary blur value (no third-blur token exists yet); this is now the third distinct arbitrary blur radius in the app alongside `PhotoBackdrop`'s `[20px]`/`[8px]`. Not yet a forced token per `CLAUDE.md`'s anti-premature-abstraction guidance, but worth tracking if a fourth appears.
+- Translucent dark fills (play-button overlay, gradient action bar) should use `bg-overlay` at partial opacity (e.g. `bg-overlay/30`) rather than a new alpha token — Figma's own variable for this fill is misleadingly named `alpha-white-30` but resolves numerically to the same near-black as the existing `overlay` token (`#0a0d12`).
+- The outer shadow (`0px 16px 32px -4px rgba(0,0,0,0.7)`) does not match any existing shadow token (Tailwind's built-in `shadow-2xl` has a different offset/blur/spread/opacity) — not added as a new token here since this is the only use site so far; revisit as a candidate `shadow-*` token (e.g. `shadow-media-card`) if a second floating-card-over-photo use case appears, per `DESIGN.md`'s Shadows section.
+- `border-black/10` — reuse, same hairline treatment as `AuthCard`'s inner panel.
+
+### Accessibility requirements
+
+None of the following are resolved in the Figma source — required before this leaves Draft, not optional polish:
+
+- Must be built on a real `<video>` element (or an accessible wrapper around one), not a decorative image with click handlers — transport controls need real keyboard operability (Space/Enter to play-pause, arrow keys to seek), per `DESIGN.md`'s custom-widget ARIA guidance.
+- The scrubber needs an accessible name and value (`role="slider"` or a native `<input type="range">`), announcing current/remaining time — not a bare styled `div`.
+- Every icon-only transport control (play/pause, volume, maximize) needs an `aria-label`, the same requirement `Button`'s `size="icon"` already carries.
+- No captions/transcript story exists in the Figma reference — flag for product before shipping, same category of gap as `HeartChartSummary`'s missing 0%-participation design.
+
+### Responsive behavior
+
+Fixed `560×315` in the only referenced Figma frame — no mobile/tablet reference exists, the same category of gap already tracked for `HeartChartSummary`/`PricingCard`.
+
+### Implementation rules
+
+- No second use site is confirmed yet, so default to route-colocating under the first-run screen's `_components` per `CLAUDE.md`'s Component Creation Process — however, the file's broader metadata references other video-adjacent surfaces (Featured Training sections, HeartChart Resources "Video Cover" nodes) that may share this exact chrome. Confirm with design whether those share this component before deciding between route-colocated and a shared `src/components` primitive; don't assume either without checking.
+- Icons map to `lucide-react`'s `Play`, `Volume2`, `Maximize2` as the closest stable equivalents — matching the project's established "closest stable substitute" precedent (`GoogleIcon`, `Select`'s `ChevronDown`, `GlobalNav`'s icon set).
+- Do not build the "playing"/"buffering"/"fullscreen" states from guesswork — get explicit design or product sign-off on their visual treatment first, per this file's standing rule that no component should ship an unverified state.
+
+### Visual examples
+
+None yet — no code exists. Reference screenshot: Figma node `1894:16438` (`fileKey` `tg3U3gNcIYMn9aY9JYrIZc`).
