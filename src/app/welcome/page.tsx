@@ -14,7 +14,7 @@ const CHURCH_NAME = "Fellowship of the Parks";
 export default function WelcomePage() {
   return (
     <PhotoBackdrop scrim="radial" className="gap-16 px-8 py-16">
-      <div className="flex max-w-[1440px] flex-col items-center gap-16">
+      <div className="relative z-10 flex max-w-[1440px] flex-col items-center gap-16">
         <div className="flex flex-col items-center gap-2 text-center">
           <h1 className="font-display text-display-2xl text-nav-foreground font-light tracking-[-1.44px]">
             Welcome, {ADMIN_FIRST_NAME}.
