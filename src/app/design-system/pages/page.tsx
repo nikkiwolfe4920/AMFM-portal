@@ -42,6 +42,13 @@ const PAGES = [
     builtFrom:
       "GlobalNav + a page <h1> (font-display text-display-md) + TopHero (new, Draft) + a 3-step CourseCard pattern (new, Draft) inside an ElevatedCard (new, Production Ready) + two more ElevatedCard resource cards (Card's CardHeader/CardTitle/CardDescription/CardAction/CardContent, composed directly on ElevatedCard rather than the flat Card primitive) with ResourceListItem rows (updated to a real download-button treatment, Production Ready) + FooterCta (new, Draft), on the new background-gradient-from/background-gradient-to page-shell tokens. All real copy/icons/token values were pulled from the actual Figma node tree via the Figma MCP. TopHero's/CourseCard's photo assets and FooterCta's background texture remain blocked by this environment's egress policy (www.figma.com denied) and render gradient/flat-color placeholders instead — see COMPONENTS.md for each component's Implementation rules. Resource link destinations remain placeholder routes (\"#\"), the same category of gap already documented for GlobalNav's other nav links.",
   },
+  {
+    href: "/marriage-champions",
+    title: "Our Marriage Champions",
+    figma: 'AMFM Portal — "Our Marriage Champions / Populated" (node 3724:23444)',
+    builtFrom:
+      "GlobalNav (first real routed consumer — this is the page its own \"Our Marriage Champions\" nav item points to) + a page <h1> (font-display text-display-md) + ElevatedCard housing a Card header (CardTitle/CardDescription + a CardAction row composing Button variant=\"ghost\" with a leading icon and InputGroup with a leading Search icon addon, per the multi-action composition documented on Card) + Table (new, Draft) with per-row Select (Profile type) and StatusTag (new, Draft) instances for the Yes/No/Invited pills. Row delete affordance reuses Button size=\"icon\" variant=\"ghost\". The header's info icon (next to \"Completed MMP\") renders decoratively only — no Tooltip component exists in COMPONENTS.md yet, and one wasn't invented for this pass; see COMPONENTS.md#table Implementation rules. Row/cell data is representative sample data, not wired to a real backend.",
+  },
 ];
 
 export default function PagesIndexPage() {
