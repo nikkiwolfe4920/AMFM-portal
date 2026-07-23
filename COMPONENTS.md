@@ -264,15 +264,15 @@ Rendered live on `/create-profile`'s "Website" field; referenced at `/design-sys
 
 **Status**: Production Ready
 **Source**: `src/components/ui/select.tsx`
-**Figma**: AMFM Portal file, `Onboarding/Create Profile` (node `1909:25769`), nodes `1909:25261` ("Your role") and `1909:25262` ("Your primary goal"); trailing icon references the `chevron-down` Figma component (node `10:338`)
+**Figma**: AMFM Portal file, `Onboarding/Create Profile` (node `1909:25769`), nodes `1909:25261` ("Your role") and `1909:25262` ("Your primary goal"); also `"Our Marriage Champions / Populated"` (node `3724:23444`), the "Profile type" column's `Table cell` instances (fixed-width trigger, e.g. `w-44` on `/marriage-champions`); trailing icon references the `chevron-down` Figma component (node `10:338`) at 16px in both references
 
 ### Purpose
 
-Single-choice selection from an enumerated option list, styled to match `Input` so the two read as one form-control family — used on the referenced frame for "Your role" (~40 options) and "Your primary goal" (23 options).
+Single-choice selection from an enumerated option list, styled to match `Input` so the two read as one form-control family — used on the referenced frame for "Your role" (~40 options) and "Your primary goal" (23 options), and, in a narrow fixed-width variant, for the inline "Profile type" editor in `Table`'s Profile type column.
 
 ### Anatomy
 
-Trigger styled identically to `Input` (border, radius, `shadow-xs`, matching padding) → placeholder or selected-value text → trailing chevron-down icon → on open, a listbox popover of options.
+Trigger styled identically to `Input` (border, radius, `shadow-xs`, matching padding) → placeholder or selected-value text → trailing chevron-down icon → on open, a listbox popover of options. The value slot (`SelectValue`, `data-slot="select-value"`) is targeted by the trigger via `*:data-[slot=select-value]:min-w-0 flex-1 truncate`, so a trigger narrower than its content (e.g. the "Profile type" column's `w-44` trigger showing "Marriage Champion") truncates the value with an ellipsis instead of overflowing past the trigger's border — confirmed at `/marriage-champions`.
 
 ### Variants
 
@@ -295,7 +295,7 @@ Standard Radix `Select.Root` / `Select.Trigger` / `Select.Content` / `Select.Ite
 
 ### Design tokens used
 
-`border-input`, `bg-background`, `placeholder:text-muted-foreground`, `border-border-brand` (focus), `border-border-destructive-subtle` (invalid), `bg-muted/50` + `text-muted-foreground` (disabled), `shadow-xs`, `radius-md` — the identical token set `Input` uses, plus `lucide-react`'s `ChevronDown` icon (matching `iconLibrary` in `components.json`; closest stable equivalent to Figma's `chevron-down` component).
+`border-input`, `bg-background`, `placeholder:text-muted-foreground`, `border-border-brand` (focus), `border-border-destructive-subtle` (invalid), `bg-muted/50` + `text-muted-foreground` (disabled), `shadow-xs`, `radius-md` — the identical token set `Input` uses, plus `lucide-react`'s `ChevronDown` icon at `size-4` (16px, matching Figma's `chevron-down` component and `SelectItem`'s own check-icon size — see Implementation rules for the earlier oversized-icon bug this replaced).
 
 ### Accessibility requirements
 
@@ -305,17 +305,18 @@ Standard Radix `Select.Root` / `Select.Trigger` / `Select.Content` / `Select.Ite
 
 ### Responsive behavior
 
-Full width (`w-full`) like `Input`; no breakpoint-specific behavior of its own.
+Full width (`w-full`) like `Input` on `/create-profile`; also supports a fixed narrow width (`Table`'s "Profile type" column uses `w-44`) since the value slot truncates instead of overflowing — no breakpoint-specific behavior of its own.
 
 ### Implementation rules
 
 - Hand-authored `src/components/ui/select.tsx` from `@radix-ui/react-select` (installed — `ui.shadcn.com` itself remains unreachable from this environment per `CLAUDE.md`'s shadcn-CLI-unreachable workflow, but the underlying Radix package installs fine from `registry.npmjs.org`), matching upstream shadcn/ui's `select` shape and this project's `Input` token set exactly (`border-input`, `bg-background`, `px-3.5 py-2.5`, `text-base`, `shadow-xs`, focus/invalid/disabled treatment).
 - `SelectContent` caps height via `max-h-(--radix-select-content-available-height)` with an internal scrolling `Viewport`, plus `SelectScrollUpButton`/`SelectScrollDownButton` — verified against the 39-item "Your role" list on `/create-profile` (see Visual examples).
 - Given the option counts on the referenced frame (39 and 23 items), a searchable combobox variant remains a flagged UX consideration for product/design to weigh in on — not implemented here, since the plain Radix listbox already satisfies the documented contract and no combobox pattern exists elsewhere in the codebase to extend.
+- **Fixed: the trailing chevron floated outside a narrow trigger's border.** `/marriage-champions`'s "Profile type" column renders `SelectTrigger` at a fixed `w-44` (176px) with a long value ("Marriage Champion"); `SelectValue` carried no width-constraining classes, so its intrinsic content width — combined with an oversized `size-6` (24px) chevron eating into the available space — pushed the flex row past the trigger's own box, visually detaching the chevron from the drawn border instead of clipping the text. Fixed in the shared trigger (not the call site) two ways: (1) the chevron is now `size-4` (16px), matching Figma's actual `chevron-down` component size and `SelectItem`'s check icon; (2) the trigger scopes `min-w-0 flex-1 truncate` onto its `[data-slot=select-value]` child via Tailwind's `*:data-[...]:` child-attribute variant, so the value shrinks and truncates with an ellipsis inside any trigger width instead of overflowing. Deliberately *not* `line-clamp-1 flex items-center gap-2` (a pattern seen in some shadcn/ui forks) — `line-clamp-*` sets `display:-webkit-box`, which collides with a same-element `flex` utility's `display:flex` (last one in the generated stylesheet wins, and per CSS's flex-item blockification rules, `flex-1`/`min-w-0` already work on `SelectValue` as a block-level flex-item child of the trigger without needing `display:flex` set on `SelectValue` itself) — the collision silently drops `line-clamp`'s truncation behavior, hard-clipping text mid-character with no visible ellipsis, which is what this fix replaced. Verified in a real browser (computed `text-overflow: ellipsis` rendering correctly) at `/marriage-champions`, and confirmed the full-width `/create-profile` triggers still render unaffected.
 
 ### Visual examples
 
-Rendered live on `/create-profile`'s "Your role" (39 options) and "Your primary goal" (23 options) fields; referenced at `/design-system/components#select` and `/design-system/patterns#create-profile-card`.
+Rendered live on `/create-profile`'s "Your role" (39 options) and "Your primary goal" (23 options) fields, and on `/marriage-champions`'s "Profile type" column (narrow fixed-width trigger); referenced at `/design-system/components#select` and `/design-system/patterns#create-profile-card`.
 
 ---
 
@@ -1740,7 +1741,7 @@ Presents tabular, multi-column record data — one row per entity (e.g. a church
 
 ### Anatomy
 
-`Table` (root) → `TableHeader` → `TableRow` (header) → `TableHeaderCell` (per-column label; the "Completed MMP" column pairs its label with a trailing info affordance — see Known gaps below) → `TableBody` → `TableRow` (per record) → `TableCell` (content type varies per column — see Variants).
+Outer rounded card wrapper (`border`, `rounded-xl`, `shadow-xs`, `bg-background`, `overflow-hidden` — matching Figma's own "Table" frame, distinct from the surrounding `Card`/`ElevatedCard` shell the table sits inside) → inner horizontal-scroll wrapper (`overflow-x-auto`, the responsive fallback — see Responsive behavior) → `Table` (`<table>`) → `TableHeader` → `TableRow` (header) → `TableHeaderCell` (per-column label, `bg-secondary` background; the "Completed MMP" column pairs its label with a trailing info affordance — see Known gaps below) → `TableBody` → `TableRow` (per record) → `TableCell` (content type varies per column — see Variants).
 
 ### Variants
 
@@ -1776,7 +1777,7 @@ Purely compositional per call site (no `variant` prop) — matches `Card`'s sub-
 
 ### Design tokens used
 
-`border-border-secondary` (row dividers — the lighter divider tier already used for `/login`'s "or" rule), `text-text-secondary` (header cell labels), `text-foreground`/`text-muted-foreground` (cell text tiers, matching `ResourceListItem`'s existing title/description token split). No new tokens required.
+`border-border-secondary` (row dividers, matching `/login`'s "or" rule; also the outer card wrapper's own border), `bg-secondary` (header cell background — see `DESIGN.md`'s Color tokens), `bg-background` + `shadow-xs` (the outer card wrapper's fill/elevation, matching `Select`/`Input`'s existing `shadow-xs` tier), `rounded-xl` (the outer card wrapper's corner radius, from `DESIGN.md`'s Radius scale), `text-text-secondary` (header cell labels), `text-foreground`/`text-muted-foreground` (cell text tiers, matching `ResourceListItem`'s existing title/description token split). No new tokens required — all reused from the existing scale.
 
 ### Accessibility requirements
 
@@ -1786,15 +1787,16 @@ Purely compositional per call site (no `variant` prop) — matches `Card`'s sub-
 
 ### Responsive behavior
 
-The Figma reference is a fixed desktop composition (1272px table within a 1512px frame) with no mobile/tablet reference — the same category of gap already tracked for `HeartChartSummary`/`PricingCard`/`GlobalNav`. Rather than guess a card-per-row collapse pattern with no Figma reference to verify against, `Table`'s root wraps in `overflow-x-auto` so the table scrolls horizontally within its container on narrow viewports instead of breaking page layout — verified in a real browser at 390px/834px/1512px widths on `/marriage-champions`. This is a deliberate, documented fallback, not the final mobile design; revisit with a real card-per-row (or similar) pattern once a Figma mobile reference or explicit product direction exists.
+The Figma reference is a fixed desktop composition (1272px table within a 1512px frame) with no mobile/tablet reference — the same category of gap already tracked for `HeartChartSummary`/`PricingCard`/`GlobalNav`. Rather than guess a card-per-row collapse pattern with no Figma reference to verify against, `Table`'s root nests an `overflow-x-auto` wrapper inside the outer rounded card wrapper, so the `<table>` scrolls horizontally within its container on narrow viewports (while the outer wrapper keeps clipping to its rounded corners) instead of breaking page layout — verified in a real browser at 390px/834px/1512px widths on `/marriage-champions`. This is a deliberate, documented fallback, not the final mobile design; revisit with a real card-per-row (or similar) pattern once a Figma mobile reference or explicit product direction exists.
 
 ### Implementation rules
 
 - Reuse `Select`, `StatusTag`, and `Button` for their respective cell types rather than re-implementing their visuals inline — a `Table` cell is a layout slot, not a second copy of another component's styling.
 - Column widths in the Figma reference are fixed pixel values per column (202px, 216px, 138px, 111px, 132px, 115px, 96px, 60px) — treat these as a starting proportion, not literal pixel tokens, since no responsive reference exists to validate them at other viewport widths.
+- **Fixed: the header row had no background color and the table had no rounded corners.** Figma's "Table" frame (node `3724:23444`) wraps the whole grid in its own bordered, `rounded-xl`, `shadow-xs`, white card — distinct from the `Card`/`ElevatedCard` shell the table sits inside — with each `Table header cell` carrying a `bg-secondary` fill. The first implementation only wrapped `<table>` in a bare `overflow-x-auto` div with no border, background, or radius at all, so the header rendered as a flat, colorless, square-cornered strip. Fixed in `Table`'s root by adding an outer `border border-border-secondary rounded-xl bg-background shadow-xs overflow-hidden` wrapper (clipping the header's top corners to match the card) around the existing `overflow-x-auto` scroll wrapper, and adding `bg-secondary` to `TableHeaderCell`. As a direct consequence, `TableHeaderCell`/`TableCell`'s previous `first:pl-0 last:pr-0` (zeroing the edge columns' outer padding so they sat flush with the *surrounding* `Card`'s own edge) was removed — it predates the table having its own border, and left edge-column content touching the new border with no inset. All cells now get the same symmetric `px-4` used before, just no longer zeroed at the first/last column. Verified in a real browser (rounded top corners visible behind the header background, no clipping artifacts) at `/marriage-champions` and in the `/design-system/components#table` demo, which picked up the fix automatically since it shares the same primitive.
 - **Known gap**: the "Completed MMP" header cell's trailing info affordance implies a tooltip/definition interaction with no corresponding component documented in this file yet. Not built as a `Tooltip` speculatively from this single icon — `/marriage-champions` renders it as a decorative, `aria-hidden` `CircleHelp` icon only, with no interactive behavior. Confirm the real interaction model (hover-only vs. keyboard-operable per `DESIGN.md`'s custom-widget accessibility standard) with design before adding one.
 - A visual-only primitive with no embedded business logic, matching `Input`/`Select`'s convention — row data, cell content, and per-row control wiring (the `Select`/`StatusTag`/delete-button instances) live at the call site (`src/app/marriage-champions/page.tsx`), not inside this primitive.
-- Column widths are not fixed by the primitive — cells size to their content/container; the call site's `overflow-x-auto` wrapper (built into `Table`'s root) is the responsive fallback on narrow viewports (see Responsive behavior).
+- Column widths are not fixed by the primitive — cells size to their content/container; the call site's `overflow-x-auto` wrapper (built into `Table`'s root, nested inside the rounded card wrapper) is the responsive fallback on narrow viewports (see Responsive behavior).
 
 ### Visual examples
 

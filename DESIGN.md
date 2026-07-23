@@ -46,7 +46,7 @@ Defined once per theme (`:root` / `.dark`) as raw values in `src/tokens/colors.c
 | `card` / `card-foreground` | `bg-card`, `text-card-foreground` | Raised content surfaces |
 | `popover` / `popover-foreground` | `bg-popover`, `text-popover-foreground` | Floating surfaces (dropdowns, popovers) |
 | `primary` / `primary-foreground` | `bg-primary`, `text-primary-foreground` | Brand action color — the terracotta `#aa6140` from the login button, white foreground. This *is* the brand, not a placeholder neutral. |
-| `secondary` / `secondary-foreground` | `bg-secondary`, `text-secondary-foreground` | Secondary actions |
+| `secondary` / `secondary-foreground` | `bg-secondary`, `text-secondary-foreground` | Secondary actions. Also `Table`'s header-row background (`#fafafa` in Figma's "Our Marriage Champions" frame, node `3724:23444`) — numerically identical to `muted` in this theme, reused rather than adding a new `bg-table-header` token. |
 | `muted` / `muted-foreground` | `bg-muted`, `text-muted-foreground` | De-emphasized backgrounds/text. `muted-foreground` = brand "text-placeholder" `#717680` — this is what `Input`'s `placeholder:` color resolves to. |
 | `accent` / `accent-foreground` | `bg-accent`, `text-accent-foreground` | Hover/highlight states |
 | `destructive` | `bg-destructive`, `text-destructive` | Destructive actions, error states |
