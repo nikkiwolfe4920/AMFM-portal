@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import { Fraunces, Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -12,11 +13,35 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-const fraunces = Fraunces({
-  variable: "--font-fraunces",
-  subsets: ["latin"],
-  weight: ["300", "400"],
-  style: ["normal"],
+const financierDisplay = localFont({
+  src: [
+    {
+      path: "../../public/fonts/FinancierDisplayLight.otf",
+      weight: "300",
+      style: "normal",
+    },
+    {
+      path: "../../public/fonts/FinancierDisplayRegular.otf",
+      weight: "400",
+      style: "normal",
+    },
+    {
+      path: "../../public/fonts/FinancierDisplayMedium.otf",
+      weight: "500",
+      style: "normal",
+    },
+    {
+      path: "../../public/fonts/FinancierDisplayBold.otf",
+      weight: "700",
+      style: "normal",
+    },
+    {
+      path: "../../public/fonts/FinancierDisplayBlack.otf",
+      weight: "900",
+      style: "normal",
+    },
+  ],
+  variable: "--font-financier-display",
 });
 
 export const metadata: Metadata = {
@@ -32,7 +57,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} ${fraunces.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${geistMono.variable} ${financierDisplay.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">{children}</body>
     </html>

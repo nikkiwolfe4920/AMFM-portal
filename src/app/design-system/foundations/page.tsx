@@ -176,7 +176,7 @@ export default function FoundationsPage() {
       <Section
         id="display-typography"
         title="Display typography"
-        description="Fraunces (font-display) via next/font/google — substitutes for Figma's licensed 'Financier Display' face, same approximation precedent as Geist/Inter above. Only pair with the Figma-specified weight (font-light for display-md, font-normal for display-sm); never use font-display with the body type scale."
+        description="Financier Display (font-display) via next/font/local — the real, licensed Klim Type Foundry face (public/fonts/, weights 300/400/500/700/900), self-hosted since it isn't available via next/font/google. Only pair with the Figma-specified weight (font-light for display-md, font-normal for display-sm); never use font-display with the body type scale."
       >
         <div className="flex flex-col gap-4">
           {DISPLAY_TYPE_SCALE.map((type) => (
