@@ -88,5 +88,15 @@
     "figmaComponent": "AMFM Portal — Onboarding/Create Profile node 1909:25769, node 1909:25281 (\"Logo\") + node 1909:25280 (\"Powered by\" caption) — asset blocked, implemented as a text approximation",
     "documentation": "COMPONENTS.md#amfmlogo",
     "implementation": "src/app/create-profile/_components/amfm-logo.tsx"
+  },
+  "DropdownMenu": {
+    "figmaComponent": "",
+    "documentation": "COMPONENTS.md#dropdownmenu",
+    "implementation": "src/components/ui/dropdown-menu.tsx"
+  },
+  "GlobalNav": {
+    "figmaComponent": "AMFM Portal — collapsed/default state node 2065:13660 (\"Sidebar navigation\"); expanded/exposed state node 3727:25276 (\"Content\"); expanded-state logo lockup node 3727:25279 (\"Logo\") — exported as public/AMFM_Collaped.svg / public/AMFM_Expanded.svg. Account-card flyout menu has no Figma node, built from a supplied screenshot.",
+    "documentation": "COMPONENTS.md#globalnav",
+    "implementation": "src/components/global-nav.tsx"
   }
 }

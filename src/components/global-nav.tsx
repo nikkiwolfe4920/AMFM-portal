@@ -1,13 +1,16 @@
 "use client";
 
 import * as React from "react";
+import Image from "next/image";
 import Link from "next/link";
 import {
-  BookOpen,
   Blend,
+  Building2,
   ChevronsRight,
   ChevronsUpDown,
+  CreditCard,
   FileHeart,
+  FileText,
   Heart,
   HeartHandshake,
   Home,
@@ -15,14 +18,23 @@ import {
   LifeBuoy,
   List,
   Presentation,
+  Settings,
   Share,
   Share2,
   Trophy,
+  User,
   Users,
+  BookOpen,
   type LucideIcon,
 } from "lucide-react";
 
 import { cn } from "@/lib/utils";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 interface NavLinkItem {
   label: string;
@@ -66,6 +78,19 @@ const FOOTER_LINKS: NavLinkItem[] = [
   { label: "Support", href: "/support", icon: LifeBuoy },
 ];
 
+/**
+ * The account card's third-tier flyout — opened by clicking the avatar/name
+ * (see NavAccountCard). Same placeholder-route caveat as the nav links above:
+ * no settings/billing/legal routes exist yet.
+ */
+const ACCOUNT_MENU_LINKS: NavLinkItem[] = [
+  { label: "Personal Profile", href: "/profile", icon: User },
+  { label: "Church Profile", href: "/church-profile", icon: Building2 },
+  { label: "Account Settings", href: "/account-settings", icon: Settings },
+  { label: "Subscription & Billing", href: "/billing", icon: CreditCard },
+  { label: "Terms & Privacy", href: "/terms-privacy", icon: FileText },
+];
+
 const TRANSITION =
   "transition-[max-width,opacity,padding,gap] duration-300 ease-in-out motion-reduce:transition-none";
 const FADE_TRANSITION = "transition-opacity duration-300 ease-in-out motion-reduce:transition-none";
@@ -80,31 +105,72 @@ interface GlobalNavProps {
 
 /**
  * Fixed-dark app-shell navigation rail. Collapses to an 80px icon-only rail
- * by default and expands to a 296px labeled panel on click — see
- * COMPONENTS.md#globalnav for the full contract.
+ * by default and expands to a 296px labeled panel on hover (or keyboard
+ * focus) — see COMPONENTS.md#globalnav for the full contract.
  */
 export function GlobalNav({ className, defaultOpen = false }: GlobalNavProps) {
   const [open, setOpen] = React.useState(defaultOpen);
   const rootRef = React.useRef<HTMLElement>(null);
+  const hoveredRef = React.useRef(defaultOpen);
+  const focusedRef = React.useRef(false);
+  const accountMenuOpenRef = React.useRef(false);
+
+  const syncOpen = React.useCallback(() => {
+    setOpen(hoveredRef.current || focusedRef.current || accountMenuOpenRef.current);
+  }, []);
+
+  const handleMouseEnter = React.useCallback(() => {
+    hoveredRef.current = true;
+    syncOpen();
+  }, [syncOpen]);
+
+  const handleMouseLeave = React.useCallback(() => {
+    hoveredRef.current = false;
+    syncOpen();
+  }, [syncOpen]);
+
+  const handleFocus = React.useCallback(() => {
+    focusedRef.current = true;
+    syncOpen();
+  }, [syncOpen]);
+
+  const handleBlur = React.useCallback(
+    (event: React.FocusEvent<HTMLElement>) => {
+      // Focus moving to another element still inside the rail (or into the
+      // account menu's portal-rendered content) isn't a real blur — ignore it.
+      const nextTarget = event.relatedTarget;
+      if (
+        (nextTarget instanceof Node && rootRef.current?.contains(nextTarget)) ||
+        accountMenuOpenRef.current
+      ) {
+        return;
+      }
+      focusedRef.current = false;
+      syncOpen();
+    },
+    [syncOpen]
+  );
+
+  const handleAccountMenuOpenChange = React.useCallback(
+    (nextOpen: boolean) => {
+      accountMenuOpenRef.current = nextOpen;
+      syncOpen();
+    },
+    [syncOpen]
+  );
 
   React.useEffect(() => {
     if (!open) return;
 
-    function handlePointerDown(event: PointerEvent) {
-      if (rootRef.current && !rootRef.current.contains(event.target as Node)) {
-        setOpen(false);
-      }
-    }
     function handleKeyDown(event: KeyboardEvent) {
-      if (event.key === "Escape") setOpen(false);
+      if (event.key !== "Escape") return;
+      hoveredRef.current = false;
+      focusedRef.current = false;
+      setOpen(false);
     }
 
-    document.addEventListener("pointerdown", handlePointerDown);
     document.addEventListener("keydown", handleKeyDown);
-    return () => {
-      document.removeEventListener("pointerdown", handlePointerDown);
-      document.removeEventListener("keydown", handleKeyDown);
-    };
+    return () => document.removeEventListener("keydown", handleKeyDown);
   }, [open]);
 
   return (
@@ -112,6 +178,10 @@ export function GlobalNav({ className, defaultOpen = false }: GlobalNavProps) {
       ref={rootRef}
       aria-label="Main"
       data-state={open ? "open" : "closed"}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+      onFocus={handleFocus}
+      onBlur={handleBlur}
       className={cn(
         "flex h-full flex-col overflow-hidden rounded-2xl border border-white/8 bg-gradient-to-b from-nav-surface-from/90 to-nav-surface-to/90 backdrop-blur-2xl",
         "transition-[width] duration-300 ease-in-out motion-reduce:transition-none",
@@ -120,7 +190,7 @@ export function GlobalNav({ className, defaultOpen = false }: GlobalNavProps) {
       )}
     >
       <div className="flex min-h-0 flex-1 flex-col gap-8 overflow-y-auto pt-6">
-        <NavHeader open={open} onToggle={() => setOpen((v) => !v)} />
+        <NavHeader open={open} />
         <div className="flex flex-col">
           <NavSection
             open={open}
@@ -142,75 +212,64 @@ export function GlobalNav({ className, defaultOpen = false }: GlobalNavProps) {
             <NavItem key={item.label} item={item} open={open} />
           ))}
         </div>
-        <NavAccountCard open={open} />
+        <NavAccountCard open={open} onMenuOpenChange={handleAccountMenuOpenChange} />
       </div>
     </nav>
   );
 }
 
-function NavHeader({ open, onToggle }: { open: boolean; onToggle: () => void }) {
-  return (
-    <div className={cn("flex h-8 shrink-0 items-center", TRANSITION, open ? "px-5" : "px-4")}>
-      <button
-        type="button"
-        onClick={onToggle}
-        aria-expanded={open}
-        aria-label={open ? "Collapse navigation" : "Expand navigation"}
-        className="focus-visible:ring-ring/50 relative flex h-8 w-full items-center overflow-hidden rounded-sm outline-none focus-visible:ring-[3px]"
-      >
-        <span
-          aria-hidden="true"
-          className={cn(
-            "absolute inset-0 flex items-center justify-center",
-            FADE_TRANSITION,
-            open ? "opacity-0" : "opacity-100"
-          )}
-        >
-          <NavWordmark />
-        </span>
-        <span
-          aria-hidden="true"
-          className={cn(
-            "absolute inset-0 flex items-center justify-start",
-            FADE_TRANSITION,
-            open ? "opacity-100" : "opacity-0"
-          )}
-        >
-          <NavWordmarkFull />
-        </span>
-      </button>
-    </div>
-  );
-}
-
 /**
- * Hand-authored text approximation of the "amfm" wordmark, matching
- * AmfmLogo's precedent (src/app/create-profile/_components/amfm-logo.tsx) —
- * the real exported asset is blocked by this environment's network policy,
- * see DESIGN.md Known gaps. Kept separate from AmfmLogo rather than reused
- * since the composition differs (no "Powered by" prefix, nav-fixed-dark
- * tokens instead of the auth-fixed-light tokens).
+ * Static brand mark — cross-fades between the collapsed logomark and the
+ * expanded lockup, both real exported assets (public/AMFM_Collaped.svg,
+ * public/AMFM_Expanded.svg). No longer a click target: expand/collapse is
+ * driven by hovering (or keyboard-focusing) the rail itself, not the logo.
  */
-function NavWordmark() {
+function NavHeader({ open }: { open: boolean }) {
   return (
-    <span className="text-nav-foreground font-display text-lg leading-none font-semibold">
-      amfm
-    </span>
-  );
-}
-
-function NavWordmarkFull() {
-  return (
-    <span className="flex items-center gap-2">
-      <span className="text-nav-foreground font-display text-xl leading-none font-semibold">
-        amfm
+    <div
+      role="img"
+      aria-label="amfm — Association of Marriage & Family Ministries"
+      className={cn(
+        "relative flex h-8 shrink-0 items-center overflow-hidden",
+        TRANSITION,
+        open ? "px-5" : "px-4"
+      )}
+    >
+      <span
+        aria-hidden="true"
+        className={cn(
+          "absolute inset-0 flex items-center justify-center",
+          FADE_TRANSITION,
+          open ? "opacity-0" : "opacity-100"
+        )}
+      >
+        <Image
+          src="/AMFM_Collaped.svg"
+          alt=""
+          width={48}
+          height={17}
+          className="block h-[17px] w-auto"
+          unoptimized
+        />
       </span>
-      <span className="text-nav-foreground-subtle flex flex-col justify-center text-[5.5px] leading-[7px] font-semibold tracking-[0.4px] uppercase">
-        <span>Association</span>
-        <span>of Marriage</span>
-        <span>&amp; Family Ministries</span>
+      <span
+        aria-hidden="true"
+        className={cn(
+          "absolute inset-0 flex items-center justify-start",
+          FADE_TRANSITION,
+          open ? "opacity-100" : "opacity-0"
+        )}
+      >
+        <Image
+          src="/AMFM_Expanded.svg"
+          alt=""
+          width={169}
+          height={33}
+          className="block h-8 w-auto"
+          unoptimized
+        />
       </span>
-    </span>
+    </div>
   );
 }
 
@@ -303,58 +362,83 @@ function NavItem({ item, open }: { item: NavLinkItem; open: boolean }) {
   );
 }
 
-function NavAccountCard({ open }: { open: boolean }) {
+function NavAccountCard({
+  open,
+  onMenuOpenChange,
+}: {
+  open: boolean;
+  onMenuOpenChange: (open: boolean) => void;
+}) {
   return (
-    <button
-      type="button"
-      className={cn(
-        "border-nav-border focus-visible:ring-ring/50 relative flex h-[68px] w-full shrink-0 gap-4 rounded-xl border outline-none focus-visible:ring-[3px]",
-        TRANSITION,
-        // Collapsed matches Figma's dedicated centered layout (p-0,
-        // justify-center) rather than reusing the expanded state's
-        // left-aligned one (items-start, p-3) — without this the avatar
-        // renders flush-left inside the padded box instead of centered.
-        open ? "items-start p-3" : "items-center justify-center p-0"
-      )}
-    >
-      <span
-        className={cn("flex min-w-0 items-center", open ? "flex-1 gap-2" : "flex-none gap-0")}
-      >
-        <span className="relative size-10 shrink-0 rounded-full border border-black/8">
-          <span
-            aria-hidden="true"
-            className="bg-nav-active-from text-nav-foreground flex size-full items-center justify-center rounded-full text-xs font-semibold"
-          >
-            OR
-          </span>
-          <span
-            aria-hidden="true"
-            className="bg-nav-success border-nav-bg absolute right-[-1px] bottom-[-1px] size-2.5 rounded-full border-[1.5px]"
-          />
-        </span>
-        <span
+    <DropdownMenu onOpenChange={onMenuOpenChange}>
+      <DropdownMenuTrigger asChild>
+        <button
+          type="button"
           className={cn(
-            "flex min-w-0 flex-col overflow-hidden text-left text-sm leading-[22px] whitespace-nowrap",
+            "border-nav-border focus-visible:ring-ring/50 relative flex h-[68px] w-full shrink-0 gap-4 rounded-xl border outline-none focus-visible:ring-[3px]",
             TRANSITION,
-            open ? "max-w-40 opacity-100" : "max-w-0 opacity-0"
+            // Collapsed matches Figma's dedicated centered layout (p-0,
+            // justify-center) rather than reusing the expanded state's
+            // left-aligned one (items-start, p-3) — without this the avatar
+            // renders flush-left inside the padded box instead of centered.
+            open ? "items-start p-3" : "items-center justify-center p-0"
           )}
         >
-          <span className="text-nav-foreground font-semibold">Olivia Rhye</span>
-          <span className="text-nav-foreground-subtle font-normal">
-            olivia@untitledui.com
+          <span
+            className={cn("flex min-w-0 items-center", open ? "flex-1 gap-2" : "flex-none gap-0")}
+          >
+            <span className="relative size-10 shrink-0 rounded-full border border-black/8">
+              <span
+                aria-hidden="true"
+                className="bg-nav-active-from text-nav-foreground flex size-full items-center justify-center rounded-full text-xs font-semibold"
+              >
+                OR
+              </span>
+              <span
+                aria-hidden="true"
+                className="bg-nav-success border-nav-bg absolute right-[-1px] bottom-[-1px] size-2.5 rounded-full border-[1.5px]"
+              />
+            </span>
+            <span
+              className={cn(
+                "flex min-w-0 flex-col overflow-hidden text-left text-sm leading-[22px] whitespace-nowrap",
+                TRANSITION,
+                open ? "max-w-40 opacity-100" : "max-w-0 opacity-0"
+              )}
+            >
+              <span className="text-nav-foreground font-semibold">Olivia Rhye</span>
+              <span className="text-nav-foreground-subtle font-normal">
+                olivia@untitledui.com
+              </span>
+            </span>
           </span>
-        </span>
-      </span>
-      <span
-        aria-hidden="true"
-        className={cn(
-          "absolute top-[7px] right-[7px] flex size-7 items-center justify-center rounded-sm",
-          FADE_TRANSITION,
-          open ? "opacity-100" : "pointer-events-none opacity-0"
-        )}
+          <span
+            aria-hidden="true"
+            className={cn(
+              "absolute top-[7px] right-[7px] flex size-7 items-center justify-center rounded-sm",
+              FADE_TRANSITION,
+              open ? "opacity-100" : "pointer-events-none opacity-0"
+            )}
+          >
+            <ChevronsUpDown className="text-nav-foreground-subtle size-4" />
+          </span>
+        </button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent
+        side="right"
+        align="end"
+        sideOffset={12}
+        className="border-nav-border bg-nav-surface-from/95 w-64 rounded-2xl border p-2 shadow-2xl backdrop-blur-2xl"
       >
-        <ChevronsUpDown className="text-nav-foreground-subtle size-4" />
-      </span>
-    </button>
+        {ACCOUNT_MENU_LINKS.map(({ label, href, icon: Icon }) => (
+          <DropdownMenuItem key={label} asChild className="focus:bg-white/5 rounded-lg p-2.5">
+            <Link href={href} className="flex items-center gap-3">
+              <Icon aria-hidden="true" className="text-nav-foreground-muted shrink-0" />
+              <span className="text-nav-foreground text-sm font-medium">{label}</span>
+            </Link>
+          </DropdownMenuItem>
+        ))}
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 }
