@@ -229,11 +229,7 @@ function NavHeader({ open }: { open: boolean }) {
     <div
       role="img"
       aria-label="amfm — Association of Marriage & Family Ministries"
-      className={cn(
-        "relative flex h-8 shrink-0 items-center overflow-hidden",
-        TRANSITION,
-        open ? "px-5" : "px-4"
-      )}
+      className="relative flex h-8 shrink-0 items-center overflow-hidden"
     >
       <span
         aria-hidden="true"
@@ -255,7 +251,10 @@ function NavHeader({ open }: { open: boolean }) {
       <span
         aria-hidden="true"
         className={cn(
-          "absolute inset-0 flex items-center justify-start",
+          // left-5 (not padding on this wrapper) so the expanded lockup lines up
+          // with "Your Church" below — see NavSection's inset-x-5 heading, which
+          // uses the same fix for the same containing-block/padding-box reason.
+          "absolute inset-y-0 left-5 flex items-center",
           FADE_TRANSITION,
           open ? "opacity-100" : "opacity-0"
         )}
