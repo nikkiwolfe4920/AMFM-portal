@@ -36,6 +36,20 @@
   --border-destructive-subtle: oklch(0.801 0.109 24.573);
   --fg-disabled: oklch(0.728 0.011 267.331);
 
+  /* HeartChart Resources page (node 2361:19280) — dashboard shell background,
+   * a subtle warm-cream gradient distinct from the plain white `background`
+   * token. Root-only for now: no dark-mode Figma reference exists yet, same
+   * class of gap as the status and nav tokens above. */
+  --background-gradient-from: oklch(0.951 0.02 84.59); /* Colors/Yellow/50, #f5eee0 */
+  --background-gradient-to: oklch(0.983 0.011 84.578); /* Colors/Yellow/25, #fdf9f1 */
+
+  /* Course Card's numbered step-header backgrounds (node 2316:26815 and
+   * siblings) — a 3-tier brand accent scale that darkens per step. Steps 1/2
+   * reuse existing tokens by exact hex match (border-brand #c07858,
+   * text-brand #894e34); brand-900 is the new third tier with no existing
+   * equivalent. */
+  --brand-900: oklch(0.309 0.054 40.586); /* Component colors/Utility/Brand/utility-brand-900, #47261a */
+
   /* Status colors — participation-level indicator (HeartChartSummary). Root-only:
    * no dark-mode value has a Figma reference yet, see DESIGN.md Known gaps. */
   --status-success: oklch(0.63 0.067 137.227);
@@ -86,6 +100,12 @@
 .dark {
   --background: oklch(0.145 0 0);
   --foreground: oklch(0.985 0 0);
+  /* No Figma dark-mode reference for the warm-cream gradient exists yet (see
+   * DESIGN.md Known gaps) — collapses to the flat dark `background` value so
+   * theme-aware text sitting directly on it (e.g. the page H1) stays legible
+   * instead of silently breaking contrast, rather than staying light-only. */
+  --background-gradient-from: var(--background);
+  --background-gradient-to: var(--background);
   --card: oklch(0.205 0 0);
   --card-foreground: oklch(0.985 0 0);
   --popover: oklch(0.205 0 0);
@@ -146,6 +166,9 @@
   --color-border-destructive-subtle: var(--border-destructive-subtle);
   --color-fg-disabled: var(--fg-disabled);
   --color-overlay: var(--overlay);
+  --color-background-gradient-from: var(--background-gradient-from);
+  --color-background-gradient-to: var(--background-gradient-to);
+  --color-brand-900: var(--brand-900);
   --color-status-success: var(--status-success);
   --color-status-success-strong: var(--status-success-strong);
   --color-status-warning: var(--status-warning);

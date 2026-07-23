@@ -47,6 +47,19 @@ const COLOR_SWATCHES: { name: string; className: string; hint?: string }[] = [
     className: "bg-highlight-gold",
     hint: "Personalized emphasis on /welcome #e9c481",
   },
+  {
+    name: "brand-900",
+    className: "bg-brand-900",
+    hint: "CourseCard step 3 header #47261a",
+  },
+];
+
+const GRADIENT_SWATCHES = [
+  {
+    name: "background-gradient-from → background-gradient-to",
+    className: "from-background-gradient-from to-background-gradient-to bg-gradient-to-l",
+    hint: "/heartchart-resources page shell — #f5eee0 → #fdf9f1, root-only (collapses to flat background in .dark)",
+  },
 ];
 
 const RADIUS_SWATCHES = [
@@ -86,7 +99,7 @@ const DISPLAY_TYPE_SCALE = [
   {
     name: "text-display-md",
     className: "font-display text-display-md font-light",
-    hint: "36px / 40px — CardTitle on /create-profile",
+    hint: "36px / 40px — CardTitle on /create-profile, page <h1> on /heartchart-resources",
   },
   {
     name: "text-display-lg",
@@ -144,6 +157,11 @@ export default function FoundationsPage() {
       >
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4">
           {COLOR_SWATCHES.map((swatch) => (
+            <Swatch key={swatch.name} {...swatch} />
+          ))}
+        </div>
+        <div className="grid grid-cols-1 gap-4">
+          {GRADIENT_SWATCHES.map((swatch) => (
             <Swatch key={swatch.name} {...swatch} />
           ))}
         </div>

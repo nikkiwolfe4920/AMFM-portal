@@ -38,6 +38,10 @@ import { SignupSuccess } from "@/app/signup/_components/signup-success";
 import { GlobalNav } from "@/components/global-nav";
 import { VideoPlayer } from "@/app/welcome/_components/video-player";
 import { ResourceListItem } from "@/components/resource-list-item";
+import { ElevatedCard } from "@/components/elevated-card";
+import { TopHero } from "@/components/top-hero";
+import { CourseCard } from "@/components/course-card";
+import { FooterCta } from "@/components/footer-cta";
 
 import { ComponentShowcase } from "../_components/showcase";
 
@@ -289,38 +293,155 @@ export default function ComponentsPage() {
 
       <ComponentShowcase
         name="ResourceListItem"
-        status="Draft"
-        purpose="Presents one linked resource (icon, title, supporting description, trailing action) inside a card-based list — used on /heartchart-resources."
+        status="Production Ready"
+        purpose="Presents one downloadable resource (icon, title, supporting description, trailing download action) inside a card-based list — used on /heartchart-resources."
         docsAnchor="resourcelistitem"
-        figmaReference='AMFM Portal — HeartChart Resources node 3722:19475, six "Table cell" instances across two resource-list cards'
-        tokens={["text-foreground", "text-muted-foreground", "border", "bg-background", "shadow-xs", "rounded-md"]}
+        figmaReference='AMFM Portal — HeartChart Resources node 2361:19280, six "Table cell" instances across the Optional Resources and Premium Resources cards'
+        tokens={["text-foreground", "text-muted-foreground", "shadow-xs", "rounded-md"]}
         states={["Default"]}
       >
         <div className="flex max-w-md flex-col gap-6">
           <ResourceListItem
             icon={ClipboardCheck}
-            title="Complete your HeartChart assessment"
-            description="Answer a short set of questions to build your profile."
+            title="HeartChart Weekend Service Kit"
+            description="Plan, host, and guide your HeartChart service moment"
             href="#"
-            actionLabel="Open Complete your HeartChart assessment"
+            actionLabel="Download HeartChart Weekend Service Kit"
           />
           <ResourceListItem
             icon={Share2}
-            title="Share your results"
-            description="Invite your spouse or a friend to compare HeartCharts."
+            title="HeartChart Promotional Kit"
+            description="Emails, social, and assets to drive participation"
             href="#"
-            actionLabel="Open Share your results"
+            actionLabel="Download HeartChart Promotional Kit"
           />
         </div>
         <p className="text-muted-foreground mt-4 text-xs">
-          Hover/focus states aren&apos;t yet designed (no Figma reference shows one), and the
-          trailing icon-button&apos;s glyph/variant are unconfirmed defaults — see{" "}
+          The trailing action downloads the resource — confirmed by Figma&apos;s own interaction
+          annotation — not a navigation chevron. See{" "}
           <code className="bg-muted rounded px-1 py-0.5">COMPONENTS.md#resourcelistitem</code>.
           View live at{" "}
           <Link href="/heartchart-resources" className="text-text-brand hover:underline">
             /heartchart-resources
           </Link>
           .
+        </p>
+      </ComponentShowcase>
+
+      <ComponentShowcase
+        name="ElevatedCard"
+        status="Production Ready"
+        purpose="Shared nested-shell surface (outer shadow-card shell wrapping an inner bordered panel) used by TopHero and the HeartChart Resources cards."
+        docsAnchor="elevatedcard"
+        figmaReference='AMFM Portal — shared shape confirmed on "Featured Training" (node 2318:26997) and the HeartChart Resources cards (node 2361:19280)'
+        tokens={["bg-background", "shadow-card", "rounded-2xl", "rounded-md", "border-border"]}
+        states={["Default"]}
+      >
+        <ElevatedCard className="max-w-sm">
+          <p className="p-6 text-sm">Outer shadow-card shell + inner bordered panel.</p>
+        </ElevatedCard>
+        <p className="text-muted-foreground mt-4 text-xs">
+          Extracted once a third real instance of this shape appeared, per{" "}
+          <code className="bg-muted rounded px-1 py-0.5">HeartChartSummary</code>&apos;s own
+          documented precedent — see{" "}
+          <code className="bg-muted rounded px-1 py-0.5">COMPONENTS.md#elevatedcard</code>.
+        </p>
+      </ComponentShowcase>
+
+      <ComponentShowcase
+        name="TopHero"
+        status="Draft"
+        purpose="Full-bleed photo hero for a dashboard page's featured training/promo banner — a two-tone heading, supporting copy, and a video CTA."
+        docsAnchor="tophero"
+        figmaReference='AMFM Portal — "Featured Training" component (node 2318:26997)'
+        tokens={[
+          "text-nav-foreground",
+          "text-highlight-gold",
+          "text-nav-foreground-muted",
+          "text-display-lg",
+          "text-display-2xl",
+        ]}
+        states={["Default"]}
+      >
+        <TopHero
+          eyebrowHeading="Let's prepare for your"
+          highlightHeading="HeartChart Weekend"
+          description="Three simple steps to get your people engaged—and your dashboard up and running."
+          ctaLabel="Watch the Overview"
+        />
+        <p className="text-muted-foreground mt-4 text-xs">
+          The real background photo is blocked in this environment (see{" "}
+          <code className="bg-muted rounded px-1 py-0.5">COMPONENTS.md#tophero</code>) — renders a
+          gradient placeholder instead. View live at{" "}
+          <Link href="/heartchart-resources" className="text-text-brand hover:underline">
+            /heartchart-resources
+          </Link>
+          .
+        </p>
+      </ComponentShowcase>
+
+      <ComponentShowcase
+        name="CourseCard"
+        status="Draft"
+        purpose="One step in a fixed 3-step course pattern — numbered header, video-cover CTA, and a supporting checklist."
+        docsAnchor="coursecard"
+        figmaReference='AMFM Portal — "Course Card" component (node 2074:45130)'
+        tokens={["bg-border-brand", "bg-text-brand", "bg-brand-900", "bg-muted", "text-muted-foreground", "text-primary"]}
+        states={["Step 1", "Step 2", "Step 3"]}
+      >
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+          <CourseCard
+            step={1}
+            eyebrow="Before the weekend service"
+            title="Get Your Team Ready"
+            videoCtaLabel="See How It Works"
+            checklist={[
+              "Share your QR code and link with your team to start your dashboard",
+              "Upload your logo (recommended)",
+            ]}
+          />
+          <CourseCard
+            step={2}
+            eyebrow="During service"
+            title="Create the Moment"
+            videoCtaLabel="See How It Works"
+            checklist={["Give people 3 minutes to complete their HeartChart"]}
+          />
+          <CourseCard
+            step={3}
+            eyebrow="Don't miss this"
+            title="Point Them to the Next Step"
+            videoCtaLabel="See How It Works"
+            hideArrow
+            checklist={["Use your dashboard to guide next steps"]}
+          />
+        </div>
+        <p className="text-muted-foreground mt-4 text-xs">
+          Per-step video thumbnails are blocked in this environment (see{" "}
+          <code className="bg-muted rounded px-1 py-0.5">COMPONENTS.md#coursecard</code>) — renders
+          a gradient placeholder instead. View the full 3-step pattern with real copy at{" "}
+          <Link href="/heartchart-resources" className="text-text-brand hover:underline">
+            /heartchart-resources
+          </Link>
+          .
+        </p>
+      </ComponentShowcase>
+
+      <ComponentShowcase
+        name="FooterCta"
+        status="Draft"
+        purpose="Full-bleed banner prompting a free-tier account to upgrade to Premium — used at the bottom of /heartchart-resources."
+        docsAnchor="footercta"
+        figmaReference='AMFM Portal — "Footer CTA" component (node 1909:25789)'
+        tokens={["bg-primary", "text-primary-foreground", "text-display-md"]}
+        states={["Default"]}
+      >
+        <FooterCta heading="Start using all the tools today." ctaLabel="Upgrade to Premium" />
+        <p className="text-muted-foreground mt-4 text-xs">
+          Figma&apos;s dev annotation notes this &quot;only shows if they have a free
+          account.&quot; The background texture asset is blocked in this environment — renders a
+          flat <code className="bg-muted rounded px-1 py-0.5">bg-primary</code> fill instead, see{" "}
+          <code className="bg-muted rounded px-1 py-0.5">COMPONENTS.md#footercta</code>.
         </p>
       </ComponentShowcase>
 

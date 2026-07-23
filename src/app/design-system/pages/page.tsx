@@ -38,9 +38,9 @@ const PAGES = [
   {
     href: "/heartchart-resources",
     title: "HeartChart Resources",
-    figma: 'AMFM Portal — "HeartChart Resources" node 3722:19475',
+    figma: 'AMFM Portal — "HeartChart Resources" component (node 2361:19280, rendered on-canvas as node 3722:19475)',
     builtFrom:
-      "GlobalNav + Card (CardHeader/CardContent) + ResourceListItem (new, Draft). Partial implementation only — the Figma page's \"Page header,\" \"Featured Training\" hero, numbered \"Course Card\" steps, and full-bleed \"Footer CTA\" banner are intentionally not built: none has an approved COMPONENTS.md component or pattern yet (see the HeartChart Resources design system audit). A bare <h1> stands in for the missing Page header so the route still satisfies DESIGN.md's one-h1-per-page rule. Resource card titles/descriptions and link destinations are placeholder copy/routes — Figma's exact text couldn't be retrieved this session (tool issue, not a design gap) and no real destination routes exist yet, the same category of gap already documented for GlobalNav's other nav links.",
+      "GlobalNav + a page <h1> (font-display text-display-md) + TopHero (new, Draft) + a 3-step CourseCard pattern (new, Draft) inside an ElevatedCard (new, Production Ready) + two more ElevatedCard resource cards (Card's CardHeader/CardTitle/CardDescription/CardAction/CardContent, composed directly on ElevatedCard rather than the flat Card primitive) with ResourceListItem rows (updated to a real download-button treatment, Production Ready) + FooterCta (new, Draft), on the new background-gradient-from/background-gradient-to page-shell tokens. All real copy/icons/token values were pulled from the actual Figma node tree via the Figma MCP. TopHero's/CourseCard's photo assets and FooterCta's background texture remain blocked by this environment's egress policy (www.figma.com denied) and render gradient/flat-color placeholders instead — see COMPONENTS.md for each component's Implementation rules. Resource link destinations remain placeholder routes (\"#\"), the same category of gap already documented for GlobalNav's other nav links.",
   },
 ];
 
