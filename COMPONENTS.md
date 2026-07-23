@@ -587,6 +587,76 @@ Rendered live in `PricingCard`'s benefit list on `/create-profile`; referenced a
 
 ---
 
+## ResourceListItem
+
+**Status**: Draft (implemented; several decisions below are unconfirmed against Figma — see Implementation rules)
+**Source**: `src/components/resource-list-item.tsx`
+**Figma**: AMFM Portal file, "HeartChart Resources" (node `3722:19475`), `Table cell` instances — six confirmed instances across two resource-list cards (nodes `0:941`, `0:952`, `0:963` and `0:999`, `0:1010`, `0:1022`)
+
+### Purpose
+
+Presents one linked resource (a course, article, video, or tool) inside a card-based list — leading icon, title, and supporting description, with a single trailing action — so a set of related resources can be scanned and acted on from a dashboard-style page.
+
+### Anatomy
+
+Leading `size-8` (32px) icon → title/supporting-text stack (a title line plus a second, de-emphasized supporting line) → trailing `size-12` (48px) icon-only action button. Rows stack full-width (584px on the reference frame) inside a card, at a consistent vertical pitch (76px between rows on the reference instances).
+
+### Variants
+
+None evidenced — a single visual treatment repeated six times with different icon/copy per instance; no variant prop needed beyond content.
+
+### States
+
+| State | Behavior |
+|---|---|
+| Default | Only state confirmed via Figma. |
+| Hover / Focus / Active | **Not yet designed** — no Figma reference shows an interactive-state treatment for this row or its trailing button. Required before shipping per `DESIGN.md`'s Interaction principles ("every interactive control has a visible hover, focus, and active/pressed treatment") — do not ship with browser-default-only states. |
+
+### Properties / API
+
+```ts
+interface ResourceListItemProps {
+  icon: LucideIcon;
+  title: string;
+  description: string;
+  href: string;
+  /** Accessible name for the trailing icon-only action, e.g. "Open {title}". */
+  actionLabel: string;
+}
+```
+
+`onAction` (originally proposed as an optional callback alongside `href`) was dropped — no Figma or app evidence showed a non-navigation use case, and `CLAUDE.md`'s anti-premature-abstraction guidance says not to carry unused API surface. `href` and `actionLabel` are both required since every real instance needs a destination and every icon-only action needs a label.
+
+### Design tokens used
+
+`text-foreground` (title/icon), `text-muted-foreground` (description — matching `CardDescription`'s existing supporting-text token, for consistency with the host `Card` rather than reaching for a different gray), `border` (`#d5d7da`, row/card hairlines — exact match to the existing `border`/`input` token), `bg-background` (white), `shadow-xs`, `rounded-md` — all existing tokens; no new tokens required.
+
+**Not `text-text-secondary`, even though Figma's title color resolves to that exact hex (`#414651`)**: per `DESIGN.md`'s "Auth/onboarding surfaces are theme-fixed" section, `text-text-secondary` is a root-only token with no `.dark` value. This card is a themed dashboard surface, not a fixed-light one — confirmed by actually toggling `.dark` during implementation, which left every title/icon at its fixed light-mode value (a dark gray, computed `lab(~30%, ...)`) against the near-black dark-mode card, an unreadable low-contrast result. Swapped to the theme-aware `text-foreground` instead, the same trade-off (and same fix) `HeartChartSummary` already made for the identical reason — see that entry's Design tokens used note.
+
+### Accessibility requirements
+
+- The trailing icon-only button must carry a caller-supplied `aria-label` describing its action (e.g. "Open {title}") — the same requirement `Button`'s `size="icon"` already documents; six repeated instances make this easy to silently skip.
+- Icon is decorative and must be `aria-hidden="true"`, consistent with `BenefitListItem`'s existing precedent — title/description text alone should carry the meaning.
+- Whichever element is the primary click target (the row itself vs. only the trailing button) must be a single real interactive element — don't wire duplicate/nested click handlers onto both the row and the button.
+
+### Responsive behavior
+
+The component itself doesn't reflow internally at any width (icon/title/description/button stay in one row) — still not evidenced against a Figma mobile/tablet frame, so very narrow viewports haven't been verified. Its first real call site (`/heartchart-resources`) handles column-level responsiveness by stacking its two host cards from `grid-cols-1` to `md:grid-cols-2`, per `DESIGN.md`'s Layout/grid rules — that's a call-site decision, not a change to this component's own layout.
+
+### Implementation rules
+
+- Icon set observed on the reference frame: `share-07`, `message-text-square-01`, `clipboard-check`, `book-open-01`, `heart`, `intersect-three`. The first five map to `lucide-react`'s `Share2`, `MessageSquareText`, `ClipboardCheck`, `BookOpen`, `Heart` respectively (closest stable equivalents, matching the project's established substitute precedent — see `GlobalNav`/`VideoPlayer`). **`intersect-three` has no clear `lucide-react` equivalent** — `Blend` (already used elsewhere in `GlobalNav` for an unrelated item) was used as the closest available overlapping-shapes glyph at the `/heartchart-resources` call site; this is an unconfirmed substitution, not a verified match — flag for design/eng alignment.
+- The trailing action button is 48px square — larger than `Button`'s existing `icon` size (`size-9`/36px in `src/components/ui/button.tsx`). Implemented as a local `className="size-12"` override on `Button` (the precedent `HeartChartSummary` already established for its own action buttons), not a new size. No Figma reference confirms the button's `variant` either — `ghost` was used (lowest-emphasis, matching `Button`'s own documented purpose for an inline row action); revisit if a real reference specifies otherwise.
+- No Figma reference confirms the trailing button's icon glyph — `ChevronRight` was used as a generic "open" affordance default; revisit once a real reference exists.
+- A hidden "Table cell lead action" sub-layer (20px) exists in the underlying Figma library component but is unused on every one of the six instances — an artifact of the shared kit, not part of this component's real contract; not implemented.
+- `href` always renders via `next/link`'s `Link`, per `CLAUDE.md`'s "use Link for navigation" rule. Its first call site (`/heartchart-resources`) has no real destination routes yet, so every instance points at `"#"` — the same "placeholder path pending real routes" situation already documented for `GlobalNav`.
+
+### Visual examples
+
+Rendered at `/design-system/components#resourcelistitem` and live in both resource cards on `/heartchart-resources`.
+
+---
+
 ## Card
 
 **Status**: Production Ready

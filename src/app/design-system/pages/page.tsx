@@ -35,6 +35,13 @@ const PAGES = [
     builtFrom:
       "PhotoBackdrop (new \"radial\" scrim variant) + a personalized heading (new text-display-lg/text-display-2xl tokens + highlight-gold color) + VideoPlayer (new, Draft) + Button. The background photo reuses public/login-background.jpg rather than a distinct export, and VideoPlayer has no real video source or captions file yet — both flagged in COMPONENTS.md/DESIGN.md's Known gaps. Side navigation is hidden per the Figma frame's own dev annotation.",
   },
+  {
+    href: "/heartchart-resources",
+    title: "HeartChart Resources",
+    figma: 'AMFM Portal — "HeartChart Resources" node 3722:19475',
+    builtFrom:
+      "GlobalNav + Card (CardHeader/CardContent) + ResourceListItem (new, Draft). Partial implementation only — the Figma page's \"Page header,\" \"Featured Training\" hero, numbered \"Course Card\" steps, and full-bleed \"Footer CTA\" banner are intentionally not built: none has an approved COMPONENTS.md component or pattern yet (see the HeartChart Resources design system audit). A bare <h1> stands in for the missing Page header so the route still satisfies DESIGN.md's one-h1-per-page rule. Resource card titles/descriptions and link destinations are placeholder copy/routes — Figma's exact text couldn't be retrieved this session (tool issue, not a design gap) and no real destination routes exist yet, the same category of gap already documented for GlobalNav's other nav links.",
+  },
 ];
 
 export default function PagesIndexPage() {

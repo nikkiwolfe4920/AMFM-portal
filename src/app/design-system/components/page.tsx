@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ClipboardCheck, Share2 } from "lucide-react";
 
 import {
   Card,
@@ -36,6 +37,7 @@ import { PasswordRequirementItem } from "@/app/signup/_components/password-requi
 import { SignupSuccess } from "@/app/signup/_components/signup-success";
 import { GlobalNav } from "@/components/global-nav";
 import { VideoPlayer } from "@/app/welcome/_components/video-player";
+import { ResourceListItem } from "@/components/resource-list-item";
 
 import { ComponentShowcase } from "../_components/showcase";
 
@@ -283,6 +285,43 @@ export default function ComponentsPage() {
           <BenefitListItem>Brand the experience with your church logo</BenefitListItem>
           <BenefitListItem>No credit card needed</BenefitListItem>
         </div>
+      </ComponentShowcase>
+
+      <ComponentShowcase
+        name="ResourceListItem"
+        status="Draft"
+        purpose="Presents one linked resource (icon, title, supporting description, trailing action) inside a card-based list — used on /heartchart-resources."
+        docsAnchor="resourcelistitem"
+        figmaReference='AMFM Portal — HeartChart Resources node 3722:19475, six "Table cell" instances across two resource-list cards'
+        tokens={["text-foreground", "text-muted-foreground", "border", "bg-background", "shadow-xs", "rounded-md"]}
+        states={["Default"]}
+      >
+        <div className="flex max-w-md flex-col gap-6">
+          <ResourceListItem
+            icon={ClipboardCheck}
+            title="Complete your HeartChart assessment"
+            description="Answer a short set of questions to build your profile."
+            href="#"
+            actionLabel="Open Complete your HeartChart assessment"
+          />
+          <ResourceListItem
+            icon={Share2}
+            title="Share your results"
+            description="Invite your spouse or a friend to compare HeartCharts."
+            href="#"
+            actionLabel="Open Share your results"
+          />
+        </div>
+        <p className="text-muted-foreground mt-4 text-xs">
+          Hover/focus states aren&apos;t yet designed (no Figma reference shows one), and the
+          trailing icon-button&apos;s glyph/variant are unconfirmed defaults — see{" "}
+          <code className="bg-muted rounded px-1 py-0.5">COMPONENTS.md#resourcelistitem</code>.
+          View live at{" "}
+          <Link href="/heartchart-resources" className="text-text-brand hover:underline">
+            /heartchart-resources
+          </Link>
+          .
+        </p>
       </ComponentShowcase>
 
       <ComponentShowcase
