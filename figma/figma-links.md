@@ -19,6 +19,9 @@ Human-readable index of the Figma file(s) and node references cited throughout `
 | `1993:36348` and variants (`1640:23457`/`1670:36217` Growing, `1670:36549` Low, `1670:36610` Exceptional) | "HeartChart Summary" dashboard card | `HeartChartSummary` — donut/scale states, action row (`COMPONENTS.md#heartchartsummary`) |
 | `Onboarding/Create Profile` (`1909:25769`) | `/create-profile` screen (full field set + pricing card) | `Card`, `Select` (`1909:25261` "Your role", `1909:25262` "Your primary goal"), `InputGroup` (`1909:25259` "Website"), `Label` required marker (e.g. `I1909:25255;7487:535320`), `BenefitListItem` (`10:6386` check-circle + instances `1909:25272`–`1909:25275`, `2852:117176`, `2852:117164`), `PricingCard` (`1909:25264`), `AmfmLogo` (`1909:25281` logo + `1909:25280` caption) — see `COMPONENTS.md` |
 | `10:338` | `chevron-down` icon component | `Select`'s trailing icon (`COMPONENTS.md#select`) |
+| `2065:13660` ("Sidebar navigation") | Collapsed/default `GlobalNav` rail (80px icon rail) | `GlobalNav` collapsed state (`COMPONENTS.md#globalnav`) |
+| `3727:25276` ("Content") | Expanded/exposed `GlobalNav` panel (296px labeled panel) | `GlobalNav` expanded state (`COMPONENTS.md#globalnav`) |
+| `3727:25279` ("Logo") | Expanded-state logo lockup | Exported directly to `public/AMFM_Expanded.svg` (paired with `public/AMFM_Collaped.svg` for the collapsed logomark) — `GlobalNav` header (`COMPONENTS.md#globalnav`) |
 
 ## Components without a Figma reference yet
 
@@ -28,6 +31,8 @@ These were implemented from product requirements or generic shadcn/ui patterns r
 - `Label` — generic shadcn/ui primitive; color token (`text-text-secondary`) sourced from the `Onboarding/login` node above.
 - `GoogleIcon` — hand-authored approximation of Google's public brand mark, not sourced from the Figma file.
 - `DposystemLearnMore` / `DposystemStory` — content-driven pattern authored directly from product copy, no Figma design reference.
+- `DropdownMenu` — generic Radix-based primitive introduced to implement `GlobalNav`'s account menu, no Figma design reference of its own.
+- `GlobalNav`'s account-card flyout menu (Personal Profile, Church Profile, Account Settings, Subscription & Billing, Terms & Privacy) — built from a screenshot supplied directly in conversation, not a Figma node.
 
 ## Maintenance
 

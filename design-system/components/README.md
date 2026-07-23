@@ -22,6 +22,8 @@ Index into `COMPONENTS.md`'s component entries. Full contracts (anatomy, variant
 | BenefitListItem | [BenefitListItem](../../COMPONENTS.md#benefitlistitem) | `src/app/create-profile/_components/benefit-list-item.tsx` | Production Ready |
 | PricingCard | [PricingCard](../../COMPONENTS.md#pricingcard) | `src/app/create-profile/_components/pricing-card.tsx` | Production Ready |
 | AmfmLogo | [AmfmLogo](../../COMPONENTS.md#amfmlogo) | `src/app/create-profile/_components/amfm-logo.tsx` | Draft (text approximation, asset blocked) |
+| DropdownMenu | [DropdownMenu](../../COMPONENTS.md#dropdownmenu) | `src/components/ui/dropdown-menu.tsx` | Production Ready |
+| GlobalNav | [GlobalNav](../../COMPONENTS.md#globalnav) | `src/components/global-nav.tsx` | Draft (routes and avatar photo are placeholders) |
 
 See `figma/component-map.json` for each component's Figma reference and `figma/figma-links.md` for the human-readable version.
 

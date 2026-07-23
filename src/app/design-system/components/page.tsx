@@ -394,9 +394,9 @@ export default function ComponentsPage() {
       <ComponentShowcase
         name="GlobalNav"
         status="Draft"
-        purpose="The app's primary left-hand navigation rail — collapses to an 80px icon rail by default and expands to a 296px labeled panel on click, with a smooth animated morph between the two."
+        purpose="The app's primary left-hand navigation rail — collapses to an 80px icon rail by default and expands to a 296px labeled panel on hover, with a smooth animated morph between the two."
         docsAnchor="globalnav"
-        figmaReference='AMFM Portal — collapsed node 2067:16268 ("Main Nav"), expanded node 3727:25276 ("Content")'
+        figmaReference='AMFM Portal — collapsed node 2065:13660 ("Sidebar navigation"), expanded node 3727:25276 ("Content"); the account menu has no Figma node reference, built from a supplied screenshot instead (see Implementation rules)'
         tokens={[
           "bg-nav-surface-from",
           "bg-nav-surface-to",
@@ -408,18 +408,17 @@ export default function ComponentsPage() {
           "text-nav-foreground-subtle",
           "bg-nav-success",
         ]}
-        states={["Collapsed (default)", "Expanded (open)", "Active item", "Hover", "Focus"]}
+        states={["Collapsed (default)", "Expanded (hover/focus)", "Active item", "Hover", "Focus", "Account menu open"]}
       >
-        <div className="bg-nav-bg flex h-[950px] items-start gap-8 overflow-x-auto rounded-xl p-6">
-          <GlobalNav defaultOpen={false} />
-          <GlobalNav defaultOpen={true} />
+        <div className="bg-nav-bg flex h-[950px] items-start rounded-xl p-6">
+          <GlobalNav />
         </div>
         <p className="text-muted-foreground mt-4 text-xs">
-          Click the &ldquo;amfm&rdquo; wordmark at the top of either rail to toggle it open/closed —
-          both instances render the same component, one starting collapsed and one starting
-          expanded (<code className="bg-muted rounded px-1 py-0.5">defaultOpen</code>). Click
-          outside a rail, or press <kbd className="bg-muted rounded px-1 py-0.5">Escape</kbd>, to
-          collapse it again. See{" "}
+          Hover the rail (or Tab into it) to expand it — move the pointer away, or press{" "}
+          <kbd className="bg-muted rounded px-1 py-0.5">Escape</kbd>, to collapse it again. Click
+          the avatar/name at the bottom to open the account menu (Personal Profile, Church
+          Profile, Account Settings, Subscription &amp; Billing, Terms &amp; Privacy) — the rail
+          stays expanded while that menu is open. See{" "}
           <code className="bg-muted rounded px-1 py-0.5">COMPONENTS.md#globalnav</code> for the
           full contract, including why its destination routes are placeholders.
         </p>
