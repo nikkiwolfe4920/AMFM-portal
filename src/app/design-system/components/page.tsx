@@ -384,7 +384,11 @@ export default function ComponentsPage() {
           (<code className="bg-muted rounded px-1 py-0.5">public/login-background.jpg</code>) —
           see <code className="bg-muted rounded px-1 py-0.5">COMPONENTS.md#photobackdrop</code>{" "}
           for why <code className="bg-muted rounded px-1 py-0.5">/welcome</code> reuses this photo
-          rather than a distinct export. View live at{" "}
+          rather than a distinct export. Every consumer&apos;s content must carry{" "}
+          <code className="bg-muted rounded px-1 py-0.5">relative z-10</code> — the scrim is
+          absolutely positioned and paints above unpositioned content regardless of DOM order; see{" "}
+          <code className="bg-muted rounded px-1 py-0.5">DESIGN.md</code>&apos;s &quot;Stacking
+          order on full-bleed backdrops.&quot; View live at{" "}
           <Link href="/login" className="text-text-brand hover:underline">
             /login
           </Link>{" "}
