@@ -1,25 +1,23 @@
 /*
  * Typography tokens — see DESIGN.md "Typography".
- * Fonts (Geist / Geist Mono / Fraunces) are loaded via next/font/google in
- * src/app/layout.tsx, which exposes them as the --font-geist-sans /
- * --font-geist-mono / --font-fraunces custom properties. This file only maps
- * those into Tailwind's --font-sans / --font-mono / --font-display theme
- * keys, and overrides line-heights to fixed pixel values (not font-size
- * ratios) to match the brand type scale.
+ * Geist / Geist Mono are loaded via next/font/google; Financier Display is
+ * self-hosted via next/font/local (its OTF files live in public/fonts/, not
+ * available as a Google Font) — all in src/app/layout.tsx, which exposes
+ * them as the --font-geist-sans / --font-geist-mono / --font-financier-display
+ * custom properties. This file only maps those into Tailwind's --font-sans /
+ * --font-mono / --font-display theme keys, and overrides line-heights to
+ * fixed pixel values (not font-size ratios) to match the brand type scale.
  *
- * --font-display (Fraunces) is a substitute for Figma's "Financier Display"
- * (a licensed Klim Type Foundry face, unavailable via next/font/google) —
- * same deliberate approximation precedent as Geist standing in for Inter
- * below: Fraunces is a warm, editorial high-contrast serif available at the
- * light (300) and regular (400) weights the Figma source uses, matching
- * DESIGN.md's "warm, editorial, trustworthy" brand principle. Use only for
- * the display-sm/display-md scale below — never as a body font.
+ * --font-display is Figma's actual "Financier Display" face (Klim Type
+ * Foundry), loaded at its light (300), regular (400), medium (500), bold
+ * (700), and black (900) static weights. Use only for the display-sm/
+ * display-md/display-lg/display-2xl scale below — never as a body font.
  */
 
 @theme inline {
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-  --font-display: var(--font-fraunces);
+  --font-display: var(--font-financier-display);
 
   --text-xs--line-height: 1.25rem;
   --text-sm--line-height: 1.375rem;
