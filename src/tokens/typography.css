@@ -29,4 +29,8 @@
   --text-display-sm--line-height: 2.375rem;
   --text-display-md: 2.25rem;
   --text-display-md--line-height: 2.5rem;
+  --text-display-lg: 3rem;
+  --text-display-lg--line-height: 3.125rem;
+  --text-display-2xl: 4.5rem;
+  --text-display-2xl--line-height: 5.625rem;
 }

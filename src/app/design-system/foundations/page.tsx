@@ -42,6 +42,11 @@ const COLOR_SWATCHES: { name: string; className: string; hint?: string }[] = [
     hint: "Brand link text #894e34",
   },
   { name: "overlay", className: "bg-overlay", hint: "Scrim #0a0d12" },
+  {
+    name: "highlight-gold",
+    className: "bg-highlight-gold",
+    hint: "Personalized emphasis on /welcome #e9c481",
+  },
 ];
 
 const RADIUS_SWATCHES = [
@@ -50,6 +55,7 @@ const RADIUS_SWATCHES = [
   { name: "rounded-lg", className: "rounded-lg" },
   { name: "rounded-xl", className: "rounded-xl" },
   { name: "rounded-2xl", className: "rounded-2xl" },
+  { name: "rounded-3xl", className: "rounded-3xl" },
 ];
 
 const SHADOW_SWATCHES = [
@@ -81,6 +87,16 @@ const DISPLAY_TYPE_SCALE = [
     name: "text-display-md",
     className: "font-display text-display-md font-light",
     hint: "36px / 40px — CardTitle on /create-profile",
+  },
+  {
+    name: "text-display-lg",
+    className: "font-display text-display-lg font-light",
+    hint: "48px / 50px — /welcome subheading",
+  },
+  {
+    name: "text-display-2xl",
+    className: "font-display text-display-2xl font-light tracking-[-1.44px]",
+    hint: "72px / 90px — /welcome main heading",
   },
 ];
 

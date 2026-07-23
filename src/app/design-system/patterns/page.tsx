@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ArrowRight } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -33,6 +34,7 @@ import { DposystemStory } from "@/app/_components/dposystem-story";
 import { PricingCard } from "@/app/create-profile/_components/pricing-card";
 import { PasswordRequirementItem } from "@/app/signup/_components/password-requirement-item";
 import { SignupSuccess } from "@/app/signup/_components/signup-success";
+import { VideoPlayer } from "@/app/welcome/_components/video-player";
 
 import { Section } from "../_components/showcase";
 
@@ -307,6 +309,44 @@ export default function PatternsPage() {
           className="text-text-brand text-sm font-medium hover:underline"
         >
           View live at /create-profile →
+        </Link>
+      </Section>
+
+      <Section
+        id="welcome-hero"
+        title="Welcome hero — /welcome"
+        description="PhotoBackdrop (radial scrim) + a personalized heading + VideoPlayer + Button, composed on /welcome (the first-run church-admin screen — side nav hidden per Figma's dev annotation). Rendered here at a reduced height so it fits the page layout — see /welcome for the live full-screen version."
+      >
+        <div className="relative h-[640px] overflow-hidden rounded-lg">
+          <div className="absolute inset-0 bg-[url('/login-background.jpg')] bg-cover bg-center" />
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(10,13,18,0.7)_0%,rgba(10,13,18,0.9)_100%)]" />
+          <div className="relative flex h-full flex-col items-center justify-center gap-10 px-8 py-12 text-center">
+            <div className="flex flex-col items-center gap-2">
+              <p className="font-display text-display-2xl text-nav-foreground font-light tracking-[-1.44px]">
+                Welcome, Jordan.
+              </p>
+              <p className="font-display text-display-lg text-nav-foreground-muted font-light">
+                Let&apos;s get <span className="text-highlight-gold">Fellowship of the Parks</span>
+                <br />
+                ready to strengthen relationships.
+              </p>
+            </div>
+            <VideoPlayer
+              poster="/login-background.jpg"
+              title="Introduction video"
+              className="max-w-md"
+            />
+            <Button>
+              <ArrowRight className="size-5" aria-hidden />
+              Get Started
+            </Button>
+          </div>
+        </div>
+        <Link
+          href="/welcome"
+          className="text-text-brand text-sm font-medium hover:underline"
+        >
+          View live at /welcome →
         </Link>
       </Section>
 

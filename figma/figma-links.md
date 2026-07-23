@@ -22,6 +22,7 @@ Human-readable index of the Figma file(s) and node references cited throughout `
 | `2065:13660` ("Sidebar navigation") | Collapsed/default `GlobalNav` rail (80px icon rail) | `GlobalNav` collapsed state (`COMPONENTS.md#globalnav`) |
 | `3727:25276` ("Content") | Expanded/exposed `GlobalNav` panel (296px labeled panel) | `GlobalNav` expanded state (`COMPONENTS.md#globalnav`) |
 | `3727:25279` ("Logo") | Expanded-state logo lockup | Exported directly to `public/AMFM_Expanded.svg` (paired with `public/AMFM_Collaped.svg` for the collapsed logomark) — `GlobalNav` header (`COMPONENTS.md#globalnav`) |
+| `Onboarding/First run church admin` (`1909:25772`) | `/welcome` screen | `PhotoBackdrop`'s `"radial"` scrim variant, the `text-display-lg`/`text-display-2xl` typography tokens and `highlight-gold` color (`DESIGN.md`), `VideoPlayer` (node `1894:16438`, "Video player 16:9" — new, Draft), `Button` (node `1894:16263`, "Get Started" CTA — confirms the `default` variant on a dark surface, see `COMPONENTS.md#button`) |
 
 ## Components without a Figma reference yet
 
