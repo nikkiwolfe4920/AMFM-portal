@@ -69,6 +69,8 @@ const FOOTER_LINKS: NavLinkItem[] = [
 const TRANSITION =
   "transition-[max-width,opacity,padding,gap] duration-300 ease-in-out motion-reduce:transition-none";
 const FADE_TRANSITION = "transition-opacity duration-300 ease-in-out motion-reduce:transition-none";
+const INSET_TRANSITION =
+  "transition-[left,right,opacity] duration-300 ease-in-out motion-reduce:transition-none";
 
 interface GlobalNavProps {
   className?: string;
@@ -225,19 +227,20 @@ function NavSection({
 }) {
   return (
     <div className="flex flex-col">
-      <div
-        className={cn(
-          "relative h-5 pb-1",
-          TRANSITION,
-          open ? "px-5" : "px-4"
-        )}
-      >
+      <div className="relative h-5 pb-1">
+        {/*
+          Insets live on the <p> elements themselves (not padding on this
+          wrapper): an absolutely positioned child resolves inset-x-0
+          against the wrapper's padding box, so parent padding has no
+          effect on it — see the 5px/4px inset mirroring the header's
+          own px-5/px-4 indent below.
+        */}
         <p
           aria-hidden={open}
           className={cn(
-            "text-nav-foreground-subtle absolute inset-x-0 top-0 text-center text-xs leading-5 font-semibold tracking-[0.24px]",
-            FADE_TRANSITION,
-            open ? "opacity-0" : "opacity-100"
+            "text-nav-foreground-subtle absolute top-0 text-center text-xs leading-5 font-semibold tracking-[0.24px]",
+            INSET_TRANSITION,
+            open ? "inset-x-5 opacity-0" : "inset-x-4 opacity-100"
           )}
         >
           {headingClosed}
@@ -245,9 +248,9 @@ function NavSection({
         <p
           aria-hidden={!open}
           className={cn(
-            "text-nav-foreground-subtle absolute inset-x-0 top-0 text-left text-xs leading-5 font-semibold tracking-[0.24px]",
-            FADE_TRANSITION,
-            open ? "opacity-100" : "opacity-0"
+            "text-nav-foreground-subtle absolute top-0 text-left text-xs leading-5 font-semibold tracking-[0.24px]",
+            INSET_TRANSITION,
+            open ? "inset-x-5 opacity-100" : "inset-x-4 opacity-0"
           )}
         >
           {headingOpen}
@@ -304,9 +307,19 @@ function NavAccountCard({ open }: { open: boolean }) {
   return (
     <button
       type="button"
-      className="border-nav-border focus-visible:ring-ring/50 relative flex w-full shrink-0 items-start gap-4 rounded-xl border p-3 outline-none focus-visible:ring-[3px]"
+      className={cn(
+        "border-nav-border focus-visible:ring-ring/50 relative flex h-[68px] w-full shrink-0 gap-4 rounded-xl border outline-none focus-visible:ring-[3px]",
+        TRANSITION,
+        // Collapsed matches Figma's dedicated centered layout (p-0,
+        // justify-center) rather than reusing the expanded state's
+        // left-aligned one (items-start, p-3) — without this the avatar
+        // renders flush-left inside the padded box instead of centered.
+        open ? "items-start p-3" : "items-center justify-center p-0"
+      )}
     >
-      <span className="flex min-w-0 flex-1 items-center gap-2">
+      <span
+        className={cn("flex min-w-0 items-center", open ? "flex-1 gap-2" : "flex-none gap-0")}
+      >
         <span className="relative size-10 shrink-0 rounded-full border border-black/8">
           <span
             aria-hidden="true"
