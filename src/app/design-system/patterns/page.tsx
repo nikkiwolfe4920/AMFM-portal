@@ -4,6 +4,7 @@ import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
+  CardAction,
   CardContent,
   CardDescription,
   CardFooter,
@@ -27,6 +28,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { ClipboardCheck, Share2, MessageSquareText, Blend, BookOpen, Heart, Sparkles } from "lucide-react";
+
 import { AuthCard } from "@/app/login/_components/auth-card";
 import { GoogleIcon } from "@/app/login/_components/google-icon";
 import { HeartChartLogo } from "@/app/login/_components/heartchart-logo";
@@ -35,6 +38,11 @@ import { PricingCard } from "@/app/create-profile/_components/pricing-card";
 import { PasswordRequirementItem } from "@/app/signup/_components/password-requirement-item";
 import { SignupSuccess } from "@/app/signup/_components/signup-success";
 import { VideoPlayer } from "@/app/welcome/_components/video-player";
+import { TopHero } from "@/components/top-hero";
+import { CourseCard } from "@/components/course-card";
+import { ElevatedCard } from "@/components/elevated-card";
+import { ResourceListItem } from "@/components/resource-list-item";
+import { FooterCta } from "@/components/footer-cta";
 
 import { Section } from "../_components/showcase";
 
@@ -375,6 +383,137 @@ export default function PatternsPage() {
           </Link>
           .
         </p>
+      </Section>
+
+      <Section
+        id="heartchart-resources-page"
+        title="HeartChart Resources page"
+        description="The full /heartchart-resources composition: a page <h1> (text-display-md) + TopHero + a 3-step CourseCard row inside an ElevatedCard + two ElevatedCard resource cards (one with a CardAction upgrade CTA) + FooterCta, on the page-shell background gradient. Rendered here at a reduced width so it fits the page layout — see /heartchart-resources for the live full-width version."
+      >
+        <div className="from-background-gradient-from to-background-gradient-to flex flex-col gap-8 rounded-lg bg-gradient-to-l p-8">
+          <h1 className="font-display text-display-md text-foreground font-light">
+            HeartChart Resources
+          </h1>
+
+          <TopHero
+            eyebrowHeading="Let's prepare for your"
+            highlightHeading="HeartChart Weekend"
+            description="Three simple steps to get your people engaged—and your dashboard up and running."
+            ctaLabel="Watch the Overview"
+          />
+
+          <ElevatedCard innerClassName="p-8">
+            <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+              <CourseCard
+                step={1}
+                eyebrow="Before the weekend service"
+                title="Get Your Team Ready"
+                videoCtaLabel="See How It Works"
+                checklist={[
+                  "Share your QR code and link with your team to start your dashboard",
+                  "Upload your logo (recommended)",
+                ]}
+              />
+              <CourseCard
+                step={2}
+                eyebrow="During service"
+                title="Create the Moment"
+                videoCtaLabel="See How It Works"
+                checklist={["Give people 3 minutes to complete their HeartChart"]}
+              />
+              <CourseCard
+                step={3}
+                eyebrow="Don't miss this"
+                title="Point Them to the Next Step"
+                videoCtaLabel="See How It Works"
+                hideArrow
+                checklist={["Use your dashboard to guide next steps"]}
+              />
+            </div>
+          </ElevatedCard>
+
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+            <ElevatedCard innerClassName="p-8">
+              <CardHeader className="gap-0.5 border-b px-0 pb-6">
+                <CardTitle className="text-lg">Optional Resources</CardTitle>
+                <CardDescription>Use what helps. It&rsquo;s all free.</CardDescription>
+              </CardHeader>
+              <CardContent className="flex flex-col gap-6 px-0 pt-6">
+                <ResourceListItem
+                  icon={ClipboardCheck}
+                  title="HeartChart Weekend Service Kit"
+                  description="Plan, host, and guide your HeartChart service moment"
+                  href="#"
+                  actionLabel="Download HeartChart Weekend Service Kit"
+                />
+                <ResourceListItem
+                  icon={Share2}
+                  title="HeartChart Promotional Kit"
+                  description="Emails, social, and assets to drive participation"
+                  href="#"
+                  actionLabel="Download HeartChart Promotional Kit"
+                />
+                <ResourceListItem
+                  icon={MessageSquareText}
+                  title="HeartChart Sermon Kit"
+                  description="Message framework to introduce and frame HeartChart"
+                  href="#"
+                  actionLabel="Download HeartChart Sermon Kit"
+                />
+              </CardContent>
+            </ElevatedCard>
+
+            <ElevatedCard innerClassName="p-8">
+              <CardHeader className="gap-x-4 gap-y-0.5 border-b px-0 pb-6">
+                <CardTitle className="text-lg">Premium Resources</CardTitle>
+                <CardDescription>
+                  Included with your AMFM Premium membership.
+                </CardDescription>
+                <CardAction>
+                  <Button size="sm">
+                    <Sparkles aria-hidden="true" />
+                    Upgrade to Premium
+                  </Button>
+                </CardAction>
+              </CardHeader>
+              <CardContent className="flex flex-col gap-6 px-0 pt-6">
+                <ResourceListItem
+                  icon={Blend}
+                  title="HeartChart Small Group Kit"
+                  description="Turn results into meaningful group conversations and growth"
+                  href="#"
+                  actionLabel="Download HeartChart Small Group Kit"
+                />
+                <ResourceListItem
+                  icon={BookOpen}
+                  title="HeartChart Champion Training"
+                  description="Equip leaders to guide couples using HeartChart results"
+                  href="#"
+                  actionLabel="Download HeartChart Champion Training"
+                />
+                <ResourceListItem
+                  icon={Heart}
+                  title="HeartChart Date Night Kit"
+                  description="Host an engaging event that moves couples forward"
+                  href="#"
+                  actionLabel="Download HeartChart Date Night Kit"
+                />
+              </CardContent>
+            </ElevatedCard>
+          </div>
+
+          <FooterCta
+            heading="Start using all the tools today."
+            ctaLabel="Upgrade to Premium"
+            className="-mx-8 -mb-8 w-auto"
+          />
+        </div>
+        <Link
+          href="/heartchart-resources"
+          className="text-text-brand text-sm font-medium hover:underline"
+        >
+          View live at /heartchart-resources →
+        </Link>
       </Section>
 
       <Section

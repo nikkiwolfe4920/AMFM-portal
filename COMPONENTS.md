@@ -589,28 +589,28 @@ Rendered live in `PricingCard`'s benefit list on `/create-profile`; referenced a
 
 ## ResourceListItem
 
-**Status**: Draft (implemented; several decisions below are unconfirmed against Figma — see Implementation rules)
+**Status**: Production Ready
 **Source**: `src/components/resource-list-item.tsx`
-**Figma**: AMFM Portal file, "HeartChart Resources" (node `3722:19475`), `Table cell` instances — six confirmed instances across two resource-list cards (nodes `0:941`, `0:952`, `0:963` and `0:999`, `0:1010`, `0:1022`)
+**Figma**: AMFM Portal file, "HeartChart Resources" component (node `2361:19280`), `Table cell` instances — six confirmed instances across two resource cards ("Optional Resources" nodes `2318:27034`/`2318:27041`/`2318:27048`, "Premium Resources" nodes `2309:20747`/`2309:20754`/`2309:20738`)
 
 ### Purpose
 
-Presents one linked resource (a course, article, video, or tool) inside a card-based list — leading icon, title, and supporting description, with a single trailing action — so a set of related resources can be scanned and acted on from a dashboard-style page.
+Presents one downloadable resource (a kit, guide, or training) inside a card-based list — leading icon, title, and supporting description, with a single trailing download action — so a set of related resources can be scanned and downloaded from a dashboard-style page.
 
 ### Anatomy
 
-Leading `size-8` (32px) icon → title/supporting-text stack (a title line plus a second, de-emphasized supporting line) → trailing `size-12` (48px) icon-only action button. Rows stack full-width (584px on the reference frame) inside a card, at a consistent vertical pitch (76px between rows on the reference instances).
+Leading `size-8` (32px) icon → title/supporting-text stack (a `text-base font-semibold` title line plus a `text-sm text-muted-foreground` supporting line) → trailing `size-12` (48px) bordered icon-only download button. Rows stack full-width inside a card, `gap-6` (24px) apart.
 
 ### Variants
 
-None evidenced — a single visual treatment repeated six times with different icon/copy per instance; no variant prop needed beyond content.
+None evidenced — a single visual treatment repeated across both resource cards with different icon/copy per instance; no variant prop needed beyond content.
 
 ### States
 
 | State | Behavior |
 |---|---|
 | Default | Only state confirmed via Figma. |
-| Hover / Focus / Active | **Not yet designed** — no Figma reference shows an interactive-state treatment for this row or its trailing button. Required before shipping per `DESIGN.md`'s Interaction principles ("every interactive control has a visible hover, focus, and active/pressed treatment") — do not ship with browser-default-only states. |
+| Hover / Focus / Active | Inherited from `Button`'s `outline` variant (the trailing action) — no Figma reference shows a distinct hover/focus treatment for the row itself, only the button. |
 
 ### Properties / API
 
@@ -620,7 +620,7 @@ interface ResourceListItemProps {
   title: string;
   description: string;
   href: string;
-  /** Accessible name for the trailing icon-only action, e.g. "Open {title}". */
+  /** Accessible name for the trailing download action, e.g. "Download {title}". */
   actionLabel: string;
 }
 ```
@@ -629,31 +629,273 @@ interface ResourceListItemProps {
 
 ### Design tokens used
 
-`text-foreground` (title/icon), `text-muted-foreground` (description — matching `CardDescription`'s existing supporting-text token, for consistency with the host `Card` rather than reaching for a different gray), `border` (`#d5d7da`, row/card hairlines — exact match to the existing `border`/`input` token), `bg-background` (white), `shadow-xs`, `rounded-md` — all existing tokens; no new tokens required.
+`text-muted-foreground` (leading icon, description, and trailing button icon), `text-foreground` (title) — all existing, theme-aware tokens; `Button`'s `outline` variant tokens for the trailing action. No new tokens required.
 
-**Not `text-text-secondary`, even though Figma's title color resolves to that exact hex (`#414651`)**: per `DESIGN.md`'s "Auth/onboarding surfaces are theme-fixed" section, `text-text-secondary` is a root-only token with no `.dark` value. This card is a themed dashboard surface, not a fixed-light one — confirmed by actually toggling `.dark` during implementation, which left every title/icon at its fixed light-mode value (a dark gray, computed `lab(~30%, ...)`) against the near-black dark-mode card, an unreadable low-contrast result. Swapped to the theme-aware `text-foreground` instead, the same trade-off (and same fix) `HeartChartSummary` already made for the identical reason — see that entry's Design tokens used note.
+**Icon color is `text-muted-foreground`, not a pixel-exact new token**: the Figma MCP's variable inspection resolved both the leading icon and the download button's icon to `#a4a7ae` (Figma's "Utility/Gray/utility-gray-400" and "Foreground/fg-quaternary (400)" — two different Figma variable names, same hex). Neither matches an existing token exactly, and no `.dark` reference exists for it. Rather than add a third root-only gray (on top of `fg-disabled`, which happens to share this exact hex but carries disabled-state *semantics* that don't apply here), this reuses the existing theme-aware `muted-foreground` token — the same trade-off `HeartChartSummary` and this component's own title color already made elsewhere in this file, prioritizing verified dark-mode behavior over a few-percent-lightness pixel match.
 
 ### Accessibility requirements
 
-- The trailing icon-only button must carry a caller-supplied `aria-label` describing its action (e.g. "Open {title}") — the same requirement `Button`'s `size="icon"` already documents; six repeated instances make this easy to silently skip.
+- The trailing download button must carry a caller-supplied `aria-label` describing its action (e.g. "Download {title}") — the same requirement `Button`'s `size="icon"` already documents.
 - Icon is decorative and must be `aria-hidden="true"`, consistent with `BenefitListItem`'s existing precedent — title/description text alone should carry the meaning.
 - Whichever element is the primary click target (the row itself vs. only the trailing button) must be a single real interactive element — don't wire duplicate/nested click handlers onto both the row and the button.
 
 ### Responsive behavior
 
-The component itself doesn't reflow internally at any width (icon/title/description/button stay in one row) — still not evidenced against a Figma mobile/tablet frame, so very narrow viewports haven't been verified. Its first real call site (`/heartchart-resources`) handles column-level responsiveness by stacking its two host cards from `grid-cols-1` to `md:grid-cols-2`, per `DESIGN.md`'s Layout/grid rules — that's a call-site decision, not a change to this component's own layout.
+The component itself doesn't reflow internally at any width (icon/title/description/button stay in one row) — still not evidenced against a Figma mobile/tablet frame, so very narrow viewports haven't been verified. Its call site (`/heartchart-resources`) handles column-level responsiveness by stacking its two host cards from `grid-cols-1` to `lg:grid-cols-2`, per `DESIGN.md`'s Layout/grid rules — that's a call-site decision, not a change to this component's own layout.
 
 ### Implementation rules
 
-- Icon set observed on the reference frame: `share-07`, `message-text-square-01`, `clipboard-check`, `book-open-01`, `heart`, `intersect-three`. The first five map to `lucide-react`'s `Share2`, `MessageSquareText`, `ClipboardCheck`, `BookOpen`, `Heart` respectively (closest stable equivalents, matching the project's established substitute precedent — see `GlobalNav`/`VideoPlayer`). **`intersect-three` has no clear `lucide-react` equivalent** — `Blend` (already used elsewhere in `GlobalNav` for an unrelated item) was used as the closest available overlapping-shapes glyph at the `/heartchart-resources` call site; this is an unconfirmed substitution, not a verified match — flag for design/eng alignment.
-- The trailing action button is 48px square — larger than `Button`'s existing `icon` size (`size-9`/36px in `src/components/ui/button.tsx`). Implemented as a local `className="size-12"` override on `Button` (the precedent `HeartChartSummary` already established for its own action buttons), not a new size. No Figma reference confirms the button's `variant` either — `ghost` was used (lowest-emphasis, matching `Button`'s own documented purpose for an inline row action); revisit if a real reference specifies otherwise.
-- No Figma reference confirms the trailing button's icon glyph — `ChevronRight` was used as a generic "open" affordance default; revisit once a real reference exists.
-- A hidden "Table cell lead action" sub-layer (20px) exists in the underlying Figma library component but is unused on every one of the six instances — an artifact of the shared kit, not part of this component's real contract; not implemented.
-- `href` always renders via `next/link`'s `Link`, per `CLAUDE.md`'s "use Link for navigation" rule. Its first call site (`/heartchart-resources`) has no real destination routes yet, so every instance points at `"#"` — the same "placeholder path pending real routes" situation already documented for `GlobalNav`.
+- Icon set confirmed on the reference frame: `share-07`, `message-text-square-01`, `clipboard-check`, `book-open-01`, `heart`, `intersect-three`. The first five map to `lucide-react`'s `Share2`, `MessageSquareText`, `ClipboardCheck`, `BookOpen`, `Heart` respectively (closest stable equivalents, matching the project's established substitute precedent — see `GlobalNav`/`VideoPlayer`). **`intersect-three` has no clear `lucide-react` equivalent** — `Blend` (already used elsewhere in `GlobalNav` for an unrelated item) is used as the closest available overlapping-shapes glyph; this remains an unconfirmed substitution, not a verified match — flag for design/eng alignment.
+- **The trailing action is a download button, not a navigation chevron** — confirmed by the Figma node's own interaction annotation ("download buttons download resource" / "downloads the resource"). Uses `lucide-react`'s `Download` icon, `Button` `variant="outline"` (bordered, white fill — matches Figma's `border-primary`/`shadow-xs` bordered square exactly) at a local `size-12` (48px) override — larger than `Button`'s existing `icon` size (`size-9`/36px) — with a `[&_svg]:size-5` override for the 20px glyph, the same override technique `HeartChartSummary` established for its own action buttons.
+- A hidden "Table cell lead action" sub-layer (20px) exists in the underlying Figma library component but is unused on every instance — an artifact of the shared kit, not part of this component's real contract; not implemented.
+- `href` always renders via `next/link`'s `Link`, per `CLAUDE.md`'s "use Link for navigation" rule. Its call site (`/heartchart-resources`) has no real destination/file routes yet, so every instance points at `"#"` — the same "placeholder path pending real routes" situation already documented for `GlobalNav`.
 
 ### Visual examples
 
 Rendered at `/design-system/components#resourcelistitem` and live in both resource cards on `/heartchart-resources`.
+
+---
+
+## ElevatedCard
+
+**Status**: Production Ready
+**Source**: `src/components/elevated-card.tsx`
+**Figma**: AMFM Portal file — the shared "outer shadow-card shell wrapping an inner bordered panel" shape, confirmed identical on `TopHero`'s "Featured Training" component (node `2318:26997`) and the `/heartchart-resources` "Optional Resources"/"Premium Resources" cards (node `2361:19280`, e.g. nodes `2309:20702`/`2309:20730`)
+
+### Purpose
+
+Shared nested-shell surface — an outer `shadow-card`/`rounded-2xl`/`p-2` shell wrapping an inner bordered `rounded-md` panel — extracted once a third real instance of the shape appeared, per `HeartChartSummary`'s own documented precedent ("if a third appears, extract it into a shared primitive"). `AuthCard` and `HeartChartSummary` built this shape locally before this component existed; see Implementation rules for why they weren't retrofitted onto it in the same change.
+
+### Anatomy
+
+Outer `div` (`rounded-2xl`, `shadow-card`, `p-2`) → inner bordered panel (`rounded-md`, `border-border` by default, `size-full`) → `children`.
+
+### Variants
+
+None — a single shape; the inner panel's border/overflow/layout classes are caller-overridable via `innerClassName` (e.g. `TopHero` overrides it to `border-white/30` for its dark photo surface).
+
+### States
+
+None of its own — purely a layout/surface primitive, same category as `Card`.
+
+### Properties / API
+
+```ts
+interface ElevatedCardProps extends React.ComponentProps<"div"> {
+  /** Classes for the inner bordered panel (e.g. to override the default border). */
+  innerClassName?: string;
+}
+```
+
+### Design tokens used
+
+`bg-background`, `shadow-card`, `rounded-2xl`, `rounded-md`, `border-border` — all existing tokens; no new tokens required.
+
+### Accessibility requirements
+
+Purely structural — accessibility depends on the semantic content placed inside, same as `Card`.
+
+### Responsive behavior
+
+Fluid width by default (`size-full`/fills its container per caller's `className`); no built-in breakpoint behavior of its own.
+
+### Implementation rules
+
+- **Not retrofitted onto `AuthCard`/`HeartChartSummary` in this change** — `AuthCard` is route-colocated and deliberately fixed-light (`border-black/10`, no `.dark` value), and `HeartChartSummary` is an already-shipped, separately-verified component; refactoring either was out of scope for the task that introduced this primitive (per `CLAUDE.md`'s "smallest maintainable change" guidance). A reasonable follow-up is migrating both onto `ElevatedCard` the next time either is meaningfully touched — see `DESIGN.md` Known gaps.
+- Keep this primitive matching its one real shape exactly — a nested shell, not a flat single-surface card (that's `Card`, above). Don't bend it to fit a flat shape.
+
+### Visual examples
+
+Rendered at `/design-system/components#elevatedcard`; composed inside `TopHero` and the two resource cards live on `/heartchart-resources`.
+
+---
+
+## TopHero
+
+**Status**: Draft (background photo unavailable — see Implementation rules)
+**Source**: `src/components/top-hero.tsx`
+**Figma**: AMFM Portal file, "Featured Training" component (node `2318:26997`), rendered on the `/heartchart-resources` page as the "Let's prepare for your HeartChart Weekend" banner
+
+### Purpose
+
+Full-bleed photo hero for a dashboard page's featured training/promo banner — a two-tone heading (a neutral line plus a brand-emphasized line), supporting copy, and a single video CTA, over a photo backdrop.
+
+### Anatomy
+
+`ElevatedCard` (dark photo surface, `border-white/30` inner panel) → background layer (photo in Figma; see Implementation rules) → content column: two-tone `font-display` heading (`text-display-lg` neutral line + `text-display-2xl` `highlight-gold` emphasis line) → `text-nav-foreground-muted` description → outline `Button` with a `PlayCircle` icon.
+
+### Variants
+
+None — a single layout; all content is caller-supplied.
+
+### States
+
+None of its own — a static banner. The CTA `Button` inherits `Button`'s own hover/focus states.
+
+### Properties / API
+
+```ts
+interface TopHeroProps {
+  eyebrowHeading: ReactNode;
+  highlightHeading: ReactNode;
+  description: ReactNode;
+  ctaLabel: string;
+  onCtaClick?: () => void;
+  className?: string;
+}
+```
+
+### Design tokens used
+
+`text-nav-foreground` (first heading line — Figma's `text-primary-(900)` variable resolves to `#f7f7f7` on this fixed-dark surface, an exact match), `text-highlight-gold` (second heading line, `#e9c481` exact match), `text-nav-foreground-muted` (description, `#cecfd2` exact match), `text-display-lg`/`text-display-2xl` + `font-display`, `nav-surface-from`/`nav-surface-to` (placeholder background gradient — see Implementation rules). `Button`'s `outline` variant for the CTA — no new button styling.
+
+### Accessibility requirements
+
+- Heading text uses real text nodes (not an image with alt text) so it's readable/selectable regardless of the background photo.
+- The CTA is a real `Button`, inheriting its keyboard focus and focus-visible ring.
+
+### Responsive behavior
+
+Not yet evidenced against a Figma mobile/tablet frame (the reference is a fixed desktop-width composition, same category of gap as `HeartChartSummary`/`PricingCard`). The heading column caps at `max-w-[544px]` per Figma; the outer `ElevatedCard` is fluid-width.
+
+### Implementation rules
+
+- **Background photo unavailable in this environment** — Figma's export/raw-image URLs all resolve to `www.figma.com`, blocked by this environment's egress policy (confirmed via the agent proxy status endpoint), the same class of gap as `AmfmLogo`'s blocked asset. Renders a `nav-surface-from`→`nav-surface-to` dark gradient in place of the real congregation-stage photo. Status stays **Draft** for this reason — replace with the real photo (via `next/image`, matching `HeartChartLogo`'s pattern) the moment it's supplied and committed to `public/`, and drop the gradient placeholder in the same change.
+- Composed on `ElevatedCard` rather than a local nested-shell implementation — see that component's Implementation rules for why `AuthCard`/`HeartChartSummary` weren't also migrated onto it.
+- `eyebrowHeading`/`highlightHeading` are two separate props (not one heading string) because they carry different colors/sizes per Figma (`text-display-lg` neutral vs. `text-display-2xl` `highlight-gold`) — don't collapse them into a single templated string.
+
+### Visual examples
+
+Rendered at `/design-system/components#tophero` and live on `/heartchart-resources`.
+
+---
+
+## CourseCard
+
+**Status**: Draft (per-step video thumbnails unavailable — see Implementation rules)
+**Source**: `src/components/course-card.tsx`
+**Figma**: AMFM Portal file, "Course Card" component (node `2074:45130`); the 3-step pattern on `/heartchart-resources` at nodes `2316:26815` (Step 1), `2316:26886` (Step 2), `2318:26954` (Step 3)
+
+### Purpose
+
+One step in a fixed 3-step "get ready" course pattern — a colored numbered header, a video-cover CTA over a photo, and a checklist of supporting actions — used together as the "Three simple steps" section beneath `TopHero` on `/heartchart-resources`.
+
+### Anatomy
+
+Numbered header (`STEP {n}`, white text, trailing `ArrowRight`, colored background) → video-cover section (photo backdrop in Figma; see Implementation rules — uppercase eyebrow, `font-display` heading, outline `Button` with `PlayCircle`) → checklist (`Check`-in-circle icon + text row, repeated per item).
+
+### Variants (`step` prop)
+
+| `step` | Header color | Figma token |
+|---|---|---|
+| `1` | `bg-border-brand` | `#c07858`, exact match to the existing `border-brand` token |
+| `2` | `bg-text-brand` | `#894e34`, exact match to the existing `text-brand` token |
+| `3` | `bg-brand-900` | `#47261a`, the one genuinely new token this pattern needed — see `DESIGN.md` Color tokens |
+
+A closed `1 | 2 | 3` union, not an open `number`, since the pattern is a fixed 3-step course, not an arbitrarily-long list — don't generalize past what's evidenced.
+
+### States
+
+None of its own beyond the static `hideArrow` prop (Figma hides the header's trailing arrow on the last step). The video CTA and checklist links inherit their own elements' hover/focus states.
+
+### Properties / API
+
+```ts
+interface CourseCardProps {
+  step: 1 | 2 | 3;
+  eyebrow: string;
+  title: ReactNode;
+  videoCtaLabel: string;
+  onWatchVideo?: () => void;
+  /** Each item renders with a leading check icon — compose inline links directly. */
+  checklist: ReactNode[];
+  hideArrow?: boolean;
+  className?: string;
+}
+```
+
+`checklist` accepts pre-composed `ReactNode`s (rather than a stricter `{text, href}` shape) because Figma's real copy mixes plain text with inline brand-colored links inside the same sentence (e.g. "**Share your QR code and link** with your team to start your dashboard") — the caller composes the inline `<a className="text-primary underline">` segment directly, matching `BenefitListItem`/`ResourceListItem`'s existing "caller supplies rich content" precedent rather than this component parsing rich text itself.
+
+### Design tokens used
+
+`bg-border-brand`/`bg-text-brand`/`bg-brand-900` (step header, see Variants), `bg-muted` (checklist icon circle — Figma's `#f5f5f5` "bg-tertiary" is a near-exact match to the existing `muted` token), `text-muted-foreground` (checklist text + icon), `text-primary` (inline links within checklist text, exact match to Figma's `#aa6140`), `font-display`/`text-display-md` with a local `leading-[2.375rem]` override (video-cover heading — see `DESIGN.md`'s note on this one-off 36px/38px pairing), `nav-surface-from`/`nav-surface-to` (placeholder video-cover background — see Implementation rules). `Button`'s `outline` variant for the video CTA.
+
+### Accessibility requirements
+
+- Checklist icons are `aria-hidden="true"` — the adjacent text alone conveys the meaning, consistent with `BenefitListItem`/`PasswordRequirementItem`'s existing precedent.
+- The header's `ArrowRight` is `aria-hidden="true"` — purely decorative, the "STEP {n}" text already conveys sequence.
+- Inline links within checklist items are real `<a>` elements (composed by the caller) — never a styled `<span>` with a click handler.
+
+### Responsive behavior
+
+Not yet evidenced against a Figma mobile/tablet frame (fixed desktop 3-column composition). Its call site (`/heartchart-resources`) stacks the 3 cards from `grid-cols-1` to `lg:grid-cols-3`, per `DESIGN.md`'s Layout/grid rules — a call-site decision, not a change to this component's own layout.
+
+### Implementation rules
+
+- **Per-step video thumbnails unavailable in this environment** — same blocked-asset class as `TopHero`'s background photo (`www.figma.com` denied by egress policy). Renders a `nav-surface-from`→`nav-surface-to` dark gradient behind each video-cover section in place of the three distinct reference photos. Status stays **Draft** for this reason — wire to real `imageSrc`/thumbnails once available, matching `VideoPlayer`'s "wire to a real source later" precedent.
+- `step`'s header color is a fixed lookup (`STEP_HEADER_CLASSNAME`), not computed — keeps the 3-tier brand scale's exact Figma-sourced colors as a single source of truth rather than an interpolated gradient function.
+- The checklist icon (`Check`, `size-3.5`, inside a `bg-muted rounded-full size-6`) is a static, always-confirmed indicator — same semantic category as `BenefitListItem`, not a derived validation state like `PasswordRequirementItem`; don't reuse either of those components here, this is a third, purpose-built row shape (a numbered course step's action list, not a benefit or a password rule).
+
+### Visual examples
+
+Rendered at `/design-system/components#coursecard` and live (all 3 steps) on `/heartchart-resources`.
+
+---
+
+## FooterCta
+
+**Status**: Draft (background texture unavailable — see Implementation rules)
+**Source**: `src/components/footer-cta.tsx`
+**Figma**: AMFM Portal file, "Footer CTA" component (node `1909:25789`) — per its own Figma dev annotation, "This component only shows if they have a free account."
+
+### Purpose
+
+Full-bleed banner prompting a free-tier account to upgrade to Premium — a heading plus a single CTA, used at the bottom of `/heartchart-resources` and (per the component library's `instanceCount`) the HeartChart Dashboard "No data" state.
+
+### Anatomy
+
+Full-width `bg-primary` band → centered `font-display text-display-md` heading + outline-style `Button` (`Sparkles` icon) sized to sit legibly on the brand-filled background.
+
+### Variants
+
+None — a single layout; heading/CTA copy are caller-supplied.
+
+### States
+
+None of its own — a static banner. The CTA `Button` inherits its own hover/focus states.
+
+### Properties / API
+
+```ts
+interface FooterCtaProps {
+  heading: string;
+  ctaLabel: string;
+  onCtaClick?: () => void;
+  className?: string;
+}
+```
+
+### Design tokens used
+
+`bg-primary` (band background — a flat approximation of Figma's gradient/noise texture, see Implementation rules), `font-display`/`text-display-md`, `text-primary-foreground` (heading + CTA text/border, theme-safe white). `Button`'s `outline` variant, locally overridden (`bg-transparent`, `border-primary-foreground/30`, `hover:bg-white/10`) since none of `Button`'s existing variants are calibrated for a brand-filled (rather than neutral) backdrop — the same "local `className` override for a new surface context" technique `HeartChartSummary` already established, not a new shared variant (no second use case yet to justify one).
+
+### Accessibility requirements
+
+- Heading is real text (not an image), legible against `bg-primary` via `text-primary-foreground` (an already-verified WCAG AA pairing, see `DESIGN.md` Color tokens).
+- The CTA is a real `Button`, inheriting its keyboard focus and focus-visible ring.
+
+### Responsive behavior
+
+Not yet evidenced against a Figma mobile/tablet frame. Content wraps (`flex-wrap`) and centers at any width; no breakpoint-specific layout changes yet.
+
+### Implementation rules
+
+- **Background texture unavailable in this environment** — same blocked-asset class as `TopHero`/`CourseCard`. Figma's reference shows a warm gradient/noise-texture image layered under a `mix-blend-luminosity` grain overlay at 5% opacity; renders as a flat `bg-primary` fill instead. Status stays **Draft** for this reason.
+- The CTA button's exact Figma treatment (`bg-primary_alt` `#13161b` fill, `border-white/12`) doesn't translate directly — that combination assumes the button sits on `bg-primary_alt`'s own dark-navy context elsewhere in the design system, not on this component's brand-terracotta background (which would make a same-color fill invisible). Approximated instead as a transparent/bordered treatment that reads correctly against `bg-primary` — revisit if a real dark-surface reference for this exact button ever surfaces.
+
+### Visual examples
+
+Rendered at `/design-system/components#footercta` and live at the bottom of `/heartchart-resources`.
 
 ---
 

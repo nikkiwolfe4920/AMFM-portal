@@ -1,5 +1,5 @@
 import type { LucideIcon } from "lucide-react";
-import { ChevronRight } from "lucide-react";
+import { Download } from "lucide-react";
 import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
@@ -9,14 +9,14 @@ interface ResourceListItemProps {
   title: string;
   description: string;
   href: string;
-  /** Accessible name for the trailing icon-only action, e.g. "Open {title}". */
+  /** Accessible name for the trailing download action, e.g. "Download {title}". */
   actionLabel: string;
 }
 
 /**
- * Icon-only trailing action is 48px (`size-12`), wider than Button's `icon`
- * size (`size-9`/36px) — no Figma reference confirms the action's exact
- * glyph, so ChevronRight is used as the default per COMPONENTS.md#resourcelistitem.
+ * One downloadable resource row inside a resource card — see
+ * COMPONENTS.md#resourcelistitem. Figma: AMFM Portal "HeartChart Resources"
+ * component (node 2361:19280), "Table cell" instances.
  */
 export function ResourceListItem({
   icon: Icon,
@@ -26,15 +26,20 @@ export function ResourceListItem({
   actionLabel,
 }: ResourceListItemProps) {
   return (
-    <div className="flex w-full items-center gap-2.5">
-      <Icon aria-hidden="true" className="text-foreground size-8 shrink-0" />
-      <div className="flex flex-1 flex-col gap-0.5">
-        <p className="text-foreground text-sm font-medium">{title}</p>
+    <div className="flex w-full items-start gap-3">
+      <Icon aria-hidden="true" className="text-muted-foreground size-8 shrink-0" />
+      <div className="flex flex-1 flex-col gap-1">
+        <p className="text-foreground text-base font-semibold">{title}</p>
         <p className="text-muted-foreground text-sm">{description}</p>
       </div>
-      <Button asChild variant="ghost" size="icon" className="size-12">
+      <Button
+        asChild
+        variant="outline"
+        size="icon"
+        className="text-muted-foreground size-12 shrink-0 [&_svg]:size-5"
+      >
         <Link href={href} aria-label={actionLabel}>
-          <ChevronRight aria-hidden="true" />
+          <Download aria-hidden="true" />
         </Link>
       </Button>
     </div>

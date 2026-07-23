@@ -103,5 +103,30 @@
     "figmaComponent": "AMFM Portal — node 1894:16438 (\"Video player 16:9\"), within Onboarding/First run church admin (node 1909:25772) — no real video asset or captions file supplied yet",
     "documentation": "COMPONENTS.md#videoplayer",
     "implementation": "src/app/welcome/_components/video-player.tsx"
+  },
+  "ResourceListItem": {
+    "figmaComponent": "AMFM Portal — HeartChart Resources node 2361:19280, \"Table cell\" instances across the Optional Resources (2318:27034/2318:27041/2318:27048) and Premium Resources (2309:20747/2309:20754/2309:20738) cards",
+    "documentation": "COMPONENTS.md#resourcelistitem",
+    "implementation": "src/components/resource-list-item.tsx"
+  },
+  "ElevatedCard": {
+    "figmaComponent": "AMFM Portal — shared nested-shell shape confirmed on TopHero/\"Featured Training\" (node 2318:26997) and the HeartChart Resources cards (node 2361:19280, e.g. 2309:20702/2309:20730)",
+    "documentation": "COMPONENTS.md#elevatedcard",
+    "implementation": "src/components/elevated-card.tsx"
+  },
+  "TopHero": {
+    "figmaComponent": "AMFM Portal — \"Featured Training\" component (node 2318:26997) — background photo asset blocked, renders a gradient placeholder",
+    "documentation": "COMPONENTS.md#tophero",
+    "implementation": "src/components/top-hero.tsx"
+  },
+  "CourseCard": {
+    "figmaComponent": "AMFM Portal — \"Course Card\" component (node 2074:45130); 3-step pattern at nodes 2316:26815/2316:26886/2318:26954 — per-step video thumbnails blocked, renders a gradient placeholder",
+    "documentation": "COMPONENTS.md#coursecard",
+    "implementation": "src/components/course-card.tsx"
+  },
+  "FooterCta": {
+    "figmaComponent": "AMFM Portal — \"Footer CTA\" component (node 1909:25789) — background texture asset blocked, renders a flat bg-primary fill",
+    "documentation": "COMPONENTS.md#footercta",
+    "implementation": "src/components/footer-cta.tsx"
   }
 }
