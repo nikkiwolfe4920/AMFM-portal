@@ -28,6 +28,13 @@ const PAGES = [
     builtFrom:
       "PhotoBackdrop + Card (CardHeader/CardAction/CardContent/CardFooter) + HeartChartLogo + Button/Input/Label. Partial implementation — only the Church/Organization name, Location, and Average Weekly Attendance fields are built (plain Input, all Production Ready). The Website field (needs InputGroup), Your role / Your primary goal fields (need Select), the required-field asterisk marker (needs a Label variant), and the entire \"Free Membership\" pricing card (needs BenefitListItem, AmfmLogo, and PricingCard) are not implemented — all are Draft in COMPONENTS.md pending open design questions (a missing display-type-scale foundation, a blocked logo asset, and unconfirmed icon/UX decisions). See COMPONENTS.md for the full list.",
   },
+  {
+    href: "/welcome",
+    title: "Welcome (first-run church admin)",
+    figma: "AMFM Portal — Onboarding/First run church admin node 1909:25772",
+    builtFrom:
+      "PhotoBackdrop (new \"radial\" scrim variant) + a personalized heading (new text-display-lg/text-display-2xl tokens + highlight-gold color) + VideoPlayer (new, Draft) + Button. The background photo reuses public/login-background.jpg rather than a distinct export, and VideoPlayer has no real video source or captions file yet — both flagged in COMPONENTS.md/DESIGN.md's Known gaps. Side navigation is hidden per the Figma frame's own dev annotation.",
+  },
 ];
 
 export default function PagesIndexPage() {

@@ -35,6 +35,7 @@ import { BenefitListItem } from "@/app/create-profile/_components/benefit-list-i
 import { PasswordRequirementItem } from "@/app/signup/_components/password-requirement-item";
 import { SignupSuccess } from "@/app/signup/_components/signup-success";
 import { GlobalNav } from "@/components/global-nav";
+import { VideoPlayer } from "@/app/welcome/_components/video-player";
 
 import { ComponentShowcase } from "../_components/showcase";
 
@@ -341,6 +342,61 @@ export default function ComponentsPage() {
       </ComponentShowcase>
 
       <ComponentShowcase
+        name="PhotoBackdrop"
+        status="Production Ready"
+        purpose="Full-bleed background photo + dark scrim shared by any onboarding-style surface built on the same Figma photo background — now with two scrim treatments."
+        docsAnchor="photobackdrop"
+        figmaReference='AMFM Portal — Onboarding/login node 1909:25767 ("flat" scrim); Onboarding/First run church admin node 1909:25772 ("radial" scrim, /welcome)'
+        tokens={["bg-overlay", "backdrop-blur-[20px]", "backdrop-blur-[8px]"]}
+        states={["flat scrim (default)", "radial scrim"]}
+      >
+        {/* PhotoBackdrop itself is min-h-screen by design (full-bleed page
+            chrome) — rendered here as scaled-down illustrative previews of
+            each scrim's visual treatment, same convention already used for
+            AuthCard/Card at /design-system/patterns, rather than embedding
+            the real full-screen component inline. */}
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <div className="flex flex-col gap-2">
+            <span className="text-muted-foreground font-mono text-xs">scrim=&quot;flat&quot;</span>
+            <div className="relative h-56 overflow-hidden rounded-lg">
+              <div className="absolute inset-0 bg-[url('/login-background.jpg')] bg-cover bg-center backdrop-blur-[20px]" />
+              <div className="bg-overlay absolute inset-0 opacity-85 backdrop-blur-[8px]" />
+              <p className="text-nav-foreground absolute inset-0 flex items-center justify-center text-center text-sm font-medium">
+                /login, /signup,
+                <br />
+                /create-profile, /
+              </p>
+            </div>
+          </div>
+          <div className="flex flex-col gap-2">
+            <span className="text-muted-foreground font-mono text-xs">scrim=&quot;radial&quot;</span>
+            <div className="relative h-56 overflow-hidden rounded-lg">
+              <div className="absolute inset-0 bg-[url('/login-background.jpg')] bg-cover bg-center" />
+              <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(10,13,18,0.7)_0%,rgba(10,13,18,0.9)_100%)]" />
+              <p className="text-nav-foreground absolute inset-0 flex items-center justify-center text-sm font-medium">
+                /welcome
+              </p>
+            </div>
+          </div>
+        </div>
+        <p className="text-muted-foreground mt-4 text-xs">
+          Both variants share the same background photo
+          (<code className="bg-muted rounded px-1 py-0.5">public/login-background.jpg</code>) —
+          see <code className="bg-muted rounded px-1 py-0.5">COMPONENTS.md#photobackdrop</code>{" "}
+          for why <code className="bg-muted rounded px-1 py-0.5">/welcome</code> reuses this photo
+          rather than a distinct export. View live at{" "}
+          <Link href="/login" className="text-text-brand hover:underline">
+            /login
+          </Link>{" "}
+          and{" "}
+          <Link href="/welcome" className="text-text-brand hover:underline">
+            /welcome
+          </Link>
+          .
+        </p>
+      </ComponentShowcase>
+
+      <ComponentShowcase
         name="GoogleIcon"
         status="Production Ready"
         purpose='Google "G" mark for the "Log in with Google" button.'
@@ -432,6 +488,29 @@ export default function ComponentsPage() {
           stays expanded while that menu is open. See{" "}
           <code className="bg-muted rounded px-1 py-0.5">COMPONENTS.md#globalnav</code> for the
           full contract, including why its destination routes are placeholders.
+        </p>
+      </ComponentShowcase>
+
+      <ComponentShowcase
+        name="VideoPlayer"
+        status="Draft"
+        purpose="Plays an embedded video with a branded poster/paused state and a persistent scrubber control bar — introduced for the /welcome first-run screen's introduction video."
+        docsAnchor="videoplayer"
+        figmaReference='AMFM Portal — node 1894:16438 ("Video player 16:9"), within Onboarding/First run church admin (node 1909:25772)'
+        tokens={["bg-overlay/30", "backdrop-blur-[8px]", "backdrop-blur-[4px]", "rounded-2xl", "border-black/10"]}
+        states={["Paused (poster)", "Playing", "Muted", "Seeking", "Fullscreen"]}
+      >
+        <VideoPlayer poster="/login-background.jpg" title="Sample video player" className="max-w-md" />
+        <p className="text-muted-foreground mt-4 text-xs">
+          Real <code className="bg-muted rounded px-1 py-0.5">&lt;video&gt;</code> element with
+          working play/pause/seek/mute/fullscreen — no real video file or captions track has been
+          supplied yet, so playback has no source (see{" "}
+          <code className="bg-muted rounded px-1 py-0.5">COMPONENTS.md#videoplayer</code> for the
+          full list of open items). View live at{" "}
+          <Link href="/welcome" className="text-text-brand hover:underline">
+            /welcome
+          </Link>
+          .
         </p>
       </ComponentShowcase>
     </div>

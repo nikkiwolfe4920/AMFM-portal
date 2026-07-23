@@ -75,6 +75,7 @@ Defined once per theme (`:root` / `.dark`) as raw values in `src/tokens/colors.c
 | `nav-foreground-muted` | `text-nav-foreground-muted` | `GlobalNav`'s default (non-active) item label color — `#cecfd2` |
 | `nav-foreground-subtle` | `text-nav-foreground-subtle` | `GlobalNav`'s section subheadings, supporting text (email, tagline) — `#94979c` |
 | `nav-success` | `bg-nav-success` | `GlobalNav`'s account-card online indicator — `#47cd89`, distinct from `status-success` (different hue/value, no shared source) |
+| `highlight-gold` | `text-highlight-gold` | Personalized-emphasis text color — e.g. the church name on the `/welcome` first-run screen's heading (`"Let's get **Fellowship of the Parks** ready..."`). `#e9c481`, a warm gold distinct from `primary`/`text-brand`/`status-warning*`. Root-only, same rationale as the `nav-*` tokens above — `/welcome` is a fixed-dark surface (it reuses `nav-foreground`/`nav-foreground-muted` directly for its body text; this is the one genuinely new color the screen needs), not swapped by `.dark`. |
 
 Every `*-foreground` token exists to be paired with its base token for text-on-surface contrast — don't mix a token's foreground with a different surface (e.g. don't use `primary-foreground` text on a `card` background).
 
@@ -91,6 +92,7 @@ One base token, `--radius: 0.625rem` (`src/tokens/radius.css`, `:root` only — 
 | `rounded-lg` | `--radius` (base, 10px) |
 | `rounded-xl` | `--radius` + 4px (14px) |
 | `rounded-2xl` | Tailwind's built-in default (16px) — not overridden locally, and already matches the brand's `radius-2xl`, so no token change was needed for it. |
+| `rounded-3xl` | Tailwind's built-in default (24px) — matches Figma's "radius-4xl" naming exactly by value despite the differing name (same class of naming mismatch as `rounded-2xl` above); used for the `/welcome` first-run screen's outer chrome corner. No token change needed. |
 
 Use these scale utilities, not arbitrary `rounded-[Npx]` values, so a future change to `--radius` propagates everywhere.
 
@@ -106,8 +108,12 @@ Use these scale utilities, not arbitrary `rounded-[Npx]` values, so a future cha
   |---|---|---|---|---|
   | `text-display-sm` | 30px | 38px | `font-normal` (400) | `PricingCard`'s "Free Membership" title |
   | `text-display-md` | 36px | 40px | `font-light` (300) | `Card`'s `CardTitle` on `/create-profile` ("Create profile") |
+  | `text-display-lg` | 48px | 50px | `font-light` (300) | The `/welcome` first-run screen's subheading ("Let's get {church} ready to strengthen relationships.") |
+  | `text-display-2xl` | 72px | 90px | `font-light` (300) | The `/welcome` first-run screen's main heading ("Welcome, {name}.") |
 
-  Always pair `text-display-sm`/`text-display-md` with `font-display` and the Figma-specified weight (`font-light` or `font-normal`) — these sizes don't apply to `font-sans` content.
+  Always pair `text-display-sm`/`text-display-md`/`text-display-lg`/`text-display-2xl` with `font-display` and the Figma-specified weight (`font-light` or `font-normal`) — these sizes don't apply to `font-sans` content. `text-display-2xl` additionally carries a Figma-specified `-1.44px` letter-spacing (`tracking-[-1.44px]` at the call site — an arbitrary one-off value, same precedent as `AmfmLogo`'s tagline tracking, not promoted to a token since no second use case exists yet).
+
+  **Provenance note**: `text-display-2xl`'s values come directly from Figma's own named `display-2xl` size/line-height variables on the `/welcome` heading node — the strongest-sourced of the four sizes. `text-display-lg`'s 48px/50px is read off the same node's inline export values; the file's style catalogue lists a named "Display lg/Light" style but the export didn't expose its exact number directly, so treat this one as a close reproduction, not a variable-sourced exact confirmation, until spot-checked directly against Figma.
 - **Line-heights are overridden for `xs`/`sm`/`base`** in `src/tokens/typography.css` to fixed pixel values (not the default font-size ratios), to match the brand type scale used throughout `/login`:
 
   | Utility | Size | Line-height |
@@ -231,3 +237,6 @@ Reach for this pattern (or the 2–3 column variant from the table above) before
 - **`GlobalNav`'s account-card avatar photo remains an approximation** — same tier as `AmfmLogo`/`GoogleIcon`: it renders initials ("OR") instead of the real "Olivia Rhye" photo, since only the wordmark assets (not an avatar photo) have been supplied so far. Replace once a real exported photo is available.
 - **`GlobalNav` isn't wired into a real app-shell layout yet** — no authenticated route currently composes it (see the routes gap above). It's demonstrated standalone at `/design-system`; integrate it into `src/app/layout.tsx` (or a dashboard-specific layout) once a real authenticated shell exists, rather than forcing it onto today's public/onboarding routes, which are built on the fixed-light `PhotoBackdrop`/`AuthCard` pattern instead.
 - **`GlobalNav`'s account-card flyout menu (Personal Profile, Church Profile, Account Settings, Subscription & Billing, Terms & Privacy) has no Figma node reference** — built from a screenshot supplied directly in conversation rather than a `get_design_context`-fetched node, so its exact spacing/typography is a close visual match, not a pixel-verified one. Its five destination routes are placeholders, same caveat as the rest of `GlobalNav`'s links — see `COMPONENTS.md#globalnav`.
+- **`/welcome`'s background photo reuses `public/login-background.jpg`, not a confirmed distinct asset** — the Figma reference shows a different (church-congregation) photo; product decided to ship with the existing login photo as a stand-in rather than block on a new export, per the same "approximate now, swap later" precedent as `AmfmLogo`/`GoogleIcon`. Replace once the real photo is supplied and committed to `public/`.
+- **`VideoPlayer`'s video source and captions are placeholders** — no real produced video file or caption track has been supplied yet, so `/welcome` renders the player wired to a real `<video>` element (native play/pause/seek/mute/fullscreen all functional) but without a working `src`/`captionsSrc`. Wire both to real assets before shipping — see `COMPONENTS.md#videoplayer`.
+- **`text-display-2xl` was added without an explicit product sign-off round**, unlike `text-display-lg` (both added in the same change) — its 72px/90px/-1.44px values come directly from Figma's own named `display-2xl` variable on the `/welcome` heading node (stronger provenance than `display-lg`'s inline-only values), and building the screen's main heading was impossible without it. Flagged here for visibility rather than silently treated as pre-approved — revisit if design wants a different value.

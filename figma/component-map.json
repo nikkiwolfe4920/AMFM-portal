@@ -30,7 +30,7 @@
     "implementation": "src/components/ui/dialog.tsx"
   },
   "PhotoBackdrop": {
-    "figmaComponent": "AMFM Portal — Onboarding/login node 1909:25767 (background photo treatment)",
+    "figmaComponent": "AMFM Portal — Onboarding/login node 1909:25767 (\"flat\" scrim, background photo treatment); Onboarding/First run church admin node 1909:25772 (\"radial\" scrim variant)",
     "documentation": "COMPONENTS.md#photobackdrop",
     "implementation": "src/components/photo-backdrop.tsx"
   },
@@ -98,5 +98,10 @@
     "figmaComponent": "AMFM Portal — collapsed/default state node 2065:13660 (\"Sidebar navigation\"); expanded/exposed state node 3727:25276 (\"Content\"); expanded-state logo lockup node 3727:25279 (\"Logo\") — exported as public/AMFM_Collaped.svg / public/AMFM_Expanded.svg. Account-card flyout menu has no Figma node, built from a supplied screenshot.",
     "documentation": "COMPONENTS.md#globalnav",
     "implementation": "src/components/global-nav.tsx"
+  },
+  "VideoPlayer": {
+    "figmaComponent": "AMFM Portal — node 1894:16438 (\"Video player 16:9\"), within Onboarding/First run church admin (node 1909:25772) — no real video asset or captions file supplied yet",
+    "documentation": "COMPONENTS.md#videoplayer",
+    "implementation": "src/app/welcome/_components/video-player.tsx"
   }
 }

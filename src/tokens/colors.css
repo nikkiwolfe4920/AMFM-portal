@@ -61,6 +61,12 @@
   --nav-foreground-subtle: oklch(0.675 0.008 260.731); /* #94979c */
   --nav-success: oklch(0.758 0.153 157.185); /* #47cd89 */
 
+  /* /welcome (first-run) — reuses nav-foreground/nav-foreground-muted directly
+   * for body text (exact hex matches); this is the one new color the screen
+   * needs, for personalized/emphasized text over its photo background.
+   * Root-only, same fixed-surface rationale as the tokens above. */
+  --highlight-gold: oklch(0.838 0.095 81.672); /* #e9c481 */
+
   --chart-1: oklch(0.646 0.222 41.116);
   --chart-2: oklch(0.6 0.118 184.704);
   --chart-3: oklch(0.398 0.07 227.392);
@@ -154,6 +160,7 @@
   --color-nav-foreground-muted: var(--nav-foreground-muted);
   --color-nav-foreground-subtle: var(--nav-foreground-subtle);
   --color-nav-success: var(--nav-success);
+  --color-highlight-gold: var(--highlight-gold);
   --color-chart-1: var(--chart-1);
   --color-chart-2: var(--chart-2);
   --color-chart-3: var(--chart-3);

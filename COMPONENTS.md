@@ -697,50 +697,59 @@ Rendered at `/design-system/components#dialog` and via the homepage "Learn More"
 
 **Status**: Production Ready
 **Source**: `src/components/photo-backdrop.tsx`
-**Figma**: AMFM Portal file, node `1909:25767` ("Onboarding/login"), node `1909:25768` ("Onboarding/sign up"), and node `1909:25769` ("Onboarding/Create Profile") — all three use the same two arbitrary blur values (`backdrop-blur-[20px]` content layer, `backdrop-blur-[8px]` overlay) and `bg-overlay`/85% scrim. **Not yet confirmed**: whether the sign-up/Create Profile screens' background photos are the same asset as `public/login-background.jpg` or distinct exports — verify before assuming this component needs no changes for those routes.
+**Figma**: AMFM Portal file, node `1909:25767` ("Onboarding/login"), node `1909:25768` ("Onboarding/sign up"), node `1909:25769` ("Onboarding/Create Profile") — all three use the same two arbitrary blur values (`backdrop-blur-[20px]` content layer, `backdrop-blur-[8px]` overlay) and `bg-overlay`/85% scrim (the `"flat"` variant, default). **Not yet confirmed**: whether the sign-up/Create Profile screens' background photos are the same asset as `public/login-background.jpg` or distinct exports — verify before assuming this component needs no changes for those routes. Also node `1909:25772` ("Onboarding/First run church admin") — the `"radial"` variant, used on `/welcome`; this screen's background photo is a distinct church-congregation photo in Figma but currently reuses `public/login-background.jpg` as a stand-in (product decision — see `DESIGN.md` Known gaps).
 
 ### Purpose
 
-Full-bleed background photo + dark scrim shared by any onboarding-style surface built on the same Figma photo background (currently `/login` and `/`).
+Full-bleed background photo + dark scrim shared by any onboarding-style surface built on the same Figma photo background (currently `/login`, `/signup`, `/create-profile`, `/`, and `/welcome`).
 
 ### Anatomy
 
-Outer full-viewport container → absolutely-positioned background image (`bg-[url('/login-background.jpg')] bg-cover bg-center`) → a blurred, scrim-tinted content layer (`children`).
+Outer full-viewport container → absolutely-positioned background image (`bg-[url('/login-background.jpg')] bg-cover bg-center`) → a scrim-tinted content layer (`children`) — the scrim itself is one of two treatments, see Variants.
 
-### Variants
+### Variants (`scrim` prop)
 
-None — one visual treatment; `className` extends the content-layer container for per-page layout needs.
+| Variant | Treatment | Use for |
+|---|---|---|
+| `"flat"` (default) | `bg-overlay` at `opacity-85`, layered on a two-stage blur (`backdrop-blur-[20px]` content / `backdrop-blur-[8px]` overlay) | `/login`, `/signup`, `/create-profile`, `/` — the original treatment, unchanged |
+| `"radial"` | An unblurred radial-gradient vignette (`rgba(10,13,18,.7)` center → `rgba(10,13,18,.9)` edge — the `overlay` token's rgb equivalent; Tailwind arbitrary gradients can't reference the CSS custom property directly) | `/welcome` (first-run church admin) |
+
+Adding `scrim="radial"` (or omitting `scrim` for the existing default) is fully backward-compatible — no visual change to any existing consumer.
 
 ### States
 
-None — static decorative backdrop.
+None — static decorative backdrop, for either variant.
 
 ### Properties / API
 
 ```ts
-{ className?: string } & React.PropsWithChildren
+{
+  className?: string;
+  scrim?: "flat" | "radial"; // defaults to "flat"
+} & React.PropsWithChildren
 ```
 
 ### Design tokens used
 
-`bg-overlay` (scrim, `opacity-85`), `backdrop-blur-[20px]` / `backdrop-blur-[8px]` (arbitrary blur values — no blur token exists yet; don't invent one without a second real use case per `CLAUDE.md`'s anti-premature-abstraction guidance).
+`bg-overlay` (`"flat"` scrim, `opacity-85`), `backdrop-blur-[20px]` / `backdrop-blur-[8px]` (arbitrary blur values, `"flat"` only — no blur token exists yet; don't invent one without a second real use case per `CLAUDE.md`'s anti-premature-abstraction guidance). `"radial"` uses a hardcoded `rgba(10,13,18,*)` gradient rather than a token reference — see Implementation rules.
 
 ### Accessibility requirements
 
-Decorative background image — no `alt` text needed (it's a CSS background, not an `<img>`). Ensure content rendered inside still meets contrast requirements against the scrim (see `DESIGN.md` Accessibility standards).
+Decorative background image — no `alt` text needed (it's a CSS background, not an `<img>`). Ensure content rendered inside still meets contrast requirements against the scrim (see `DESIGN.md` Accessibility standards) — verified for both variants' text content (`nav-foreground`/`nav-foreground-muted`/`highlight-gold` on `/welcome`).
 
 ### Responsive behavior
 
-`min-h-screen w-full` fills the viewport at every breakpoint; content layer centers its children (`items-center justify-center`) regardless of viewport size.
+`min-h-screen w-full` fills the viewport at every breakpoint; content layer centers its children (`items-center justify-center`) regardless of viewport size — same for both scrim variants.
 
 ### Implementation rules
 
-- Shared across routes — changes here affect every consuming page; verify `/login` and `/` both still look correct after any edit.
-- Don't duplicate this pattern per-route; extend `className` instead.
+- Shared across routes — changes here affect every consuming page; verify `/login`, `/signup`, `/create-profile`, `/`, and `/welcome` all still look correct after any edit.
+- Don't duplicate this pattern per-route; extend `className` (and now `scrim`) instead — this is exactly why the radial vignette became a variant of this component rather than a second, parallel backdrop implementation.
+- The `"radial"` gradient's `rgba(10,13,18,*)` values are the `overlay` token's rgb equivalent, hardcoded because Tailwind's arbitrary `bg-[radial-gradient(...)]` syntax can't cleanly reference a CSS custom property inline. If a second radial/gradient scrim use case appears, revisit converting this to a real token-driven gradient instead of a second hardcoded value.
 
 ### Visual examples
 
-Rendered live on `/login`, `/signup`, and `/`; referenced (not re-rendered full-bleed) at `/design-system/patterns`.
+Rendered live on `/login`, `/signup`, `/create-profile`, `/`, and `/welcome`; both scrim variants shown side-by-side at `/design-system/components#photobackdrop` (as reduced-height illustrative previews, not the real full-bleed component — see that page's implementation note) and the full `/welcome` composition at `/design-system/patterns#welcome-hero`.
 
 ---
 
@@ -1320,82 +1329,83 @@ Rendered live as a single instance (collapsed by default) at `/design-system/com
 
 ## VideoPlayer
 
-**Status**: Not Implemented — identified and contract-documented via a design system audit of `Onboarding/First run church admin`; no code exists yet (see Implementation rules before building)
-**Source**: None yet
+**Status**: Draft — implemented and functional (real `<video>` element, working play/pause/seek/mute/fullscreen), but shipped without a real video asset/captions file and with several states built from generic interaction principles rather than a Figma reference (see States and Implementation rules)
+**Source**: `src/app/welcome/_components/video-player.tsx`
 **Figma**: AMFM Portal file, node `1894:16438` ("Video player 16:9"), within `Onboarding/First run church admin` (node `1909:25772`) — first appearance of any video-playback UI in the file (distinct from `DposystemStory`, which has no audio/video playback of its own)
 
 ### Purpose
 
-Plays an embedded video with a branded poster/paused state and a persistent scrubber control bar — used on the first-run welcome screen to play a personalized church-admin introduction video ahead of the "Get Started" CTA.
+Plays an embedded video with a branded poster/paused state and a persistent scrubber control bar — used on `/welcome` to play a church-admin introduction video ahead of the "Get Started" CTA.
 
 ### Anatomy
 
-- Outer container: 16:9 aspect box, `rounded-2xl`, hairline border, elevated drop shadow (see Design tokens)
-- Poster image, `object-cover`, fills the container
-- Centered play-button overlay: `size-16` circle, `backdrop-blur-[8px]`, translucent dark fill, centered play glyph (20px)
-- Bottom gradient action bar (`bg-gradient-to-b from-transparent to-black/30`, `pt-10 pb-4 px-5`):
-  - Play/pause icon button (16px icon, 8px padding, `rounded-sm`)
-  - Volume icon button (same treatment)
-  - Elapsed-time label (`text-xs font-semibold text-white`)
-  - Progress/scrubber track (`backdrop-blur-[4px]`, translucent white, `rounded-full`) with separate buffered- and played-progress fills
-  - Remaining-time label
-  - Maximize/fullscreen icon button
+- Outer container: 16:9 aspect box (`aspect-video`), `rounded-2xl`, hairline border, elevated drop shadow (see Design tokens)
+- Real `<video>` element, `poster`/`src`, `object-cover`, fills the container; an optional `<track kind="captions">` child when `captionsSrc` is supplied
+- Centered play-button overlay (shown only while paused): `size-16` circle, `backdrop-blur-[8px]`, translucent dark fill, centered play glyph (20px) — the whole circle is a real `<button>`
+- Bottom gradient action bar (`bg-gradient-to-b from-transparent to-overlay/30`, `pt-10 pb-4 px-5`):
+  - Play/pause icon button (16px icon, 8px padding, `rounded-sm`) — icon swaps with playback state
+  - Mute/unmute icon button (same treatment) — icon swaps with mute state
+  - Elapsed-time label (`text-xs font-semibold text-white`), live from `video.currentTime`
+  - Scrubber: a real `<input type="range">` (accessible seek control) layered over two `aria-hidden` fill `div`s (buffered progress, played progress) on a `backdrop-blur-[4px]` translucent track
+  - Remaining-time label, live (`duration − currentTime`)
+  - Fullscreen icon button (`video.requestFullscreen()`)
 
 ### Variants
 
-None evidenced — the referenced frame shows only one visual treatment (paused, poster visible, 0:00 elapsed).
+None — one visual treatment; content is driven entirely by props (`src`/`poster`/`title`/`captionsSrc`) and live playback state, not a caller-chosen variant.
 
 ### States
 
-Only the default/paused state has a Figma reference. The following are real states this control will need but have **no Figma source to build against yet** — flag for design before shipping, same category of gap as `HeartChartSummary`'s missing 0% state:
+| State | Behavior | Figma-sourced? |
+|---|---|---|
+| Paused (poster) | Poster visible, play-button overlay shown, elapsed time `00:00` | Yes — the only state with a direct Figma reference |
+| Playing | Play-button overlay hides, transport play icon swaps to pause, progress fill advances live off real `<video>` events | No — implemented via native `<video>` playback + generic icon-swap convention, not a Figma reference |
+| Muted / unmuted | Volume icon swaps (`Volume2`/`VolumeX`) | No — generic convention |
+| Seeking | Real `<input type="range">`, keyboard- and pointer-operable, updates `video.currentTime` | No — added specifically to satisfy the accessibility requirement below; no Figma equivalent to diverge from |
+| Buffering | Buffered-progress fill computed live from `video.buffered` | Figma shows an empty "Buffering progress" layer (0-width in the static frame) — the live computation is real, but its exact visual (color/opacity) is not pixel-verified against a real buffering Figma state |
+| Hover / focus (transport buttons) | Not yet given an explicit visual treatment beyond the browser default — **gap**, see Implementation rules | No |
+| Fullscreen | Wired to the native Fullscreen API | No — undesigned, uses the browser's native fullscreen presentation |
 
-| State | Behavior |
-|---|---|
-| Default / paused | Poster visible, play-button overlay shown, elapsed time `00:00` — the only state with a Figma reference |
-| Playing | Undesigned — icon swap (play → pause), progress fill advancing, overlay play button presumably hidden |
-| Buffering | An empty "Buffering progress" layer exists in the Figma export (0-width in the static frame) but its visual behavior is undesigned |
-| Hover / focus (transport buttons) | Undesigned |
-| Fullscreen | Undesigned |
-
-### Properties / API (proposed — not yet implemented)
+### Properties / API
 
 ```ts
 interface VideoPlayerProps {
-  src: string;
+  src?: string;     // no real video asset supplied yet — see Implementation rules
   poster: string;
-  title: string; // accessible name for the player region
+  title: string;    // accessible name for the player region
+  captionsSrc?: string; // optional <track> captions file — no real file supplied yet
+  className?: string;
 }
 ```
-
-Needs product/engineering input on whether this wraps a native `<video>` element or an external embed before finalizing — the video is a produced piece (not confirmed as a local file), so the source mechanism isn't settled.
 
 ### Design tokens used
 
 - `backdrop-blur-[8px]` — reuse, exact match to `PhotoBackdrop`'s existing overlay blur value.
-- `backdrop-blur-[4px]` — new arbitrary blur value (no third-blur token exists yet); this is now the third distinct arbitrary blur radius in the app alongside `PhotoBackdrop`'s `[20px]`/`[8px]`. Not yet a forced token per `CLAUDE.md`'s anti-premature-abstraction guidance, but worth tracking if a fourth appears.
-- Translucent dark fills (play-button overlay, gradient action bar) should use `bg-overlay` at partial opacity (e.g. `bg-overlay/30`) rather than a new alpha token — Figma's own variable for this fill is misleadingly named `alpha-white-30` but resolves numerically to the same near-black as the existing `overlay` token (`#0a0d12`).
-- The outer shadow (`0px 16px 32px -4px rgba(0,0,0,0.7)`) does not match any existing shadow token (Tailwind's built-in `shadow-2xl` has a different offset/blur/spread/opacity) — not added as a new token here since this is the only use site so far; revisit as a candidate `shadow-*` token (e.g. `shadow-media-card`) if a second floating-card-over-photo use case appears, per `DESIGN.md`'s Shadows section.
+- `backdrop-blur-[4px]` — arbitrary blur value (no third-blur token exists yet); this is now the third distinct arbitrary blur radius in the app alongside `PhotoBackdrop`'s `[20px]`/`[8px]`. Not yet a forced token per `CLAUDE.md`'s anti-premature-abstraction guidance, but worth tracking if a fourth appears.
+- Translucent dark fills (play-button overlay, gradient action bar, scrubber track) use `bg-overlay`/`to-overlay` at partial opacity (`/30`) rather than a new alpha token — Figma's own variable for this fill is misleadingly named `alpha-white-30` but resolves numerically to the same near-black as the existing `overlay` token (`#0a0d12`).
+- The outer shadow (`shadow-[0px_16px_32px_-4px_rgba(0,0,0,0.7)]`) does not match any existing shadow token (Tailwind's built-in `shadow-2xl` has a different offset/blur/spread/opacity) — kept as a one-off arbitrary value since this is the only use site so far; revisit as a candidate `shadow-*` token (e.g. `shadow-media-card`) if a second floating-card-over-photo use case appears, per `DESIGN.md`'s Shadows section.
 - `border-black/10` — reuse, same hairline treatment as `AuthCard`'s inner panel.
 
 ### Accessibility requirements
 
-None of the following are resolved in the Figma source — required before this leaves Draft, not optional polish:
-
-- Must be built on a real `<video>` element (or an accessible wrapper around one), not a decorative image with click handlers — transport controls need real keyboard operability (Space/Enter to play-pause, arrow keys to seek), per `DESIGN.md`'s custom-widget ARIA guidance.
-- The scrubber needs an accessible name and value (`role="slider"` or a native `<input type="range">`), announcing current/remaining time — not a bare styled `div`.
-- Every icon-only transport control (play/pause, volume, maximize) needs an `aria-label`, the same requirement `Button`'s `size="icon"` already carries.
-- No captions/transcript story exists in the Figma reference — flag for product before shipping, same category of gap as `HeartChartSummary`'s missing 0%-participation design.
+- Built on a real `<video>` element with real keyboard-operable transport controls (native `<button>`s, a native `<input type="range">` for seeking) — not a decorative image with click handlers.
+- The scrubber is a native `<input type="range">` (`aria-label="Seek"`, `aria-valuetext` announcing "current of total" time) rather than a hand-rolled `div` — satisfies the requirement flagged when this component was first documented.
+- Every icon-only transport control (play/pause, mute/unmute, fullscreen) has an `aria-label` that updates with state (e.g. `"Play"`/`"Pause"`), the same requirement `Button`'s `size="icon"` already carries.
+- The whole player is a `role="region"` with `aria-label={title}`, matching the ARIA-region precedent already used by `DposystemStory`'s carousel.
+- **Still open**: no captions/transcript file has been supplied — the `<track>` element is wired (`captionsSrc` prop) but unused until a real file exists. Do not consider this component's accessibility contract complete until captions are real.
 
 ### Responsive behavior
 
-Fixed `560×315` in the only referenced Figma frame — no mobile/tablet reference exists, the same category of gap already tracked for `HeartChartSummary`/`PricingCard`.
+Fluid width (`w-full aspect-video`), unlike the Figma frame's fixed `560×315` — extended to be fluid since no mobile/tablet Figma reference exists (the same category of gap already tracked for `HeartChartSummary`/`PricingCard`), and a fixed-pixel player would overflow on mobile viewports. The call site (`/welcome`) constrains it with `max-w-[560px]` to match Figma's exact size at wider viewports.
 
 ### Implementation rules
 
-- No second use site is confirmed yet, so default to route-colocating under the first-run screen's `_components` per `CLAUDE.md`'s Component Creation Process — however, the file's broader metadata references other video-adjacent surfaces (Featured Training sections, HeartChart Resources "Video Cover" nodes) that may share this exact chrome. Confirm with design whether those share this component before deciding between route-colocated and a shared `src/components` primitive; don't assume either without checking.
-- Icons map to `lucide-react`'s `Play`, `Volume2`, `Maximize2` as the closest stable equivalents — matching the project's established "closest stable substitute" precedent (`GoogleIcon`, `Select`'s `ChevronDown`, `GlobalNav`'s icon set).
-- Do not build the "playing"/"buffering"/"fullscreen" states from guesswork — get explicit design or product sign-off on their visual treatment first, per this file's standing rule that no component should ship an unverified state.
+- Colocated at `src/app/welcome/_components/video-player.tsx` (single confirmed use site) per `CLAUDE.md`'s Component Creation Process — the file's broader metadata references other video-adjacent surfaces (Featured Training sections, HeartChart Resources "Video Cover" nodes) that may eventually share this chrome; promote to `src/components` only once a second real use site is confirmed, don't assume it preemptively.
+- Icons map to `lucide-react`'s `Play`, `Pause`, `Volume2`, `VolumeX`, `Maximize2` as the closest stable equivalents — matching the project's established "closest stable substitute" precedent (`GoogleIcon`, `Select`'s `ChevronDown`, `GlobalNav`'s icon set).
+- **No real video source or captions file exists yet** — `/welcome` renders this component without a `src`/`captionsSrc` (poster-only; clicking play has no video to actually play). Wire both to real assets before this leaves Draft, per the same "flag, don't hide" precedent as `AmfmLogo`/`SignupSuccess`.
+- Hover/focus treatments on the transport buttons were not given an explicit visual per `DESIGN.md`'s Interaction principles ("every interactive control has a visible hover/focus treatment") — currently rely on the browser default only. This is a real gap, not a deliberate decision; add explicit `hover:`/`focus-visible:` treatments before promoting out of Draft.
+- Playing/buffering-visual/fullscreen behavior was implemented against real native `<video>`/Fullscreen-API semantics rather than a Figma reference, since none exists — this is a deliberate "resolve with sensible engineering defaults, flag clearly" decision (matching `GlobalNav`'s precedent for its undesigned hover states), not a guess dressed up as verified.
 
 ### Visual examples
 
-None yet — no code exists. Reference screenshot: Figma node `1894:16438` (`fileKey` `tg3U3gNcIYMn9aY9JYrIZc`).
+Rendered at `/design-system/components#videoplayer` (poster-only, no source) and live on `/welcome`; referenced at `/design-system/patterns#welcome-hero`.
