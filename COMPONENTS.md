@@ -587,6 +587,70 @@ Rendered live in `PricingCard`'s benefit list on `/create-profile`; referenced a
 
 ---
 
+## ResourceListItem
+
+**Status**: Draft (Figma-validated; not yet implemented in code — see Implementation rules)
+**Source**: Not yet implemented — no `src/components` file exists yet for this component.
+**Figma**: AMFM Portal file, "HeartChart Resources" (node `3722:19475`), `Table cell` instances — six confirmed instances across two resource-list cards (nodes `0:941`, `0:952`, `0:963` and `0:999`, `0:1010`, `0:1022`)
+
+### Purpose
+
+Presents one linked resource (a course, article, video, or tool) inside a card-based list — leading icon, title, and supporting description, with a single trailing action — so a set of related resources can be scanned and acted on from a dashboard-style page.
+
+### Anatomy
+
+Leading `size-8` (32px) icon → title/supporting-text stack (a title line plus a second, de-emphasized supporting line) → trailing `size-12` (48px) icon-only action button. Rows stack full-width (584px on the reference frame) inside a card, at a consistent vertical pitch (76px between rows on the reference instances).
+
+### Variants
+
+None evidenced — a single visual treatment repeated six times with different icon/copy per instance; no variant prop needed beyond content.
+
+### States
+
+| State | Behavior |
+|---|---|
+| Default | Only state confirmed via Figma. |
+| Hover / Focus / Active | **Not yet designed** — no Figma reference shows an interactive-state treatment for this row or its trailing button. Required before shipping per `DESIGN.md`'s Interaction principles ("every interactive control has a visible hover, focus, and active/pressed treatment") — do not ship with browser-default-only states. |
+
+### Properties / API (proposed)
+
+```ts
+interface ResourceListItemProps {
+  icon: React.ComponentType<{ className?: string }>; // lucide-react icon
+  title: string;
+  description: string;
+  onAction?: () => void;
+  href?: string;
+}
+```
+
+### Design tokens used
+
+`text-text-secondary` (title — Figma resolved to `#414651`, an exact match), `border` (`#d5d7da`, row/card hairlines — exact match to the existing `border`/`input` token), `bg-background` (white), `shadow-xs`, `rounded-md` — all existing tokens; no new tokens required.
+
+### Accessibility requirements
+
+- The trailing icon-only button must carry a caller-supplied `aria-label` describing its action (e.g. "Open {title}") — the same requirement `Button`'s `size="icon"` already documents; six repeated instances make this easy to silently skip.
+- Icon is decorative and must be `aria-hidden="true"`, consistent with `BenefitListItem`'s existing precedent — title/description text alone should carry the meaning.
+- Whichever element is the primary click target (the row itself vs. only the trailing button) must be a single real interactive element — don't wire duplicate/nested click handlers onto both the row and the button.
+
+### Responsive behavior
+
+Not evidenced — the Figma reference is a single fixed-width (584px) desktop composition. Needs an explicit mobile/tablet treatment (icon/text wrapping, trailing button placement) before shipping, per `DESIGN.md`'s mobile-first Layout/grid rules — the same category of gap already tracked for `HeartChartSummary`/`PricingCard`.
+
+### Implementation rules
+
+- Icon set observed on the reference frame: `share-07`, `message-text-square-01`, `clipboard-check`, `book-open-01`, `heart`, `intersect-three`. The first five map to `lucide-react`'s `Share2`, `MessageSquareText`, `ClipboardCheck`, `BookOpen`, `Heart` respectively (closest stable equivalents, matching the project's established substitute precedent — see `GlobalNav`/`VideoPlayer`). **`intersect-three` has no clear `lucide-react` equivalent** — flag for design/eng alignment before implementation rather than guessing a substitute.
+- The trailing action button is 48px square — larger than `Button`'s existing `icon` size (`size-9`/36px in `src/components/ui/button.tsx`). Decide whether this is a local `className` override on `Button` (the precedent `HeartChartSummary` already established for its own action buttons) or a genuine new size before building; don't invent an arbitrary value at the call site.
+- A hidden "Table cell lead action" sub-layer (20px) exists in the underlying Figma library component but is unused on every one of the six instances — an artifact of the shared kit, not part of this component's real contract; do not implement it.
+- No code exists yet for this component — this entry documents its validated Figma contract ahead of implementation. Add the real `Source` path here in the same change that implements it, per `CLAUDE.md`'s Component Creation Process.
+
+### Visual examples
+
+Not yet rendered anywhere in code — confirmed only via direct Figma inspection (`get_metadata`/`get_variable_defs`); no `/design-system` showcase exists until this is implemented.
+
+---
+
 ## Card
 
 **Status**: Production Ready
