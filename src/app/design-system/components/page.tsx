@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ClipboardCheck, Share2 } from "lucide-react";
+import { Award, ClipboardCheck, Share2 } from "lucide-react";
 
 import {
   Card,
@@ -36,7 +36,8 @@ import { BenefitListItem } from "@/app/create-profile/_components/benefit-list-i
 import { PasswordRequirementItem } from "@/app/signup/_components/password-requirement-item";
 import { SignupSuccess } from "@/app/signup/_components/signup-success";
 import { GlobalNav } from "@/components/global-nav";
-import { VideoPlayer } from "@/app/welcome/_components/video-player";
+import { VideoPlayer } from "@/components/video-player";
+import { BlurOverlay } from "@/components/blur-overlay";
 import { ResourceListItem } from "@/components/resource-list-item";
 import { ElevatedCard } from "@/components/elevated-card";
 import { TopHero } from "@/components/top-hero";
@@ -62,7 +63,7 @@ export default function ComponentsPage() {
         status="Production Ready"
         purpose="Reusable interactive action element for triggering a command (form submit, navigation, dialog open)."
         docsAnchor="button"
-        figmaReference='AMFM Portal — node 3273:19658 ("Primary" button set) and siblings'
+        figmaReference='AMFM Portal — node 3273:19658 ("Primary" button set) and siblings; icon-leading composition confirmed on node 3724:23184 ("Invite Marriage Champions" CTA)'
         tokens={[
           "bg-primary",
           "text-primary-foreground",
@@ -94,9 +95,20 @@ export default function ComponentsPage() {
             <Button disabled>Disabled</Button>
             <Button loading>Log in</Button>
           </div>
+          <div className="flex flex-wrap items-center gap-3">
+            <Button>
+              <Award aria-hidden="true" className="size-5" />
+              Invite Marriage Champions
+            </Button>
+          </div>
           <p className="text-muted-foreground text-xs">
             Tab to a button to see the focused state; hover to see the hover
-            fill.
+            fill. Icons on the <code className="bg-muted rounded px-1">default</code>{" "}
+            variant inherit <code className="bg-muted rounded px-1">
+              text-primary-foreground
+            </code>{" "}
+            (white) via <code className="bg-muted rounded px-1">currentColor</code> —
+            never give a leading icon its own color class.
           </p>
         </div>
       </ComponentShowcase>
@@ -667,7 +679,7 @@ export default function ComponentsPage() {
       <ComponentShowcase
         name="VideoPlayer"
         status="Draft"
-        purpose="Plays an embedded video with a branded poster/paused state and a persistent scrubber control bar — introduced for the /welcome first-run screen's introduction video."
+        purpose="Plays an embedded video with a branded poster/paused state and a persistent scrubber control bar — introduced for the /welcome first-run screen's introduction video, now also used on /marriage-champions-empty's recruiting overlay."
         docsAnchor="videoplayer"
         figmaReference='AMFM Portal — node 1894:16438 ("Video player 16:9"), within Onboarding/First run church admin (node 1909:25772)'
         tokens={["bg-overlay/30", "backdrop-blur-[8px]", "backdrop-blur-[4px]", "rounded-2xl", "border-black/10"]}
@@ -765,6 +777,47 @@ export default function ComponentsPage() {
           roster (with Select and StatusTag cells) live at{" "}
           <Link href="/marriage-champions" className="text-text-brand hover:underline">
             /marriage-champions
+          </Link>
+          .
+        </p>
+      </ComponentShowcase>
+
+      <ComponentShowcase
+        name="BlurOverlay"
+        status="Draft"
+        purpose="Renders real content as an inert, faded backdrop behind a centered empty-state call-to-action — used on /marriage-champions-empty to preview the Team Members table without making it interactive."
+        docsAnchor="bluroverlay"
+        figmaReference='AMFM Portal — "Our Marriage Champions / Empty" (node 3724:23167), "image 54" backdrop layer (node 3724:23178)'
+        tokens={["blur-[2px]", "opacity-30", "bg-background"]}
+        states={["Default (only state — static, non-interactive)"]}
+      >
+        <div className="overflow-hidden rounded-lg border">
+          <BlurOverlay>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHeaderCell>Name</TableHeaderCell>
+                  <TableHeaderCell>Campus</TableHeaderCell>
+                  <TableHeaderCell>Status</TableHeaderCell>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                <TableRow>
+                  <TableCell className="font-semibold">Olivia Rhye</TableCell>
+                  <TableCell className="text-muted-foreground">North Campus</TableCell>
+                  <TableCell>
+                    <span className="text-muted-foreground">Active</span>
+                  </TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
+          </BlurOverlay>
+        </div>
+        <p className="text-muted-foreground mt-4 text-xs">
+          Always <code className="bg-muted rounded px-1 py-0.5">aria-hidden</code> — see the full
+          empty-state composition (blurred table + VideoPlayer + heading + primary Button) live at{" "}
+          <Link href="/marriage-champions-empty" className="text-text-brand hover:underline">
+            /marriage-champions-empty
           </Link>
           .
         </p>

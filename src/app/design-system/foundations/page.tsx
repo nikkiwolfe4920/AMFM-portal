@@ -1,4 +1,5 @@
 import { HeartChartLogo } from "@/app/login/_components/heartchart-logo";
+import { BlurOverlay } from "@/components/blur-overlay";
 
 import { Section, Swatch } from "../_components/showcase";
 
@@ -261,6 +262,30 @@ export default function FoundationsPage() {
             </div>
           ))}
         </div>
+      </Section>
+
+      <Section
+        id="blur-overlay"
+        title="Blur overlay"
+        description="Renders real content as an inert, faded backdrop (blur-[2px], 30% opacity, fading to the surrounding surface color) so it reads as 'there, but not yet actionable' behind a centered empty-state call-to-action — see BlurOverlay in COMPONENTS.md. Introduced for /marriage-champions-empty (Figma node 3724:23178)."
+      >
+        <div className="overflow-hidden rounded-lg border">
+          <BlurOverlay>
+            <div className="grid grid-cols-3 gap-px bg-transparent p-6 text-sm">
+              <span className="font-semibold">Olivia Rhye</span>
+              <span className="text-muted-foreground">olivia@untitledui.com</span>
+              <span className="text-muted-foreground">North Campus</span>
+              <span className="font-semibold">Phoenix Baker</span>
+              <span className="text-muted-foreground">phoenix@untitledui.com</span>
+              <span className="text-muted-foreground">South Campus</span>
+            </div>
+          </BlurOverlay>
+        </div>
+        <p className="text-muted-foreground text-xs">
+          Always <code className="bg-muted rounded px-1">aria-hidden</code> and{" "}
+          <code className="bg-muted rounded px-1">pointer-events-none</code> — decorative
+          only, never a substitute for a real disabled/loading state on interactive content.
+        </p>
       </Section>
 
       <Section

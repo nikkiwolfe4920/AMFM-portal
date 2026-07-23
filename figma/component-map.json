@@ -1,6 +1,6 @@
 {
   "Button": {
-    "figmaComponent": "AMFM Portal — node 3273:19658 (\"Primary\" button set) and sibling nodes",
+    "figmaComponent": "AMFM Portal — node 3273:19658 (\"Primary\" button set) and sibling nodes; icon-leading composition also confirmed on node 3724:23184 (\"Invite Marriage Champions\" CTA, within \"Our Marriage Champions / Empty\", node 3724:23167)",
     "documentation": "COMPONENTS.md#button",
     "implementation": "src/components/ui/button.tsx"
   },
@@ -100,9 +100,9 @@
     "implementation": "src/components/global-nav.tsx"
   },
   "VideoPlayer": {
-    "figmaComponent": "AMFM Portal — node 1894:16438 (\"Video player 16:9\"), within Onboarding/First run church admin (node 1909:25772) — no real video asset or captions file supplied yet",
+    "figmaComponent": "AMFM Portal — node 1894:16438 (\"Video player 16:9\"), within Onboarding/First run church admin (node 1909:25772); second instance node 3724:23180, within \"Our Marriage Champions / Empty\" (node 3724:23167) — no real video asset or captions file supplied yet",
     "documentation": "COMPONENTS.md#videoplayer",
-    "implementation": "src/app/welcome/_components/video-player.tsx"
+    "implementation": "src/components/video-player.tsx"
   },
   "ResourceListItem": {
     "figmaComponent": "AMFM Portal — HeartChart Resources node 2361:19280, \"Table cell\" instances across the Optional Resources (2318:27034/2318:27041/2318:27048) and Premium Resources (2309:20747/2309:20754/2309:20738) cards",
@@ -128,5 +128,20 @@
     "figmaComponent": "AMFM Portal — \"Footer CTA\" component (node 1909:25789) — background texture asset blocked, renders a flat bg-primary fill",
     "documentation": "COMPONENTS.md#footercta",
     "implementation": "src/components/footer-cta.tsx"
+  },
+  "MarriageChampionsPageShell": {
+    "figmaComponent": "AMFM Portal — \"Our Marriage Champions\" screen's shared \"Page header\" instance, confirmed identical across \"Populated\" (node 3724:23444) and \"Empty\" (node 3724:23167)",
+    "documentation": "COMPONENTS.md#marriagechampionspageshell",
+    "implementation": "src/components/marriage-champions-page-shell.tsx"
+  },
+  "FellowshipOfTheParksLogo": {
+    "figmaComponent": "AMFM Portal — \"Our Marriage Champions\" screen's header lockup (nodes 3724:23444 and 3724:23167) — asset export host unreachable, cropped from a rendered screenshot rather than the original vector",
+    "documentation": "COMPONENTS.md#fellowshipoftheparkslogo",
+    "implementation": "src/components/fellowship-of-the-parks-logo.tsx"
+  },
+  "BlurOverlay": {
+    "figmaComponent": "AMFM Portal — \"Our Marriage Champions / Empty\" (node 3724:23167), \"image 54\" backdrop layer (node 3724:23178)",
+    "documentation": "COMPONENTS.md#bluroverlay",
+    "implementation": "src/components/blur-overlay.tsx"
   }
 }
