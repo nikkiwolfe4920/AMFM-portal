@@ -133,7 +133,7 @@ Two custom tokens in `src/tokens/shadows.css` (Tailwind v4 auto-generates `shado
 | Utility | Use |
 |---|---|
 | `shadow-card` | The elevated white auth card on `/login` — a 3-layer shadow, tinted with the `overlay` color rather than pure black. |
-| `shadow-button-inset` | The skeuomorphic finish on solid/outline buttons: an outer `shadow-xs`-equivalent drop shadow plus a two-layer inset ring (a 1px full-perimeter highlight + a 2px bottom shade) that gives buttons a subtle "pressed glass" edge. |
+| `shadow-button-inset` | The skeuomorphic finish on the solid `default` button: an outer `shadow-xs`-equivalent drop shadow plus a two-layer inset ring (a 1px full-perimeter highlight + a 2px bottom shade) that gives the brand-filled button a subtle "pressed glass" edge. `outline` (and other bordered/flat variants) use plain `shadow-xs` instead — stacking the inset ring on top of a real border on a light background doubles the edge into a heavier line than Figma's reference, since the ring is designed to read as a highlight *inside* a saturated fill, not alongside a neutral border. |
 
 Don't hand-roll either of these as an arbitrary `shadow-[...]` value at a call site; use the token.
 

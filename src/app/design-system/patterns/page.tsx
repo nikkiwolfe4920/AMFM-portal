@@ -296,7 +296,7 @@ export default function PatternsPage() {
             </CardContent>
             <CardFooter className="flex-col items-stretch gap-0 px-0 pt-8 pb-0">
               <div className="border-border-secondary border-t" />
-              <div className="flex justify-end px-6 pb-6">
+              <div className="flex justify-end px-6 py-6">
                 <Button>Start using HeartChart</Button>
               </div>
             </CardFooter>

@@ -17,6 +17,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { HelperText } from "@/components/ui/helper-text";
 import { Input } from "@/components/ui/input";
 import { InputGroup } from "@/components/ui/input-group";
 import { Label } from "@/components/ui/label";
@@ -54,6 +55,7 @@ export default function ComponentsPage() {
           "bg-muted",
           "text-fg-disabled",
           "shadow-button-inset",
+          "shadow-xs",
         ]}
         states={["Default", "Hover", "Focus", "Disabled", "Loading"]}
       >
@@ -97,6 +99,7 @@ export default function ComponentsPage() {
           "bg-muted/50",
           "text-text-secondary",
           "text-primary",
+          "text-destructive",
         ]}
         states={["Default", "Filled", "Focused", "Disabled", "Invalid", "Required"]}
       >
@@ -115,7 +118,15 @@ export default function ComponentsPage() {
           </div>
           <div className="flex flex-col gap-1.5">
             <Label htmlFor="ds-invalid">Invalid</Label>
-            <Input id="ds-invalid" aria-invalid defaultValue="not-an-email" />
+            <Input
+              id="ds-invalid"
+              aria-invalid
+              aria-describedby="ds-invalid-helper"
+              defaultValue="not-an-email"
+            />
+            <HelperText id="ds-invalid-helper" error>
+              Enter a valid email address.
+            </HelperText>
           </div>
           <div className="flex flex-col gap-1.5">
             <Label htmlFor="ds-required" required>

@@ -83,6 +83,7 @@ No layout behavior of its own — width and stacking are controlled by the calle
 - Always use `cva` variants, never inline ternaries for variant styling.
 - Must support keyboard focus (native `<button>` gives this for free; don't override `tabIndex`).
 - `loading` and `asChild` are mutually exclusive — don't pass both.
+- **`outline` uses `shadow-xs`, not `shadow-button-inset`.** `shadow-button-inset`'s inset 18%-opacity ring is designed to read as a bevel highlight sitting *inside* a saturated brand fill (the `default` variant) — stacked on top of `outline`'s own real 1px `border` on a plain white background, the two edges compound into a doubled, noticeably heavier-looking border/shadow than Figma's reference. `shadow-xs` (Tailwind's built-in `0 1px 2px black/5%`, the same token `Input`/`InputGroup`/`Select` already use) keeps the single real border as the only visible edge, matching the Figma outline button 1:1.
 
 ### Visual examples
 
@@ -102,7 +103,7 @@ Single-line text entry control for forms — the base control every text/email/p
 
 ### Anatomy
 
-Bare `<input>` (matches upstream shadcn/ui shape — no wrapper, no built-in label/help-text/error-message chrome). Compose `Label` and validation messaging around it at the call site.
+Bare `<input>` (matches upstream shadcn/ui shape — no wrapper, no built-in label/help-text/error-message chrome). Compose `Label` and a `HelperText` (see below) around it at the call site for validation messaging.
 
 ### Variants
 
@@ -114,7 +115,7 @@ None — a single visual treatment, differentiated only by `type` (`text`, `emai
 |---|---|
 | Default / Filled | `bg-background`, `text-foreground`, `px-3.5 py-2.5`, intrinsic height (no fixed `h-*`). Figma's "Default" and "Filled" are visually identical — filled is just this styling with a value present. |
 | Focused | `focus-visible:border-2 focus-visible:border-border-brand` — a thicker, brand-colored border. No separate ring layer (unlike `Button`). |
-| Invalid (`aria-invalid`) | `aria-invalid:border-border-destructive-subtle`, flat border only — no ring glow. |
+| Invalid (`aria-invalid`) | `aria-invalid:border-border-destructive-subtle`, flat border only — no ring glow. Pair with a `HelperText error` below the input (`aria-describedby` pointing at its `id`) so the error is never conveyed by border color alone — see `DESIGN.md`'s "Color is never the only signal". |
 | Disabled | `disabled:bg-muted/50` (verified pixel-exact against Figma's flat `#fafafa` composited on the white card), `disabled:text-muted-foreground`, `disabled:opacity-100` to cancel the base fade. Border unchanged from default. |
 
 ### Properties / API
@@ -138,12 +139,69 @@ Full-width by default (`w-full`) within its flex container; no breakpoint-specif
 ### Implementation rules
 
 - Never hardcode colors, border widths, or padding — use the tokens/utilities above.
-- Stays a bare `<input>` — no business logic (validation wiring, error message rendering) inside the primitive itself (see "No business logic in `src/components/ui`" in `CLAUDE.md`). Build field-level validation UI in the composing component.
-- Figma's reference also shows a trailing help-circle icon and inline error message — treated as component-browser demo chrome only, not implemented, since no app-level validation wiring exists yet to attach one to. Revisit when real field-level validation lands.
+- Stays a bare `<input>` — no business logic (validation wiring, error message rendering) inside the primitive itself (see "No business logic in `src/components/ui`" in `CLAUDE.md`). Build field-level validation UI (including the paired `HelperText`) in the composing component.
+- Figma's reference also shows a trailing help-circle icon — treated as component-browser demo chrome only, not implemented, since no app-level validation wiring exists yet to attach one to. Revisit when real field-level validation lands. The inline error message itself, however, is implemented via `HelperText` (see below) — color alone is never a sufficient invalid signal per `DESIGN.md`.
 
 ### Visual examples
 
-Default, filled, disabled, and invalid states render at `/design-system/components#input`. Also rendered live on `/signup`'s Name/Email/Password fields, `/create-profile`'s Church/Organization name, Location, and Average Weekly Attendance fields, and at `/design-system/patterns#auth-card-signup` / `#create-profile-card`.
+Default, filled, disabled, and invalid (with paired `HelperText`) states render at `/design-system/components#input`. Also rendered live on `/signup`'s Name/Email/Password fields, `/create-profile`'s Church/Organization name, Location, and Average Weekly Attendance fields, and at `/design-system/patterns#auth-card-signup` / `#create-profile-card`.
+
+---
+
+## HelperText
+
+**Status**: Production Ready
+**Source**: `src/components/ui/helper-text.tsx`
+**Figma**: AMFM Portal file, node `3272:19436` ("Input" field set) — the field's hidden "Hint text" slot (a `text-sm` line directly beneath the input, same `gap-1.5`/6px offset as the label-to-input gap)
+
+### Purpose
+
+Supporting or error text rendered directly beneath a form control — the accessible, always-visible companion to a control's `aria-invalid` state, so validity is never conveyed by border color alone (see `DESIGN.md`'s "Color is never the only signal").
+
+### Usage guidelines
+
+Place immediately after the control it describes, inside the same `flex flex-col gap-1.5` field wrapper `Input`/`InputGroup`/`Select` already use, and wire `aria-describedby` on the control to this element's `id`. Not a standalone component — always paired with exactly one control's error or supporting-copy state, never used as generic body text.
+
+### Variants
+
+None — a single visual treatment, differentiated only by the `error` prop.
+
+### States
+
+| State | Behavior |
+|---|---|
+| Default (helper) | `text-text-tertiary` — neutral supporting copy. |
+| Error | `error` prop → `text-destructive` + `role="alert"` so assistive tech announces the message when it appears. |
+
+### Properties / API
+
+```ts
+React.ComponentProps<"p"> & {
+  error?: boolean; // renders in the destructive color and as role="alert"
+}
+```
+
+### Design tokens used
+
+`text-text-tertiary` (default), `text-destructive` (error). See `DESIGN.md` Color tokens.
+
+### Accessibility requirements
+
+- The paired control must reference this element via `aria-describedby` so screen readers announce it as part of the field, not just sighted users via color.
+- `error` sets `role="alert"` — reserve it for messages that appear/change in response to validation, not static helper copy (which would announce on every mount/re-render if `alert` were used unconditionally).
+
+### Responsive behavior
+
+None — inline text, wraps naturally with its container, same as `Label`.
+
+### Implementation rules
+
+- Never hardcode the error color — always use `text-destructive` via the `error` prop, not a literal class at the call site.
+- Stays a bare `<p>` — no built-in icon or dismiss affordance; Figma's reference trailing help-circle icon on the input itself is separate demo chrome, not part of this component (see `Input`'s Implementation rules).
+
+### Visual examples
+
+Rendered paired with `Input`'s Invalid state at `/design-system/components#input`.
 
 ---
 
@@ -159,7 +217,7 @@ Pairs an `Input` with a fixed, non-editable leading (or trailing) add-on — e.g
 
 ### Anatomy
 
-Wrapper `div` carrying the shared border/shadow/radius (focus/invalid/disabled state driven off the real `<input>` via `has-*` selectors) → add-on `span` (`rounded-l-md` corner only, non-interactive, `text-text-tertiary`, `aria-hidden`) → bare `<input>` (`rounded-r-md` corner only, transparent background/border on the shared edge so the two segments read as one control).
+Wrapper `div` carrying the shared border/shadow/radius (focus/invalid/disabled state driven off the real `<input>` via `has-*` selectors) → add-on `span` (`rounded-l-md` corner only, non-interactive, `text-text-tertiary`, `aria-hidden`) → bare `<input>` (`rounded-r-md` corner only, transparent background, `border-l border-input` on the shared edge — a 1px vertical divider separating the add-on from the editable text, matching Figma's "Website" field exactly — otherwise no border of its own so the two segments still read as one control).
 
 ### Variants
 
@@ -194,6 +252,7 @@ Full width (`w-full`) like `Input`; the add-on segment's width is intrinsic to i
 
 - Compose around the existing `Input` primitive — reuse its exact token set rather than re-declaring border/shadow/radius values, so a future `Input` token change propagates automatically.
 - Do not implement a `"trailing"` variant speculatively; add it only once a second real Figma reference exists.
+- **Fixed: the add-on/input boundary had no visible divider.** Figma's "Website" field draws the add-on and text-input segments as two adjacent bordered boxes whose shared inner edge is the only new line visible (the outer edges coincide with the wrapper's own border). Reproduced here as `border-l border-input` on the `<input>` — the same border color the wrapper already uses, so no new token — rather than a second full border on either segment, which the wrapper's own border already provides on the outer edges.
 
 ### Visual examples
 
@@ -573,7 +632,7 @@ Fluid width by default (fills its container); no built-in breakpoint behavior �
 - **Fixed: `cn()` was silently dropping `text-display-md`/`text-display-sm` whenever paired with a text-color utility, rendering `CardTitle` at the browser default size instead of 36px.** `tailwind-merge`'s built-in `font-size` class group only recognizes Tailwind's default `text-*` scale (`xs`/`sm`/`base`/`lg`/...); it doesn't know about this project's custom `--text-display-sm`/`--text-display-md` theme keys (`src/tokens/typography.css`), so it fell through to the generic `text-color` group — the same group `text-foreground` belongs to. Any `cn(..., "text-display-md text-foreground", ...)` call (exactly `CardTitle`'s usage on `/create-profile`) therefore had `text-display-md` silently removed, keeping only `text-foreground` and leaving the title at its inherited font-size. **Fixed at the root** in `src/lib/utils.ts` by extending `tailwind-merge`'s `font-size` group (`extendTailwindMerge({ extend: { classGroups: { "font-size": [{ text: ["display-sm", "display-md"] }] } } })`) rather than patching every call site — this protects every future use of the display scale, not just `CardTitle`'s. Verify with `node -e "console.log(require('tailwind-merge').twMerge('text-display-md', 'text-foreground'))"` — before the fix this printed only `text-foreground`.
 - **`CardTitle`'s base `leading-none` still fights the display scale's paired line-height** (`text-display-md` carries its own 40px line-height, but `leading-none` sets `line-height: 1` on a separate, non-conflicting `tailwind-merge` group, so which one wins depends on Tailwind's internal utility-emission order, not class order in the JSX). Rather than rely on that, `/create-profile`'s `CardTitle` explicitly adds `leading-[2.5rem]` (40px, `DESIGN.md`'s documented `display-md` line-height) — an unambiguous `leading-*` vs `leading-*` conflict that `tailwind-merge` resolves correctly. Do this for any other `CardTitle` using the display scale; don't assume the token's own line-height wins by default.
 - **Don't put `border-t`/`border-b` directly on `CardHeader`/`CardFooter` when also overriding their padding** — `card.tsx`'s base classes include self-referential arbitrary-variant rules (`[.border-b]:pb-6` / `[.border-t]:pt-6`) that add padding *only when the element also carries that literal border class*. Because Tailwind compiles `[.border-b]:pb-6` to a two-class compound selector (higher CSS specificity than a plain single-class `pb-5`), a plain padding override loses to it even when it appears later via `cn()` — `tailwind-merge` doesn't recognize the bracket-variant form as conflicting with a plain `pb-*`/`pt-*` class, so both end up in the class list and CSS specificity (not source order) decides. `/create-profile`'s header/footer instead render the divider as a plain child `div` (`border-border-secondary border-t`, no bracket-variant involved) and set `CardHeader`/`CardFooter`'s own padding as ordinary non-conflicting utilities.
-- **`/create-profile`'s modal restyled to a flush, zero-gap flex layout matching the Figma frame exactly**, rather than relying on `Card`'s default `gap-6`/`py-6`: the Figma `Modal` node has *no* implicit spacing between its header/content/actions sections — every gap is an explicit padding value or spacer, so leaving `Card`'s default `gap-6` (24px) in place double-counted spacing on top of each section's own padding. The call site overrides `Card` to `gap-0 py-0` and expresses every gap as the section's own padding/margin, verified against the Figma node metadata (`Onboarding/Create Profile`, node `1909:25769`): `CardHeader` `pt-6`(24px)+`px-6`(24px), `gap-4`(16px) between the title block and `HeartChartLogo`, `gap-0.5`(2px) between `CardTitle`/`CardDescription`, then a divider `div` with `mt-5`(20px) before it; `CardContent` keeps its existing `pt-5`(20px); `CardFooter` uses `pt-8`(32px) before its divider `div`, then a `flex justify-end px-6 pb-6`(24px) row for the button, with **no** gap between the divider and the button row (matches the Figma frame's `Divider-wrap` sitting flush against the actions row). The Figma `Divider-wrap` under the footer is itself a ~25px gradient/shadow graphic (not a plain hairline) — approximated here as a plain 1px `border-t`, the same class of simplification as `AmfmLogo`'s text approximation below, since the exact gradient asset isn't available (see that entry's Implementation rules for why).
+- **`/create-profile`'s modal restyled to a flush, zero-gap flex layout matching the Figma frame exactly**, rather than relying on `Card`'s default `gap-6`/`py-6`: the Figma `Modal` node has *no* implicit spacing between its header/content/actions sections — every gap is an explicit padding value or spacer, so leaving `Card`'s default `gap-6` (24px) in place double-counted spacing on top of each section's own padding. The call site overrides `Card` to `gap-0 py-0` and expresses every gap as the section's own padding/margin, verified against the Figma node metadata (`Onboarding/Create Profile`, node `1909:25769`): `CardHeader` `pt-6`(24px)+`px-6`(24px), `gap-4`(16px) between the title block and `HeartChartLogo`, `gap-0.5`(2px) between `CardTitle`/`CardDescription`, then a divider `div` with `mt-5`(20px) before it; `CardContent` keeps its existing `pt-5`(20px); `CardFooter` uses `pt-8`(32px) before its divider `div`, then a `flex justify-end px-6 py-6`(24px top and bottom) row for the button. **Fixed: the button row previously used `pb-6` only (no top padding)**, which read as the divider running directly into the button — the Figma `Divider-wrap` graphic under the footer is a ~25px gradient/shadow asset (not a plain hairline) with its visible line inset within that height, so it never actually sits flush against the actions row the way a bare 1px line does. Since this divider is approximated here as a plain 1px `border-t` (the same class of simplification as `AmfmLogo`'s text approximation below, since the exact gradient asset isn't available — see that entry's Implementation rules for why), that graphic's baked-in breathing room has to be restored explicitly: `py-6` gives the button even padding above (between it and the divider) and below (between it and the card edge), matching `pt-8`'s gap above the divider on the other side.
 - ~~The `Onboarding/Create Profile` Figma frame specifies a title/description in a serif "Financier Display" font not yet defined in `DESIGN.md`~~ **Resolved**: `DESIGN.md`'s Typography system now defines `font-display`/`text-display-md` (Fraunces substituting for the licensed Financier Display face). `/create-profile`'s `CardTitle` renders `font-display text-display-md leading-[2.5rem] font-light text-foreground` (was `text-3xl font-semibold tracking-tight`); `CardDescription` renders `text-text-tertiary` (was the generic `text-muted-foreground`, a different gray — Figma's description color resolves to the `text-tertiary` token, `#535862`, exactly).
 - **`/create-profile`'s content column widened**: the Figma frame places a `368px`-wide `PricingCard` beside the form fields (`gap-[40px]`/`gap-10`), so the page's `Card` call site now uses `max-w-4xl` (was `max-w-2xl`) to fit both columns without cramping the fields column; below `lg`, the two columns stack (fields, then `PricingCard`) per `DESIGN.md`'s mobile-first layout rules — no Figma mobile reference exists for this frame, so the stacking behavior is a deliberate application of the general grid rules, not a pixel-sourced breakpoint.
 

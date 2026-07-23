@@ -27,7 +27,7 @@ function InputGroup({ className, addon, ...props }: InputGroupProps) {
       </span>
       <input
         data-slot="input-group-control"
-        className="placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground flex w-full min-w-0 rounded-r-md bg-transparent px-3.5 py-2.5 text-base text-foreground outline-none disabled:pointer-events-none disabled:cursor-not-allowed disabled:text-muted-foreground disabled:opacity-100"
+        className="border-input placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground flex w-full min-w-0 rounded-r-md border-l bg-transparent px-3.5 py-2.5 text-base text-foreground outline-none disabled:pointer-events-none disabled:cursor-not-allowed disabled:text-muted-foreground disabled:opacity-100"
         {...props}
       />
     </div>
