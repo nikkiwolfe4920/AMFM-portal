@@ -37,7 +37,7 @@ import { DposystemStory } from "@/app/_components/dposystem-story";
 import { PricingCard } from "@/app/create-profile/_components/pricing-card";
 import { PasswordRequirementItem } from "@/app/signup/_components/password-requirement-item";
 import { SignupSuccess } from "@/app/signup/_components/signup-success";
-import { VideoPlayer } from "@/app/welcome/_components/video-player";
+import { VideoPlayer } from "@/components/video-player";
 import { TopHero } from "@/components/top-hero";
 import { CourseCard } from "@/components/course-card";
 import { ElevatedCard } from "@/components/elevated-card";

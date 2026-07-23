@@ -3,8 +3,7 @@ import { ArrowRight } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { PhotoBackdrop } from "@/components/photo-backdrop";
-
-import { VideoPlayer } from "./_components/video-player";
+import { VideoPlayer } from "@/components/video-player";
 
 // Placeholders — no auth/session or church-profile data source exists yet.
 // Replace once a real account/church lookup is wired up.

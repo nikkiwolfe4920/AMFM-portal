@@ -152,6 +152,20 @@ Two custom tokens in `src/tokens/shadows.css` (Tailwind v4 auto-generates `shado
 
 Don't hand-roll either of these as an arbitrary `shadow-[...]` value at a call site; use the token.
 
+### Blur overlay
+
+A visual treatment for showing real content as an inert, faded backdrop behind a centered empty-state call-to-action — rather than hiding it outright — so the eventual populated experience still reads as "there." Introduced for `/marriage-champions-empty` (Figma "Our Marriage Champions / Empty", node `3724:23167`; backdrop layer "image 54", node `3724:23178`); implemented as the `BlurOverlay` component — see `COMPONENTS.md#bluroverlay`.
+
+| Layer | Treatment |
+|---|---|
+| Blurred content | `blur-[2px]` (matches Figma's own `2px` blur value on the reference layer) |
+| Dimming | `opacity-30` |
+| Fade mask | `bg-gradient-to-b from-background/0 to-background` — fades the blurred content into the surrounding card surface toward the bottom |
+
+**Deliberate token deviation**: Figma's reference layer fades to a hardcoded white (`to-white`), since the file doesn't model dark mode for this frame. The implementation fades to `bg-background` instead — the same surface token the surrounding `ElevatedCard` already sits on — so the effect stays correct in both themes rather than punching a hardcoded white rectangle into a dark surface. Same category of deliberate token substitution as `Table`/`StatusTag`'s root-only badge tokens elsewhere in this file.
+
+Always pair the blurred content with `aria-hidden` and `pointer-events-none` — it is decorative only, never a substitute for a real disabled/loading state on content a user is still expected to reach.
+
 ## Layout/grid rules
 
 Single source of truth for responsive behavior across design and engineering. Every layout, component, and pattern must adapt across the breakpoints below using Tailwind's responsive utilities (`sm:`, `md:`, `lg:`, `xl:`, `2xl:`).
@@ -259,3 +273,5 @@ Reach for this pattern (or the 2–3 column variant from the table above) before
 - **`background-gradient-from`/`background-gradient-to` and `brand-900` are root-only** — no Figma dark-mode reference exists for the `/heartchart-resources` page shell or `CourseCard`'s step-3 header. Unlike `status-success`/`status-warning` (which stay root-only and rely on their *consuming component* already being on a theme-aware surface), the background gradient is the outermost page background every unthemed element sits on directly — leaving it light-only broke the page `<h1>`'s contrast when `.dark` was toggled (theme-aware `text-foreground` turned near-white against a backdrop that stayed light). Fixed by giving `.dark` a real fallback (both stops collapse to the flat dark `background` value) rather than leaving the page shell effectively non-theme-aware — see `src/tokens/colors.css`. Revisit with a real gradient once a Figma dark-mode reference exists.
 - **`badge-success-*`/`badge-error-*`/`badge-warning-*` are root-only** — the "Our Marriage Champions" Figma frame (node `3724:23444`) that introduced `StatusTag` has no dark-mode reference, same class of gap as `status-success`/`status-warning`/`nav-*`/`highlight-gold`/`brand-900` above. Add `.dark` values once a dark-mode Figma reference exists.
 - **`ElevatedCard` (the shared "outer shadow-card shell + inner bordered panel" primitive) does not retrofit `AuthCard` or `HeartChartSummary`** — per `HeartChartSummary`'s own documented precedent ("this is now the second real instance of the nested-shell shape; if a third appears, extract it into a shared primitive"), `TopHero` and the `/heartchart-resources` resource cards are the third and fourth instances, so the shape was extracted to `src/components/elevated-card.tsx` for their use. `AuthCard` (route-colocated, fixed-light, `border-black/10`) and `HeartChartSummary` (already-shipped, separately verified) were deliberately left as-is in the same change to keep the diff scoped — a reasonable follow-up is migrating both onto `ElevatedCard` once a next real touch to either component justifies the refactor.
+- **`/marriage-champions-empty`'s "Invite Marriage Champions" button has no wired invite modal** — the Figma file defines one (`3724:23382`, "Modal / invite user"), but only the button's own visual/token contract was in scope for this pass. Wire it to a real `Dialog` (see `COMPONENTS.md#dialog`) once the invite flow is built, rather than leaving the button a dead click target indefinitely.
+- **`GlobalNav`'s "Our Marriage Champions" nav item only routes to `/marriage-champions`** — `/marriage-champions-empty` exists purely to demonstrate Figma's "Empty" frame as a `/design-system`-indexed screen (matching the "one Figma frame → one route" precedent already established for `/welcome`, `/heartchart-resources`, etc.), not as a second navigable app state, so it won't show as the active nav item. Revisit once/if the product direction is to render the empty state conditionally on `/marriage-champions` itself (zero real team members) rather than as a separate route.
