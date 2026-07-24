@@ -2291,7 +2291,7 @@ The 11 entries below were added from the design system audit of the Figma "Heart
 
 ## WeDoCard
 
-**Status**: Draft (implemented and rendered on `/dashboard`; wordmark is a hand-authored approximation — see Implementation rules)
+**Status**: Draft (implemented and rendered on `/dashboard`; real WeDo wordmark and couple illustration now in place — see Implementation rules)
 **Source**: `src/components/we-do-card.tsx`
 **Figma**: AMFM Portal file, node `3727:29573` ("HeartChart Dashboard / premium"), `_Summary Data` region, right-hand instance (paired with `HeartChartSummary` on the left)
 
@@ -2301,11 +2301,11 @@ Church-wide "WeDo" (couples relationship app) engagement snapshot — the counte
 
 ### Anatomy
 
-Outer elevated shell (same nested outer-shadow-shell/inner-bordered-panel shape as `HeartChartSummary` — see Implementation rules) → WeDo heart-hands logo (top-left) → attribution text (top-right) → stat row: big stat number ("363 Couples") + supporting sentence ("Active in the app today") → `PointerCallout` (see below) containing a couple illustration + pull-quote → action row: two `Button` instances ("See Results", "Share Your Code").
+Outer elevated shell (`ElevatedCard`, same nested outer-shadow-shell/inner-bordered-panel shape as `HeartChartSummary`) → WeDo wordmark logo (top-left) → optional "Next Pulse in {label}" countdown text (top-right) → stat row: big stat number ("363 Couples", in the WeDo brand red) + supporting sentence ("Active in the app today") → `PointerCallout` (see below) containing a couple illustration + an uppercase "Most of your couples say..." label + pull-quote (with an optional highlighted phrase in the WeDo brand red) + a "Source: {quoteSource}" attribution line → action row: two `Button` instances ("See Results", "Share Your Code").
 
 ### Variants
 
-None — visual treatment is entirely data-driven (`coupleCount`, `quote`), not a caller-chosen variant, matching `HeartChartSummary`'s precedent of deriving display from props rather than a manual variant.
+None — visual treatment is entirely data-driven (`coupleCount`, `quote`, `highlightedPhrase`, `quoteSource`, `nextPulseLabel`), not a caller-chosen variant, matching `HeartChartSummary`'s precedent of deriving display from props rather than a manual variant.
 
 ### States
 
@@ -2313,6 +2313,8 @@ None — visual treatment is entirely data-driven (`coupleCount`, `quote`), not 
 |---|---|
 | Default | Static presentational read of caller-supplied numbers/quote — no loading/empty/error state of its own; caller owns that while fetching, same contract as `HeartChartSummary`. |
 | Action buttons | `onSeeResults`/`onShareCode` are optional callbacks; each button renders regardless of whether a handler is passed, matching `HeartChartSummary`'s three-action-row precedent. |
+| `nextPulseLabel` omitted | The "Next Pulse in {label}" text is omitted entirely (not rendered empty/blank) when no label is supplied. |
+| `highlightedPhrase` omitted or not found in `quote` | The quote renders as plain text with no colored span — never throws on a non-matching phrase. |
 
 ### Properties / API
 
@@ -2320,6 +2322,12 @@ None — visual treatment is entirely data-driven (`coupleCount`, `quote`), not 
 interface WeDoCardProps {
   coupleCount: number;
   quote: string;
+  /** Substring of `quote` to render in the WeDo brand red, matching Figma's pull-quote emphasis (e.g. "being a listener"). */
+  highlightedPhrase?: string;
+  /** Attribution line under the quote, e.g. "Your Current WeDo Pulse". Defaults to "Your Current WeDo Pulse". */
+  quoteSource?: string;
+  /** Countdown copy rendered as "Next Pulse in {nextPulseLabel}", e.g. "2d 10h". Omitted entirely if not provided. */
+  nextPulseLabel?: string;
   onSeeResults?: () => void;
   onShareCode?: () => void;
   className?: string;
@@ -2328,27 +2336,31 @@ interface WeDoCardProps {
 
 ### Design tokens used
 
-Reuse `HeartChartSummary`'s existing token set rather than a parallel one — same surface family: `shadow-card`, `rounded-2xl`, `border`, `bg-muted/50`, `text-foreground`, `text-muted-foreground`. No new tokens confirmed as required.
+Reuse `HeartChartSummary`'s existing token set for the shared shell/surfaces — `shadow-card`, `rounded-2xl`, `border`, `text-foreground`, `text-muted-foreground`, `text-text-tertiary`. One new token: `wedo-brand` (`text-wedo-brand`) — WeDo's own brand red (Figma `Colors/Red/500`, `#cd4745`), distinct from the app's `primary` terracotta accent, used for the couple-count stat and the quote's highlighted phrase. See `DESIGN.md`'s Color tokens table.
 
 ### Accessibility requirements
 
-- The couple illustration inside `PointerCallout` is decorative (`aria-hidden`); the quote itself must be real DOM text, not baked into an image, so it reaches assistive tech.
-- Both action buttons render through `Button`, inheriting its focus-visible ring and keyboard behavior; each has a visible text label (no icon-only affordance observed), so no additional `aria-label` is required.
+- The couple illustration (`/We-do.png`) inside `PointerCallout` is decorative (`alt=""`, `aria-hidden="true"`); the quote itself is real DOM text, not baked into an image, so it reaches assistive tech.
+- The WeDo wordmark (`/We-do-logo.svg`) carries a real `alt="WeDo"`, since it's the card's identifying mark, not decorative — same treatment as `HeartChartLogo`.
+- Both action buttons render through `Button`, inheriting its focus-visible ring and keyboard behavior; each has a visible text label alongside its icon, so no additional `aria-label` is required.
+- The highlighted phrase inside the quote is conveyed with color alone (a `<span>`, no bold/underline) — this is a stylistic emphasis on already-present text, not new information, so it doesn't trip DESIGN.md's "color is never the only signal" rule (which applies to state/status, not inline typographic emphasis).
 
 ### Responsive behavior
 
-Sits side-by-side with `HeartChartSummary` at desktop width (each roughly half the row). No mobile/tablet Figma reference was found for this frame — needs a documented single-column stacking behavior before shipping, same category of gap already tracked for `HeartChartSummary`.
+Sits side-by-side with `HeartChartSummary` at desktop width (each roughly half the row) via the parent grid (`grid-cols-1 lg:grid-cols-2`); stacks to a single full-width column below `lg`. No mobile/tablet Figma reference was found for this frame — the stacking behavior itself is verified in-browser, but exact mobile spacing/type-scale adjustments are unconfirmed, same category of gap already tracked for `HeartChartSummary`.
 
 ### Implementation rules
 
-- Compose on `ElevatedCard` rather than a third local copy of the nested-shell shape — `HeartChartSummary` predates `ElevatedCard` and was deliberately not retrofitted (see `ElevatedCard`'s Implementation rules), but `WeDoCard` is new code with no such precedent excusing a duplicate.
-- Reuse `Button variant="outline" size="compact"` for both actions, matching `HeartChartSummary`'s action-row treatment exactly rather than inventing new button styling.
-- **Implemented**: the WeDo wordmark renders as a hand-authored `lucide-react` `HeartHandshake` icon + "WeDo" text (`role="img"`, `aria-label="WeDo"`), not the real brand mark — same tier of approximation as `AmfmLogo`/`GoogleIcon`, since the real WeDo logo/couple illustration is unavailable in this environment (blocked Figma asset host). Replace with the real exported asset once available, per `AmfmLogo`'s established precedent.
+- Composed on `ElevatedCard` rather than a local copy of the nested-shell shape, per this entry's own prior note and `ElevatedCard`'s Implementation rules.
+- Reuses `Button variant="outline" size="compact"` for both actions, each with a leading `lucide-react` icon (`Eye` for "See Results", `QrCode` for "Share Your Code" — the latter mirroring `HeartChartSummary`'s "Share Your Link" icon choice), matching `HeartChartSummary`'s action-row treatment.
+- **Implemented**: the WeDo wordmark renders from the real exported asset (`public/We-do-logo.svg`, WeDo's brand red `#CD4745`) via `next/image`, unoptimized (same pattern as `HeartChartLogo`) — no longer a hand-authored icon approximation.
+- **Implemented**: the couple illustration renders from the real exported asset (`public/We-do.png`) via `next/image`, decorative and `aria-hidden`.
+- The quote's highlighted phrase is matched by exact substring (`quote.indexOf(highlightedPhrase)`) and wrapped in a `text-wedo-brand` span — this only supports a single, contiguous highlighted run per quote (matches the one confirmed Figma instance); do not extend to multiple highlighted ranges without a confirmed second use case.
 - A connecting caption row ("HeartChart shows you where your people are" / "WeDo helps them get where they want to go") sits below both hero cards on the page — this is page-level connective copy, not part of `WeDoCard`'s or `HeartChartSummary`'s own anatomy; do not fold it into either component.
 
 ### Visual examples
 
-Rendered live on `/dashboard` (hero row, alongside `HeartChartSummary`); tested at `src/components/we-do-card.test.tsx`. No dedicated `/design-system/components` entry yet — see this file's header note on scope.
+Rendered live on `/dashboard` (hero row, alongside `HeartChartSummary`) and at `/design-system/components#wedocard`; tested at `src/components/we-do-card.test.tsx`.
 
 ---
 

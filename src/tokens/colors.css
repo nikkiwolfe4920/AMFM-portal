@@ -140,6 +140,14 @@
    * even though they're visually close. */
   --chart-participation-fill: oklch(0.919 0.047 82.028); /* utility-yellow-100, #f4e2c2 */
 
+  /* WeDoCard (HeartChart Dashboard, node 3727:29573) — WeDo's own brand red,
+   * used for the couple-count stat and the pull-quote's highlighted phrase.
+   * Distinct from --primary (the app's own terracotta accent): this is
+   * Figma's "Colors/Red/500" variable, a different hue entirely. Root-only,
+   * no dark-mode Figma reference exists yet for this frame — same class of
+   * gap as the other HeartChart Dashboard tokens above. */
+  --wedo-brand: oklch(0.584 0.17 24.827); /* Colors/Red/500, #cd4745 */
+
   --sidebar: oklch(0.985 0 0);
   --sidebar-foreground: oklch(0.145 0 0);
   --sidebar-primary: oklch(0.205 0 0);
@@ -282,6 +290,7 @@
   --color-chart-scale-blue-50: var(--chart-scale-blue-50);
   --color-chart-scale-blue-25: var(--chart-scale-blue-25);
   --color-chart-participation-fill: var(--chart-participation-fill);
+  --color-wedo-brand: var(--wedo-brand);
   --color-sidebar: var(--sidebar);
   --color-sidebar-foreground: var(--sidebar-foreground);
   --color-sidebar-primary: var(--sidebar-primary);

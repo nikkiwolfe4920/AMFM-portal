@@ -90,6 +90,8 @@ export function DashboardContent() {
         <WeDoCard
           coupleCount={WE_DO_CARD.coupleCount}
           quote={WE_DO_CARD.quote}
+          highlightedPhrase={WE_DO_CARD.highlightedPhrase}
+          nextPulseLabel={WE_DO_CARD.nextPulseLabel}
         />
       </div>
       <p className="text-center text-sm text-muted-foreground">

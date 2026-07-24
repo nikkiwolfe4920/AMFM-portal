@@ -31,6 +31,7 @@ import {
 } from "@/components/ui/select";
 import { GoogleIcon } from "@/app/login/_components/google-icon";
 import { HeartChartSummary } from "@/components/heartchart-summary";
+import { WeDoCard } from "@/components/we-do-card";
 import { AmfmLogo } from "@/app/create-profile/_components/amfm-logo";
 import { BenefitListItem } from "@/app/create-profile/_components/benefit-list-item";
 import { PasswordRequirementItem } from "@/app/signup/_components/password-requirement-item";
@@ -797,6 +798,31 @@ export default function ComponentsPage() {
         >
           View full HeartChartSummary documentation →
         </Link>
+      </ComponentShowcase>
+
+      <ComponentShowcase
+        name="WeDoCard"
+        status="Draft"
+        purpose="Church-wide WeDo (couples relationship app) engagement snapshot — the counterpart card to HeartChartSummary, pairing a daily couple-activity stat with a qualitative pull-quote and entry points into results/sharing."
+        docsAnchor="wedocard"
+        figmaReference='AMFM Portal — node 3727:29573 ("HeartChart Dashboard / premium"), _Summary Data region, right-hand instance'
+        tokens={[
+          "wedo-brand",
+          "shadow-card",
+          "rounded-2xl",
+          "border",
+          "text-foreground",
+          "text-muted-foreground",
+          "text-text-tertiary",
+        ]}
+        states={["Default"]}
+      >
+        <WeDoCard
+          coupleCount={363}
+          quote="When it comes to being a listener in our relationship, I would rate myself: Excellent — I give full attention and seek to understand."
+          highlightedPhrase="being a listener"
+          nextPulseLabel="2d 10h"
+        />
       </ComponentShowcase>
 
       <ComponentShowcase
