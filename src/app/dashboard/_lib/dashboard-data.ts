@@ -45,6 +45,8 @@ export const WE_DO_CARD = {
   coupleCount: 363,
   quote:
     "When it comes to being a listener in our relationship, I would rate myself: Excellent — I give full attention and seek to understand.",
+  highlightedPhrase: "being a listener",
+  nextPulseLabel: "2d 10h",
 };
 
 export const AGE_GROUPS_DATA = [

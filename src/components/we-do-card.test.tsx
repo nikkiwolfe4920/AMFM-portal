@@ -39,4 +39,45 @@ describe("WeDoCard", () => {
 
     expect(screen.getByText("Couple")).toBeInTheDocument();
   });
+
+  it("highlights the given phrase within the quote", () => {
+    render(
+      <WeDoCard
+        coupleCount={363}
+        quote="When it comes to being a listener, I would rate myself: Excellent."
+        highlightedPhrase="being a listener"
+      />
+    );
+
+    const highlighted = screen.getByText("being a listener");
+    expect(highlighted.tagName).toBe("SPAN");
+    expect(screen.getByText(/I would rate myself: Excellent/)).toBeInTheDocument();
+  });
+
+  it("renders the quote plainly when the highlighted phrase isn't found", () => {
+    render(<WeDoCard coupleCount={363} quote="Test quote" highlightedPhrase="missing phrase" />);
+
+    expect(screen.getByText("Test quote", { exact: false })).toBeInTheDocument();
+  });
+
+  it("shows the default quote source and omits the next-pulse label when not provided", () => {
+    render(<WeDoCard coupleCount={363} quote="Test quote" />);
+
+    expect(screen.getByText(/Your Current WeDo Pulse/)).toBeInTheDocument();
+    expect(screen.queryByText(/Next Pulse in/)).not.toBeInTheDocument();
+  });
+
+  it("renders a custom quote source and next-pulse label when provided", () => {
+    render(
+      <WeDoCard
+        coupleCount={363}
+        quote="Test quote"
+        quoteSource="Custom Source"
+        nextPulseLabel="2d 10h"
+      />
+    );
+
+    expect(screen.getByText(/Custom Source/)).toBeInTheDocument();
+    expect(screen.getByText("Next Pulse in 2d 10h")).toBeInTheDocument();
+  });
 });
