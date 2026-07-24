@@ -408,6 +408,7 @@ export default function PatternsPage() {
                 step={1}
                 eyebrow="Before the weekend service"
                 title="Get Your Team Ready"
+                imageSrc="/Step-1.png"
                 videoCtaLabel="See How It Works"
                 checklist={[
                   "Share your QR code and link with your team to start your dashboard",
@@ -418,6 +419,7 @@ export default function PatternsPage() {
                 step={2}
                 eyebrow="During service"
                 title="Create the Moment"
+                imageSrc="/Step-2.png"
                 videoCtaLabel="See How It Works"
                 checklist={["Give people 3 minutes to complete their HeartChart"]}
               />
@@ -425,6 +427,7 @@ export default function PatternsPage() {
                 step={3}
                 eyebrow="Don't miss this"
                 title="Point Them to the Next Step"
+                imageSrc="/Step-3.png"
                 videoCtaLabel="See How It Works"
                 hideArrow
                 checklist={["Use your dashboard to guide next steps"]}

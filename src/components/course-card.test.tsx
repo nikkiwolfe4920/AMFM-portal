@@ -12,6 +12,7 @@ describe("CourseCard", () => {
           step={step}
           eyebrow="Before the weekend service"
           title="Get Your Team Ready"
+          imageSrc="/Step-1.png"
           videoCtaLabel="See How It Works"
           checklist={["Share your QR code and link"]}
         />
@@ -30,6 +31,7 @@ describe("CourseCard", () => {
         step={1}
         eyebrow="Before the weekend service"
         title="Get Your Team Ready"
+        imageSrc="/Step-1.png"
         videoCtaLabel="See How It Works"
         onWatchVideo={vi.fn()}
         checklist={["Share your QR code and link"]}

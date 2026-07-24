@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import Image from "next/image";
 import { ArrowRight, Check, PlayCircle } from "lucide-react";
 
 import { cn } from "@/lib/utils";
@@ -13,6 +14,8 @@ interface CourseCardProps {
   /** Uppercase eyebrow over the video cover, e.g. "BEFORE THE WEEKEND SERVICE". */
   eyebrow: string;
   title: ReactNode;
+  /** Video-cover backdrop photo — decorative (the eyebrow/title already convey the step's meaning), so it always renders with `alt=""`. */
+  imageSrc: string;
   /** Label for the video-cover CTA button, e.g. "See How It Works". */
   videoCtaLabel: string;
   onWatchVideo?: () => void;
@@ -33,6 +36,7 @@ export function CourseCard({
   step,
   eyebrow,
   title,
+  imageSrc,
   videoCtaLabel,
   onWatchVideo,
   checklist,
@@ -59,8 +63,20 @@ export function CourseCard({
         )}
       </div>
 
-      <div className="from-nav-surface-from to-nav-surface-to relative flex aspect-video flex-col justify-between gap-2 bg-gradient-to-br px-6 py-8 pr-32">
-        <div className="flex flex-col gap-2">
+      <div className="relative flex aspect-video flex-col justify-between gap-2 px-6 py-8 pr-32">
+        <div aria-hidden="true" className="absolute inset-0 overflow-hidden">
+          <Image
+            src={imageSrc}
+            alt=""
+            fill
+            unoptimized
+            sizes="(min-width: 1024px) 33vw, 100vw"
+            className="object-cover"
+          />
+          {/* Figma's video-cover scrim (node 3926:27043 et al.): dark over the text column, clear toward the right. */}
+          <div className="absolute inset-0 bg-gradient-to-r from-black/80 to-transparent" />
+        </div>
+        <div className="relative z-10 flex flex-col gap-2">
           <p className="text-xs font-semibold tracking-[0.24px] text-white/70 uppercase">
             {eyebrow}
           </p>
@@ -72,7 +88,7 @@ export function CourseCard({
           variant="outline"
           size="compact"
           onClick={onWatchVideo}
-          className="w-fit"
+          className="relative z-10 w-fit"
         >
           <PlayCircle aria-hidden="true" />
           {videoCtaLabel}

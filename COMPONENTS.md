@@ -741,7 +741,7 @@ Rendered at `/design-system/components#elevatedcard`; composed inside `TopHero` 
 
 ## TopHero
 
-**Status**: Draft (background photo unavailable — see Implementation rules)
+**Status**: Production Ready
 **Source**: `src/components/top-hero.tsx`
 **Figma**: AMFM Portal file, "Featured Training" component (node `4194:25820`, superseding the previously-referenced node `2318:26997`), rendered on the `/heartchart-resources` page as the "Let's prepare for your HeartChart Weekend" banner
 
@@ -751,7 +751,7 @@ Full-bleed photo hero for a dashboard page's featured training/promo banner — 
 
 ### Anatomy
 
-`ElevatedCard` (dark photo surface, `background` prop bleeding under the outer shell's padding to the true outer edge, `border-white/30` pinstripe inner panel) → background layer (photo + a left-to-right legibility scrim in Figma; see Implementation rules) → content column: two-tone `font-display` heading (`text-display-lg` neutral line + `text-display-2xl` `highlight-gold` emphasis line) → `text-nav-foreground-muted` description → outline `Button` with a `PlayCircle` icon.
+`ElevatedCard` (dark photo surface, `background` prop bleeding under the outer shell's padding to the true outer edge, `border-white/30` pinstripe inner panel) → background layer (`next/image` congregation-stage photo, `fill`+`object-cover`, plus a left-to-right legibility scrim) → content column: two-tone `font-display` heading (`text-display-lg` neutral line + `text-display-2xl` `highlight-gold` emphasis line) → `text-nav-foreground-muted` description → outline `Button` with a `PlayCircle` icon.
 
 ### Variants
 
@@ -776,7 +776,7 @@ interface TopHeroProps {
 
 ### Design tokens used
 
-`text-nav-foreground` (first heading line — Figma's `text-primary-(900)` variable resolves to `#f7f7f7` on this fixed-dark surface, an exact match), `text-highlight-gold` (second heading line, `#e9c481` exact match), `text-nav-foreground-muted` (description, `#cecfd2` exact match), `text-display-lg`/`text-display-2xl` + `font-display`, `nav-surface-from`/`nav-surface-to` (placeholder background gradient — see Implementation rules), `h-128` (Tailwind v4's dynamic spacing-scale utility for the card's fixed 512px height — a real scale value, `128 × 4px`, not an arbitrary bracketed one, same precedent as `GlobalNav`'s `w-20`/`w-74`). `Button variant="outline" size="default"` for the CTA — no new button styling, and the size is pinned so it does not drift if `Button`'s default changes later.
+`text-nav-foreground` (first heading line — Figma's `text-primary-(900)` variable resolves to `#f7f7f7` on this fixed-dark surface, an exact match), `text-highlight-gold` (second heading line, `#e9c481` exact match), `text-nav-foreground-muted` (description, `#cecfd2` exact match), `text-display-lg`/`text-display-2xl` + `font-display`, `h-128` (Tailwind v4's dynamic spacing-scale utility for the card's fixed 512px height — a real scale value, `128 × 4px`, not an arbitrary bracketed one, same precedent as `GlobalNav`'s `w-20`/`w-74`). `Button variant="outline" size="default"` for the CTA — no new button styling, and the size is pinned so it does not drift if `Button`'s default changes later.
 
 ### Accessibility requirements
 
@@ -790,7 +790,7 @@ Not yet evidenced against a Figma mobile/tablet frame (the reference is a fixed 
 ### Implementation rules
 
 - **Fixed 512px height, no white gap, image bleeds to the true outer edge**: previously `TopHero` filled only `ElevatedCard`'s inner bordered panel, leaving the outer shell's `bg-background` (white) padding gap visible as a solid border around the photo — Figma shows no such gap: the photo fills the *entire* outer rounded-2xl shape, and only a thin `border-white/30` "pinstripe" line (not a solid-color gap) marks the 8px inset where the inner panel sits. Fixed by passing the photo/scrim layer to `ElevatedCard`'s new `background` prop (see `ElevatedCard` above) instead of rendering it inside the inner panel — `background` is absolutely positioned against the *outer* shell's own box, which has no border (only padding), so its containing block is flush with the true outer edge and it bleeds under the padding gap; the inner panel's `border-white/30` then reads as a pinstripe drawn over continuous photo, not a margin. Height is pinned to `h-128` (512px) rather than left fluid, since the Figma frame is a fixed-height composition, not one that grows/shrinks with its content.
-- **Background photo unavailable in this environment** — Figma's export/raw-image URLs all resolve to `www.figma.com`, blocked by this environment's egress policy (confirmed via the agent proxy status endpoint and the Figma MCP's own `download_assets` tool, whose returned asset URLs are equally unreachable from this sandbox), the same class of gap as `AmfmLogo`'s blocked asset. Renders a `nav-surface-from`→`nav-surface-to` dark gradient plus Figma's own left-to-right legibility scrim (`bg-gradient-to-l from-black/0 from-20% to-black/70 to-70%`) in place of the real congregation-stage photo. Status stays **Draft** for this reason — replace the placeholder gradient div with a `next/image` painted at the same layer (via `ElevatedCard`'s `background` prop) the moment the photo is supplied and committed to `public/`, and drop the placeholder in the same change.
+- **Background photo wired to the real exported asset**: renders `public/Featured Training.png` (the congregation-stage photo with the HeartChart QR screen, matching Figma node `4194:25820`'s screenshot) via `next/image` with `fill`/`object-cover`/`priority` (it's the largest above-the-fold image on the page) inside `ElevatedCard`'s `background` prop, plus Figma's own left-to-right legibility scrim (`bg-gradient-to-l from-black/0 from-20% to-black/70 to-70%`) layered on top. `unoptimized` is set because this repo has no `sharp` dependency (see `HeartChartLinkCard`/`FellowshipOfTheParksLogo`'s existing precedent) and the filename is referenced URL-encoded (`/Featured%20Training.png`) since it contains a space. The image is decorative (`alt=""`) — the heading/description already carry the meaning as real text, per the Accessibility requirement below.
 - Composed on `ElevatedCard` rather than a local nested-shell implementation — see that component's Implementation rules for why `AuthCard`/`HeartChartSummary` weren't also migrated onto it.
 - The CTA is explicitly `Button variant="outline" size="default"`: Figma's node `4194:25820` exports the nested button with `Text md/Semibold` plus `spacing-sm`/`spacing-xl` button spacing, matching the standard text-md outline CTA rather than the 14px compact course-card action.
 - `eyebrowHeading`/`highlightHeading` are two separate props (not one heading string) because they carry different colors/sizes per Figma (`text-display-lg` neutral vs. `text-display-2xl` `highlight-gold`) — don't collapse them into a single templated string.
@@ -803,9 +803,9 @@ Rendered at `/design-system/components#tophero` and live on `/heartchart-resourc
 
 ## CourseCard
 
-**Status**: Draft (per-step video thumbnails unavailable — see Implementation rules)
+**Status**: Production Ready
 **Source**: `src/components/course-card.tsx`
-**Figma**: AMFM Portal file, "Course Card" component (node `2074:45130`); the 3-step pattern on `/heartchart-resources` at nodes `2316:26815` (Step 1), `2316:26886` (Step 2), `2318:26954` (Step 3); the shared step-header fill is confirmed at node `3926:27038`
+**Figma**: AMFM Portal file, "Course Card" component (node `2074:45130`); the 3-step pattern on `/heartchart-resources` at nodes `2316:26815` (Step 1), `2316:26886` (Step 2), `2318:26954` (Step 3), confirmed against the full 3-up "card-wrapper" composition at node `3926:27030`; the shared step-header fill is confirmed at node `3926:27038`; the video-cover photo/scrim treatment is confirmed at node `3926:27043` (Step 1), `3926:27059` (Step 2), `3926:27074` (Step 3)
 
 ### Purpose
 
@@ -813,7 +813,7 @@ One step in a fixed 3-step "get ready" course pattern — a colored numbered hea
 
 ### Anatomy
 
-Numbered header (`STEP {n}`, trailing `ArrowRight`, shared brand-colored background, white text/icon) → video-cover section (photo backdrop in Figma; see Implementation rules — uppercase eyebrow, `font-display` heading, outline `Button` with `PlayCircle`) → checklist (`Check`-in-circle icon + text row, repeated per item).
+Numbered header (`STEP {n}`, trailing `ArrowRight`, shared brand-colored background, white text/icon) → video-cover section (`next/image` photo backdrop, `fill`+`object-cover`, plus a left-to-right legibility scrim — uppercase eyebrow, `font-display` heading, outline `Button` with `PlayCircle`) → checklist (`Check`-in-circle icon + text row, repeated per item).
 
 ### Variants (`step` prop)
 
@@ -832,6 +832,8 @@ interface CourseCardProps {
   step: 1 | 2 | 3;
   eyebrow: string;
   title: ReactNode;
+  /** Video-cover backdrop photo — decorative, always rendered with `alt=""` (see Accessibility requirements). */
+  imageSrc: string;
   videoCtaLabel: string;
   onWatchVideo?: () => void;
   /** Each item renders with a leading check icon — compose inline links directly. */
@@ -845,13 +847,14 @@ interface CourseCardProps {
 
 ### Design tokens used
 
-`bg-text-brand` (all 3 steps' shared header background, see Variants), `text-white` (header text/icons, plus video-cover text), `bg-muted` (checklist icon circle — Figma's `#f5f5f5` "bg-tertiary" is a near-exact match to the existing `muted` token), `text-muted-foreground` (checklist text + icon), `text-primary` (inline links within checklist text, exact match to Figma's `#aa6140`), `font-display`/`text-display-md` with a local `leading-[2.375rem]` override (video-cover heading — see `DESIGN.md`'s note on this one-off 36px/38px pairing), `nav-surface-from`/`nav-surface-to` (placeholder video-cover background — see Implementation rules). `Button variant="outline" size="compact"` for the 38px video CTA, matching the neutral bordered Figma button treatment.
+`bg-text-brand` (all 3 steps' shared header background, see Variants), `text-white` (header text/icons, plus video-cover text), `bg-muted` (checklist icon circle — Figma's `#f5f5f5` "bg-tertiary" is a near-exact match to the existing `muted` token), `text-muted-foreground` (checklist text + icon), `text-primary` (inline links within checklist text, exact match to Figma's `#aa6140`), `font-display`/`text-display-md` with a local `leading-[2.375rem]` override (video-cover heading — see `DESIGN.md`'s note on this one-off 36px/38px pairing). `Button variant="outline" size="compact"` for the 38px video CTA, matching the neutral bordered Figma button treatment.
 
 ### Accessibility requirements
 
 - Checklist icons are `aria-hidden="true"` — the adjacent text alone conveys the meaning, consistent with `BenefitListItem`/`PasswordRequirementItem`'s existing precedent.
 - The header's `ArrowRight` is `aria-hidden="true"` — purely decorative, the "STEP {n}" text already conveys sequence.
 - Inline links within checklist items are real `<a>` elements (composed by the caller) — never a styled `<span>` with a click handler.
+- The video-cover photo (`imageSrc`) is decorative and always renders with `alt=""`: the eyebrow + `font-display` title already convey the step's meaning as real text, the same reasoning as `TopHero`'s background photo.
 
 ### Responsive behavior
 
@@ -859,7 +862,7 @@ Not yet evidenced against a Figma mobile/tablet frame (fixed desktop 3-column co
 
 ### Implementation rules
 
-- **Per-step video thumbnails unavailable in this environment** — same blocked-asset class as `TopHero`'s background photo (`www.figma.com` denied by egress policy). Renders a `nav-surface-from`→`nav-surface-to` dark gradient behind each video-cover section in place of the three distinct reference photos. Status stays **Draft** for this reason — wire to real `imageSrc`/thumbnails once available, matching `VideoPlayer`'s "wire to a real source later" precedent.
+- **Per-step video-cover photos wired to the real exported assets**: each step renders its own `imageSrc` (`public/Step-1.png`/`Step-2.png`/`Step-3.png` at the `/heartchart-resources` call site, matching Figma nodes `3926:27043`/`3926:27059`/`3926:27074`'s screenshots) via `next/image` with `fill`/`object-cover`, `unoptimized` (no `sharp` dependency in this repo, same precedent as `TopHero`/`HeartChartLinkCard`), wrapped in an `aria-hidden absolute inset-0 overflow-hidden` layer matching `ElevatedCard`'s own background-bleed pattern. The eyebrow/title/CTA are lifted to `relative z-10` so they paint above the now-absolutely-positioned photo, per `DESIGN.md`'s "Stacking order on full-bleed backdrops" rule. The photo's legibility scrim is `bg-gradient-to-r from-black/80 to-transparent` — confirmed via Figma's own exported markup (not assumed from `TopHero`'s different 3-stop `to-l` scrim), dark over the text column and clearing toward the right two-thirds where the checklist/CTA don't need protection.
 - The header treatment is a single shared constant (`STEP_HEADER_CLASSNAME`), not a per-step lookup — Figma's current design (node `3926:27038`) uses one `utility-brand-700` fill across all 3 steps rather than the earlier 3-tier darkening scale, and `bg-text-brand` is an exact hex match (`#894e34`) so no new token was needed. This also resolves a prior contrast issue: an earlier per-step scale had Step 1 reuse `border-brand` (`#c07858`) directly, which only cleared 3.46:1 with white text — below WCAG AA's 4.5:1 for this non-"large text" label. `text-brand` clears 6.56:1 with white, so all 3 steps are both on-brand and accessible with no per-step exception.
 - The video-cover CTA composes `Button variant="outline" size="compact"` with only `w-fit` local to the CourseCard layout. The verified nested Video Cover instance (`2320:27278`) maps to a 38px shared neutral outline action: one visible neutral border, `shadow-xs`, 20px icon slot, and the shared icon/text gap.
 - The checklist icon (`Check`, `size-3.5`, inside a `bg-muted rounded-full size-6`) is a static, always-confirmed indicator — same semantic category as `BenefitListItem`, not a derived validation state like `PasswordRequirementItem`; don't reuse either of those components here, this is a third, purpose-built row shape (a numbered course step's action list, not a benefit or a password rule).
@@ -918,7 +921,7 @@ Not yet evidenced against a Figma mobile/tablet frame. Content wraps (`flex-wrap
 
 ### Implementation rules
 
-- **Background texture unavailable in this environment** — same blocked-asset class as `TopHero`/`CourseCard`. Figma's reference shows a warm gradient/noise-texture image layered under a `mix-blend-luminosity` grain overlay at 5% opacity; renders as a flat `bg-primary` fill instead. Status stays **Draft** for this reason.
+- **Background texture unavailable in this environment** — same blocked-asset class previously affecting `TopHero`/`CourseCard` (since resolved for both — see `COMPONENTS.md#tophero`/`#coursecard`). Figma's reference shows a warm gradient/noise-texture image layered under a `mix-blend-luminosity` grain overlay at 5% opacity; renders as a flat `bg-primary` fill instead. Status stays **Draft** for this reason.
 - The CTA button's exact Figma treatment (`bg-primary_alt` `#13161b` fill, `border-white/12`) doesn't translate directly — that combination assumes the button sits on `bg-primary_alt`'s own dark-navy context elsewhere in the design system, not on this component's brand-terracotta background (which would make a same-color fill invisible). Approximated instead via `Button variant="outlineReversed" size="sm"` as a transparent/bordered 42px treatment that reads correctly against `bg-primary` and is shared with `/`'s dark hero links; adjust the reversed-outline tokens rather than this call site if the treatment changes.
 
 ### Visual examples
