@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Award, ClipboardCheck, Plus, Share2, Upload } from "lucide-react";
+import { ClipboardCheck, FileBadge, Plus, Share2, Upload } from "lucide-react";
 
 import {
   Card,
@@ -118,7 +118,7 @@ export default function ComponentsPage() {
           </div>
           <div className="flex flex-wrap items-center gap-3">
             <Button size="sm">
-              <Award aria-hidden="true" />
+              <FileBadge aria-hidden="true" />
               Invite Marriage Champions
             </Button>
           </div>
