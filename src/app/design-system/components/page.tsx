@@ -63,10 +63,11 @@ export default function ComponentsPage() {
         status="Production Ready"
         purpose="Reusable interactive action element for triggering a command (form submit, navigation, dialog open)."
         docsAnchor="button"
-        figmaReference='AMFM Portal — node 3273:19658 ("Primary" button set) and siblings; icon-leading composition confirmed on node 3724:23184 ("Invite Marriage Champions" CTA)'
+        figmaReference='AMFM Portal — node 3273:19658 ("Primary" button set) and siblings; icon-leading composition confirmed on nodes 4188:25971 ("Invite Marriage Champions" CTA) and 4188:25952 ("Upgrade to Premium" CTA), whose icon fill resolves to the button-primary-icon variable, not text-white'
         tokens={[
           "bg-primary",
           "text-primary-foreground",
+          "text-button-primary-icon",
           "bg-text-brand",
           "border-border-brand",
           "bg-muted",
@@ -104,11 +105,16 @@ export default function ComponentsPage() {
           <p className="text-muted-foreground text-xs">
             Tab to a button to see the focused state; hover to see the hover
             fill. Icons on the <code className="bg-muted rounded px-1">default</code>{" "}
-            variant inherit <code className="bg-muted rounded px-1">
-              text-primary-foreground
+            variant use the dedicated{" "}
+            <code className="bg-muted rounded px-1">text-button-primary-icon</code>{" "}
+            token (Figma&apos;s <code className="bg-muted rounded px-1">
+              button-primary-icon
             </code>{" "}
-            (white) via <code className="bg-muted rounded px-1">currentColor</code> —
-            never give a leading icon its own color class.
+            variable) — they do not inherit{" "}
+            <code className="bg-muted rounded px-1">text-primary-foreground</code>{" "}
+            (white) like the label. Every other variant still inherits icon color via{" "}
+            <code className="bg-muted rounded px-1">currentColor</code> — never give a
+            leading icon its own color class.
           </p>
         </div>
       </ComponentShowcase>

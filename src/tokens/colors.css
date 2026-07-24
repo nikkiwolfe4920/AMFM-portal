@@ -50,6 +50,17 @@
    * equivalent. */
   --brand-900: oklch(0.309 0.054 40.586); /* Component colors/Utility/Brand/utility-brand-900, #47261a */
 
+  /* Button's `default` (primary) variant leading/trailing icon color — Figma's
+   * "Component colors/Components/Buttons/button-primary-icon" variable, confirmed
+   * identical across every sampled `default`-variant icon instance (nodes
+   * 4188:25971 "Invite Marriage Champions", 4188:25952/4188:25956 "Upgrade to
+   * Premium", 1894:16263 "Get Started"). Deliberately distinct from
+   * `primary-foreground` (the button's white label/text color) — the icon does
+   * NOT inherit `currentColor` from the label on this variant, unlike every
+   * other Button variant. Root-only: no dark-mode Figma reference exists yet,
+   * same class of gap as `brand-900`/`nav-*` above. */
+  --button-primary-icon: oklch(0.751 0.076 42.932); /* #d89f88 */
+
   /* Status colors — participation-level indicator (HeartChartSummary). Root-only:
    * no dark-mode value has a Figma reference yet, see DESIGN.md Known gaps. */
   --status-success: oklch(0.63 0.067 137.227);
@@ -184,6 +195,7 @@
   --color-background-gradient-from: var(--background-gradient-from);
   --color-background-gradient-to: var(--background-gradient-to);
   --color-brand-900: var(--brand-900);
+  --color-button-primary-icon: var(--button-primary-icon);
   --color-status-success: var(--status-success);
   --color-status-success-strong: var(--status-success-strong);
   --color-status-warning: var(--status-warning);

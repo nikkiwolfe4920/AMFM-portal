@@ -11,7 +11,7 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default:
-          "bg-primary text-primary-foreground border-2 border-white/12 shadow-button-inset hover:bg-text-brand focus-visible:border-white/12 focus-visible:ring-border-brand focus-visible:ring-4 focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:opacity-100 [&:disabled:not([data-loading])]:bg-muted [&:disabled:not([data-loading])]:border-border-secondary [&:disabled:not([data-loading])]:text-fg-disabled [&:disabled:not([data-loading])]:shadow-xs",
+          "bg-primary text-primary-foreground border-2 border-white/12 shadow-button-inset hover:bg-text-brand focus-visible:border-white/12 focus-visible:ring-border-brand focus-visible:ring-4 focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:opacity-100 [&:disabled:not([data-loading])]:bg-muted [&:disabled:not([data-loading])]:border-border-secondary [&:disabled:not([data-loading])]:text-fg-disabled [&:disabled:not([data-loading])]:shadow-xs [&_svg]:text-button-primary-icon [&:disabled:not([data-loading])_svg]:text-fg-disabled",
         destructive:
           "bg-destructive text-white shadow-xs hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/60",
         outline:
