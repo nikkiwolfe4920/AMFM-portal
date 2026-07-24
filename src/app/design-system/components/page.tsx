@@ -394,7 +394,7 @@ export default function ComponentsPage() {
 
       <ComponentShowcase
         name="TopHero"
-        status="Draft"
+        status="Production Ready"
         purpose="Full-bleed photo hero for a dashboard page's featured training/promo banner — a two-tone heading, supporting copy, and a video CTA. Fixed 512px height; the photo bleeds to the card's true outer edge with a thin pinstripe border marking the inset."
         docsAnchor="tophero"
         figmaReference='AMFM Portal — "Featured Training" component (node 4194:25820)'
@@ -414,10 +414,9 @@ export default function ComponentsPage() {
           ctaLabel="Watch the Overview"
         />
         <p className="text-muted-foreground mt-4 text-xs">
-          The real background photo is blocked in this environment (see{" "}
-          <code className="bg-muted rounded px-1 py-0.5">COMPONENTS.md#tophero</code>) — renders a
-          gradient placeholder instead, bleeding to the card&apos;s true edge behind a pinstripe
-          border, matching where the real photo will sit. View live at{" "}
+          The congregation-stage photo bleeds to the card&apos;s true outer edge behind a pinstripe
+          border, per{" "}
+          <code className="bg-muted rounded px-1 py-0.5">COMPONENTS.md#tophero</code>. View live at{" "}
           <Link href="/heartchart-resources" className="text-text-brand hover:underline">
             /heartchart-resources
           </Link>
@@ -427,7 +426,7 @@ export default function ComponentsPage() {
 
       <ComponentShowcase
         name="CourseCard"
-        status="Draft"
+        status="Production Ready"
         purpose="One step in a fixed 3-step course pattern — numbered header, video-cover CTA, and a supporting checklist."
         docsAnchor="coursecard"
         figmaReference='AMFM Portal — "Course Card" component (node 2074:45130)'
@@ -439,6 +438,7 @@ export default function ComponentsPage() {
             step={1}
             eyebrow="Before the weekend service"
             title="Get Your Team Ready"
+            imageSrc="/Step-1.png"
             videoCtaLabel="See How It Works"
             checklist={[
               "Share your QR code and link with your team to start your dashboard",
@@ -449,6 +449,7 @@ export default function ComponentsPage() {
             step={2}
             eyebrow="During service"
             title="Create the Moment"
+            imageSrc="/Step-2.png"
             videoCtaLabel="See How It Works"
             checklist={["Give people 3 minutes to complete their HeartChart"]}
           />
@@ -456,15 +457,16 @@ export default function ComponentsPage() {
             step={3}
             eyebrow="Don't miss this"
             title="Point Them to the Next Step"
+            imageSrc="/Step-3.png"
             videoCtaLabel="See How It Works"
             hideArrow
             checklist={["Use your dashboard to guide next steps"]}
           />
         </div>
         <p className="text-muted-foreground mt-4 text-xs">
-          Per-step video thumbnails are blocked in this environment (see{" "}
-          <code className="bg-muted rounded px-1 py-0.5">COMPONENTS.md#coursecard</code>) — renders
-          a gradient placeholder instead. View the full 3-step pattern with real copy at{" "}
+          See{" "}
+          <code className="bg-muted rounded px-1 py-0.5">COMPONENTS.md#coursecard</code> for the
+          full contract. View the full 3-step pattern with real copy at{" "}
           <Link href="/heartchart-resources" className="text-text-brand hover:underline">
             /heartchart-resources
           </Link>

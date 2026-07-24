@@ -48,6 +48,7 @@ export default function HeartChartResourcesPage() {
                 step={1}
                 eyebrow="Before the weekend service"
                 title="Get Your Team Ready"
+                imageSrc="/Step-1.png"
                 videoCtaLabel="See How It Works"
                 checklist={[
                   <>
@@ -86,6 +87,7 @@ export default function HeartChartResourcesPage() {
                     Moment
                   </>
                 }
+                imageSrc="/Step-2.png"
                 videoCtaLabel="See How It Works"
                 checklist={[
                   <>
@@ -107,6 +109,7 @@ export default function HeartChartResourcesPage() {
                 step={3}
                 eyebrow="Don't miss this"
                 title="Point Them to the Next Step"
+                imageSrc="/Step-3.png"
                 videoCtaLabel="See How It Works"
                 hideArrow
                 checklist={[

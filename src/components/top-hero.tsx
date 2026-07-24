@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import Image from "next/image";
 import { PlayCircle } from "lucide-react";
 
 import { cn } from "@/lib/utils";
@@ -37,17 +38,14 @@ export function TopHero({
       innerClassName="flex overflow-hidden border-white/30"
       background={
         <>
-          {/*
-            Placeholder for the real congregation-stage photo (Figma node
-            4194:25820) — the Figma asset host is blocked by this
-            environment's egress policy (see DESIGN.md Known gaps, same
-            class of gap as CourseCard/FooterCta). Replace this div with a
-            `next/image` painted at the exact same layer the moment the
-            photo is supplied and committed to `public/`.
-          */}
-          <div
-            aria-hidden="true"
-            className="from-nav-surface-from to-nav-surface-to absolute inset-0 bg-gradient-to-br"
+          <Image
+            src="/Featured%20Training.png"
+            alt=""
+            fill
+            priority
+            unoptimized
+            sizes="100vw"
+            className="object-cover"
           />
           {/* Figma's own legibility scrim: dark over the text column, clear over the right two-thirds. */}
           <div

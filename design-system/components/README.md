@@ -16,8 +16,8 @@ Index into `COMPONENTS.md`'s component entries. Full contracts (anatomy, variant
 | BenefitListItem | [BenefitListItem](../../COMPONENTS.md#benefitlistitem) | `src/app/create-profile/_components/benefit-list-item.tsx` | Production Ready |
 | ResourceListItem | [ResourceListItem](../../COMPONENTS.md#resourcelistitem) | `src/components/resource-list-item.tsx` | Production Ready |
 | ElevatedCard | [ElevatedCard](../../COMPONENTS.md#elevatedcard) | `src/components/elevated-card.tsx` | Production Ready |
-| TopHero | [TopHero](../../COMPONENTS.md#tophero) | `src/components/top-hero.tsx` | Draft |
-| CourseCard | [CourseCard](../../COMPONENTS.md#coursecard) | `src/components/course-card.tsx` | Draft |
+| TopHero | [TopHero](../../COMPONENTS.md#tophero) | `src/components/top-hero.tsx` | Production Ready |
+| CourseCard | [CourseCard](../../COMPONENTS.md#coursecard) | `src/components/course-card.tsx` | Production Ready |
 | FooterCta | [FooterCta](../../COMPONENTS.md#footercta) | `src/components/footer-cta.tsx` | Draft |
 | Card | [Card](../../COMPONENTS.md#card) | `src/components/ui/card.tsx` | Production Ready |
 | Dialog | [Dialog](../../COMPONENTS.md#dialog) | `src/components/ui/dialog.tsx` | Production Ready |
