@@ -2280,3 +2280,672 @@ None of its own — sizing/layout is entirely driven by `children` and the call 
 ### Visual examples
 
 Rendered at `/design-system/foundations#blur-overlay` and `/design-system/components#bluroverlay`, and live on `/marriage-champions-empty`.
+
+---
+
+## Dashboard components (HeartChart Dashboard)
+
+The 11 entries below were added from the design system audit of the Figma "HeartChart Dashboard / premium" frame (node `3727:29573`), then implemented on `/dashboard` (`src/app/dashboard/page.tsx`, composed via `src/app/dashboard/_components/dashboard-content.tsx`). Status/Source lines below now point at real code; sample data lives in `src/app/dashboard/_lib/dashboard-data.ts` (representative, not wired to a real backend — same caveat as `src/lib/team-members.ts`). **Node-ID caveat**: several nested instance IDs inside this frame did not resolve reliably when queried in isolation during the audit (a scoping quirk of this file's deeply-nested instances, not a tooling failure on the top-level frame) — the visual implementation was verified against full-resolution screenshots and the confirmed top-level frame metadata instead; re-select each sub-component directly in Figma to pixel-verify exact per-node values if that becomes necessary later.
+
+---
+
+## WeDoCard
+
+**Status**: Draft (implemented and rendered on `/dashboard`; wordmark is a hand-authored approximation — see Implementation rules)
+**Source**: `src/components/we-do-card.tsx`
+**Figma**: AMFM Portal file, node `3727:29573` ("HeartChart Dashboard / premium"), `_Summary Data` region, right-hand instance (paired with `HeartChartSummary` on the left)
+
+### Purpose
+
+Church-wide "WeDo" (couples relationship app) engagement snapshot — the counterpart card to `HeartChartSummary`, giving an admin an at-a-glance read on daily couple activity plus a qualitative pull-quote and entry points into results/sharing.
+
+### Anatomy
+
+Outer elevated shell (same nested outer-shadow-shell/inner-bordered-panel shape as `HeartChartSummary` — see Implementation rules) → WeDo heart-hands logo (top-left) → attribution text (top-right) → stat row: big stat number ("363 Couples") + supporting sentence ("Active in the app today") → `PointerCallout` (see below) containing a couple illustration + pull-quote → action row: two `Button` instances ("See Results", "Share Your Code").
+
+### Variants
+
+None — visual treatment is entirely data-driven (`coupleCount`, `quote`), not a caller-chosen variant, matching `HeartChartSummary`'s precedent of deriving display from props rather than a manual variant.
+
+### States
+
+| State | Behavior |
+|---|---|
+| Default | Static presentational read of caller-supplied numbers/quote — no loading/empty/error state of its own; caller owns that while fetching, same contract as `HeartChartSummary`. |
+| Action buttons | `onSeeResults`/`onShareCode` are optional callbacks; each button renders regardless of whether a handler is passed, matching `HeartChartSummary`'s three-action-row precedent. |
+
+### Properties / API
+
+```ts
+interface WeDoCardProps {
+  coupleCount: number;
+  quote: string;
+  onSeeResults?: () => void;
+  onShareCode?: () => void;
+  className?: string;
+}
+```
+
+### Design tokens used
+
+Reuse `HeartChartSummary`'s existing token set rather than a parallel one — same surface family: `shadow-card`, `rounded-2xl`, `border`, `bg-muted/50`, `text-foreground`, `text-muted-foreground`. No new tokens confirmed as required.
+
+### Accessibility requirements
+
+- The couple illustration inside `PointerCallout` is decorative (`aria-hidden`); the quote itself must be real DOM text, not baked into an image, so it reaches assistive tech.
+- Both action buttons render through `Button`, inheriting its focus-visible ring and keyboard behavior; each has a visible text label (no icon-only affordance observed), so no additional `aria-label` is required.
+
+### Responsive behavior
+
+Sits side-by-side with `HeartChartSummary` at desktop width (each roughly half the row). No mobile/tablet Figma reference was found for this frame — needs a documented single-column stacking behavior before shipping, same category of gap already tracked for `HeartChartSummary`.
+
+### Implementation rules
+
+- Compose on `ElevatedCard` rather than a third local copy of the nested-shell shape — `HeartChartSummary` predates `ElevatedCard` and was deliberately not retrofitted (see `ElevatedCard`'s Implementation rules), but `WeDoCard` is new code with no such precedent excusing a duplicate.
+- Reuse `Button variant="outline" size="compact"` for both actions, matching `HeartChartSummary`'s action-row treatment exactly rather than inventing new button styling.
+- **Implemented**: the WeDo wordmark renders as a hand-authored `lucide-react` `HeartHandshake` icon + "WeDo" text (`role="img"`, `aria-label="WeDo"`), not the real brand mark — same tier of approximation as `AmfmLogo`/`GoogleIcon`, since the real WeDo logo/couple illustration is unavailable in this environment (blocked Figma asset host). Replace with the real exported asset once available, per `AmfmLogo`'s established precedent.
+- A connecting caption row ("HeartChart shows you where your people are" / "WeDo helps them get where they want to go") sits below both hero cards on the page — this is page-level connective copy, not part of `WeDoCard`'s or `HeartChartSummary`'s own anatomy; do not fold it into either component.
+
+### Visual examples
+
+Rendered live on `/dashboard` (hero row, alongside `HeartChartSummary`); tested at `src/components/we-do-card.test.tsx`. No dedicated `/design-system/components` entry yet — see this file's header note on scope.
+
+---
+
+## PointerCallout
+
+**Status**: Draft (implemented; only the static variant — see Variants)
+**Source**: `src/components/pointer-callout.tsx`
+**Figma**: AMFM Portal file, node `3727:29573`, nested inside the `WeDoCard` instance (`_Summary Data` region)
+
+### Purpose
+
+A speech-bubble-style container with a visible directional pointer (tail), used to present a short quote or contextual note anchored to a specific piece of content. Confirmed use: the WeDo pull-quote inside `WeDoCard`.
+
+### Anatomy
+
+Rounded bordered container (subtle shadow) → directional pointer/tail graphic on one edge → content slot (optional leading illustration/icon + required text).
+
+### Variants
+
+None validated — only the static, always-visible variant (as used inside `WeDoCard`) was confirmed in this pass. Other elements on the dashboard ("Why does this matter?" on `ScaleChartCard`, "Understanding your data" on the Relationship Health card header) visually resemble a possible trigger for an interactive/on-demand version of this shape, but their interaction model was not confirmed — do not build a second interactive variant until that's verified directly against Figma; those two links are left undocumented pending that confirmation (see `ScaleChartCard`'s Implementation rules).
+
+### States
+
+None — the confirmed static variant has no interactive state.
+
+### Properties / API
+
+```ts
+interface PointerCalloutProps {
+  children: React.ReactNode;
+  pointerPosition: "top" | "right" | "bottom" | "left";
+  className?: string;
+}
+```
+
+### Design tokens used
+
+Not yet confirmed against a direct node pull — likely candidates are `border`, `shadow-sm`/`shadow-md`, `bg-background`/`bg-card`. Confirm exact values before implementation rather than assuming.
+
+### Accessibility requirements
+
+The pointer/tail graphic is decorative (`aria-hidden`); the contained text/illustration follow the same rule as everywhere else in this file — illustration `aria-hidden`, text real and readable.
+
+### Responsive behavior
+
+Not yet evidenced against a mobile Figma reference — flag for verification before shipping a fixed pixel-width bubble.
+
+### Implementation rules
+
+- Extract as its own primitive from the start rather than inlining it inside `WeDoCard` — its visual language (rounded box + pointer tail) is distinct enough from `WeDoCard`'s own anatomy to warrant separation even at a single confirmed use site, unlike e.g. `HeartChartSummary`'s donut chart (which stayed unextracted until a second use case appeared) — this is a judgment call flagged here for visibility, not a hard reuse-count justification.
+- Do not add the speculative interactive/popover variant described under Variants above without first confirming the interaction model directly in Figma. If confirmed, it must follow the Radix `Popover`/`Tooltip` ARIA pattern per `DESIGN.md`'s standing rule against hand-rolled custom widgets (already enforced for `Select`/`DropdownMenu`/`Dialog`) — never a plain absolutely-positioned `div`.
+
+### Visual examples
+
+Rendered live on `/dashboard`, inside `WeDoCard`'s pull-quote; tested at `src/components/pointer-callout.test.tsx`.
+
+---
+
+## ParticipationVerticalBarCard
+
+**Status**: Draft (implemented; rendered on `/dashboard`)
+**Source**: `src/components/participation-vertical-bar-card.tsx`
+**Figma**: AMFM Portal file, node `3727:29573`, "Bedford Campus Participation Profile" card, first column ("Age Groups")
+
+### Purpose
+
+Presents a single categorical distribution as a labeled vertical bar chart inside a bordered sub-panel — one of three peer widgets inside the "Participation Profile" card (confirmed instance: "Age Groups").
+
+### Anatomy
+
+Icon + label header (e.g. leading icon + "Age Groups") → vertical bar chart, one bar per category, with a percentage label above each bar and a category label below each bar.
+
+### Variants
+
+None evidenced — a single dataset shape (N categories, one percentage each); content varies, not visual treatment.
+
+### States
+
+| State | Behavior |
+|---|---|
+| Default | Data-driven read of caller-supplied `data`. |
+| Empty/loading | Not evidenced in Figma — must be added per `CLAUDE.md`'s Feature Completion Requirements before this component is considered production-ready; do not ship without one. |
+
+### Properties / API
+
+```ts
+interface ParticipationVerticalBarCardProps {
+  title: string;
+  icon: React.ReactNode;
+  data: { label: string; value: number }[];
+  className?: string;
+}
+```
+
+### Design tokens used
+
+Bar fill reads as a light brand/neutral tone in the reference screenshot — exact token not yet confirmed against a direct node pull. **Do not default to the generic `chart-1`…`chart-5` tokens** in `src/tokens/colors.css` — those are the unmodified shadcn/ui scaffold palette, not sourced from this Figma file's actual data-visualization colors (see the audit's DESIGN.md-inconsistencies finding). Confirm real values, or raise a `DESIGN.md` foundations update for a real data-viz palette, before implementing.
+
+### Accessibility requirements
+
+Chart is a visual read of numeric data already rendered as real on-bar percentage/category text labels (not baked into an image or canvas) — same "SVG is `aria-hidden`, text carries the meaning" pattern already established by `HeartChartSummary`'s donut chart.
+
+### Responsive behavior
+
+Renders as one of three siblings in a row at desktop width (with `ParticipationHorizontalBarCard` ×2). No mobile Figma reference confirmed — needs mobile-first stacking per `DESIGN.md`'s grid rules before shipping.
+
+### Implementation rules
+
+- Share a single underlying chart-rendering approach (SVG, not a raster image) with `FullWidthBarChart` if their visual language is confirmed to match — do not build two independent bar-chart implementations without checking first.
+- Build the donut/bar-rendering logic as hand-built SVG (not a fetched/rasterized asset) so it can respond to arbitrary data, matching `HeartChartSummary`'s existing precedent.
+
+### Visual examples
+
+Rendered live on `/dashboard`'s "Bedford Campus Participation Profile" card (Age Groups column); tested at `src/components/participation-vertical-bar-card.test.tsx`.
+
+---
+
+## ParticipationHorizontalBarCard
+
+**Status**: Draft (implemented; rendered on `/dashboard`)
+**Source**: `src/components/participation-horizontal-bar-card.tsx`
+**Figma**: AMFM Portal file, node `3727:29573`, "Bedford Campus Participation Profile" card, second and third columns ("Relationship Status", "Kids")
+
+### Purpose
+
+Presents a categorical distribution as a horizontal bar/list — confirmed reused twice unmodified on this single frame ("Relationship Status", 6 rows; "Kids", 4 rows), the second and third widgets in the "Participation Profile" card.
+
+### Anatomy
+
+Icon + label header → list of rows, each: category label (left) + horizontal bar proportional to value + percentage label (right).
+
+### Variants
+
+None evidenced beyond dataset content — confirmed reused twice with different data and row counts, same visual treatment both times.
+
+### States
+
+| State | Behavior |
+|---|---|
+| Default | Data-driven read of caller-supplied `data`. |
+| Empty/loading | Not evidenced in Figma — must be added before shipping, same gap as `ParticipationVerticalBarCard`. |
+
+### Properties / API
+
+```ts
+interface ParticipationHorizontalBarCardProps {
+  title: string;
+  icon: React.ReactNode;
+  data: { label: string; value: number }[];
+  className?: string;
+}
+```
+
+### Design tokens used
+
+Not yet confirmed against a direct node pull — same caveat as `ParticipationVerticalBarCard`: verify against a real data-viz palette rather than defaulting to the generic `chart-*` scaffold tokens.
+
+### Accessibility requirements
+
+Same pattern as `ParticipationVerticalBarCard` — bar is a visual read of already-rendered real text values, not the only signal.
+
+### Responsive behavior
+
+Same 3-column sibling constraint as `ParticipationVerticalBarCard` — needs mobile-first stacking, not yet evidenced against a mobile frame.
+
+### Implementation rules
+
+- Confirmed reused twice on a single frame already clears `CLAUDE.md`'s reusability bar for a shared `src/components` primitive immediately — do not colocate this route-specific (unlike e.g. `PricingCard`'s single-use-site precedent).
+
+### Visual examples
+
+Rendered live on `/dashboard`'s "Bedford Campus Participation Profile" card (Relationship Status and Kids columns); tested at `src/components/participation-horizontal-bar-card.test.tsx`.
+
+---
+
+## HorizontalTabs
+
+**Status**: Draft (implemented; a real ARIA-controls/tabpanel linkage is not wired — see Implementation rules)
+**Source**: `src/components/ui/tabs.tsx`
+**Figma**: AMFM Portal file, node `3727:29573` — 4 confirmed instances: "Relationship Health for Bedford Campus" card header (2-tab: Couples/Singles), "Spiritual Snapshot for Bedford Campus" card header (3-tab: All/Couples/Singles), "Top 3 Caution Flags for Bedford Campus" card header (2-tab: Couples/Singles), "Top 3 Expressed Needs for Bedford Campus" card header (2-tab: Couples/Singles)
+
+### Purpose
+
+Segments a card's content by audience — confirmed used 4 times on this single frame, always inside a `Card`'s `CardHeader`/`CardAction` slot, matching `Card`'s already-documented "`CardAction` may contain more than one control" guidance.
+
+### Anatomy
+
+Pill-shaped segmented control — a track of tab buttons (2 or 3, confirmed both counts on this frame), one marked active (filled pill) at a time.
+
+### Variants
+
+None (`variant` prop) — tab count and labels are driven by the `tabs` prop, not a caller-chosen variant, matching `HeartChartSummary`'s precedent of deriving visual state from data rather than a manual variant. Confirmed configurations: 2-tab (Couples/Singles) and 3-tab (All/Couples/Singles).
+
+### States
+
+| State | Behavior |
+|---|---|
+| Inactive tab | Default unselected treatment. |
+| Active tab | Filled pill, distinguished from inactive tabs. |
+| Focus | Visible focus-visible ring, per `DESIGN.md`'s "focus states are not optional" rule. |
+| Hover | Visible hover treatment, per `DESIGN.md`'s Interaction principles ("every interactive control has a visible hover/focus treatment"). |
+
+### Properties / API
+
+```ts
+interface HorizontalTabsProps {
+  tabs: { label: string; value: string }[];
+  value: string;
+  onValueChange: (value: string) => void;
+  className?: string;
+}
+```
+
+### Design tokens used
+
+Not yet confirmed against a direct node pull — likely `bg-muted`/`bg-primary` (active) and `text-muted-foreground`/`text-primary-foreground`, by visual analogy with `HeartChartSummary`'s segmented scale bar (a different, non-interactive component — see Implementation rules). Confirm real values before implementation.
+
+### Accessibility requirements
+
+- **Must be built on Radix `Tabs`** (`Tabs.Root`/`Tabs.List`/`Tabs.Trigger`/`Tabs.Content`) — full ARIA tablist pattern (`role="tablist"`/`tab`/`tabpanel`, `aria-selected`, arrow-key navigation between tabs) — per `DESIGN.md`'s explicit rule against hand-rolling custom widgets, already enforced for `Select`/`DropdownMenu`/`Dialog`. Do not implement as a plain button group with manual `useState`.
+
+### Responsive behavior
+
+Not yet evidenced against a mobile Figma frame — a pill track this narrow may need to wrap or shrink at small viewports; flag for verification before shipping.
+
+### Implementation rules
+
+- Confirmed reused 4 times on a single frame clears the reusability bar for a shared primitive immediately (`src/components/ui`, alongside `Select`) — do not colocate route-specific.
+- Visually similar to `HeartChartSummary`'s segmented participation-level bar, but semantically different (interactive tab switch vs. decorative data marker) — keep the two separate components; do not merge them, per `CLAUDE.md`'s "different semantics → don't force a shared generalization" precedent (same reasoning already applied to `PasswordRequirementItem` vs. `BenefitListItem`).
+- Do not share an interactive primitive with `DashboardFilterMenu` even though both render as pill segmented controls — `DashboardFilterMenu`'s pills are single-select filters (`radiogroup` semantics), not tabs (`tablist` semantics); conflating the two ARIA patterns is a real accessibility defect, not just a styling nuance. Sharing visual tokens/CSS between the two is fine; sharing the interactive primitive itself is not.
+- **Known accessibility tradeoff**: the flat `{tabs, value, onValueChange}` API has no content/panel slot, since each use on `/dashboard` switches data displayed elsewhere in the same card rather than swapping a distinct panel. Radix's `Tabs.Trigger` still provides full `tablist`/`tab` roles, `aria-selected`, and keyboard arrow/Home/End navigation without a mounted `Tabs.Content` — the one gap is that each trigger's `aria-controls` points at a `Tabs.Content` id that doesn't exist in the DOM, so the tab/panel relationship isn't fully wired for assistive tech. This is a deliberate, flagged tradeoff (matching `GlobalNav`'s own "known tradeoff" precedent for hover-driven expand), not an oversight — revisit if a real per-tab panel becomes necessary.
+
+### Visual examples
+
+Rendered live on `/dashboard` (4 instances: Relationship Health, Spiritual Snapshot, Caution Flags, Expressed Needs card headers); tested at `src/components/ui/tabs.test.tsx`.
+
+---
+
+## CommitmentConnectionChart
+
+**Status**: Draft (implemented; zone label positions are evenly distributed, not pixel-verified per-zone — see Implementation rules)
+**Source**: `src/components/commitment-connection-chart.tsx`
+**Figma**: AMFM Portal file, node `3727:29573`, "Scattergram" instance inside the "Relationship Health for Bedford Campus" card (metadata tree ID `0:4918` — unreliable for direct re-query, re-confirm on canvas before implementation per the node-ID caveat above)
+
+### Purpose
+
+The centerpiece relationship-health chart — a quadrant scatter/bubble plot mapping individuals along two axes (Commitment × Connection), surfacing named relationship-health zones with a highlighted "center of mass" zone (confirmed sample: "Steady").
+
+### Anatomy
+
+Circular quadrant background with zone labels positioned around its boundary → scattered dot cloud (one dot per data point — confirmed via a hidden repeated `_Dot` child node in the Figma source, i.e. the cloud is built from a repeated component, not a rasterized background image) → a highlighted center circle labeling the dominant zone → two axis labels ("Commitment" vertical, "Connection" horizontal) with low/high directional indicators.
+
+### Variants
+
+None evidenced — one chart shape, entirely data-driven.
+
+### States
+
+| State | Behavior |
+|---|---|
+| Default | Renders the current filtered dataset (see `DashboardFilterMenu`, `HorizontalTabs`). |
+| Empty | Not evidenced in Figma — needed once filters can produce a zero-result set; must be added before shipping. |
+
+### Properties / API
+
+```ts
+interface CommitmentConnectionChartProps {
+  dataPoints: { commitment: number; connection: number }[];
+  highlightedZone: string;
+  zoneLabels: Record<string, string>;
+  className?: string;
+}
+```
+
+### Design tokens used
+
+Not yet confirmed against a direct node pull. Dot color reads consistent with a brand/terracotta tone (`primary`/`text-brand` family) and zone label text reads consistent with a muted gray (`text-muted-foreground`/`text-text-tertiary`) in the reference screenshot — confirm exact values before implementation.
+
+### Accessibility requirements
+
+- The chart SVG itself is `aria-hidden` — same pattern as `HeartChartSummary`'s donut.
+- A scatter plot of many individual data points has no meaningful per-point text equivalent. The adjacent text panel (confirmed present in Figma: e.g. "Steady — 292 people (46%) are Comfortable but coasting") must fully carry the chart's headline finding in real text, matching `HeartChartSummary`'s "text carries the meaning" precedent. Whether a full data-table fallback is warranted for a chart this data-dense was not resolved in this pass — raise with product/design before shipping rather than deciding unilaterally.
+
+### Responsive behavior
+
+Fixed circular geometry — not yet evidenced to scale below its Figma-authored desktop width. Needs a real mobile Figma reference before a responsive behavior can be documented, same category of gap as `HeartChartSummary`.
+
+### Implementation rules
+
+- Hand-build as SVG (or equivalent), not a fetched/rasterized asset — Figma's own per-sample export is static, but this component must respond to arbitrary data, matching `HeartChartSummary`'s donut-chart precedent for the same reason.
+- Exact zone label copy/spelling should be re-verified directly against the Figma text nodes before implementation — this entry's labels are read off a screenshot, not a direct text-node pull, per the node-ID caveat above.
+
+### Visual examples
+
+Rendered live on `/dashboard`'s "Relationship Health for Bedford Campus" card; tested at `src/components/commitment-connection-chart.test.tsx`.
+
+---
+
+## SnapshotVideoCard
+
+**Status**: Draft (implemented as a static preview, per the `CourseCard`-style composition — see Implementation rules; product/design should still confirm this over a full `VideoPlayer`)
+**Source**: `src/components/snapshot-video-card.tsx`
+**Figma**: AMFM Portal file, node `3727:29573`, "Relationship Health for Bedford Campus" card, right column (paired with `CommitmentConnectionChart`)
+
+### Purpose
+
+Presents a short contextual video ("Quick Snapshot") explaining the currently-highlighted relationship-health zone, alongside a "Next Ministry Steps" call to action.
+
+### Anatomy
+
+Video thumbnail/player area (photo, play affordance) → "Quick Snapshot" caption/label → supporting description paragraph → `Button` ("Next Ministry Steps").
+
+### Variants
+
+None evidenced.
+
+### States
+
+| State | Behavior |
+|---|---|
+| Default | Static thumbnail, as observed in Figma. |
+| Play/playing | Not evidenced in the current Figma reference (a static frame) — must be defined once wired to a real video source, per the composition choice below. |
+
+### Properties / API
+
+```ts
+interface SnapshotVideoCardProps {
+  title: string;
+  description: string;
+  onNextSteps?: () => void;
+  className?: string;
+}
+```
+Exact video/thumbnail props depend on the composition decision below — not finalized.
+
+### Design tokens used
+
+Not yet confirmed against a direct node pull.
+
+### Accessibility requirements
+
+Depends on the composition decision below: if built on `VideoPlayer`, inherits its existing native `<video>` control accessibility; if built on `CourseCard`'s static video-cover pattern, needs its own play-button `aria-label` and keyboard operability, since that pattern has no in-place scrubber.
+
+### Responsive behavior
+
+Sits beside `CommitmentConnectionChart` at desktop width — not yet evidenced against a mobile Figma reference; needs a documented stacking behavior before shipping.
+
+### Implementation rules
+
+- **No `VideoCard` component exists in this codebase** — despite this pattern's working name, there is no component by that name to reuse. The two existing candidates were `VideoPlayer` (`src/components/video-player.tsx`, a full native `<video>` element with working play/pause/seek/mute/fullscreen, currently wired with a placeholder `src`) and `CourseCard`'s internal video-cover treatment (a static thumbnail + play glyph + heading, no scrubber). **Implemented using the `CourseCard`-style static-preview pattern** (a self-contained `<button>` with a play-affordance overlay, not `VideoPlayer`'s `<video>` element), since the Figma reference shows a static photo + play affordance with no visible scrubber/controls. This is a reasonable default, not a final product decision — confirm with product/design before treating the interaction model as settled. The thumbnail photo itself renders a `nav-surface-from`→`nav-surface-to` gradient placeholder (same blocked-asset class as `TopHero`/`CourseCard`).
+
+### Visual examples
+
+Rendered live on `/dashboard`'s "Relationship Health for Bedford Campus" card, alongside `CommitmentConnectionChart`; tested at `src/components/snapshot-video-card.test.tsx`.
+
+---
+
+## DashboardFilterMenu
+
+**Status**: Draft (implemented; rendered on `/dashboard`)
+**Source**: `src/app/dashboard/_components/dashboard-filter-menu.tsx` (route-colocated per `CLAUDE.md`'s colocation rule, since no second dashboard-style route exists yet to justify promoting it to `src/components`; revisit once a second real use site appears, matching `PricingCard`'s precedent)
+**Figma**: AMFM Portal file, node `3727:29573`, below the "Relationship Health for Bedford Campus" card's chart, above `FullWidthBarChart`
+
+### Purpose
+
+Lets an admin narrow `CommitmentConnectionChart` and `FullWidthBarChart` by demographic dimensions — confirmed 5 filter groups: Gender, Relationship Status, Years in Relationship, Kids, Age.
+
+### Anatomy
+
+"Showing N of N people" summary line → 5 filter groups, each: group label + a row of pill options (e.g. Gender: All / Male / Female), one pill active per group.
+
+### Variants
+
+None evidenced — 5 groups with varying option counts (confirmed range: 2–8 options), same shape.
+
+### States
+
+| State | Behavior |
+|---|---|
+| Inactive pill | Default unselected treatment. |
+| Active/selected pill | One per group, filled/highlighted. |
+| Hover | Visible hover treatment per `DESIGN.md`'s Interaction principles. |
+| Focus | Visible focus-visible ring. |
+| Disabled | Not evidenced in Figma — flag if a future "zero matching results" option needs one. |
+
+### Properties / API
+
+```ts
+interface DashboardFilterMenuProps {
+  groups: {
+    label: string;
+    options: { label: string; value: string }[];
+    value: string;
+  }[];
+  onChange: (group: string, value: string) => void;
+  resultCount: number;
+  totalCount: number;
+  className?: string;
+}
+```
+
+### Design tokens used
+
+Not yet confirmed against a direct node pull. Verify whether the active-pill fill is meant to share a token with `HorizontalTabs`' active-pill fill or is a deliberately distinct emphasis tier before implementation.
+
+### Accessibility requirements
+
+- **Each group is a single-select filter, not a tab** — implement as `role="radiogroup"` (or a native `<fieldset>`/grouped toggle buttons with `aria-pressed`), distinct from `HorizontalTabs`' `tablist`/`tab` pattern, even though the two look visually similar (pill segmented control). Filtering data is not the same interaction as switching a displayed panel — conflating the two ARIA patterns is a real accessibility defect.
+- Each group's label must be programmatically associated with its option row (not just visually adjacent text).
+
+### Responsive behavior
+
+5 groups in a row will not fit a mobile viewport — not yet evidenced against a mobile Figma reference; needs a documented wrap/collapse behavior (e.g. horizontal scroll, or a disclosure pattern) before shipping.
+
+### Implementation rules
+
+- Do not build on top of `Select` (this is not a dropdown) or reuse `HorizontalTabs`' interactive primitive directly (different ARIA semantics — see that entry's Implementation rules) even though the pill visual language may be shareable at the styling/token layer.
+- The "Bedford" campus selector in the page header (top of `/dashboard`) reuses the existing `Select` primitive directly (`SelectTrigger` with a call-site `w-36 py-2` className override, the same "override at the call site, no new variant" pattern already established by `Table`'s Profile-type column) — not a new component. It renders a single hardcoded `Bedford` item, matching `FellowshipOfTheParksLogo`'s "no multi-church data model yet" precedent; wire to real campus data once that model exists.
+
+### Visual examples
+
+Rendered live on `/dashboard`'s "Relationship Health for Bedford Campus" card, below the chart row; tested at `src/app/dashboard/_components/dashboard-filter-menu.test.tsx`.
+
+---
+
+## FullWidthBarChart
+
+**Status**: Draft (implemented; rendered on `/dashboard`)
+**Source**: `src/components/full-width-bar-chart.tsx`
+**Figma**: AMFM Portal file, node `3727:29573`, bottom of the "Relationship Health for Bedford Campus" card, below `DashboardFilterMenu`
+
+### Purpose
+
+The detailed, full-width companion to `CommitmentConnectionChart` — breaks the same relationship-health zones into a ranked horizontal bar chart with percentage labels, filtered by the same `HorizontalTabs`/`DashboardFilterMenu` controls above it.
+
+### Anatomy
+
+Y-axis category labels (ranked zone list, confirmed order in the reference screenshot: Thriving, Strong, Steady, Hopeful, Reliable, Fickle, Tentative, Stuck, Detached, Shallow, Estranged, Frayed, Broken) → horizontal bars (one per zone) → inline percentage label at each bar's end.
+
+### Variants
+
+None evidenced.
+
+### States
+
+| State | Behavior |
+|---|---|
+| Default | Data-driven read of caller-supplied `data`. |
+| Empty | Not evidenced in Figma — needed once the filter menu can produce a zero-result set; must be added before shipping. |
+
+### Properties / API
+
+```ts
+interface FullWidthBarChartProps {
+  data: { label: string; value: number }[];
+  className?: string;
+}
+```
+
+### Design tokens used
+
+Bars read as a warmer/darker brand tone than `ParticipationVerticalBarCard`'s bars in the reference screenshot — not yet confirmed against a direct node pull. Same caveat as the other new chart components: verify against a real data-viz palette rather than the generic `chart-*` scaffold tokens (see the audit's DESIGN.md-inconsistencies finding).
+
+### Accessibility requirements
+
+Same "text label carries the meaning, chart is decorative" pattern as every other chart component in this section.
+
+### Responsive behavior
+
+Full-bleed width at desktop in the reference frame — not yet evidenced against a mobile Figma reference; labels may need to wrap or bars may need to shrink proportionally. Needs verification before shipping.
+
+### Implementation rules
+
+- Share an underlying horizontal-bar rendering primitive with `ParticipationHorizontalBarCard` if their visual treatment is confirmed close enough (same bar/label/track anatomy at different scale) — evaluate at implementation time rather than assuming two independent components are needed.
+- The zone list here (13 entries) is more granular than `CommitmentConnectionChart`'s quadrant labels (fewer, coarser zone names) — confirm directly against Figma whether these represent the same taxonomy at two granularities or two genuinely different label sets before implementation; do not assume without checking.
+
+### Visual examples
+
+Rendered live on `/dashboard`'s "Relationship Health for Bedford Campus" card, below `DashboardFilterMenu`; tested at `src/components/full-width-bar-chart.test.tsx`.
+
+---
+
+## PieChartCard
+
+**Status**: Draft (implemented; the surrounding tabs live on the parent `Card`, not this tile — see Anatomy)
+**Source**: `src/components/pie-chart-card.tsx`
+**Figma**: AMFM Portal file, node `3727:29573`, "Spiritual Snapshot for Bedford Campus" card — 2 confirmed instances ("9% of people are new to following Jesus", "31% of people occasionally feel connected to God")
+
+### Purpose
+
+Presents a proportional breakdown as a donut/pie chart with a bold headline finding in the center and a text legend below — confirmed reused twice in the "Spiritual Snapshot" card with different data and color families.
+
+### Anatomy
+
+Visually-hidden `title` heading (`sr-only`, no visible per-chart title in Figma — the visible "Spiritual Snapshot for Bedford Campus" title and its `HorizontalTabs` (confirmed 3-tab "All/Couples/Singles") belong to the *parent* `Card`'s header, per `Card`'s existing multi-control `CardAction` pattern — not to this tile) → donut chart (center: bold headline text) → legend list (color swatch + label + percentage per segment, confirmed 4 segments per instance).
+
+### Variants
+
+None evidenced — same shape, two confirmed instances differing only in data/color family (one uses a purple scale, the other a green scale, per the Figma variable export).
+
+### States
+
+| State | Behavior |
+|---|---|
+| Default | Data-driven read of caller-supplied `segments`. |
+| Empty | Not evidenced in Figma — must be added before shipping. |
+
+### Properties / API
+
+```ts
+interface PieChartCardProps {
+  title: string;
+  centerStat: string;
+  segments: { label: string; value: number; color: string }[];
+  className?: string;
+}
+```
+
+### Design tokens used
+
+**Confirmed gap, not yet resolved**: the two instances use distinct color families (Figma variable export confirms a purple scale — `utility-purple-700/500/300/100` — and a green scale — `utility-green-500/400/300/100`) that do not map to this project's existing generic `chart-1`…`chart-5` scaffold tokens in `src/tokens/colors.css`. Raise a `DESIGN.md` foundations update (convert these Figma hex values to `oklch()`, name real tokens) before implementing this component — do not invent inline colors ad hoc at the call site.
+
+### Accessibility requirements
+
+Same pattern as `HeartChartSummary`'s donut: chart SVG `aria-hidden`, center stat + legend rows are real text. The legend already pairs a color swatch with a text label + percentage in the Figma reference, so color is confirmed not to be the only signal — preserve this pairing in implementation.
+
+### Responsive behavior
+
+Two pie charts render side-by-side at desktop width in the reference frame — not yet evidenced against a mobile reference; needs a documented stacking behavior before shipping.
+
+### Implementation rules
+
+- Build the donut-rendering logic as a shared primitive with `HeartChartSummary`'s existing hand-built SVG donut if the ring/arc geometry is confirmed to match (the main difference is multi-segment vs. single-value-arc) — do not hand-roll a second, unrelated donut-drawing implementation without checking first.
+- **Resolved**: segment colors are supplied as full CSS custom-property references (e.g. `"--color-chart-pie-purple-700"`, added to `src/tokens/colors.css`/`DESIGN.md` in this change), consumed via inline `style={{ stroke: \`var(${color})\` }}` rather than a dynamically-built Tailwind class string — Tailwind's static class scanner can't see a runtime-constructed utility class, but a direct `var()` reference to a real named token is not a hardcoded color and needs no scanner support.
+
+### Visual examples
+
+Rendered live on `/dashboard`'s "Spiritual Snapshot for Bedford Campus" card (2 instances: faith journey, connection to God); tested at `src/components/pie-chart-card.test.tsx`.
+
+---
+
+## ScaleChartCard
+
+**Status**: Draft (implemented; "Why does this matter?" always renders — see Implementation rules)
+**Source**: `src/components/scale-chart-card.tsx`
+**Figma**: AMFM Portal file, node `3727:29573`, "Top 3 Caution Flags for Bedford Campus" and "Top 3 Expressed Needs for Bedford Campus" cards — 6 confirmed instances total (3 per card), Figma layer name "Scale chart/Default"
+
+### Purpose
+
+Presents a single metric as a headline percentage plus a short question/description and a horizontal 0–100% scale plotting the church's value against a "National Average" marker — confirmed reused 6 times across two `Card`s, each headed by a `HorizontalTabs` (Couples/Singles).
+
+### Anatomy
+
+Big percentage stat → description line (e.g. "Lack a strong support system?") → horizontal scale/slider track (0%–100%, a "National Average" tick, and the church's own value marker) → "Why does this matter?" link.
+
+### Variants
+
+Only one variant was confirmed in this pass: the Figma layer name is "Scale chart/**Default**", which suggests a component set with additional variants may exist in the source file, but no sibling variant was observed or confirmed on this frame. **Do not implement any variant beyond `Default`** until one is directly confirmed against the Figma component set — flagged here as an open question for a follow-up audit, not documented as a speculative second variant.
+
+### States
+
+| State | Behavior |
+|---|---|
+| Default | Data-driven read of caller-supplied `percentage`/`nationalAverage`/`question`. |
+| Empty/loading | Not evidenced in Figma — must be added before shipping. |
+
+### Properties / API
+
+```ts
+interface ScaleChartCardProps {
+  percentage: number;
+  question: string;
+  nationalAverage: number;
+  /** Optional — the "Why does this matter?" link always renders (matching Figma and HeartChartSummary's "action renders regardless of handler" precedent); this only wires its click behavior. */
+  onWhyDoesThisMatter?: () => void;
+  className?: string;
+}
+```
+
+### Design tokens used
+
+Scale track reads as a blue/teal tone in the reference screenshot, distinct from every other chart's color family confirmed on this page — not yet resolved against a real token; part of the same data-viz-palette gap flagged under `PieChartCard`. Raise the `DESIGN.md` foundations update before implementing rather than inventing an inline color.
+
+### Accessibility requirements
+
+The scale is a labeled range/gauge with two data points (this value, national average). The percentage is already confirmed rendered as real text in Figma; confirm the "national average" value is also real DOM text near the visual (not implied by tick position alone) before implementation.
+
+### Responsive behavior
+
+Renders 3-up in a grid at desktop width in the reference frame (matching `ParticipationVerticalBarCard`/`ParticipationHorizontalBarCard`'s 3-column pattern) — not yet evidenced against a mobile reference; needs documented stacking behavior before shipping.
+
+### Implementation rules
+
+- The "Why does this matter?" link may trigger `PointerCallout` as an interactive/on-demand variant — this was not confirmed in this pass (see `PointerCallout`'s Variants section). Confirm the actual interaction model directly against Figma before deciding whether this link opens a popover, navigates, or does something else; do not assume.
+- Re-pull the "Scale chart" Figma component set directly (select the node on canvas, not via a page-level frame pull) before finalizing this component's variant list — this audit's tooling could not resolve that sub-component in isolation (see the node-ID caveat above), so the `Default`-only variant list here should be treated as the current confirmed floor, not a claim that no other variants exist.
+- **"Why does this matter?" always renders**, regardless of whether `onWhyDoesThisMatter` is supplied — matching `HeartChartSummary`'s established precedent that a documented action renders even without a wired handler, rather than disappearing from the layout. `/dashboard`'s 6 instances currently pass no handler (no real destination content exists yet for this link).
+
+### Visual examples
+
+Rendered live on `/dashboard`'s "Top 3 Caution Flags" and "Top 3 Expressed Needs" cards (6 instances total); tested at `src/components/scale-chart-card.test.tsx`.

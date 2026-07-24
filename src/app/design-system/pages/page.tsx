@@ -43,6 +43,13 @@ const PAGES = [
       "GlobalNav + a page <h1> (font-display text-display-md) + TopHero (new, Draft) + a 3-step CourseCard pattern (new, Draft) inside an ElevatedCard (new, Production Ready) + two more ElevatedCard resource cards (Card's CardHeader/CardTitle/CardDescription/CardAction/CardContent, composed directly on ElevatedCard rather than the flat Card primitive) with ResourceListItem rows (updated to a real download-button treatment, Production Ready) + FooterCta (new, Draft), on the new background-gradient-from/background-gradient-to page-shell tokens. All real copy/icons/token values were pulled from the actual Figma node tree via the Figma MCP. TopHero's/CourseCard's photo assets and FooterCta's background texture remain blocked by this environment's egress policy (www.figma.com denied) and render gradient/flat-color placeholders instead — see COMPONENTS.md for each component's Implementation rules. Resource link destinations remain placeholder routes (\"#\"), the same category of gap already documented for GlobalNav's other nav links.",
   },
   {
+    href: "/dashboard",
+    title: "Our Data Dashboard",
+    figma: 'AMFM Portal — "HeartChart Dashboard / premium" (node 3727:29573)',
+    builtFrom:
+      "GlobalNav + a page <h1> (font-display text-display-md) + a Select-based campus picker + HeartChartSummary paired with the new WeDoCard (new, Draft — composes the new PointerCallout for its pull-quote) inside a Card housing the new ParticipationVerticalBarCard/ParticipationHorizontalBarCard (new, Draft, reused 3x) + a Card composing the new CommitmentConnectionChart, SnapshotVideoCard, DashboardFilterMenu, and FullWidthBarChart (all new, Draft) behind the new HorizontalTabs (new, Draft) + two Cards composing the new PieChartCard (new, Draft, reused 2x) and ScaleChartCard (new, Draft, reused 6x). A new data-visualization color palette (chart-pie-*/chart-scale-blue-*/chart-participation-fill) was added to DESIGN.md/src/tokens/colors.css to support the chart components. Sample data is representative only (src/app/dashboard/_lib/dashboard-data.ts), not wired to a real backend — see each new component's COMPONENTS.md entry for full Figma references, known gaps, and approximations (WeDoCard's wordmark, SnapshotVideoCard's composition choice, FullWidthBarChart's exact bar shade).",
+  },
+  {
     href: "/marriage-champions",
     title: "Our Marriage Champions",
     figma: 'AMFM Portal — "Our Marriage Champions / Populated" (node 3724:23444)',
