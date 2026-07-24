@@ -116,6 +116,11 @@ function getRouteStatus(item: NavLinkItem): RouteStatus {
   return item.implemented ? "implemented" : "placeholder";
 }
 
+// Above this viewport width the rail stays pinned expanded — see
+// COMPONENTS.md#globalnav and DESIGN.md's Breakpoints (a documented
+// exception to "don't add a custom breakpoint without a design reference").
+const PINNED_OPEN_QUERY = "(min-width: 1600px)";
+
 interface GlobalNavProps {
   className?: string;
   /** Uncontrolled initial state — defaults to collapsed, matching the Figma default. */
@@ -126,6 +131,16 @@ interface GlobalNavProps {
    * call sites should omit this and let `usePathname()` decide.
    */
   activeHref?: string;
+  /**
+   * Renders the rail as a fixed, viewport-pinned overlay with an in-flow
+   * spacer reserving its collapsed width, so hover/focus expansion overlays
+   * page content instead of pushing it — see COMPONENTS.md#globalnav
+   * Implementation rules. Defaults to `false` so the /design-system gallery
+   * (and any other bounded, non-app-shell demo context) keeps rendering the
+   * rail as a plain in-flow element. Real app-shell consumers
+   * (`MarriageChampionsPageShell`, `/heartchart-resources`) should set this.
+   */
+  overlay?: boolean;
 }
 
 /**
@@ -133,16 +148,36 @@ interface GlobalNavProps {
  * by default and expands to a 296px labeled panel on hover (or keyboard
  * focus) — see COMPONENTS.md#globalnav for the full contract.
  */
-export function GlobalNav({ className, defaultOpen = false, activeHref }: GlobalNavProps) {
+export function GlobalNav({
+  className,
+  defaultOpen = false,
+  activeHref,
+  overlay = false,
+}: GlobalNavProps) {
   const [open, setOpen] = React.useState(defaultOpen);
+  const [pinnedOpen, setPinnedOpen] = React.useState(false);
   const rootRef = React.useRef<HTMLElement>(null);
   const hoveredRef = React.useRef(defaultOpen);
   const focusedRef = React.useRef(false);
   const accountMenuOpenRef = React.useRef(false);
 
   const syncOpen = React.useCallback(() => {
-    setOpen(hoveredRef.current || focusedRef.current || accountMenuOpenRef.current);
+    setOpen(
+      hoveredRef.current || focusedRef.current || accountMenuOpenRef.current || pinnedOpen
+    );
+  }, [pinnedOpen]);
+
+  React.useEffect(() => {
+    const mediaQuery = window.matchMedia(PINNED_OPEN_QUERY);
+    const handleChange = () => setPinnedOpen(mediaQuery.matches);
+    handleChange();
+    mediaQuery.addEventListener("change", handleChange);
+    return () => mediaQuery.removeEventListener("change", handleChange);
   }, []);
+
+  React.useEffect(() => {
+    syncOpen();
+  }, [syncOpen]);
 
   const handleMouseEnter = React.useCallback(() => {
     hoveredRef.current = true;
@@ -198,7 +233,7 @@ export function GlobalNav({ className, defaultOpen = false, activeHref }: Global
     return () => document.removeEventListener("keydown", handleKeyDown);
   }, [open]);
 
-  return (
+  const rail = (
     <nav
       ref={rootRef}
       aria-label="Main"
@@ -208,9 +243,13 @@ export function GlobalNav({ className, defaultOpen = false, activeHref }: Global
       onFocus={handleFocus}
       onBlur={handleBlur}
       className={cn(
-        "flex h-full flex-col overflow-hidden rounded-2xl border border-white/8 bg-gradient-to-b from-nav-surface-from/90 to-nav-surface-to/90 backdrop-blur-2xl",
+        "flex flex-col overflow-hidden rounded-2xl border border-white/8 bg-gradient-to-b from-nav-surface-from/90 to-nav-surface-to/90 backdrop-blur-2xl",
         "transition-[width] duration-300 ease-in-out motion-reduce:transition-none",
         open ? "w-74" : "w-20",
+        // `overlay`: fixed to the viewport (not the layout flow), so
+        // expanding the rail on hover paints over page content instead of
+        // reflowing it — see COMPONENTS.md#globalnav Implementation rules.
+        overlay ? "fixed inset-y-3 left-3 z-40" : "h-full",
         className
       )}
     >
@@ -242,6 +281,29 @@ export function GlobalNav({ className, defaultOpen = false, activeHref }: Global
         <NavAccountCard open={open} onMenuOpenChange={handleAccountMenuOpenChange} />
       </div>
     </nav>
+  );
+
+  if (!overlay) return rail;
+
+  return (
+    <>
+      {/*
+        In-flow spacer reserving the rail's collapsed (or pinned-open, see
+        PINNED_OPEN_QUERY) width — the rail itself is `fixed` above and no
+        longer participates in layout, so surrounding flex/grid siblings
+        need this to avoid sitting underneath it. 26/80 = the collapsed/
+        pinned-open rail width (20/74) plus its 3-unit (12px) left/right
+        gutters — see COMPONENTS.md#globalnav.
+      */}
+      <div
+        aria-hidden="true"
+        className={cn(
+          "shrink-0 transition-[width] duration-300 ease-in-out motion-reduce:transition-none",
+          pinnedOpen ? "w-80" : "w-26"
+        )}
+      />
+      {rail}
+    </>
   );
 }
 
