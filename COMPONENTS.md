@@ -2301,7 +2301,9 @@ Church-wide "WeDo" (couples relationship app) engagement snapshot — the counte
 
 ### Anatomy
 
-Outer elevated shell (`ElevatedCard`, same nested outer-shadow-shell/inner-bordered-panel shape as `HeartChartSummary`) → WeDo wordmark logo (top-left) → optional "Next Pulse in {label}" countdown text (top-right) → stat row: big stat number ("363 Couples", in the WeDo brand red) + supporting sentence ("Active in the app today") → `PointerCallout` (see below) containing a couple illustration + an uppercase "Most of your couples say..." label + pull-quote (with an optional highlighted phrase in the WeDo brand red) + a "Source: {quoteSource}" attribution line → action row: two `Button` instances ("See Results", "Share Your Code").
+Outer elevated shell (`ElevatedCard`, same nested outer-shadow-shell/inner-bordered-panel shape as `HeartChartSummary`) → WeDo wordmark logo (top-left) → optional "Next Pulse in {label}" countdown text (top-right) → a two-column row: **left column** — big stat number ("363 Couples", in the WeDo brand red), supporting sentence ("Active in the app today"), and the couple illustration stacked directly beneath it; **right column** — `PointerCallout` (see below), stretched to fill the remaining width, containing only text: an uppercase "Most of your couples say..." label + pull-quote (with an optional highlighted phrase in the WeDo brand red) + a "Source: {quoteSource}" attribution line → action row: two `Button` instances ("See Results", "Share Your Code"), pinned to the bottom of the card.
+
+Corrected from an earlier pass that had put the couple illustration *inside* `PointerCallout`, beside the quote text, and stacked the stat row and the callout full-width on top of each other — re-verified against a native-resolution (1523×4573) full-page screenshot of node `3727:29573`, which shows the illustration sitting under "Active in the app today" in its own column, not next to the quote.
 
 ### Variants
 
@@ -2340,7 +2342,7 @@ Reuse `HeartChartSummary`'s existing token set for the shared shell/surfaces —
 
 ### Accessibility requirements
 
-- The couple illustration (`/We-do.png`) inside `PointerCallout` is decorative (`alt=""`, `aria-hidden="true"`); the quote itself is real DOM text, not baked into an image, so it reaches assistive tech.
+- The couple illustration (`/We-do.png`), positioned beneath the stat/caption in the left column, is decorative (`alt=""`, `aria-hidden="true"`); the quote itself is real DOM text, not baked into an image, so it reaches assistive tech.
 - The WeDo wordmark (`/We-do-logo.svg`) carries a real `alt="WeDo"`, since it's the card's identifying mark, not decorative — same treatment as `HeartChartLogo`.
 - Both action buttons render through `Button`, inheriting its focus-visible ring and keyboard behavior; each has a visible text label alongside its icon, so no additional `aria-label` is required.
 - The highlighted phrase inside the quote is conveyed with color alone (a `<span>`, no bold/underline) — this is a stylistic emphasis on already-present text, not new information, so it doesn't trip DESIGN.md's "color is never the only signal" rule (which applies to state/status, not inline typographic emphasis).
@@ -2354,7 +2356,8 @@ Sits side-by-side with `HeartChartSummary` at desktop width (each roughly half t
 - Composed on `ElevatedCard` rather than a local copy of the nested-shell shape, per this entry's own prior note and `ElevatedCard`'s Implementation rules.
 - Reuses `Button variant="outline" size="compact"` for both actions, each with a leading `lucide-react` icon (`Eye` for "See Results", `QrCode` for "Share Your Code" — the latter mirroring `HeartChartSummary`'s "Share Your Link" icon choice), matching `HeartChartSummary`'s action-row treatment.
 - **Implemented**: the WeDo wordmark renders from the real exported asset (`public/We-do-logo.svg`, WeDo's brand red `#CD4745`) via `next/image`, unoptimized (same pattern as `HeartChartLogo`) — no longer a hand-authored icon approximation.
-- **Implemented**: the couple illustration renders from the real exported asset (`public/We-do.png`) via `next/image`, decorative and `aria-hidden`.
+- **Implemented**: the couple illustration renders from the real exported asset (`public/We-do.png`) via `next/image`, decorative and `aria-hidden`, in the left column beneath the stat/caption text (`mt-auto` on the image keeps it pinned to the bottom of that column so it lines up with the callout's bottom edge regardless of quote length) — not inside `PointerCallout`.
+- The stat/caption/image column and the `PointerCallout` sit in a `flex flex-wrap` row (`items-stretch` so `PointerCallout` matches the column's height); `PointerCallout` takes `flex-1 min-w-0` to fill the remaining width and lets its quote text wrap instead of overflowing.
 - The quote's highlighted phrase is matched by exact substring (`quote.indexOf(highlightedPhrase)`) and wrapped in a `text-wedo-brand` span — this only supports a single, contiguous highlighted run per quote (matches the one confirmed Figma instance); do not extend to multiple highlighted ranges without a confirmed second use case.
 - A connecting caption row ("HeartChart shows you where your people are" / "WeDo helps them get where they want to go") sits below both hero cards on the page — this is page-level connective copy, not part of `WeDoCard`'s or `HeartChartSummary`'s own anatomy; do not fold it into either component.
 
@@ -2376,7 +2379,7 @@ A speech-bubble-style container with a visible directional pointer (tail), used 
 
 ### Anatomy
 
-Rounded bordered container (subtle shadow) → directional pointer/tail graphic on one edge → content slot (optional leading illustration/icon + required text).
+Rounded bordered grey container → directional pointer/tail graphic on one edge → content slot (text; in `WeDoCard`'s confirmed use this is label + quote + source, with no illustration inside — the illustration lives in `WeDoCard`'s own left column instead, not in this component).
 
 ### Variants
 
@@ -2398,7 +2401,7 @@ interface PointerCalloutProps {
 
 ### Design tokens used
 
-Not yet confirmed against a direct node pull — likely candidates are `border`, `shadow-sm`/`shadow-md`, `bg-background`/`bg-card`. Confirm exact values before implementation rather than assuming.
+`border`, `rounded-lg`, `bg-muted` — a flat, fully-opaque grey fill (not `bg-background`/`bg-card`, and not an alpha-blended `/50` tint like `HeartChartSummary`'s participation-level box). Confirmed against a native-resolution full-page screenshot of node `3727:29573`: the "Most of your couples say..." box renders as a subtle solid grey, distinct from the white card surface behind it. Full opacity is deliberate here, not just a style preference — the pointer/tail `<span>` overlaps the container's edge, and a translucent fill would double-composite where the tail sits over the box versus over the surrounding white card, producing a visible two-tone seam; a flat `bg-muted` keeps the tail and box the same color everywhere.
 
 ### Accessibility requirements
 
@@ -2411,6 +2414,7 @@ Not yet evidenced against a mobile Figma reference — flag for verification bef
 ### Implementation rules
 
 - Extract as its own primitive from the start rather than inlining it inside `WeDoCard` — its visual language (rounded box + pointer tail) is distinct enough from `WeDoCard`'s own anatomy to warrant separation even at a single confirmed use site, unlike e.g. `HeartChartSummary`'s donut chart (which stayed unextracted until a second use case appeared) — this is a judgment call flagged here for visibility, not a hard reuse-count justification.
+- Use a solid background (`bg-muted`) on both the container and the pointer `<span>`, never an alpha-based tint (`bg-muted/50` etc.) — see Design tokens used above for why the pointer's overlap makes opacity unsafe here, unlike other de-emphasized boxes in this file that have no overlapping child.
 - Do not add the speculative interactive/popover variant described under Variants above without first confirming the interaction model directly in Figma. If confirmed, it must follow the Radix `Popover`/`Tooltip` ARIA pattern per `DESIGN.md`'s standing rule against hand-rolled custom widgets (already enforced for `Select`/`DropdownMenu`/`Dialog`) — never a plain absolutely-positioned `div`.
 
 ### Visual examples
