@@ -582,11 +582,12 @@ export function DposystemStory() {
         aria-label="DPOsystem overview"
       >
         <div
+          data-slot="dposystem-story-track"
           ref={scrollerRef}
           onScroll={handleScroll}
           onKeyDown={handleKeyDown}
           tabIndex={0}
-          className="flex h-[min(70vh,560px)] snap-x snap-mandatory overflow-x-auto scroll-smooth outline-none motion-reduce:scroll-auto focus-visible:ring-ring/50 focus-visible:ring-[3px]"
+          className="flex h-[min(70vh,560px)] snap-x snap-mandatory overflow-x-auto scroll-smooth [scrollbar-width:none] outline-none motion-reduce:scroll-auto focus-visible:ring-ring/50 focus-visible:ring-[3px] [&::-webkit-scrollbar]:hidden"
         >
           {SLIDES.map((slide, index) => (
             <div

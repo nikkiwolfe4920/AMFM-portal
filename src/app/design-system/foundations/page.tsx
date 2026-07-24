@@ -267,7 +267,7 @@ export default function FoundationsPage() {
       <Section
         id="blur-overlay"
         title="Blur overlay"
-        description="Renders real content as an inert, faded backdrop (blur-[2px], 30% opacity, fading to the surrounding surface color) so it reads as 'there, but not yet actionable' behind a centered empty-state call-to-action — see BlurOverlay in COMPONENTS.md. Introduced for /marriage-champions-empty (Figma node 3724:23178)."
+        description="Renders real content as an inert, blurred backdrop (blur-[2px], fading to the surrounding surface color) so it reads as 'there, but not yet actionable' behind a centered empty-state call-to-action — see BlurOverlay in COMPONENTS.md. Introduced for /marriage-champions-empty (Figma node 3724:23178)."
       >
         <div className="overflow-hidden rounded-lg border">
           <BlurOverlay>

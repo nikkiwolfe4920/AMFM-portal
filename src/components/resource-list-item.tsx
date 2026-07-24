@@ -27,7 +27,11 @@ export function ResourceListItem({
 }: ResourceListItemProps) {
   return (
     <div className="flex w-full items-start gap-3">
-      <Icon aria-hidden="true" className="text-muted-foreground size-8 shrink-0" />
+      <Icon
+        aria-hidden="true"
+        data-slot="resource-list-item-icon"
+        className="text-fg-quaternary size-8 shrink-0"
+      />
       <div className="flex flex-1 flex-col gap-1">
         <p className="text-foreground text-base font-semibold">{title}</p>
         <p className="text-muted-foreground text-sm">{description}</p>
@@ -35,8 +39,8 @@ export function ResourceListItem({
       <Button
         asChild
         variant="outline"
-        size="icon"
-        className="text-muted-foreground size-12 shrink-0 [&_svg]:size-5"
+        size="iconLg"
+        className="shrink-0"
       >
         <Link href={href} aria-label={actionLabel}>
           <Download aria-hidden="true" />

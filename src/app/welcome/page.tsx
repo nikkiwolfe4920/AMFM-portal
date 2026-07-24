@@ -31,9 +31,9 @@ export default function WelcomePage() {
           className="max-w-[560px]"
         />
 
-        <Button asChild>
+        <Button asChild size="lg">
           <Link href="/">
-            <ArrowRight className="size-5" aria-hidden />
+            <ArrowRight aria-hidden />
             Get Started
           </Link>
         </Button>

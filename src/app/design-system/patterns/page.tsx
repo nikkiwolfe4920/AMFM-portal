@@ -76,7 +76,7 @@ export default function PatternsPage() {
               <HeartChartLogo />
               <p className="text-xs">Powered by AMFM.org</p>
             </div>
-            <Button variant="outline" className="text-text-secondary w-full gap-3">
+            <Button variant="outline" className="w-full gap-3">
               <GoogleIcon className="size-6" />
               Log in with Google
             </Button>
@@ -117,7 +117,7 @@ export default function PatternsPage() {
               <HeartChartLogo />
               <p className="text-xs">Powered by AMFM.org</p>
             </div>
-            <Button variant="outline" className="text-text-secondary w-full gap-3">
+            <Button variant="outline" className="w-full gap-3">
               <GoogleIcon className="size-6" />
               Sign up with Google
             </Button>
@@ -344,8 +344,8 @@ export default function PatternsPage() {
               title="Introduction video"
               className="max-w-md"
             />
-            <Button>
-              <ArrowRight className="size-5" aria-hidden />
+            <Button size="lg">
+              <ArrowRight aria-hidden />
               Get Started
             </Button>
           </div>

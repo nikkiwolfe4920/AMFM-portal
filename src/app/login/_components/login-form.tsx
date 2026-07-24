@@ -52,7 +52,7 @@ export function LoginForm() {
           <Checkbox id="trusted-device" className="mt-0.5" />
           <Label htmlFor="trusted-device">This is a trusted device</Label>
         </div>
-        <Button variant="link" asChild className="text-text-brand h-auto p-0 text-sm">
+        <Button variant="link" asChild>
           <Link href="/forgot-password">Forgot password</Link>
         </Button>
       </div>

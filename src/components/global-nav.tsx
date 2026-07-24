@@ -42,19 +42,30 @@ interface NavLinkItem {
   href: string;
   icon: LucideIcon;
   external?: boolean;
+  implemented?: boolean;
 }
 
 /**
  * Placeholder routes — no dashboard/IA has been built yet for most of these
  * destinations (see COMPONENTS.md#globalnav Implementation rules). "Home",
- * "Our Marriage Champions", and the two external URLs are the only real,
- * verified destinations.
+ * "Our Marriage Champions", "HeartChart Resources", and the two external URLs
+ * are the only real, verified destinations.
  */
 const CHURCH_LINKS: NavLinkItem[] = [
-  { label: "Home", href: "/", icon: Home },
+  { label: "Home", href: "/", icon: Home, implemented: true },
   { label: "Our Data Dashboard", href: "/dashboard", icon: LayoutGrid },
-  { label: "Our Marriage Champions", href: "/marriage-champions", icon: Trophy },
-  { label: "HeartChart Resources", href: "/heartchart-resources", icon: FileHeart },
+  {
+    label: "Our Marriage Champions",
+    href: "/marriage-champions",
+    icon: Trophy,
+    implemented: true,
+  },
+  {
+    label: "HeartChart Resources",
+    href: "/heartchart-resources",
+    icon: FileHeart,
+    implemented: true,
+  },
   { label: "Training", href: "/training", icon: BookOpen },
 ];
 
@@ -97,6 +108,13 @@ const TRANSITION =
 const FADE_TRANSITION = "transition-opacity duration-300 ease-in-out motion-reduce:transition-none";
 const INSET_TRANSITION =
   "transition-[left,right,opacity] duration-300 ease-in-out motion-reduce:transition-none";
+
+type RouteStatus = "implemented" | "placeholder" | "external";
+
+function getRouteStatus(item: NavLinkItem): RouteStatus {
+  if (item.external) return "external";
+  return item.implemented ? "implemented" : "placeholder";
+}
 
 interface GlobalNavProps {
   className?: string;
@@ -346,13 +364,18 @@ function NavItem({
   const { label, href, icon: Icon, external } = item;
   const pathname = usePathname();
   const active = (activeHref ?? pathname) === href;
+  const routeStatus = getRouteStatus(item);
+  const prefetchDisabled = routeStatus === "placeholder";
 
   return (
     <Link
       href={href}
+      prefetch={prefetchDisabled ? false : undefined}
       aria-current={active ? "page" : undefined}
       target={external ? "_blank" : undefined}
       rel={external ? "noopener noreferrer" : undefined}
+      data-route-status={routeStatus}
+      data-prefetch={prefetchDisabled ? "disabled" : undefined}
       className={cn(
         "focus-visible:ring-ring/50 flex w-full shrink-0 items-center gap-3 rounded-sm px-3 py-2 outline-none focus-visible:ring-[3px]",
         active
@@ -450,14 +473,26 @@ function NavAccountCard({
         sideOffset={12}
         className="border-nav-border bg-nav-surface-from/95 w-64 rounded-2xl border p-2 shadow-2xl backdrop-blur-2xl"
       >
-        {ACCOUNT_MENU_LINKS.map(({ label, href, icon: Icon }) => (
-          <DropdownMenuItem key={label} asChild className="focus:bg-white/5 rounded-lg p-2.5">
-            <Link href={href} className="flex items-center gap-3">
-              <Icon aria-hidden="true" className="text-nav-foreground-muted shrink-0" />
-              <span className="text-nav-foreground text-sm font-medium">{label}</span>
-            </Link>
-          </DropdownMenuItem>
-        ))}
+        {ACCOUNT_MENU_LINKS.map((item) => {
+          const { label, href, icon: Icon } = item;
+          const routeStatus = getRouteStatus(item);
+          const prefetchDisabled = routeStatus === "placeholder";
+
+          return (
+            <DropdownMenuItem key={label} asChild className="focus:bg-white/5 rounded-lg p-2.5">
+              <Link
+                href={href}
+                prefetch={prefetchDisabled ? false : undefined}
+                data-route-status={routeStatus}
+                data-prefetch={prefetchDisabled ? "disabled" : undefined}
+                className="flex items-center gap-3"
+              >
+                <Icon aria-hidden="true" className="text-nav-foreground-muted shrink-0" />
+                <span className="text-nav-foreground text-sm font-medium">{label}</span>
+              </Link>
+            </DropdownMenuItem>
+          );
+        })}
       </DropdownMenuContent>
     </DropdownMenu>
   );

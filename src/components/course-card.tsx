@@ -5,9 +5,9 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 
 const STEP_HEADER_CLASSNAME: Record<1 | 2 | 3, string> = {
-  1: "bg-border-brand",
-  2: "bg-text-brand",
-  3: "bg-brand-900",
+  1: "bg-border-brand text-foreground",
+  2: "bg-text-brand text-white",
+  3: "bg-brand-900 text-white",
 };
 
 interface CourseCardProps {
@@ -49,14 +49,15 @@ export function CourseCard({
       )}
     >
       <div
+        data-slot="course-card-step-header"
         className={cn(
           "flex items-center justify-between px-6 py-3",
           STEP_HEADER_CLASSNAME[step]
         )}
       >
-        <p className="text-base font-semibold text-white">STEP {step}</p>
+        <p className="text-base font-semibold">STEP {step}</p>
         {!hideArrow && (
-          <ArrowRight aria-hidden="true" className="size-6 text-white" />
+          <ArrowRight aria-hidden="true" className="size-6" />
         )}
       </div>
 
@@ -71,7 +72,7 @@ export function CourseCard({
         </div>
         <Button
           variant="outline"
-          size="sm"
+          size="compact"
           onClick={onWatchVideo}
           className="w-fit"
         >

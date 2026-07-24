@@ -109,7 +109,7 @@ export function HeartChartSummary({
           </div>
 
           <div className="flex flex-col gap-3 rounded-md border bg-muted/50 px-5 pt-4 pb-5">
-            <p className="text-xs font-semibold tracking-[0.24px] text-muted-foreground">
+            <p className="text-text-tertiary text-xs font-semibold tracking-[0.24px]">
               CHURCH-WIDE PARTICIPATION LEVEL
             </p>
             <ParticipationScale percentage={clampedPercentage} level={level} />
@@ -117,30 +117,27 @@ export function HeartChartSummary({
               <div className="flex flex-wrap items-center gap-3">
                 <Button
                   variant="outline"
-                  size="sm"
-                  className="h-auto gap-1 px-3 py-2 text-muted-foreground has-[>svg]:px-3"
+                  size="compact"
                   onClick={onQuickTip}
                 >
-                  <Lightbulb className="size-5" />
+                  <Lightbulb />
                   Quick Tip
                 </Button>
                 <Button
                   variant="outline"
-                  size="sm"
-                  className="h-auto gap-1 px-3 py-2 text-muted-foreground has-[>svg]:px-3"
+                  size="compact"
                   onClick={onViewLastFourWeeks}
                 >
-                  <TrendingUp className="size-5" />
+                  <TrendingUp />
                   Last 4 Weeks
                 </Button>
               </div>
               <Button
                 variant="outline"
-                size="sm"
-                className="h-auto gap-1 px-3 py-2 text-muted-foreground has-[>svg]:px-3"
+                size="compact"
                 onClick={onShareLink}
               >
-                <QrCode className="size-5" />
+                <QrCode />
                 Share Your Link
               </Button>
             </div>
