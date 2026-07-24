@@ -30,6 +30,7 @@ Human-readable index of the Figma file(s) and node references cited throughout `
 | `HeartChart Resources` (`2361:19280`, rendered on-canvas as `3722:19475`) | `/heartchart-resources` screen | Page `<h1>` (`text-display-md`, "Page header" node `2309:20675`), `TopHero`/"Featured Training" (node `2318:26997`), `CourseCard`/"Course Card" 3-step pattern (node `2074:45130`; steps at `2316:26815`/`2316:26886`/`2318:26954`; shared step-header fill confirmed at `3926:27038`, reusing the existing `text-brand` token), `ResourceListItem` + `ElevatedCard` resource cards ("Optional Resources" `2309:20702`, "Premium Resources" — the `CardAction` CTA variant — `2309:20730`), `FooterCta` (node `1909:25789`), the page shell's `background-gradient-from`/`background-gradient-to` tokens (`DESIGN.md`) — see `COMPONENTS.md` |
 | `Our Marriage Champions / Populated` (`3724:23444`) | `/marriage-champions` screen | `MarriageChampionsPageShell` (page header), `Table`, `Select`, `StatusTag`, `FellowshipOfTheParksLogo` — see `COMPONENTS.md` |
 | `Our Marriage Champions / Empty` (`3724:23167`) | `/marriage-champions-empty` screen | `MarriageChampionsPageShell` (shared shell, page header), `BlurOverlay` (backdrop layer "image 54", node `3724:23178`, wrapping a decorative `Table`/`StatusTag` preview), `VideoPlayer` (node `3724:23180`, second confirmed use site), `Button size="sm"` (node `3724:23184`, "Invite Marriage Champions" — icon-leading composition, lucide's `FileBadge` matching Figma's `certificate-02`) — the "Modal / invite user" node (`3724:23382`) the button opens is not implemented in this pass — see `COMPONENTS.md` |
+| `HeartChart Dashboard / premium` (`3727:29573`), `_Summary Data` region, right-hand instance | `/dashboard` hero row, WeDo card | `WeDoCard` — couple illustration exported directly to `public/We-do.png` (rendered at a fixed 186×186px); `PointerCallout`'s `"bottom-left-diagonal"` tail exported to `public/speechbubblepointer.svg`; the pull-quote's decorative quotation mark has no Figma vector reference and is implemented as lucide-react's `Quote` icon (mirrored, `text-wedo-brand`) — see `COMPONENTS.md#wedocard` and `COMPONENTS.md#pointercallout` |
 
 ## Components without a Figma reference yet
 
@@ -41,6 +42,7 @@ These were implemented from product requirements or generic shadcn/ui patterns r
 - `DposystemLearnMore` / `DposystemStory` — content-driven pattern authored directly from product copy, no Figma design reference.
 - `DropdownMenu` — generic Radix-based primitive introduced to implement `GlobalNav`'s account menu, no Figma design reference of its own.
 - `GlobalNav`'s account-card flyout menu (Personal Profile, Church Profile, Account Settings, Subscription & Billing, Terms & Privacy) — built from a screenshot supplied directly in conversation, not a Figma node.
+- `WeDoCard`'s pull-quote quotation mark — the Figma frame's pull-quote box lacked its own vector/icon layer for this mark, so it's implemented as lucide-react's `Quote` icon rather than an exported asset.
 
 ## Maintenance
 

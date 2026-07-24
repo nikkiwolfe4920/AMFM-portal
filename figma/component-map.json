@@ -158,5 +158,15 @@
     "figmaComponent": "AMFM Portal — \"Our Marriage Champions / Empty\" (node 3724:23167), \"image 54\" backdrop layer (node 3724:23178)",
     "documentation": "COMPONENTS.md#bluroverlay",
     "implementation": "src/components/blur-overlay.tsx"
+  },
+  "WeDoCard": {
+    "figmaComponent": "AMFM Portal — node 3727:29573 (\"HeartChart Dashboard / premium\"), \"_Summary Data\" region, right-hand instance; couple illustration exported as public/We-do.png (186x186 display size), decorative quotation mark has no Figma vector reference and is implemented as lucide-react's Quote icon",
+    "documentation": "COMPONENTS.md#wedocard",
+    "implementation": "src/components/we-do-card.tsx"
+  },
+  "PointerCallout": {
+    "figmaComponent": "AMFM Portal — node 3727:29573, nested inside the WeDoCard instance (\"_Summary Data\" region); diagonal-tail variant's asset exported as public/speechbubblepointer.svg",
+    "documentation": "COMPONENTS.md#pointercallout",
+    "implementation": "src/components/pointer-callout.tsx"
   }
 }

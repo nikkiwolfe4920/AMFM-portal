@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { Eye, QrCode } from "lucide-react";
+import { Eye, QrCode, Quote } from "lucide-react";
 
 import { ElevatedCard } from "@/components/elevated-card";
 import { Button } from "@/components/ui/button";
@@ -76,35 +76,42 @@ function WeDoCard({
             src="/We-do.png"
             alt=""
             aria-hidden="true"
-            width={1196}
-            height={1230}
+            width={990}
+            height={874}
             unoptimized
-            className="mt-auto size-16 shrink-0 object-contain"
+            className="mt-auto size-[186px] shrink-0 object-contain"
           />
         </div>
 
-        <PointerCallout pointerPosition="left" className="min-w-0 flex-1">
-          <div className="flex flex-col gap-1.5">
-            <p className="text-xs font-semibold tracking-[0.24px] text-text-tertiary uppercase">
-              Most of your couples say...
-            </p>
-            <p className="text-sm text-foreground">
-              &ldquo;{renderQuote(quote, highlightedPhrase)}&rdquo;
-            </p>
-            <p className="text-xs text-muted-foreground">Source: {quoteSource}</p>
-          </div>
-        </PointerCallout>
-      </div>
+        <div className="flex min-w-0 flex-1 flex-col gap-3">
+          <PointerCallout pointerPosition="bottom-left-diagonal" className="min-w-0">
+            <div className="flex flex-col gap-1.5">
+              <Quote
+                aria-hidden="true"
+                className="size-6 -scale-x-100 text-wedo-brand"
+                strokeWidth={2.5}
+              />
+              <p className="text-xs font-semibold tracking-[0.24px] text-text-tertiary uppercase">
+                Most of your couples say...
+              </p>
+              <p className="text-sm text-foreground">
+                &ldquo;{renderQuote(quote, highlightedPhrase)}&rdquo;
+              </p>
+              <p className="text-xs text-muted-foreground">Source: {quoteSource}</p>
+            </div>
+          </PointerCallout>
 
-      <div className="mt-auto flex flex-wrap items-center gap-3">
-        <Button variant="outline" size="compact" onClick={onSeeResults}>
-          <Eye />
-          See Results
-        </Button>
-        <Button variant="outline" size="compact" onClick={onShareCode}>
-          <QrCode />
-          Share Your Code
-        </Button>
+          <div className="mt-auto flex flex-wrap items-center justify-end gap-3">
+            <Button variant="outline" size="compact" onClick={onSeeResults}>
+              <Eye />
+              See Results
+            </Button>
+            <Button variant="outline" size="compact" onClick={onShareCode}>
+              <QrCode />
+              Share Your Code
+            </Button>
+          </div>
+        </div>
       </div>
     </ElevatedCard>
   );
