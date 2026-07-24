@@ -19,10 +19,10 @@ describe("GlobalNav", () => {
       "data-route-status",
       "implemented"
     );
-
-    const dashboardLink = screen.getByRole("link", { name: "Our Data Dashboard" });
-    expect(dashboardLink).toHaveAttribute("data-route-status", "placeholder");
-    expect(dashboardLink).toHaveAttribute("data-prefetch", "disabled");
+    expect(screen.getByRole("link", { name: "Our Data Dashboard" })).toHaveAttribute(
+      "data-route-status",
+      "implemented"
+    );
 
     const trainingLink = screen.getByRole("link", { name: "Training" });
     expect(trainingLink).toHaveAttribute("data-route-status", "placeholder");

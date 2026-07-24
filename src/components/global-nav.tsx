@@ -53,7 +53,12 @@ interface NavLinkItem {
  */
 const CHURCH_LINKS: NavLinkItem[] = [
   { label: "Home", href: "/", icon: Home, implemented: true },
-  { label: "Our Data Dashboard", href: "/dashboard", icon: LayoutGrid },
+  {
+    label: "Our Data Dashboard",
+    href: "/dashboard",
+    icon: LayoutGrid,
+    implemented: true,
+  },
   {
     label: "Our Marriage Champions",
     href: "/marriage-champions",

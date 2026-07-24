@@ -106,6 +106,40 @@
   --chart-4: oklch(0.828 0.189 84.429);
   --chart-5: oklch(0.769 0.188 70.08);
 
+  /* HeartChart Dashboard (node 3727:29573) — data-visualization palette. These
+   * are distinct from the generic chart-1…5 scaffold above (unmodified
+   * shadcn/ui defaults, never actually used by a real chart in this codebase)
+   * and are named/scoped per chart instance rather than as one shared
+   * sequence, since PieChartCard's two instances use two unrelated Figma
+   * color families, not two steps of one palette. Root-only, no dark-mode
+   * Figma reference exists for this frame yet — same class of gap as
+   * status-success, badge-success/error/warning, and nav-* above; the
+   * consuming chart components are assumed to sit on an already theme-aware
+   * card surface. */
+  --chart-pie-purple-700: oklch(0.473 0.065 312.257); /* Component colors/Utility/Purple/utility-purple-700, #685176 */
+  --chart-pie-purple-500: oklch(0.627 0.067 311.973); /* utility-purple-500, #967da6 */
+  --chart-pie-purple-300: oklch(0.753 0.044 313.619); /* utility-purple-300, #b9a7c3 */
+  --chart-pie-purple-100: oklch(0.864 0.024 313.114); /* utility-purple-100, #d8cede */
+  /* Darkest green segment reuses --status-success directly (Figma's
+   * utility-green-500, #76936b, is an exact hex match — confirmed by
+   * converting it through the same oklch pipeline as every value here and
+   * getting oklch(0.63 0.067 137.227), identical to the existing token). Only
+   * the three lighter tiers below are new. */
+  --chart-pie-green-400: oklch(0.693 0.056 137.459); /* utility-green-400, #8ca583 */
+  --chart-pie-green-300: oklch(0.753 0.044 137.572); /* utility-green-300, #a2b69b */
+  --chart-pie-green-100: oklch(0.871 0.022 136.604); /* utility-green-100, #ced8ca */
+  --chart-scale-blue-400: oklch(0.657 0.063 217.847); /* Colors/Blue/400, #639bab */
+  --chart-scale-blue-100: oklch(0.857 0.027 214.449); /* Colors/Blue/100, #bdd5db */
+  --chart-scale-blue-50: oklch(0.922 0.014 213.1); /* Colors/Blue/50, #dbe8eb */
+  --chart-scale-blue-25: oklch(0.986 0.003 197.105); /* Colors/Blue/25, #f8fbfb */
+  /* Participation bar fill (Age Groups/Relationship Status/Kids) — distinct
+   * from --background-gradient-from (utility-yellow-50, #f5eee0, the page
+   * shell background) at a slightly deeper tier of the same Figma yellow
+   * scale; kept as its own token rather than reusing background-gradient-from
+   * since the two serve different purposes (page background vs. chart fill)
+   * even though they're visually close. */
+  --chart-participation-fill: oklch(0.919 0.047 82.028); /* utility-yellow-100, #f4e2c2 */
+
   --sidebar: oklch(0.985 0 0);
   --sidebar-foreground: oklch(0.145 0 0);
   --sidebar-primary: oklch(0.205 0 0);
@@ -236,6 +270,18 @@
   --color-chart-3: var(--chart-3);
   --color-chart-4: var(--chart-4);
   --color-chart-5: var(--chart-5);
+  --color-chart-pie-purple-700: var(--chart-pie-purple-700);
+  --color-chart-pie-purple-500: var(--chart-pie-purple-500);
+  --color-chart-pie-purple-300: var(--chart-pie-purple-300);
+  --color-chart-pie-purple-100: var(--chart-pie-purple-100);
+  --color-chart-pie-green-400: var(--chart-pie-green-400);
+  --color-chart-pie-green-300: var(--chart-pie-green-300);
+  --color-chart-pie-green-100: var(--chart-pie-green-100);
+  --color-chart-scale-blue-400: var(--chart-scale-blue-400);
+  --color-chart-scale-blue-100: var(--chart-scale-blue-100);
+  --color-chart-scale-blue-50: var(--chart-scale-blue-50);
+  --color-chart-scale-blue-25: var(--chart-scale-blue-25);
+  --color-chart-participation-fill: var(--chart-participation-fill);
   --color-sidebar: var(--sidebar);
   --color-sidebar-foreground: var(--sidebar-foreground);
   --color-sidebar-primary: var(--sidebar-primary);
