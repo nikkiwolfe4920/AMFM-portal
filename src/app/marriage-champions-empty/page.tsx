@@ -1,4 +1,4 @@
-import { Award } from "lucide-react";
+import { FileBadge } from "lucide-react";
 
 import { BlurOverlay } from "@/components/blur-overlay";
 import { ElevatedCard } from "@/components/elevated-card";
@@ -78,7 +78,7 @@ export default function MarriageChampionsEmptyPage() {
             </div>
 
             <Button size="sm">
-              <Award aria-hidden="true" />
+              <FileBadge aria-hidden="true" />
               Invite Marriage Champions
             </Button>
           </div>
