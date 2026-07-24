@@ -24,7 +24,7 @@ export function SignupCardContent() {
         <p className="text-xs">Powered by AMFM.org</p>
       </div>
 
-      <Button variant="outline" className="text-text-secondary w-full gap-3">
+      <Button variant="outline" className="w-full gap-3">
         <GoogleIcon className="size-6" />
         Sign up with Google
       </Button>

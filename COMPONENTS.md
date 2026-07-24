@@ -14,9 +14,9 @@ Every component below is rendered live at **`/design-system`** (`src/app/design-
 
 ## Button
 
-**Status**: Production Ready
+**Status**: Branch Audit (existing primitive was production-ready before this branch; branch Button-token/size changes are under active visual audit)
 **Source**: `src/components/ui/button.tsx`
-**Figma**: AMFM Portal file, node `3273:19658` ("Primary" button set) and siblings; `default` variant also confirmed on the sign-up screen's primary CTA (`Onboarding/sign up`, node `1909:25231`), on the "Start using HeartChart" CTA on `Onboarding/Create Profile` (node `1909:25769`), and on the "Get Started" CTA on `Onboarding/First run church admin` (node `1894:16263`, within `1909:25772`) — the latter confirms the `default` variant's exact border/shadow-inset spec (`border-white/12`, `shadow-button-inset`) also holds unmodified on a dark, photo-background surface, not only the light auth-card surface previously verified, and confirms the icon-leading composition (`arrow-right` + label) already covered by this component's anatomy; further confirmed on `3724:23184` ("Invite Marriage Champions" CTA, within "Our Marriage Champions / Empty", node `3724:23167`) — the Figma reference's icon fill resolves to the button's own `text-white`/`text-primary-foreground` value, not an independent icon color, matching this component's existing `currentColor` inheritance (see Implementation rules) — see `figma/figma-links.md`
+**Figma**: AMFM Portal file, node `3273:19658` ("Primary" button set) and siblings; primary/default-variant styling also confirmed on the sign-up screen's primary CTA (`Onboarding/sign up`, node `1909:25231`), on the "Start using HeartChart" CTA on `Onboarding/Create Profile` (node `1909:25769`), and on the "Get Started" CTA on `Onboarding/First run church admin` (node `1894:16263`, within `1909:25772`) — the latter confirms the `default` variant's exact border/shadow-inset spec (`border-white/12`, `shadow-button-inset`) also holds unmodified on a dark, photo-background surface, not only the light auth-card surface previously verified. Neutral `outline` styling is checked against the Google social auth button (`Onboarding/login`, node `1909:25767`) and HeartChart/CourseCard neutral button instances (`1903:19737`, `2316:26815`): Figma exports the HeartChart standalone Download QR control with `shadow-xs-skeuomorphic`, while the current branch maps neutral outline buttons to semantic neutral outline tokens plus `shadow-xs` because the existing `shadow-button-inset` token is calibrated for saturated primary buttons and overdraws the neutral edge in-browser. This is a branch audit calibration pending visual acceptance, not a claim that the Figma node lacks inner effects. Size references are split by Figma dimensions: `compact` 38px (`1903:19737` Add a campus; `1670:36217` HeartChartSummary actions; `2320:27278` CourseCard video CTA; `3727:29364` dashboard empty-state share CTA), `sm` 42px (`3724:23184` Invite Marriage Champions; `1909:25789` Footer CTA), `default` 46px (`3273:19658`), and `lg` 50px (`1894:16263`). Icon-leading primary CTAs (`1894:16263`, `3724:23184`, and `1903:19737`) resolve the icon fill to Figma's `button-primary-icon` (`#d89f88`) while the label remains `text-white`, so the primary icon color is a shared `default`-variant rule, not a per-modal override — see `figma/figma-links.md`
 
 ### Purpose
 
@@ -33,24 +33,37 @@ Reusable interactive action element for triggering a command (form submit, navig
 | Variant | Use for |
 |---|---|
 | `default` | Primary/brand action — one per view in most cases |
-| `outline` | Secondary action alongside a `default` button |
+| `outline` | Neutral/secondary Figma button rendered through semantic neutral outline tokens plus `shadow-xs`, e.g. Google social auth, HeartChart Download QR, CourseCard video CTAs, and ResourceListItem's 48px download action |
+| `outlineReversed` | Reversed outline action for dark photo surfaces or brand-filled bands, e.g. `/`'s hero links and `FooterCta`'s upgrade CTA |
+| `utilitySegment` | Input-embedded trailing utility segment, e.g. the Copy action attached to a labelled URL field |
 | `secondary` | Lower-emphasis action, neutral fill |
 | `destructive` | Irreversible/destructive action (delete, remove) |
 | `ghost` | Lowest-emphasis inline action, no fill until hover |
-| `link` | Renders as inline text, no button chrome |
+| `link` | Renders as inline text, no button chrome; defaults to `size="inline"` when rendered through `Button` so callers do not patch link geometry locally |
 
 ### Sizes (`size` prop)
 
-`sm`, `default`, `lg`, `icon` (square, for icon-only buttons — always pair with `aria-label`).
+| Size | Use for |
+|---|---|
+| `compact` | 38px compact action buttons (`text-sm`) such as HeartChartSummary actions, CourseCard video CTAs, dashboard empty-state share CTA, and the HeartChart modal footer Add Campus CTA. |
+| `control` | 44px neutral outline controls (`px-3.5 py-2.5 text-sm`) matching the HeartChart URL row's standalone Download QR control (`1903:19737`). |
+| `controlSegment` | Full-height trailing segment for an input group; pair with `variant="utilitySegment"` only. |
+| `inline` | Chrome-free icon/text actions (`px-0 py-0 text-sm gap-1.5`) matching Figma `Buttons/Button` text-button instances such as "Upload your logo in settings" (`1903:19737` / `3724:20579`). This is the implicit size for `variant="link"` unless a caller explicitly passes another size. |
+| `sm` | 42px small CTAs (`text-sm`) such as Invite Marriage Champions and Footer CTA. |
+| `default` | 46px standard form/page action. Maps to the primary button set (`3273:19658`) with `text-base`, `px-4`, and `py-2`. |
+| `lg` | 50px hero or first-run CTAs. Maps to the icon-leading "Get Started" CTA (`1894:16263`). |
+| `icon` | Square icon-only button — always pair with `aria-label`. |
+| `iconLg` | 48px square icon-only action for larger table/card row controls such as `ResourceListItem`'s trailing download action. Always pair with `aria-label`. |
 
 ### States
 
 | State | Behavior |
 |---|---|
 | Default | Base variant styling |
-| Hover | `default`: fills `bg-text-brand` (not `bg-primary/90` — verified against Figma's "Primary Hover", not an opacity of `primary`). Other variants: standard `hover:bg-*` per variant. |
+| Hover | `default`: fills `bg-text-brand` (not `bg-primary/90` — verified against Figma's "Primary Hover", not an opacity of `primary`). `outline`/`utilitySegment`: neutral `hover:bg-accent` while retaining the correct standalone/segmented chrome. `outlineReversed`: `hover:bg-button-outline-reversed-hover-bg` while keeping white text/icon color on fixed dark/brand surfaces. Other variants: standard `hover:bg-*` per variant. |
 | Focus | `default`: keeps the `border-white/12` edge, adds a `border-brand`-colored ring (`focus-visible:ring-border-brand focus-visible:ring-4 focus-visible:ring-offset-2`) reproducing Figma's "Primary Focused" (2px white gap + 4px brand ring). Other variants: generic `focus-visible:ring-ring/50 focus-visible:ring-[3px]`. |
-| Disabled | `default`: flat tokens (`bg-muted`, `border-border-secondary`, `text-fg-disabled`, `shadow-xs`, `disabled:opacity-100` to cancel the base fade). Other variants: generic `disabled:opacity-50`. |
+| Icons | Icon-leading buttons default to 20px child SVGs, matching Figma's common `Buttons/Button` icon slot. `default`: child SVG icons use `text-button-primary-icon` while labels remain `text-primary-foreground`. `outline`/`utilitySegment`: child SVG icons use `text-button-outline-icon` while labels use `text-button-outline-fg`; those semantic tokens map to Figma's neutral light-surface colors in `:root` and to contrast-safe theme values in `.dark` because Figma has no dark neutral-button reference yet. `outlineReversed`: child SVG icons use `text-button-outline-reversed-icon`. Other variants inherit their own text color unless a verified Figma reference justifies an override. |
+| Disabled | `default`, `outline`, and `utilitySegment`: flat tokens (`bg-muted`, `text-fg-disabled`, child SVGs `text-fg-disabled`, `shadow-xs`, `disabled:opacity-100` to cancel the base fade; `default` also switches to `border-border-secondary`). Other variants: generic `disabled:opacity-50`. |
 | Loading | `loading` prop sets native `disabled`, `aria-busy`, `data-loading`, renders a spinning `Loader2Icon` before children. On `default`, forces the same fill as hover (`bg-text-brand`) rather than the disabled flat gray. |
 
 ### Properties / API
@@ -64,7 +77,7 @@ React.ComponentProps<"button"> & VariantProps<typeof buttonVariants> & {
 
 ### Design tokens used
 
-`bg-primary`, `text-primary-foreground`, `bg-text-brand` (hover/loading fill), `border-border-brand` (focus ring), `bg-muted`, `border-border-secondary`, `text-fg-disabled` (disabled), `shadow-button-inset`, `shadow-xs`. See `DESIGN.md` Color tokens / Shadows.
+`bg-primary`, `text-primary-foreground`, `text-button-primary-icon` (default-variant child SVGs), `bg-text-brand` (hover/loading fill), `text-text-brand` (`link`), `border-border-brand` (focus ring), `bg-button-outline-bg`, `border-button-outline-border`, `text-button-outline-fg`, `text-button-outline-icon`, `bg-button-outline-reversed-bg`, `border-button-outline-reversed-border`, `text-button-outline-reversed-fg`, `text-button-outline-reversed-icon`, `hover:bg-button-outline-reversed-hover-bg`, `bg-muted`, `border-border-secondary`, `text-fg-disabled` (disabled), `shadow-button-inset`, `shadow-xs`. See `DESIGN.md` Color tokens / Shadows.
 
 ### Accessibility requirements
 
@@ -83,12 +96,17 @@ No layout behavior of its own — width and stacking are controlled by the calle
 - Always use `cva` variants, never inline ternaries for variant styling.
 - Must support keyboard focus (native `<button>` gives this for free; don't override `tabIndex`).
 - `loading` and `asChild` are mutually exclusive — don't pass both.
-- **Leading/trailing icons inherit their color from the button's own text color — never give an icon its own `text-*` class.** `lucide-react` icons render with `stroke="currentColor"`, and every variant already sets a text color for its label (`text-primary-foreground` on `default`, etc.); as long as the icon is a plain child with no independent color class, it resolves to the same color as the label for free (confirmed white on `default`, matching Figma node `3724:23184`'s "Invite Marriage Champions" icon). This is also why `size="icon"`'s bare glyph and every icon-leading composition elsewhere (`ArrowRight` on `/welcome`, `Award` on `/marriage-champions-empty`) never hardcode a color.
-- **`outline` uses `shadow-xs`, not `shadow-button-inset`.** `shadow-button-inset`'s inset 18%-opacity ring is designed to read as a bevel highlight sitting *inside* a saturated brand fill (the `default` variant) — stacked on top of `outline`'s own real 1px `border` on a plain white background, the two edges compound into a doubled, noticeably heavier-looking border/shadow than Figma's reference. `shadow-xs` (Tailwind's built-in `0 1px 2px black/5%`, the same token `Input`/`InputGroup`/`Select` already use) keeps the single real border as the only visible edge, matching the Figma outline button 1:1.
+- **Button owns the common direct icon slot geometry.** Do not add local `gap-*` or `size-5` classes just to make ordinary icon-leading buttons match Figma. The primitive's direct child SVG slot is 20px (`[&>svg:not([class*='size-'])]:size-5`), and its effective icon/text spacing is 6px (`gap-1.5`) because Figma's button instances use a 4px icon/text gap plus a 2px text-padding wrapper around the label. Add a local icon size or gap only when a verified Figma node shows a different anatomy for that specific control.
+- **Primary/default icons use the shared `button-primary-icon` token.** Do not fix icon-leading primary CTAs with local classes: the `Button` `default` variant applies `text-button-primary-icon` to direct child SVG icons because Figma resolves icon-leading primary buttons (`1894:16263`, `3724:23184`, and `1903:19737`) to `#d89f88` while labels remain white. Disabled default buttons override direct child SVG icons back to `text-fg-disabled`. `outline`/`utilitySegment` apply `text-button-outline-icon`; other non-default variants continue to rely on `currentColor` from their own text color unless a verified Figma reference introduces a specific icon token for that variant. Nested SVG assets inside non-icon children are not part of this slot and should keep their own asset colors.
+- **Use the shared size variants before local padding overrides.** `compact` is the fixed 38px action (`text-sm px-3 py-1.5`), `control` is the fixed 44px neutral outline control (`text-sm px-3.5 py-2.5`), `controlSegment` is the full-height input-embedded utility segment, `inline` is the chrome-free text-button/link action (`text-sm gap-1.5 px-0 py-0`), `sm` is the fixed 42px CTA (`text-sm px-3 py-2`), `default` is the fixed 46px form/page action (`text-base px-4 py-2`), `lg` is the fixed 50px hero/first-run CTA (`text-base px-6 py-2.5`), `icon` is the 36px square icon action, and `iconLg` is the 48px square row/card icon action. If a future Figma button lands between these sizes, add a named size variant with tests rather than one-off height/padding on a caller.
+- **`outline` is the shared neutral Figma button.** Do not add a second standalone neutral CTA variant for HeartChart, CourseCard, social-auth buttons, or resource-row icon buttons: the verified neutral references all use the same neutral fill, border, text color, active low-emphasis icon color, and 1px border/drop-shadow behavior. The HeartChart Figma export names the standalone Download QR effect `shadow-xs-skeuomorphic`; do not reuse the primary `shadow-button-inset` token for that neutral button because it creates the doubled/heavy ring visible in browser review. Keep the calibrated implementation on `shadow-xs` until a separate neutral-specific inset token is deliberately introduced and validated across every neutral call site.
+- **`outlineReversed` is the shared reversed outline button.** Use it when a button sits on a fixed dark photo surface or brand-filled band and needs transparent fill, white label/icon, white translucent border, and no neutral drop shadow. Do not repeat `border-white/* bg-transparent text-white shadow-none hover:bg-white/*` bundles at call sites; add or adjust reversed-outline tokens in `src/tokens/colors.css` if this surface treatment changes.
+- **Use `utilitySegment` for input-attached trailing actions.** The HeartChart URL Copy action is not a standalone outline button: the input group owns the outer border/shadow while Copy owns the trailing segment's left divider. Use `variant="utilitySegment" size="controlSegment"` for that shape instead of passing local `rounded-l-none border-y-0 border-r-0 shadow-none` overrides to a standalone `outline` button.
+- **Figma text-button links still compose `Button`.** Use `Button asChild variant="link"` for navigation CTAs such as "Forgot password"; add `size="inline"` explicitly when documenting an icon-leading Figma text-button instance such as "Upload your logo in settings". Do not hand-style a raw anchor or add local `h-auto p-0 text-sm` patches just because the Figma instance has no visible button chrome.
 
 ### Visual examples
 
-All variants, sizes, and the disabled/loading states render at `/design-system/components#button`, including an icon-leading `default` example ("Invite Marriage Champions") confirming white icon inheritance. `default`/`outline` also render live on `/signup` (primary CTA, Google button), `/create-profile` (primary CTA), `/welcome` (icon-leading "Get Started"), `/marriage-champions-empty` (icon-leading "Invite Marriage Champions"), and at `/design-system/patterns#auth-card-signup` / `#create-profile-card`.
+Base variants, standard sizes, and disabled/loading states render at `/design-system/components#button`, including an icon-leading `sm` example ("Invite Marriage Champions") confirming shared primary icon coloring and an `inline link` example matching the upload-logo CTA. HeartChart's `control`-sized `outline` button is intentionally demonstrated in the `HeartChartLinkCard` and `HeartChartLinkModal` examples rather than as a standalone generic control sample, so the Button showcase does not imply a separate product action. `iconLg` `outline` renders through `ResourceListItem`. `default`/`outline` also render live on `/signup` (primary CTA, Google button), `/create-profile` (primary CTA), `/welcome` (`lg` icon-leading "Get Started"), `/marriage-champions-empty` (`sm` icon-leading "Invite Marriage Champions"), and at `/design-system/patterns#auth-card-signup` / `#create-profile-card`. `outlineReversed` is documented here but intentionally demonstrated only in real dark/brand-surface contexts: `/`'s dark hero links and `FooterCta`.
 
 ---
 
@@ -631,9 +649,9 @@ interface ResourceListItemProps {
 
 ### Design tokens used
 
-`text-muted-foreground` (leading icon, description, and trailing button icon), `text-foreground` (title) — all existing, theme-aware tokens; `Button`'s `outline` variant tokens for the trailing action. No new tokens required.
+`text-fg-quaternary` (leading icon), `text-button-outline-icon` (trailing download icon through `Button variant="outline"`), `text-muted-foreground` (description), `text-foreground` (title); `Button`'s `outline` variant tokens for the trailing action.
 
-**Icon color is `text-muted-foreground`, not a pixel-exact new token**: the Figma MCP's variable inspection resolved both the leading icon and the download button's icon to `#a4a7ae` (Figma's "Utility/Gray/utility-gray-400" and "Foreground/fg-quaternary (400)" — two different Figma variable names, same hex). Neither matches an existing token exactly, and no `.dark` reference exists for it. Rather than add a third root-only gray (on top of `fg-disabled`, which happens to share this exact hex but carries disabled-state *semantics* that don't apply here), this reuses the existing theme-aware `muted-foreground` token — the same trade-off `HeartChartSummary` and this component's own title color already made elsewhere in this file, prioritizing verified dark-mode behavior over a few-percent-lightness pixel match.
+**Icon color is the active utility-icon token, not the disabled token**: the Figma MCP's variable inspection resolved both the leading icon and the download button's icon to `#a4a7ae` (Figma's "Utility/Gray/utility-gray-400" and "Foreground/fg-quaternary (400)" — two different Figma variable names, same hex). The standalone leading icon uses `text-fg-quaternary`; the trailing action receives the same light-surface value through `text-button-outline-icon`, separate from `text-fg-disabled` even though the current hex is the same, because active icons and disabled labels have different semantics.
 
 ### Accessibility requirements
 
@@ -648,7 +666,7 @@ The component itself doesn't reflow internally at any width (icon/title/descript
 ### Implementation rules
 
 - Icon set confirmed on the reference frame: `share-07`, `message-text-square-01`, `clipboard-check`, `book-open-01`, `heart`, `intersect-three`. The first five map to `lucide-react`'s `Share2`, `MessageSquareText`, `ClipboardCheck`, `BookOpen`, `Heart` respectively (closest stable equivalents, matching the project's established substitute precedent — see `GlobalNav`/`VideoPlayer`). **`intersect-three` has no clear `lucide-react` equivalent** — `Blend` (already used elsewhere in `GlobalNav` for an unrelated item) is used as the closest available overlapping-shapes glyph; this remains an unconfirmed substitution, not a verified match — flag for design/eng alignment.
-- **The trailing action is a download button, not a navigation chevron** — confirmed by the Figma node's own interaction annotation ("download buttons download resource" / "downloads the resource"). Uses `lucide-react`'s `Download` icon, `Button` `variant="outline"` (bordered, white fill — matches Figma's `border-primary`/`shadow-xs` bordered square exactly) at a local `size-12` (48px) override — larger than `Button`'s existing `icon` size (`size-9`/36px) — with a `[&_svg]:size-5` override for the 20px glyph, the same override technique `HeartChartSummary` established for its own action buttons.
+- **The trailing action is a download button, not a navigation chevron** — confirmed by the Figma node's own interaction annotation ("download buttons download resource" / "downloads the resource"). Uses `lucide-react`'s `Download` icon and `Button variant="outline" size="iconLg"` so it shares the neutral bordered button treatment while using the 48px square row/card size. The 20px glyph size comes from `Button`'s shared direct icon slot, not a local `[&>svg]` override.
 - A hidden "Table cell lead action" sub-layer (20px) exists in the underlying Figma library component but is unused on every instance — an artifact of the shared kit, not part of this component's real contract; not implemented.
 - `href` always renders via `next/link`'s `Link`, per `CLAUDE.md`'s "use Link for navigation" rule. Its call site (`/heartchart-resources`) has no real destination/file routes yet, so every instance points at `"#"` — the same "placeholder path pending real routes" situation already documented for `GlobalNav`.
 
@@ -749,7 +767,7 @@ interface TopHeroProps {
 
 ### Design tokens used
 
-`text-nav-foreground` (first heading line — Figma's `text-primary-(900)` variable resolves to `#f7f7f7` on this fixed-dark surface, an exact match), `text-highlight-gold` (second heading line, `#e9c481` exact match), `text-nav-foreground-muted` (description, `#cecfd2` exact match), `text-display-lg`/`text-display-2xl` + `font-display`, `nav-surface-from`/`nav-surface-to` (placeholder background gradient — see Implementation rules). `Button`'s `outline` variant for the CTA — no new button styling.
+`text-nav-foreground` (first heading line — Figma's `text-primary-(900)` variable resolves to `#f7f7f7` on this fixed-dark surface, an exact match), `text-highlight-gold` (second heading line, `#e9c481` exact match), `text-nav-foreground-muted` (description, `#cecfd2` exact match), `text-display-lg`/`text-display-2xl` + `font-display`, `nav-surface-from`/`nav-surface-to` (placeholder background gradient — see Implementation rules). `Button variant="outline" size="default"` for the CTA — no new button styling, and the size is pinned so it does not drift if `Button`'s default changes later.
 
 ### Accessibility requirements
 
@@ -764,6 +782,7 @@ Not yet evidenced against a Figma mobile/tablet frame (the reference is a fixed 
 
 - **Background photo unavailable in this environment** — Figma's export/raw-image URLs all resolve to `www.figma.com`, blocked by this environment's egress policy (confirmed via the agent proxy status endpoint), the same class of gap as `AmfmLogo`'s blocked asset. Renders a `nav-surface-from`→`nav-surface-to` dark gradient in place of the real congregation-stage photo. Status stays **Draft** for this reason — replace with the real photo (via `next/image`, matching `HeartChartLogo`'s pattern) the moment it's supplied and committed to `public/`, and drop the gradient placeholder in the same change.
 - Composed on `ElevatedCard` rather than a local nested-shell implementation — see that component's Implementation rules for why `AuthCard`/`HeartChartSummary` weren't also migrated onto it.
+- The CTA is explicitly `Button variant="outline" size="default"`: Figma's node `2318:26997` exports the nested button with `Text md/Semibold` plus `spacing-sm`/`spacing-xl` button spacing, matching the standard text-md outline CTA rather than the 14px compact course-card action.
 - `eyebrowHeading`/`highlightHeading` are two separate props (not one heading string) because they carry different colors/sizes per Figma (`text-display-lg` neutral vs. `text-display-2xl` `highlight-gold`) — don't collapse them into a single templated string.
 
 ### Visual examples
@@ -784,15 +803,15 @@ One step in a fixed 3-step "get ready" course pattern — a colored numbered hea
 
 ### Anatomy
 
-Numbered header (`STEP {n}`, white text, trailing `ArrowRight`, colored background) → video-cover section (photo backdrop in Figma; see Implementation rules — uppercase eyebrow, `font-display` heading, outline `Button` with `PlayCircle`) → checklist (`Check`-in-circle icon + text row, repeated per item).
+Numbered header (`STEP {n}`, trailing `ArrowRight`, colored background, contrast-safe text color) → video-cover section (photo backdrop in Figma; see Implementation rules — uppercase eyebrow, `font-display` heading, outline `Button` with `PlayCircle`) → checklist (`Check`-in-circle icon + text row, repeated per item).
 
 ### Variants (`step` prop)
 
-| `step` | Header color | Figma token |
-|---|---|---|
-| `1` | `bg-border-brand` | `#c07858`, exact match to the existing `border-brand` token |
-| `2` | `bg-text-brand` | `#894e34`, exact match to the existing `text-brand` token |
-| `3` | `bg-brand-900` | `#47261a`, the one genuinely new token this pattern needed — see `DESIGN.md` Color tokens |
+| `step` | Header color | Header text/icon color | Figma token |
+|---|---|---|---|
+| `1` | `bg-border-brand` | `text-foreground` | `#c07858`, exact match to the existing `border-brand` token |
+| `2` | `bg-text-brand` | `text-white` | `#894e34`, exact match to the existing `text-brand` token |
+| `3` | `bg-brand-900` | `text-white` | `#47261a`, the one genuinely new token this pattern needed — see `DESIGN.md` Color tokens |
 
 A closed `1 | 2 | 3` union, not an open `number`, since the pattern is a fixed 3-step course, not an arbitrarily-long list — don't generalize past what's evidenced.
 
@@ -820,7 +839,7 @@ interface CourseCardProps {
 
 ### Design tokens used
 
-`bg-border-brand`/`bg-text-brand`/`bg-brand-900` (step header, see Variants), `bg-muted` (checklist icon circle — Figma's `#f5f5f5` "bg-tertiary" is a near-exact match to the existing `muted` token), `text-muted-foreground` (checklist text + icon), `text-primary` (inline links within checklist text, exact match to Figma's `#aa6140`), `font-display`/`text-display-md` with a local `leading-[2.375rem]` override (video-cover heading — see `DESIGN.md`'s note on this one-off 36px/38px pairing), `nav-surface-from`/`nav-surface-to` (placeholder video-cover background — see Implementation rules). `Button`'s `outline` variant for the video CTA.
+`bg-border-brand`/`bg-text-brand`/`bg-brand-900` (step header, see Variants), `text-foreground` (Step 1 header text/icon, because Figma's white-on-`utility-brand-500` pairing failed browser contrast), `text-white` (Step 2/3 header text/icons and video-cover text), `bg-muted` (checklist icon circle — Figma's `#f5f5f5` "bg-tertiary" is a near-exact match to the existing `muted` token), `text-muted-foreground` (checklist text + icon), `text-primary` (inline links within checklist text, exact match to Figma's `#aa6140`), `font-display`/`text-display-md` with a local `leading-[2.375rem]` override (video-cover heading — see `DESIGN.md`'s note on this one-off 36px/38px pairing), `nav-surface-from`/`nav-surface-to` (placeholder video-cover background — see Implementation rules). `Button variant="outline" size="compact"` for the 38px video CTA, matching the neutral bordered Figma button treatment.
 
 ### Accessibility requirements
 
@@ -835,7 +854,8 @@ Not yet evidenced against a Figma mobile/tablet frame (fixed desktop 3-column co
 ### Implementation rules
 
 - **Per-step video thumbnails unavailable in this environment** — same blocked-asset class as `TopHero`'s background photo (`www.figma.com` denied by egress policy). Renders a `nav-surface-from`→`nav-surface-to` dark gradient behind each video-cover section in place of the three distinct reference photos. Status stays **Draft** for this reason — wire to real `imageSrc`/thumbnails once available, matching `VideoPlayer`'s "wire to a real source later" precedent.
-- `step`'s header color is a fixed lookup (`STEP_HEADER_CLASSNAME`), not computed — keeps the 3-tier brand scale's exact Figma-sourced colors as a single source of truth rather than an interpolated gradient function.
+- `step`'s header treatment is a fixed lookup (`STEP_HEADER_CLASSNAME`), not computed — keeps the 3-tier brand scale's exact Figma-sourced colors as a single source of truth rather than an interpolated gradient function. Step 1 deliberately uses `text-foreground` instead of Figma's `text-primary_on-brand`/white because the Figma variable pairing failed Lighthouse contrast on `utility-brand-500`; Steps 2/3 keep white because their darker brand fills clear the same audit.
+- The video-cover CTA composes `Button variant="outline" size="compact"` with only `w-fit` local to the CourseCard layout. The verified nested Video Cover instance (`2320:27278`) maps to a 38px shared neutral outline action: one visible neutral border, `shadow-xs`, 20px icon slot, and the shared icon/text gap.
 - The checklist icon (`Check`, `size-3.5`, inside a `bg-muted rounded-full size-6`) is a static, always-confirmed indicator — same semantic category as `BenefitListItem`, not a derived validation state like `PasswordRequirementItem`; don't reuse either of those components here, this is a third, purpose-built row shape (a numbered course step's action list, not a benefit or a password rule).
 
 ### Visual examples
@@ -856,7 +876,7 @@ Full-bleed banner prompting a free-tier account to upgrade to Premium — a head
 
 ### Anatomy
 
-Full-width `bg-primary` band → centered `font-display text-display-md` heading + outline-style `Button` (`Sparkles` icon) sized to sit legibly on the brand-filled background.
+Full-width `bg-primary` band → centered `font-display text-display-md` heading + `Button variant="outlineReversed" size="sm"` (`Sparkles` icon) sized to the Figma 42px CTA on the brand-filled background.
 
 ### Variants
 
@@ -879,7 +899,7 @@ interface FooterCtaProps {
 
 ### Design tokens used
 
-`bg-primary` (band background — a flat approximation of Figma's gradient/noise texture, see Implementation rules), `font-display`/`text-display-md`, `text-primary-foreground` (heading + CTA text/border, theme-safe white). `Button`'s `outline` variant, locally overridden (`bg-transparent`, `border-primary-foreground/30`, `hover:bg-white/10`) since none of `Button`'s existing variants are calibrated for a brand-filled (rather than neutral) backdrop — the same "local `className` override for a new surface context" technique `HeartChartSummary` already established, not a new shared variant (no second use case yet to justify one).
+`bg-primary` (band background — a flat approximation of Figma's gradient/noise texture, see Implementation rules), `font-display`/`text-display-md`, `text-primary-foreground` (heading), and `Button variant="outlineReversed" size="sm"` tokens (`bg-button-outline-reversed-bg`, `border-button-outline-reversed-border`, `text-button-outline-reversed-fg`, `text-button-outline-reversed-icon`, `hover:bg-button-outline-reversed-hover-bg`) for the 42px CTA.
 
 ### Accessibility requirements
 
@@ -893,7 +913,7 @@ Not yet evidenced against a Figma mobile/tablet frame. Content wraps (`flex-wrap
 ### Implementation rules
 
 - **Background texture unavailable in this environment** — same blocked-asset class as `TopHero`/`CourseCard`. Figma's reference shows a warm gradient/noise-texture image layered under a `mix-blend-luminosity` grain overlay at 5% opacity; renders as a flat `bg-primary` fill instead. Status stays **Draft** for this reason.
-- The CTA button's exact Figma treatment (`bg-primary_alt` `#13161b` fill, `border-white/12`) doesn't translate directly — that combination assumes the button sits on `bg-primary_alt`'s own dark-navy context elsewhere in the design system, not on this component's brand-terracotta background (which would make a same-color fill invisible). Approximated instead as a transparent/bordered treatment that reads correctly against `bg-primary` — revisit if a real dark-surface reference for this exact button ever surfaces.
+- The CTA button's exact Figma treatment (`bg-primary_alt` `#13161b` fill, `border-white/12`) doesn't translate directly — that combination assumes the button sits on `bg-primary_alt`'s own dark-navy context elsewhere in the design system, not on this component's brand-terracotta background (which would make a same-color fill invisible). Approximated instead via `Button variant="outlineReversed" size="sm"` as a transparent/bordered 42px treatment that reads correctly against `bg-primary` and is shared with `/`'s dark hero links; adjust the reversed-outline tokens rather than this call site if the treatment changes.
 
 ### Visual examples
 
@@ -973,7 +993,7 @@ Modal overlay for focused, blocking tasks or supplementary content (e.g. the hom
 
 ### Variants
 
-`DialogContent`'s `showCloseButton` prop (default `true`) — set `false` only when the caller renders its own close affordance.
+`DialogContent`'s `showCloseButton` prop (default `true`) — set `false` only when the caller renders its own close affordance. `DialogContent` also accepts `overlayClassName` for composed modal patterns that need a stronger scrim while preserving the same Radix overlay primitive.
 
 ### States
 
@@ -981,7 +1001,7 @@ Open / closed, animated via `tw-animate-css` (`animate-in`/`animate-out`, `fade-
 
 ### Properties / API
 
-`Dialog`/`DialogTrigger`/`DialogClose` forward Radix's root props (`open`, `onOpenChange`, etc.). `DialogContent` adds `showCloseButton?: boolean` on top of Radix `Content` props.
+`Dialog`/`DialogTrigger`/`DialogClose` forward Radix's root props (`open`, `onOpenChange`, etc.). `DialogContent` adds `showCloseButton?: boolean` and `overlayClassName?: string` on top of Radix `Content` props.
 
 ### Design tokens used
 
@@ -1000,11 +1020,232 @@ Open / closed, animated via `tw-animate-css` (`animate-in`/`animate-out`, `fade-
 ### Implementation rules
 
 - No default padding on `DialogContent` so full-bleed content (e.g. a carousel) can control its own layout — use `DialogHeader`/`DialogFooter` for the padded, upstream-shadcn-shaped case.
+- Use `overlayClassName` when a composed modal pattern needs a stronger or blurred scrim; do not render a second overlay beside `DialogOverlay`.
 - Don't fight Radix's animation/focus-management primitives with custom JS — compose on top of `data-state`/`data-slot` instead.
 
 ### Visual examples
 
 Rendered at `/design-system/components#dialog` and via the homepage "Learn More" trigger.
+
+---
+
+## HeartChartModalShell
+
+**Status**: Draft (shared modal foundation verified against the four HeartChart modal frames; URL content is implemented via `HeartChartLinkCard`/`HeartChartLinkModal`; video/chart/tip modal content remains future work)
+**Source**: `src/components/heartchart-modal-shell.tsx`
+**Figma**: AMFM Portal file — HeartChart link Modal (current verified node `1903:19737`; earlier component reference `3724:20579`), Modal / quick tip (`3727:32459`), Modal / last 4 weeks (`3727:32514`), HeartChart Resources / Quick Start (`3727:32687`)
+
+### Purpose
+
+Reusable shell for the HeartChart modal family: shared overlay, centered rounded surface, title/close header, optional divider, body slot, optional footer/action area, and Figma-sized width variants. Content atoms such as the HeartChart URL row, video player, chart, and tips carousel compose inside this shell rather than each modal re-declaring its own chrome.
+
+### Anatomy
+
+`Dialog` root → `DialogTrigger asChild` → `DialogContent` with `bg-overlay/85 backdrop-blur-[8px]` overlay override and capped-height grid rows → optional inner framed panel (`data-slot="heartchart-modal-frame"`) → padded `DialogHeader` (`DialogTitle` + `sr-only` `DialogDescription` + optional `headerContent`) → optional divider (`data-slot="heartchart-modal-divider"`) → scrollable body slot (`data-slot="heartchart-modal-body"`) → optional shell footer wrapper (`data-slot="heartchart-modal-footer"`) containing the primitive `DialogFooter` (`data-slot="dialog-footer"`).
+
+### Variants
+
+| Prop | Values | Use for |
+|---|---|---|
+| `size` | `"sm"` / `"md"` / `"lg"` / `"xl"` | Maps the four Figma modal widths: 544px, 640px, 768px, 800px. |
+| `framed` | `true` / `false` | `true` renders the inner bordered panel used by the HeartChart link, quick tip, and last-four-weeks modals; `false` supports the plainer Quick Start video modal. |
+| `showDivider` | `true` / `false` | `true` renders the title/body separator and uses a four-row shell grid; `false` removes the separator and switches to a three-row shell grid so the body remains the scroll row. |
+
+### States
+
+Closed / open, inherited from `Dialog`. Close button hover/focus behavior is inherited from `DialogContent`'s built-in close affordance.
+
+### Properties / API
+
+```ts
+type HeartChartModalShellSize = "sm" | "md" | "lg" | "xl";
+
+type HeartChartModalShellProps = Omit<ComponentProps<typeof Dialog>, "children"> & {
+  title: string;
+  trigger: ReactElement;
+  children: ReactNode;
+  description?: string;
+  headerContent?: ReactNode;
+  footer?: ReactNode;
+  size?: HeartChartModalShellSize;
+  framed?: boolean;
+  showDivider?: boolean;
+  className?: string;
+  bodyClassName?: string;
+  footerClassName?: string;
+  headerClassName?: string;
+};
+```
+
+### Design tokens used
+
+`bg-background`, `bg-overlay/85`, `backdrop-blur-[8px]`, `border-border-secondary`, `bg-secondary`, `text-foreground`, `rounded-2xl`, `rounded-md`, `shadow-2xl` — all existing tokens/utilities. No new design token was introduced for the modal shell.
+
+### Accessibility requirements
+
+- Built on the existing Radix-backed `Dialog`, preserving focus trap, `Escape` close, return-focus-to-trigger, and `data-slot` metadata.
+- `DialogTitle` is always rendered from the required `title` prop and receives initial programmatic focus on open so content-heavy modals do not auto-focus/select the first body control.
+- `DialogDescription` is always rendered as `sr-only`; callers can provide specific assistive copy via `description`, otherwise the shell falls back to "{title} modal."
+- `headerContent`, when provided, renders inside `DialogHeader` after the hidden description and before the divider. Use it for modal-specific intro copy/previews; do not put body rows or footer actions there.
+- The close control remains the `DialogContent` built-in `size-11` button with visible focus treatment.
+- `footer` content must use real buttons/links and supply accessible labels for icon-only actions.
+
+### Responsive behavior
+
+Mobile remains `w-full max-w-[calc(100%-2rem)]` via `DialogContent`; from `sm` up, `size` maps to the Figma desktop widths (`sm:max-w-[544px]`, `sm:max-w-[640px]`, `sm:max-w-[768px]`, `sm:max-w-[800px]`). Content inside the body slot owns its own responsive behavior.
+
+The shell caps the dialog at `max-h-[calc(100vh-2rem)]`; framed shells cap the inner panel at `max-h-[calc(100vh-3rem)]`, and the body slot carries `min-h-0 overflow-y-auto` so tall chart/resource/video content scrolls inside the modal without clipping the header or footer. Divider-present shells use `grid-rows-[auto_auto_minmax(0,1fr)_auto]`; divider-free shells use `grid-rows-[auto_minmax(0,1fr)_auto]` so the body row remains the constrained scroll region.
+
+### Implementation rules
+
+- Compose this shell for HeartChart modal-family screens before adding modal-specific content; do not copy modal header/body/footer chrome per modal.
+- Keep content-specific logic out of the shell. QR/link copying, video controls, charts, and carousel behavior belong in dedicated child components with their own tests.
+- Preserve primitive metadata inside composed shell slots: the shell footer wrapper uses `data-slot="heartchart-modal-footer"`, while the nested `DialogFooter` keeps `data-slot="dialog-footer"`.
+- Use existing tokens and `DialogContent.overlayClassName`; do not introduce a parallel overlay, dialog primitive, or raw-color modal style.
+- The shell is a foundation component, not a complete page pattern. It becomes production-ready only after at least one full HeartChart modal pattern is implemented and browser-validated through `/design-system`.
+
+### Visual examples
+
+Rendered at `/design-system/components#heartchartmodalshell`.
+
+---
+
+## HeartChartLinkCard
+
+**Status**: Draft (validated as a reusable content atom for Modal / HeartChart link; real QR generation/download side effects are caller-owned)
+**Source**: `src/components/heartchart-link-card.tsx`
+**Figma**: AMFM Portal file — HeartChart link Modal (current verified node `1903:19737`; earlier component reference `3724:20579`), nested `_HeartChart - Church - URL` row
+
+### Purpose
+
+Reusable card for sharing a campus-specific HeartChart assessment URL: QR preview, labelled read-only URL field, copy button, share icon action, and download-QR action. This is the reusable URL row the full HeartChart link modal composes, and it should be reused by any future info box or resource panel that exposes the same QR/link actions.
+
+### Anatomy
+
+Outer card (`data-slot="heartchart-link-card"`) → QR preview (`data-slot="heartchart-link-qr"`) → label + read-only URL control (`data-slot="heartchart-link-url-control"` / `heartchart-link-url-input`) → copy button (`heartchart-link-copy-button`) → actions group (`heartchart-link-actions`) with icon-only share button and labelled download-QR button. On desktop the share affordance is positioned at the URL card's top-right edge, matching Figma; on compact layouts it returns to the action row to sit left of the centered download button.
+
+### Variants
+
+| Prop | Values | Use for |
+|---|---|---|
+| `qrImageSrc` | `string` / omitted | When present, render the real QR image; when omitted, render a tokenized QR placeholder icon so the card never displays a stale demo QR for an arbitrary URL. Design-system demos pass the Figma-derived QR asset explicitly. |
+| `label` | `string` | Defaults to "Your unique HeartChart URL"; override only when the product label changes. |
+
+### States
+
+Default, hover/focus on all actions, with QR image, without QR image. Copy/share/download buttons render disabled when their matching callback is omitted so design-system or incomplete consumers do not expose dead enabled controls. Loading states are not owned by this card yet because the real async copy/share/download flows are not implemented in this slice.
+
+### Properties / API
+
+```ts
+interface HeartChartLinkCardProps {
+  url: string;
+  label?: string;
+  qrImageSrc?: string;
+  qrImageAlt?: string;
+  onCopy?: () => void;
+  onShare?: () => void;
+  onDownloadQr?: () => void;
+  className?: string;
+}
+```
+
+### Design tokens used
+
+`bg-secondary`, `bg-background`, `border-border-secondary`, `border-input`, `text-text-secondary`, `text-muted-foreground`, `text-fg-quaternary`, `bg-button-outline-bg`, `border-button-outline-border`, `text-button-outline-fg`, `text-button-outline-icon`, `shadow-xs`, `shadow-sm`, `rounded-md`, `rounded-sm`.
+
+### Accessibility requirements
+
+- URL is rendered in a real read-only text input with a visible `<label>`; it truncates visually in constrained widths while retaining the full value in the native textbox and `title` attribute so users can select/copy the URL without relying on the QR image.
+- Copy button uses visible text plus `aria-label="Copy HeartChart URL"`.
+- Share is icon-only and must keep `aria-label="Share HeartChart URL"`.
+- Download action uses visible text plus `aria-label="Download QR code"`.
+- QR image defaults to `alt="QR code for HeartChart URL"`; if the real QR becomes decorative because the URL is already exposed nearby, revisit this with product/design rather than silently removing the accessible name.
+- Side effects stay outside the component. Callers pass `onCopy`, `onShare`, and `onDownloadQr`; this component does not introduce a clipboard/share/download primitive. If a callback is omitted, the matching button is disabled.
+
+### Responsive behavior
+
+Stacks vertically on narrow screens so the URL input and actions do not overflow; the QR preview is centered, the labelled URL control stays full-width and truncates inside the native input, and the compact actions center as a share/download group below `360px` because the full spacer grid is wider than the available content. From `360px` up, the action grid centers the "Download QR" button with the share icon positioned to its left. From `sm` up, QR, field, and download action sit in a single row while the share affordance is absolutely positioned at the card's top-right edge, matching the Figma modal card.
+
+### Implementation rules
+
+- Reuse this card anywhere the HeartChart QR/link row appears. Do not duplicate the copy/share/download markup inside individual modals.
+- Download QR composes `Button variant="outline" size="control"` so it keeps the shared 44px neutral bordered button chrome without local padding, icon, color, or shadow overrides. Copy composes `Button variant="utilitySegment" size="controlSegment"` because it is embedded as the right segment of the URL input group: the group owns the outer border/shadow while the segment owns the left divider and trailing rounded corners.
+- Share composes `Button variant="ghost" size="icon"` with `text-fg-quaternary`, matching Figma's icon-only share affordance rather than inventing a second raw icon button.
+- Use lucide `Copy`, `ExternalLink`, and `QrCode` as the project-approved icon equivalents for Figma `copy-01`, `share-04`, and `qr-code-01`; `share-04` is documented in Figma as share/export/open/link/external/hyperlink/website, and the rendered glyph is the external-link square-arrow form, not lucide's node-style `Share2`. Active utility icons use `text-fg-quaternary`, not the disabled-state token.
+- Real QR generation, clipboard feedback, native share fallbacks, and file download behavior belong in a future side-effect wrapper or caller, not in this presentational atom.
+
+### Visual examples
+
+Rendered at `/design-system/components#heartchartlinkcard`.
+
+---
+
+## HeartChartLinkModal
+
+**Status**: Draft (first full HeartChart modal pattern; decorative phone preview is a local Figma-derived asset; design-system demos pass the demo QR asset explicitly; real QR/download side effects remain caller-owned)
+**Source**: `src/components/heartchart-link-modal.tsx`
+**Figma**: AMFM Portal file — HeartChart link Modal (current verified node `1903:19737`; earlier component reference `3724:20579`)
+
+### Purpose
+
+Full "Share your HeartChart link" modal pattern composed from `HeartChartModalShell` and `HeartChartLinkCard`. It owns the modal-specific intro copy, quick tip, optional settings link, brand preview area, URL/QR card, and "Add a campus" footer action while leaving dialog chrome to the shared shell.
+
+### Anatomy
+
+`HeartChartModalShell size="xl"` → `headerContent` grid with intro copy / quick tip / optional settings CTA (`Button asChild variant="link" size="inline"` with leading upload icon, explicit here to document the Figma text-button instance) / preview → body containing `HeartChartLinkCard` → footer `Button` with leading plus icon.
+
+### Variants
+
+No formal variant prop yet. The component accepts `preview` to replace the default decorative phone-preview asset with a real app preview or richer composition once dynamic church/logo rendering exists. `qrImageSrc` is caller-supplied; when omitted, the card renders its generic QR placeholder rather than a demo QR that could mismatch a real URL.
+
+### States
+
+Closed/open via `HeartChartModalShell`; footer action; copy/share/download QR callbacks delegated to `HeartChartLinkCard`. Callback-owned controls disable themselves when their callback is omitted.
+
+### Properties / API
+
+```ts
+interface HeartChartLinkModalProps {
+  trigger: ReactElement;
+  url: string;
+  settingsHref?: string;
+  qrImageSrc?: string;
+  preview?: ReactNode;
+  onCopyUrl?: () => void;
+  onShareUrl?: () => void;
+  onDownloadQr?: () => void;
+  onAddCampus?: () => void;
+}
+```
+
+### Design tokens used
+
+Shell tokens from `HeartChartModalShell`, plus `text-text-tertiary`, `text-text-brand`, `bg-secondary`, `bg-background`, `border-input`, `text-fg-quaternary`, `shadow-button-inset`, `Button variant="link" size="inline"` for the upload settings CTA, and existing `Button` default-variant styling with `size="compact"` for "Add a campus" (`text-button-primary-icon` on its leading icon).
+
+### Accessibility requirements
+
+- Modal title is the visible `DialogTitle`: "Share your HeartChart link", and receives initial focus through `HeartChartModalShell` when the dialog opens.
+- Hidden modal description summarizes the share/QR purpose.
+- Settings CTA renders only when `settingsHref` is supplied, and then it composes `Button asChild variant="link" size="inline"` around a real `<a>` with visible text and a leading decorative `Upload` icon. Do not default this to a placeholder route.
+- Footer CTA is a real `Button` with a decorative leading `Plus` icon. It is disabled when `onAddCampus` is omitted so the modal never exposes a dead enabled action.
+- The header phone preview is `aria-hidden` because it is decorative visual context. Do not expose it as content until it carries meaningful dynamic product information.
+
+### Responsive behavior
+
+Uses the 800px shell width on desktop. Header content collapses to one column on narrow screens and hides the decorative preview so text and URL controls remain usable. The composed `HeartChartLinkCard` stacks in compressed layouts, centering the QR preview and share/download actions while keeping the URL control full-width.
+
+### Implementation rules
+
+- Do not inline modal chrome here. Changes to overlay, close button, shell dimensions, header/body/footer slots, or scroll behavior belong in `HeartChartModalShell`.
+- Keep `HeartChartLinkCard` reusable and side-effect-free. If copy/share/download behavior is implemented later, add a caller-level behavior wrapper and tests rather than wiring browser APIs directly into the presentational card.
+- `settingsHref` has no default because no real settings route exists in the app yet. Supply it only after a verified destination exists; do not use `"#"` or `/settings` as a fake route.
+- Do not default `qrImageSrc` to the demo QR asset inside the reusable modal. Demos may pass `/heartchart-link-qr.svg` explicitly, but real app callers must supply a QR source that matches `url` or let the generic placeholder render until QR generation exists.
+- `HeartChartBrandPreview` uses `public/heartchart-link-phone-preview.png`, a local asset derived from the verified Figma node screenshot (`1903:19737`). The nested Figma screen asset exported empty through MCP, so do not rebuild this as hand-authored placeholder markup; replace it only with a stable exported asset or real app preview.
+
+### Visual examples
+
+Rendered at `/design-system/components#heartchartlinkmodal`, with a dedicated detail page at `/design-system/components/heart-chart-link-modal`.
 
 ---
 
@@ -1310,7 +1551,7 @@ Horizontally snap-scrolling "story" carousel presenting the DPOsystem philosophy
 
 ### Anatomy
 
-ARIA carousel region (`role="region"`, `aria-roledescription="carousel"`) → scroll container (`snap-x snap-mandatory`, keyboard-navigable) → per-slide panels (`role="group"`, `aria-roledescription="slide"`, `SlideHeading` + prose/list content, some slides using `ValueList`) → prev/next buttons → dot indicators.
+ARIA carousel region (`role="region"`, `aria-roledescription="carousel"`) → scroll container (`data-slot="dposystem-story-track"`, `snap-x snap-mandatory`, keyboard-navigable, horizontal scrollbar visually hidden) → per-slide panels (`role="group"`, `aria-roledescription="slide"`, `SlideHeading` + prose/list content, some slides using `ValueList`) → prev/next buttons → dot indicators.
 
 ### Variants
 
@@ -1332,6 +1573,7 @@ No props — content is authored inline (`SLIDES` constant); not designed to be 
 
 - Follows the ARIA carousel pattern exactly (`role="region"`/`aria-roledescription="carousel"` wrapping `role="group"`/`aria-roledescription="slide"`) — don't simplify this to plain `div`s.
 - Scroll container is keyboard-navigable via `tabIndex={0}` with Arrow key / Home / End handling — required, not optional, since it replaces native scroll-snap keyboard behavior with explicit control for reliability across browsers.
+- The horizontal track intentionally keeps `overflow-x-auto` for carousel mechanics but hides native scrollbars (`scrollbar-width: none` / hidden WebKit scrollbar) because visible horizontal browser chrome inside the modal reads as broken UI. Do not replace this with `overflow-x-hidden`; that would risk breaking touch/trackpad scrolling and snap behavior.
 - Respects `motion-reduce:scroll-auto` for the smooth-scroll behavior (see `DESIGN.md` Motion rules).
 - Every flex/grid item ancestor of the horizontally-scrolling container needs `min-w-0` (the default `min-width: auto` on flex/grid items otherwise sizes them to content's max-content width, breaking wrapping/clipping instead of scrolling) — a load-bearing detail, don't remove it during a refactor.
 
@@ -1369,7 +1611,7 @@ Church-wide HeartChart participation snapshot for an admin dashboard: how many i
   - Participation scale panel (muted sub-panel):
     - Eyebrow label ("CHURCH-WIDE PARTICIPATION LEVEL")
     - Segmented scale bar — 4 fixed labeled segments (Early / Active / Strong / Exceptional), one highlighted per participation level, with a marker (downward triangle + a thin vertical stem into the bar, matching Figma's two-part marker asset) positioned within the active segment per `percentage`'s place in that level's range
-    - Action row — three `Button` (`variant="outline" size="sm"`, with local height/icon-size/color overrides — see Implementation rules) instances: "Quick Tip" (lightbulb), "Last 4 Weeks" (trending line), "Share Your Link" (QR code)
+    - Action row — three `Button` (`variant="outline" size="compact"`) instances: "Quick Tip" (lightbulb), "Last 4 Weeks" (trending line), "Share Your Link" (QR code)
 
 ### Variants
 
@@ -1410,9 +1652,9 @@ interface HeartChartSummaryProps {
 
 ### Design tokens used
 
-`shadow-card`, `rounded-2xl`/`rounded-md`, `bg-background`, `border` (outer/inner card hairlines, participation-level sub-panel border) + `bg-muted/50` (participation-level sub-panel, badge — `bg-muted/50` reused per `Input`'s established `#fafafa`-over-white precedent, not a new gray token), `text-foreground` (badge text), `text-muted-foreground`/`bg-muted-foreground` (supporting sentence, "Individuals" caption, donut percentage label, inactive bar-segment text, marker triangle+stem, action button label/icon color), `border-secondary` (donut track ring — exact match, see Implementation rules), `bg-muted` (inactive bar segments), `status-success`/`status-success-strong`, `status-warning`/`status-warning-subtle` (new — see `DESIGN.md` Color tokens and Known gaps). `Button`'s own tokens for the three action buttons (see `Button` above).
+`shadow-card`, `rounded-2xl`/`rounded-md`, `bg-background`, `border` (outer/inner card hairlines, participation-level sub-panel border) + `bg-muted/50` (participation-level sub-panel, badge — `bg-muted/50` reused per `Input`'s established `#fafafa`-over-white precedent, not a new gray token), `text-foreground` (badge text), `text-text-tertiary` (participation-level eyebrow label — the 12px uppercase label needs the darker supporting-copy token for contrast on the muted sub-panel), `text-muted-foreground`/`bg-muted-foreground` (supporting sentence, "Individuals" caption, donut percentage label, inactive bar-segment text, marker triangle+stem), `border-secondary` (donut track ring — exact match, see Implementation rules), `bg-muted` (inactive bar segments), `status-success`/`status-success-strong`, `status-warning`/`status-warning-subtle` (new — see `DESIGN.md` Color tokens and Known gaps). The three action buttons use `Button variant="outline"` and inherit `bg-button-outline-bg`, `border-button-outline-border`, `text-button-outline-fg`, and `text-button-outline-icon` from the shared Button contract.
 
-**Deliberately not using `text-text-secondary`/`text-text-tertiary`/`fg-disabled`/`border-black/10`**, even though several are closer pixel matches to Figma's exact grays — `DESIGN.md`'s "Auth/onboarding surfaces are theme-fixed" section scopes those specifically to the fixed-light auth surface family (root-only, no `.dark` value by design). This card is a themed dashboard surface, not a fixed-light one, so reusing them left inactive scale segments, borders, and marker/tint colors stuck in their light-mode value under `.dark` — confirmed by actually toggling `.dark` during implementation and seeing bright, undarkened elements against an otherwise-dark card. Swapped to the equivalent theme-aware generic tokens (`foreground`/`muted-foreground`/`muted`/`border`) instead; this trades a small amount of pixel-exactness against the light-only Figma reference for correct, verified dark-mode behavior, per `IMPLEMENTATION.md`'s "No unverified dark mode" non-negotiable. This same reasoning now also covers the action buttons' label/icon color (see Implementation rules) — an exception is `border-secondary`, which Figma's own variable export confirmed as the donut track's literal fill and which already carries a verified `.dark` value, so no trade-off was needed there.
+**Deliberately not using `text-text-secondary`/`fg-disabled`/`border-black/10` for most of the summary card's own non-button chrome**, even though several are closer pixel matches to Figma's exact grays — `DESIGN.md`'s "Auth/onboarding surfaces are theme-fixed" section scopes those specifically to the fixed-light auth surface family (root-only, no `.dark` value by design). This card is a themed dashboard surface, not a fixed-light one, so reusing those tokens broadly left inactive scale segments, borders, and marker/tint colors stuck in their light-mode value under `.dark` — confirmed by actually toggling `.dark` during implementation and seeing bright, undarkened elements against an otherwise-dark card. Swapped to the equivalent theme-aware generic tokens (`foreground`/`muted-foreground`/`muted`/`border`) for the bulk of the component; the lone exception is the tiny participation-level eyebrow label, which uses existing `text-text-tertiary` because `text-muted-foreground` failed browser accessibility contrast on the muted sub-panel. The action buttons now rely on `Button`'s semantic outline tokens instead of local color overrides — an exception is `border-secondary`, which Figma's own variable export confirmed as the donut track's literal fill and which already carries a verified `.dark` value, so no trade-off was needed there.
 
 ### Accessibility requirements
 
@@ -1432,11 +1674,7 @@ interface HeartChartSummaryProps {
 - **`percentage` is independent of `completedCount`/`totalAttenders`** — don't compute it as `completedCount / totalAttenders`. Figma's own content annotation says percentage is "of HeartCharts completed divided by the total number of people in the church," a different (larger) denominator than the "attenders" figure shown in the supporting sentence, and the "Exceptional" example shows `completedCount` (2,912) exceeding `totalAttenders` (2,800) while `percentage` still caps at 100 — treat all three as independent caller-supplied numbers, cap `percentage` display at 100 defensively, and pluralize "Individual"/"Individuals" off of `completedCount` rather than requiring a separate label prop.
 - **Marker position is computed as a position *within the active quarter-segment*, not a flat `percentage`% of the full bar.** Figma's own three sample states (1% / 58% / 100%) place their marker at pixel offsets that only make sense once you notice each maps to *where that value falls inside its level's own range* (1–44 for Low, 45–74 for Growing, 75–100 for Exceptional), scaled into that level's 25%-wide quarter of the bar — e.g. 1% (the very start of Low's range) lands exactly on the Active segment's left edge, not 1% across the whole bar. A flat `left: ${percentage}%` mapping reproduces the Growing/Exceptional samples closely enough to look "roughly right" but places Low's marker deep inside the *Early* segment while the *Active* segment is the one highlighted — a visible mismatch between the marker and the segment it's supposed to point at. `getMarkerPosition(percentage, level)` reproduces Figma's actual per-sample offsets (verified against Figma's own metadata pixel values) via `(segmentIndex + (percentage − levelMin) / (levelMax − levelMin)) × 25`, using the same thresholds as `getParticipationLevel`/`LEVEL_RANGES` — a single source of truth, and still a continuous formula (not Figma's fixed per-variant pixel offsets), so it keeps working for any `percentage`, not just the three sample values.
 - **Marker shape is a downward triangle plus a thin vertical stem** (`bg-muted-foreground`) spanning from just above the bar down into it, matching Figma's "Marker" vector asset (a triangle-topped line, not a bare triangle) — a bare CSS triangle with no stem read as visually incomplete next to Figma's reference.
-- Reuse `Button` (`variant="outline" size="sm"`) for the three action buttons rather than hand-rolling button markup — their border/shadow/focus/hover treatment already matches Figma's skeuomorphic button reference exactly (`shadow-button-inset` is pixel-for-pixel Figma's "shadow-xs-skeuomorphic" effect; the border color, `border`/`border-primary` `#d5d7da`, is also an exact match, verified by sampling rendered pixels). Three local overrides via `className` bring the instances themselves closer to Figma's exact button spec without changing the shared `Button` primitive (which other call sites still use as-is):
-  - `h-auto py-2` (was the `sm` size's fixed `h-8`/32px) — Figma's buttons are 38px tall, which falls out naturally from `py-2` (8px) plus `text-sm`'s 22px line-height; a fixed 32px read as visibly more cramped/heavier-bordered than Figma's more generous button.
-  - `size-5` on each icon (was the `Button` base class's default `size-4`/16px for any icon without an explicit size class) — Figma's icons are 20px.
-  - `gap-1` (was `sm`'s `gap-1.5`/6px) — Figma uses 4px between icon and label.
-  - `text-muted-foreground` for icon/label color (was unset, inheriting the ambient near-black `foreground`, confirmed by sampling rendered pixels at `#181d27`) — Figma's button text/icon color is `text-secondary-700` (`#414651`), a root-only auth-surface token per `DESIGN.md`, so per this component's own established precedent (see Design tokens used above) it uses the closest theme-aware token instead rather than reproducing a color with no verified `.dark` value.
+- Reuse `Button` (`variant="outline" size="compact"`) for the three 38px action buttons rather than hand-rolling button markup or applying local color overrides — shared `Button` owns the compact geometry, 20px icon slot, icon/text gap, semantic outline colors, border/shadow/focus/hover treatment, and dark-mode fallback.
 - Icons: `lucide-react`'s `Lightbulb`, `TrendingUp`, `QrCode` for Quick Tip / Last 4 Weeks / Share Your Link respectively (matching `iconLibrary` in `components.json`) — Figma's own icon names are `lightbulb-02`, `line-chart-up-02`, `qr-code-01`; these are the closest stable `lucide-react` equivalents, not pixel-identical to Figma's icon set (same category of approximation as `GoogleIcon`).
 - Donut chart is a hand-built SVG (stroke-based ring, not a fetched/rasterized asset) so it can respond to an arbitrary `percentage` value — Figma's version is a set of pre-rendered PNGs per sample state, which can't generalize to real data. Track ring uses `stroke-border-secondary` (confirmed an exact match — see `DESIGN.md` Known gaps); the value arc uses `stroke-status-success`/`stroke-status-warning` per the derived level; the center percentage label uses `text-muted-foreground` (see Design tokens used above for why not Figma's literal `text-secondary-700`). Marked `aria-hidden` (see Accessibility).
 - Single use site today (no consuming dashboard route yet) — colocated at `src/components` rather than a route's `_components` because it's an app-level (not route-specific) business component per `CLAUDE.md`'s structure guidance, and is expected to be consumed by a future dashboard route. Internal helpers (the donut renderer, the scale bar) are kept as unexported functions in the same file rather than extracted, per `CLAUDE.md`'s anti-premature-abstraction guidance — extract to shared primitives only once a second real chart/scale-bar use case appears.
@@ -1602,7 +1840,7 @@ interface GlobalNavProps {
 }
 ```
 
-Uncontrolled by design (internal `useState`, now driven by hover/focus/account-menu-open rather than a click handler) — no controlled `open`/`onOpenChange` pair exists yet since there's only one real call site (the `/design-system` demo); add one if/when a second consumer needs to control it externally (e.g. an app shell that also needs to know nav state for its own layout), per `CLAUDE.md`'s anti-premature-abstraction guidance.
+Uncontrolled by design (internal `useState`, now driven by hover/focus/account-menu-open rather than a click handler) — no controlled `open`/`onOpenChange` pair exists because both current consumers (`MarriageChampionsPageShell` and the `/design-system` demo) let the rail manage its own visual state. Add a controlled API only if a future app shell needs to coordinate layout with nav state, per `CLAUDE.md`'s anti-premature-abstraction guidance.
 
 ### Design tokens used
 
@@ -1636,15 +1874,15 @@ Both Figma references are desktop-only (80px/296px fixed rail widths); no mobile
 - **Account menu is a `DropdownMenu` (see above), not a hand-rolled popover**: `NavAccountCard`'s existing button becomes the `DropdownMenuTrigger` (via `asChild`, so no extra nested button is introduced), and `DropdownMenuContent` is positioned `side="right" align="end"` with the nav's fixed-dark tokens instead of the swappable `popover` tokens (see Design tokens used) to read as an extension of the rail's own chrome, matching the supplied screenshot. Its five links (`/profile`, `/church-profile`, `/account-settings`, `/billing`, `/terms-privacy`) are placeholders, same caveat as the rest of `GlobalNav`'s routes below — no Figma node backs this menu (see Figma reference above).
 - **Section headings use `inset-x-{4,5}` on the `<p>` elements themselves, not padding on their wrapper**: an absolutely positioned child resolves `inset-x-0` against its containing block's *padding box*, so padding declared on the `relative` wrapper has no effect on it. A prior version put the indent on the wrapper (`px-4`/`px-5`) and left the headings at `inset-x-0`, which silently rendered "Church"/"Tools" and "Your Church"/"Ministry Tools" flush against the rail's left edge instead of matching the header's own indent. Any future change to this indent must move with the `<p>` elements, not a parent's padding.
 - **`NavAccountCard` renders two distinct Figma layouts, not one layout with a collapsed label**: the expanded reference is left-aligned (`items-start`, `p-3`, avatar-label group ungrown-but-left-packed) so the chevron affordance has room in the corner; the collapsed reference is a separate, centered layout (`items-center justify-center`, `p-0`, no gap) since only the avatar renders. Applying the expanded layout's padding/alignment to the collapsed state (rather than switching to the dedicated centered one) left the avatar packed against the left padding instead of centered in the 80px rail.
-- **Destination routes are placeholders** — only `/` (Home), `/marriage-champions` (Our Marriage Champions), and the two external URLs (`https://amfm.org/mmp`, `https://wedowedo.com`, taken directly from the Figma reference's own `href`/`target` attributes) are real. Every other internal `href` (`/dashboard`, the account menu's five links, etc.) is a placeholder path pending real routes — don't mistake these for a verified IA.
+- **Destination route status lives on the nav item data** — only `/` (Home), `/marriage-champions` (Our Marriage Champions), `/heartchart-resources` (HeartChart Resources), and the two external URLs (`https://amfm.org/mmp`, `https://wedowedo.com`, taken directly from the Figma reference's own `href`/`target` attributes) are real. Every other internal `href` (`/dashboard`, `/training`, `/loveology`, the account menu's five links, etc.) is a placeholder path pending real routes — don't mistake these for a verified IA. Placeholder links render `data-route-status="placeholder"` and `data-prefetch="disabled"` and pass `prefetch={false}` to `next/link`, so design-system browser validation does not generate noisy 404s for documented placeholder IA.
 - **Active state is route-derived, not data-driven**: `NavItem` calls `usePathname()` and computes `active = pathname === href` itself, rather than reading a hardcoded `active` flag off `NavLinkItem` (the field was removed from the type once a second real route existed to compare against). This means any nav instance always reflects the actual current page — e.g. rendering `GlobalNav` on `/marriage-champions` highlights "Our Marriage Champions", not "Home". Placeholder routes simply never match `pathname` and so are never active, which is correct until they become real pages.
 - **`activeHref` is a demo-only escape hatch**: `/design-system/components` renders `GlobalNav` at its own route (`/design-system/components`), which matches none of the nav's real `href`s, so pathname-derived active would never demo the "Active item" state documented above. `GlobalNav` accepts an optional `activeHref` prop that, when set, is compared against each item's `href` instead of `usePathname()`'s result; the showcase passes `activeHref="/marriage-champions"` so the third "Your Church" item still renders active there. Real call sites (e.g. `/marriage-champions`) should omit this prop and let the actual route decide.
-- **Doesn't assume its own screen position**: unlike `PhotoBackdrop`, `GlobalNav` doesn't hardcode `fixed`/`absolute` positioning — it fills its container (`h-full`) and lets the caller decide (e.g. wrap it in `fixed inset-y-4 left-4 z-40` in a real app shell, so the expand transition overlays content rather than reflowing it). Not yet wired into `src/app/layout.tsx` or any route, since no authenticated dashboard shell exists yet — see `DESIGN.md` Known gaps.
+- **Doesn't assume its own screen position**: unlike `PhotoBackdrop`, `GlobalNav` doesn't hardcode `fixed`/`absolute` positioning — it fills its container (`h-full`) and lets the caller decide. Today, `MarriageChampionsPageShell` wraps it in a sticky left rail for `/marriage-champions` and `/marriage-champions-empty`, while `/design-system/components` renders it standalone for component inspection. It is still not wired into `src/app/layout.tsx` as a global authenticated app shell, since the broader dashboard IA does not exist yet — see `DESIGN.md` Known gaps.
 - Colocated at `src/components/global-nav.tsx` (not `src/components/ui`) since it carries real business logic (hover/focus/account-menu open-state coordination, `Escape` handling) beyond a visual primitive, per `CLAUDE.md`'s "No business logic in `src/components/ui`."
 
 ### Visual examples
 
-Rendered live as a single instance (collapsed by default) at `/design-system/components#globalnav` — hover it (or Tab into it) to see the expanded state, and click the avatar/name to see the account menu. Previously `/design-system` rendered two side-by-side instances (one forced open via `defaultOpen`) to show both rail states at once; consolidated to one instance per the task that introduced hover-to-expand, since hovering the single instance now demonstrates both states directly.
+Rendered live in the Marriage Champions shell (`/marriage-champions`, `/marriage-champions-empty`) and as a single inspectable instance (collapsed by default) at `/design-system/components#globalnav` — hover it (or Tab into it) to see the expanded state, and click the avatar/name to see the account menu. Previously `/design-system` rendered two side-by-side instances (one forced open via `defaultOpen`) to show both rail states at once; consolidated to one instance per the task that introduced hover-to-expand, since hovering the single instance now demonstrates both states directly.
 
 ---
 
@@ -1711,6 +1949,7 @@ interface VideoPlayerProps {
 
 - Built on a real `<video>` element with real keyboard-operable transport controls (native `<button>`s, a native `<input type="range">` for seeking) — not a decorative image with click handlers.
 - The scrubber is a native `<input type="range">` (`aria-label="Seek"`, `aria-valuetext` announcing "current of total" time) rather than a hand-rolled `div` — satisfies the requirement flagged when this component was first documented.
+- The scrubber carries a generated `id` and stable `name="video-seek"` so browser autofill/form-field heuristics do not flag the design-system page while preserving its accessible `aria-label`.
 - Every icon-only transport control (play/pause, mute/unmute, fullscreen) has an `aria-label` that updates with state (e.g. `"Play"`/`"Pause"`), the same requirement `Button`'s `size="icon"` already carries.
 - The whole player is a `role="region"` with `aria-label={title}`, matching the ARIA-region precedent already used by `DposystemStory`'s carousel.
 - **Still open**: no captions/transcript file has been supplied — the `<track>` element is wired (`captionsSrc` prop) but unused until a real file exists. Do not consider this component's accessibility contract complete until captions are real.
@@ -1981,11 +2220,11 @@ Live on `/marriage-champions` and `/marriage-champions-empty` (via `MarriageCham
 
 ### Purpose
 
-Renders its `children` as an inert, faded backdrop — blurred, dimmed, and fading into the surrounding surface color — so real content reads as "there, but not yet actionable" behind a centered empty-state call-to-action, instead of being hidden outright. Used on `/marriage-champions-empty` to preview the Team Members table's shape without making it interactive. See `DESIGN.md`'s "Blur overlay" foundation for the token-level treatment.
+Renders its `children` as an inert, faded backdrop — blurred and fading into the surrounding surface color — so real content reads as "there, but not yet actionable" behind a centered empty-state call-to-action, instead of being hidden outright. Used on `/marriage-champions-empty` to preview the Team Members table's shape without making it interactive. See `DESIGN.md`'s "Blur overlay" foundation for the token-level treatment.
 
 ### Anatomy
 
-Single wrapping `<div>` (`aria-hidden`, `relative`, `overflow-hidden`) containing: the blurred/dimmed `children` (`blur-[2px] opacity-30 pointer-events-none select-none`) plus an absolutely-positioned fade mask (`bg-gradient-to-b from-background/0 to-background`) covering the full area.
+Single wrapping `<div>` (`aria-hidden`, `relative`, `overflow-hidden`) containing: the blurred inert `children` (`blur-[2px] pointer-events-none select-none`) plus an absolutely-positioned fade mask (`bg-gradient-to-b from-background/0 to-background`) covering the full area.
 
 ### Variants
 
@@ -2005,7 +2244,7 @@ interface BlurOverlayProps extends React.PropsWithChildren {
 
 ### Design tokens used
 
-`bg-background` (fade-mask end color — see Implementation rules for why this diverges from Figma's hardcoded white). No new tokens required; `blur-[2px]`/`opacity-30` are arbitrary values matching Figma's own layer effect exactly, not promoted to tokens for a single use site (same precedent as `VideoPlayer`'s one-off `backdrop-blur-[4px]`).
+`bg-background` (fade-mask end color — see Implementation rules for why this diverges from Figma's hardcoded white). No new tokens required; `blur-[2px]` is an arbitrary value matching Figma's own layer effect exactly, not promoted to a token for a single use site (same precedent as `VideoPlayer`'s one-off `backdrop-blur-[4px]`). Child opacity is intentionally not lowered: a browser accessibility audit flagged the previous `opacity-30` treatment because visible text inside the decorative preview no longer met contrast, while the blur + fade mask already communicates the inactive state.
 
 ### Accessibility requirements
 

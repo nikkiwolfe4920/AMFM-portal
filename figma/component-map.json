@@ -1,6 +1,6 @@
 {
   "Button": {
-    "figmaComponent": "AMFM Portal — node 3273:19658 (\"Primary\" button set) and sibling nodes; icon-leading composition also confirmed on node 3724:23184 (\"Invite Marriage Champions\" CTA, within \"Our Marriage Champions / Empty\", node 3724:23167)",
+    "figmaComponent": "AMFM Portal — node 3273:19658 (\"Primary\" button set, default size 46px) and sibling nodes; icon-leading primary buttons confirmed on node 1894:16263 (\"Get Started\" CTA, lg size 50px), node 3724:23184 (\"Invite Marriage Champions\" CTA, sm size 42px), and node 1903:19737 (HeartChart link modal \"Add a campus\" CTA, compact size 38px), all resolving icons to button-primary-icon; common Figma Buttons/Button icon slot is 20px with effective 6px icon/text spacing; HeartChart standalone neutral controls in node 1903:19737 map to variant=outline size=control using semantic neutral outline tokens plus shadow-xs (Figma exports shadow-xs-skeuomorphic, but the implementation avoids reusing the primary shadow-button-inset token because it overdraws the neutral edge in browser review); reversed dark/brand-surface links and CTAs map to variant=outlineReversed, with Footer CTA node 1909:25789 using size=sm (42px); the input-attached Copy segment maps to variant=utilitySegment size=controlSegment; chrome-free upload-logo text-button instances in nodes 1903:19737 / 3724:20579 map to variant=link size=inline; CourseCard video CTA node 2320:27278 and HeartChartSummary actions node 1670:36217 map to variant=outline size=compact (38px); ResourceListItem's 48px resource-table action maps to variant=outline size=iconLg",
     "documentation": "COMPONENTS.md#button",
     "implementation": "src/components/ui/button.tsx"
   },
@@ -28,6 +28,21 @@
     "figmaComponent": "AMFM Portal — node 1829:19828 (modal chrome reference)",
     "documentation": "COMPONENTS.md#dialog",
     "implementation": "src/components/ui/dialog.tsx"
+  },
+  "HeartChartModalShell": {
+    "figmaComponent": "AMFM Portal — HeartChart link Modal (current verified node 1903:19737; earlier component reference 3724:20579), Modal / quick tip (node 3727:32459), Modal / last 4 weeks (node 3727:32514), HeartChart Resources / Quick Start (node 3727:32687)",
+    "documentation": "COMPONENTS.md#heartchartmodalshell",
+    "implementation": "src/components/heartchart-modal-shell.tsx"
+  },
+  "HeartChartLinkCard": {
+    "figmaComponent": "AMFM Portal — HeartChart link Modal (current verified node 1903:19737; earlier component reference 3724:20579), nested \"_HeartChart - Church - URL\" row; Figma share-04 maps to lucide ExternalLink",
+    "documentation": "COMPONENTS.md#heartchartlinkcard",
+    "implementation": "src/components/heartchart-link-card.tsx"
+  },
+  "HeartChartLinkModal": {
+    "figmaComponent": "AMFM Portal — HeartChart link Modal (current verified node 1903:19737; earlier component reference 3724:20579)",
+    "documentation": "COMPONENTS.md#heartchartlinkmodal",
+    "implementation": "src/components/heartchart-link-modal.tsx"
   },
   "PhotoBackdrop": {
     "figmaComponent": "AMFM Portal — Onboarding/login node 1909:25767 (\"flat\" scrim, background photo treatment); Onboarding/First run church admin node 1909:25772 (\"radial\" scrim variant)",

@@ -51,9 +51,10 @@ export function Swatch({
 }
 
 const STATUS_STYLES: Record<string, string> = {
-  "Production Ready": "bg-primary/10 text-primary border-primary/20",
+  "Production Ready": "bg-primary/10 text-text-brand border-primary/30",
+  "Branch Audit": "bg-badge-warning-bg text-badge-warning-text border-badge-warning-border",
   Approved: "bg-chart-2/10 text-chart-2 border-chart-2/20",
-  Draft: "bg-muted text-muted-foreground border-border",
+  Draft: "bg-muted text-text-secondary border-border",
   Deprecated: "bg-destructive/10 text-destructive border-destructive/20",
 };
 
@@ -130,7 +131,7 @@ export function ComponentShowcase({
   return (
     <div id={docsAnchor} className="flex scroll-mt-24 flex-col gap-4 py-8 first:pt-0">
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <h3 className="text-xl font-semibold tracking-tight">{name}</h3>
+        <h2 className="text-xl font-semibold tracking-tight">{name}</h2>
         <StatusBadge status={status} />
       </div>
       <p className="text-muted-foreground max-w-2xl text-sm">{purpose}</p>

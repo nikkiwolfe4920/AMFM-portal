@@ -53,7 +53,12 @@ export function TopHero({
               {description}
             </p>
           </div>
-          <Button variant="outline" onClick={onCtaClick} className="w-fit">
+          <Button
+            variant="outline"
+            size="default"
+            onClick={onCtaClick}
+            className="w-fit"
+          >
             <PlayCircle aria-hidden="true" />
             {ctaLabel}
           </Button>

@@ -15,6 +15,7 @@
   --popover-foreground: oklch(0.23 0.021 264.037);
   --primary: oklch(0.569 0.106 44.428);
   --primary-foreground: oklch(1 0 0);
+  --button-primary-icon: oklch(0.751 0.076 42.932); /* Component colors/Components/Buttons/button-primary-icon, #d89f88 */
   --secondary: oklch(0.97 0 0);
   --secondary-foreground: oklch(0.205 0 0);
   --muted: oklch(0.97 0 0);
@@ -35,6 +36,16 @@
   --border-brand: oklch(0.642 0.101 44.483);
   --border-destructive-subtle: oklch(0.801 0.109 24.573);
   --fg-disabled: oklch(0.728 0.011 267.331);
+  --fg-quaternary: oklch(0.728 0.011 267.331); /* Colors/Foreground/fg-quaternary (400), #a4a7ae */
+  --button-outline-bg: var(--background);
+  --button-outline-border: var(--input);
+  --button-outline-fg: var(--text-secondary);
+  --button-outline-icon: var(--fg-quaternary);
+  --button-outline-reversed-bg: transparent;
+  --button-outline-reversed-border: oklch(1 0 0 / 40%);
+  --button-outline-reversed-fg: oklch(1 0 0);
+  --button-outline-reversed-hover-bg: oklch(1 0 0 / 10%);
+  --button-outline-reversed-icon: oklch(1 0 0);
 
   /* HeartChart Resources page (node 2361:19280) — dashboard shell background,
    * a subtle warm-cream gradient distinct from the plain white `background`
@@ -137,6 +148,15 @@
   --border: oklch(1 0 0 / 10%);
   --input: oklch(1 0 0 / 15%);
   --ring: oklch(0.556 0 0);
+  --button-outline-bg: oklch(1 0 0 / 4.5%);
+  --button-outline-border: var(--input);
+  --button-outline-fg: var(--foreground);
+  --button-outline-icon: var(--muted-foreground);
+  --button-outline-reversed-bg: transparent;
+  --button-outline-reversed-border: oklch(1 0 0 / 40%);
+  --button-outline-reversed-fg: oklch(1 0 0);
+  --button-outline-reversed-hover-bg: oklch(1 0 0 / 10%);
+  --button-outline-reversed-icon: oklch(1 0 0);
 
   --chart-1: oklch(0.488 0.243 264.376);
   --chart-2: oklch(0.696 0.17 162.48);
@@ -163,6 +183,7 @@
   --color-popover-foreground: var(--popover-foreground);
   --color-primary: var(--primary);
   --color-primary-foreground: var(--primary-foreground);
+  --color-button-primary-icon: var(--button-primary-icon);
   --color-secondary: var(--secondary);
   --color-secondary-foreground: var(--secondary-foreground);
   --color-muted: var(--muted);
@@ -180,6 +201,16 @@
   --color-border-brand: var(--border-brand);
   --color-border-destructive-subtle: var(--border-destructive-subtle);
   --color-fg-disabled: var(--fg-disabled);
+  --color-fg-quaternary: var(--fg-quaternary);
+  --color-button-outline-bg: var(--button-outline-bg);
+  --color-button-outline-border: var(--button-outline-border);
+  --color-button-outline-fg: var(--button-outline-fg);
+  --color-button-outline-icon: var(--button-outline-icon);
+  --color-button-outline-reversed-bg: var(--button-outline-reversed-bg);
+  --color-button-outline-reversed-border: var(--button-outline-reversed-border);
+  --color-button-outline-reversed-fg: var(--button-outline-reversed-fg);
+  --color-button-outline-reversed-hover-bg: var(--button-outline-reversed-hover-bg);
+  --color-button-outline-reversed-icon: var(--button-outline-reversed-icon);
   --color-overlay: var(--overlay);
   --color-background-gradient-from: var(--background-gradient-from);
   --color-background-gradient-to: var(--background-gradient-to);

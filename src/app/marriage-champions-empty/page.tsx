@@ -77,8 +77,8 @@ export default function MarriageChampionsEmptyPage() {
               </p>
             </div>
 
-            <Button>
-              <Award aria-hidden="true" className="size-5" />
+            <Button size="sm">
+              <Award aria-hidden="true" />
               Invite Marriage Champions
             </Button>
           </div>

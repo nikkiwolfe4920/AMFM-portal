@@ -6,7 +6,7 @@ export default function DesignSystemLayout({
   children,
 }: React.PropsWithChildren) {
   return (
-    <div className="mx-auto flex w-full max-w-[90rem] flex-col gap-2 px-6 py-12 md:px-8">
+    <main className="mx-auto flex w-full max-w-[90rem] flex-col gap-2 px-6 py-12 md:px-8 [&_code]:text-foreground [&_kbd]:text-foreground [&_li_a]:underline [&_li_a]:underline-offset-2 [&_p_a]:underline [&_p_a]:underline-offset-2">
       <p className="text-muted-foreground text-sm font-medium">AMFM Portal</p>
       <h1 className="text-3xl font-semibold tracking-tight">Design system</h1>
       <p className="text-muted-foreground max-w-2xl text-sm">
@@ -22,6 +22,6 @@ export default function DesignSystemLayout({
       </p>
       <DesignSystemNav />
       {children}
-    </div>
+    </main>
   );
 }

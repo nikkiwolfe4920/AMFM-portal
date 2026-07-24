@@ -7,7 +7,7 @@ interface BlurOverlayProps extends React.PropsWithChildren {
 }
 
 /**
- * Renders `children` as an inert, faded backdrop — blurred and dimmed,
+ * Renders `children` as an inert, faded backdrop — blurred,
  * fading to the surrounding surface color toward the bottom — so real
  * content reads as "there, but not yet actionable" behind a centered
  * empty-state call-to-action, rather than being hidden outright.
@@ -22,9 +22,13 @@ export function BlurOverlay({ className, children }: BlurOverlayProps) {
   return (
     <div
       aria-hidden="true"
+      data-slot="blur-overlay"
       className={cn("relative overflow-hidden", className)}
     >
-      <div className="pointer-events-none blur-[2px] opacity-30 select-none">
+      <div
+        data-slot="blur-overlay-content"
+        className="pointer-events-none blur-[2px] select-none"
+      >
         {children}
       </div>
       <div className="from-background/0 to-background pointer-events-none absolute inset-0 bg-gradient-to-b" />

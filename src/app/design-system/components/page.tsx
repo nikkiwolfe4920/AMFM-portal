@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Award, ClipboardCheck, Share2 } from "lucide-react";
+import { Award, ClipboardCheck, Plus, Share2, Upload } from "lucide-react";
 
 import {
   Card,
@@ -37,6 +37,7 @@ import { PasswordRequirementItem } from "@/app/signup/_components/password-requi
 import { SignupSuccess } from "@/app/signup/_components/signup-success";
 import { GlobalNav } from "@/components/global-nav";
 import { VideoPlayer } from "@/components/video-player";
+import { HeartChartModalShell } from "@/components/heartchart-modal-shell";
 import { BlurOverlay } from "@/components/blur-overlay";
 import { ResourceListItem } from "@/components/resource-list-item";
 import { ElevatedCard } from "@/components/elevated-card";
@@ -54,19 +55,32 @@ import {
 } from "@/components/ui/table";
 
 import { ComponentShowcase } from "../_components/showcase";
+import {
+  HeartChartLinkCardDemo,
+  HeartChartLinkModalDemo,
+} from "./_components/heartchart-link-demos";
 
 export default function ComponentsPage() {
   return (
     <div className="flex flex-col divide-y">
       <ComponentShowcase
         name="Button"
-        status="Production Ready"
+        status="Branch Audit"
         purpose="Reusable interactive action element for triggering a command (form submit, navigation, dialog open)."
         docsAnchor="button"
-        figmaReference='AMFM Portal — node 3273:19658 ("Primary" button set) and siblings; icon-leading composition confirmed on node 3724:23184 ("Invite Marriage Champions" CTA)'
+        figmaReference='AMFM Portal — node 3273:19658 ("Primary" button set, default 46px) and siblings; icon-leading sizes confirmed on node 3724:23184 ("Invite Marriage Champions", sm 42px), node 1894:16263 ("Get Started", lg 50px), and node 1903:19737 ("Add a campus", compact 38px)'
         tokens={[
           "bg-primary",
           "text-primary-foreground",
+          "text-button-primary-icon",
+          "bg-button-outline-bg",
+          "border-button-outline-border",
+          "text-button-outline-fg",
+          "text-button-outline-icon",
+          "bg-button-outline-reversed-bg",
+          "border-button-outline-reversed-border",
+          "text-button-outline-reversed-fg",
+          "text-button-outline-reversed-icon",
           "bg-text-brand",
           "border-border-brand",
           "bg-muted",
@@ -86,6 +100,13 @@ export default function ComponentsPage() {
             <Button variant="link">Link</Button>
           </div>
           <div className="flex flex-wrap items-center gap-3">
+            <Button size="compact">Compact</Button>
+            <Button variant="link" size="inline" asChild>
+              <a href="#heartchartlinkmodal">
+                <Upload aria-hidden="true" />
+                Upload your logo in settings
+              </a>
+            </Button>
             <Button size="sm">Small</Button>
             <Button size="default">Default</Button>
             <Button size="lg">Large</Button>
@@ -96,19 +117,20 @@ export default function ComponentsPage() {
             <Button loading>Log in</Button>
           </div>
           <div className="flex flex-wrap items-center gap-3">
-            <Button>
-              <Award aria-hidden="true" className="size-5" />
+            <Button size="sm">
+              <Award aria-hidden="true" />
               Invite Marriage Champions
             </Button>
           </div>
           <p className="text-muted-foreground text-xs">
             Tab to a button to see the focused state; hover to see the hover
             fill. Icons on the <code className="bg-muted rounded px-1">default</code>{" "}
-            variant inherit <code className="bg-muted rounded px-1">
-              text-primary-foreground
+            variant use <code className="bg-muted rounded px-1">
+              text-button-primary-icon
             </code>{" "}
-            (white) via <code className="bg-muted rounded px-1">currentColor</code> —
-            never give a leading icon its own color class.
+            while labels remain <code className="bg-muted rounded px-1">
+              text-primary-foreground
+            </code>.
           </p>
         </div>
       </ComponentShowcase>
@@ -318,7 +340,7 @@ export default function ComponentsPage() {
         purpose="Presents one downloadable resource (icon, title, supporting description, trailing download action) inside a card-based list — used on /heartchart-resources."
         docsAnchor="resourcelistitem"
         figmaReference='AMFM Portal — HeartChart Resources node 2361:19280, six "Table cell" instances across the Optional Resources and Premium Resources cards'
-        tokens={["text-foreground", "text-muted-foreground", "shadow-xs", "rounded-md"]}
+        tokens={["text-foreground", "text-muted-foreground", "text-fg-quaternary", "shadow-xs", "rounded-md"]}
         states={["Default"]}
       >
         <div className="flex max-w-md flex-col gap-6">
@@ -454,7 +476,15 @@ export default function ComponentsPage() {
         purpose="Full-bleed banner prompting a free-tier account to upgrade to Premium — used at the bottom of /heartchart-resources."
         docsAnchor="footercta"
         figmaReference='AMFM Portal — "Footer CTA" component (node 1909:25789)'
-        tokens={["bg-primary", "text-primary-foreground", "text-display-md"]}
+        tokens={[
+          "bg-primary",
+          "text-primary-foreground",
+          "text-display-md",
+          "bg-button-outline-reversed-bg",
+          "border-button-outline-reversed-border",
+          "text-button-outline-reversed-fg",
+          "text-button-outline-reversed-icon",
+        ]}
         states={["Default"]}
       >
         <FooterCta heading="Start using all the tools today." ctaLabel="Upgrade to Premium" />
@@ -520,6 +550,131 @@ export default function ComponentsPage() {
             </DialogHeader>
           </DialogContent>
         </Dialog>
+      </ComponentShowcase>
+
+      <ComponentShowcase
+        name="HeartChartModalShell"
+        status="Draft"
+        purpose="Reusable HeartChart modal-family shell: shared overlay, accessible title/close header, optional divider, body slot, optional footer, and Figma-sized width variants."
+        docsAnchor="heartchartmodalshell"
+        figmaReference="AMFM Portal — HeartChart link Modal (1903:19737; earlier component reference 3724:20579), Modal / quick tip (3727:32459), Modal / last 4 weeks (3727:32514), HeartChart Resources / Quick Start (3727:32687)"
+        tokens={[
+          "bg-background",
+          "bg-overlay/85",
+          "backdrop-blur-[8px]",
+          "border-border-secondary",
+          "bg-secondary",
+          "rounded-2xl",
+          "rounded-md",
+          "shadow-2xl",
+        ]}
+        states={["Closed", "Open", "Framed", "Plain", "Footer", "No divider"]}
+      >
+        <div className="flex flex-wrap items-center gap-3">
+          <HeartChartModalShell
+            title="HeartChart link"
+            description="Shareable HeartChart link modal shell preview."
+            trigger={
+              <Button type="button" variant="outline">
+                Open framed shell
+              </Button>
+            }
+            size="xl"
+            footer={
+              <Button type="button" size="compact">
+                <Plus aria-hidden="true" />
+                Add a campus
+              </Button>
+            }
+          >
+            <div className="border-border-secondary rounded-md border bg-secondary p-4">
+              <p className="text-sm font-medium text-foreground">
+                HeartChart URL or QR content composes here.
+              </p>
+              <p className="text-muted-foreground mt-1 text-sm">
+                The shell owns chrome; modal-specific rows stay separate.
+              </p>
+            </div>
+          </HeartChartModalShell>
+          <HeartChartModalShell
+            title="Quick Start Guide"
+            description="Plain HeartChart video modal shell preview."
+            trigger={
+              <Button type="button" variant="outline">
+                Open plain shell
+              </Button>
+            }
+            size="lg"
+            framed={false}
+            showDivider={false}
+          >
+            <div className="bg-overlay/90 flex aspect-video items-center justify-center rounded-md text-sm font-medium text-white">
+              Video content slot
+            </div>
+          </HeartChartModalShell>
+        </div>
+        <p className="text-muted-foreground mt-4 text-xs">
+          Foundation shell — URL rows are now composed by HeartChartLinkCard; video controls,
+          charts, and tips carousel content should follow as separate child components with their
+          own tests. See{" "}
+          <code className="bg-muted rounded px-1 py-0.5">COMPONENTS.md#heartchartmodalshell</code>.
+        </p>
+      </ComponentShowcase>
+
+      <ComponentShowcase
+        name="HeartChartLinkCard"
+        status="Draft"
+        purpose="Reusable HeartChart URL and QR action card: QR preview, labelled read-only URL field, copy action, share action, and download-QR action."
+        docsAnchor="heartchartlinkcard"
+        figmaReference='AMFM Portal — HeartChart link Modal node 1903:19737, nested "_HeartChart - Church - URL" row; earlier component reference node 3724:20579'
+        tokens={[
+          "bg-secondary",
+          "bg-background",
+          "border-border-secondary",
+          "border-input",
+          "text-text-secondary",
+          "text-muted-foreground",
+          "text-fg-quaternary",
+          "bg-button-outline-bg",
+          "border-button-outline-border",
+          "text-button-outline-fg",
+          "text-button-outline-icon",
+          "shadow-xs",
+        ]}
+        states={["Default", "Hover", "Focus", "No QR image", "With QR image", "Missing callback disabled"]}
+      >
+        <HeartChartLinkCardDemo />
+      </ComponentShowcase>
+
+      <ComponentShowcase
+        name="HeartChartLinkModal"
+        status="Draft"
+        purpose="Full first HeartChart modal pattern composed from HeartChartModalShell and HeartChartLinkCard."
+        docsAnchor="heartchartlinkmodal"
+        figmaReference="AMFM Portal — HeartChart link Modal node 1903:19737; earlier component reference node 3724:20579"
+        tokens={[
+          "bg-overlay/85",
+          "backdrop-blur-[8px]",
+          "bg-background",
+          "bg-secondary",
+          "border-border-secondary",
+          "text-text-tertiary",
+          "text-text-brand",
+          "shadow-2xl",
+        ]}
+        states={["Closed", "Open", "Footer action", "Header preview"]}
+      >
+        <HeartChartLinkModalDemo settingsHref="https://example.com/settings" />
+        <p className="text-muted-foreground mt-4 text-xs">
+          View the dedicated{" "}
+          <Link
+            href="/design-system/components/heart-chart-link-modal"
+            className="text-text-brand font-medium hover:underline"
+          >
+            HeartChartLinkModal documentation
+          </Link>
+          .
+        </p>
       </ComponentShowcase>
 
       <ComponentShowcase
@@ -590,7 +745,7 @@ export default function ComponentsPage() {
         tokens={[]}
         states={["Static"]}
       >
-        <Button variant="outline" className="text-text-secondary gap-3">
+        <Button variant="outline" className="gap-3">
           <GoogleIcon className="size-6" />
           Log in with Google
         </Button>
@@ -788,7 +943,7 @@ export default function ComponentsPage() {
         purpose="Renders real content as an inert, faded backdrop behind a centered empty-state call-to-action — used on /marriage-champions-empty to preview the Team Members table without making it interactive."
         docsAnchor="bluroverlay"
         figmaReference='AMFM Portal — "Our Marriage Champions / Empty" (node 3724:23167), "image 54" backdrop layer (node 3724:23178)'
-        tokens={["blur-[2px]", "opacity-30", "bg-background"]}
+        tokens={["blur-[2px]", "bg-background"]}
         states={["Default (only state — static, non-interactive)"]}
       >
         <div className="overflow-hidden rounded-lg border">

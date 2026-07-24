@@ -1,7 +1,13 @@
 "use client";
 
 import { Maximize2, Pause, Play, Volume2, VolumeX } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import {
+  useEffect,
+  useId,
+  useRef,
+  useState,
+  type ChangeEvent,
+} from "react";
 
 import { cn } from "@/lib/utils";
 
@@ -27,6 +33,7 @@ export function VideoPlayer({
   captionsSrc,
   className,
 }: VideoPlayerProps) {
+  const seekControlId = useId();
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
@@ -80,7 +87,7 @@ export function VideoPlayer({
     setIsMuted(video.muted);
   };
 
-  const seek = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const seek = (event: ChangeEvent<HTMLInputElement>) => {
     const video = videoRef.current;
     if (!video) return;
     const value = Number(event.target.value);
@@ -169,6 +176,8 @@ export function VideoPlayer({
                 style={{ width: `${playedPercent}%` }}
               />
               <input
+                id={seekControlId}
+                name="video-seek"
                 type="range"
                 min={0}
                 max={duration || 0}

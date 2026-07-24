@@ -35,9 +35,10 @@ export function FooterCta({
           {heading}
         </p>
         <Button
-          variant="outline"
+          variant="outlineReversed"
+          size="sm"
           onClick={onCtaClick}
-          className="border-primary-foreground/30 bg-transparent text-primary-foreground shrink-0 hover:bg-white/10"
+          className="shrink-0"
         >
           <Sparkles aria-hidden="true" />
           {ctaLabel}

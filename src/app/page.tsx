@@ -4,9 +4,6 @@ import { Button } from "@/components/ui/button";
 import { PhotoBackdrop } from "@/components/photo-backdrop";
 import { DposystemLearnMore } from "@/app/_components/dposystem-learn-more";
 
-const REVERSED_OUTLINE =
-  "border-white/40 bg-transparent text-white hover:bg-white/10 hover:text-white";
-
 export default function Home() {
   return (
     <PhotoBackdrop>
@@ -21,10 +18,10 @@ export default function Home() {
           <Button asChild>
             <Link href="/login">Get Started</Link>
           </Button>
-          <Button asChild variant="outline" className={REVERSED_OUTLINE}>
+          <Button asChild variant="outlineReversed">
             <Link href="/design-system">Design System</Link>
           </Button>
-          <Button asChild variant="outline" className={REVERSED_OUTLINE}>
+          <Button asChild variant="outlineReversed">
             <a
               href="https://github.com/nikkiwolfe4920/AMFM-portal/blob/main/DESIGN.md"
               target="_blank"
