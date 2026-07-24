@@ -24,4 +24,16 @@ describe("PointerCallout", () => {
     const pointer = container.querySelector('[aria-hidden="true"]');
     expect(pointer).not.toBeNull();
   });
+
+  it("renders the diagonal-tail asset and marks it decorative when pointerPosition is bottom-left-diagonal", () => {
+    const { container } = render(
+      <PointerCallout pointerPosition="bottom-left-diagonal">
+        <p>Callout content</p>
+      </PointerCallout>
+    );
+
+    const pointer = container.querySelector('img[aria-hidden="true"]');
+    expect(pointer).not.toBeNull();
+    expect(pointer).toHaveAttribute("alt", "");
+  });
 });
