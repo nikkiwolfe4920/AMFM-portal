@@ -795,7 +795,7 @@ Rendered at `/design-system/components#tophero` and live on `/heartchart-resourc
 
 **Status**: Draft (per-step video thumbnails unavailable — see Implementation rules)
 **Source**: `src/components/course-card.tsx`
-**Figma**: AMFM Portal file, "Course Card" component (node `2074:45130`); the 3-step pattern on `/heartchart-resources` at nodes `2316:26815` (Step 1), `2316:26886` (Step 2), `2318:26954` (Step 3)
+**Figma**: AMFM Portal file, "Course Card" component (node `2074:45130`); the 3-step pattern on `/heartchart-resources` at nodes `2316:26815` (Step 1), `2316:26886` (Step 2), `2318:26954` (Step 3); the shared step-header fill is confirmed at node `3926:27038`
 
 ### Purpose
 
@@ -803,15 +803,11 @@ One step in a fixed 3-step "get ready" course pattern — a colored numbered hea
 
 ### Anatomy
 
-Numbered header (`STEP {n}`, trailing `ArrowRight`, colored background, contrast-safe text color) → video-cover section (photo backdrop in Figma; see Implementation rules — uppercase eyebrow, `font-display` heading, outline `Button` with `PlayCircle`) → checklist (`Check`-in-circle icon + text row, repeated per item).
+Numbered header (`STEP {n}`, trailing `ArrowRight`, shared brand-colored background, white text/icon) → video-cover section (photo backdrop in Figma; see Implementation rules — uppercase eyebrow, `font-display` heading, outline `Button` with `PlayCircle`) → checklist (`Check`-in-circle icon + text row, repeated per item).
 
 ### Variants (`step` prop)
 
-| `step` | Header color | Header text/icon color | Figma token |
-|---|---|---|---|
-| `1` | `bg-brand-700` | `text-white` | `#9f6348`, a darkened `border-brand` (`#c07858`) variant — see Implementation rules for why |
-| `2` | `bg-text-brand` | `text-white` | `#894e34`, exact match to the existing `text-brand` token |
-| `3` | `bg-brand-900` | `text-white` | `#47261a`, the one genuinely new token this pattern needed — see `DESIGN.md` Color tokens |
+All 3 steps share one header treatment — `bg-text-brand text-white` (`#894e34`, exact match to Figma's `utility-brand-700` variable, node `3926:27038`). `step` only drives the `STEP {n}` label text, not the styling; header color no longer varies per step (Figma previously showed a 3-tier darkening scale across steps, since superseded by this shared-fill design).
 
 A closed `1 | 2 | 3` union, not an open `number`, since the pattern is a fixed 3-step course, not an arbitrarily-long list — don't generalize past what's evidenced.
 
@@ -839,7 +835,7 @@ interface CourseCardProps {
 
 ### Design tokens used
 
-`bg-brand-700`/`bg-text-brand`/`bg-brand-900` (step header, see Variants), `text-white` (all 3 step headers' text/icons, plus video-cover text), `bg-muted` (checklist icon circle — Figma's `#f5f5f5` "bg-tertiary" is a near-exact match to the existing `muted` token), `text-muted-foreground` (checklist text + icon), `text-primary` (inline links within checklist text, exact match to Figma's `#aa6140`), `font-display`/`text-display-md` with a local `leading-[2.375rem]` override (video-cover heading — see `DESIGN.md`'s note on this one-off 36px/38px pairing), `nav-surface-from`/`nav-surface-to` (placeholder video-cover background — see Implementation rules). `Button variant="outline" size="compact"` for the 38px video CTA, matching the neutral bordered Figma button treatment.
+`bg-text-brand` (all 3 steps' shared header background, see Variants), `text-white` (header text/icons, plus video-cover text), `bg-muted` (checklist icon circle — Figma's `#f5f5f5` "bg-tertiary" is a near-exact match to the existing `muted` token), `text-muted-foreground` (checklist text + icon), `text-primary` (inline links within checklist text, exact match to Figma's `#aa6140`), `font-display`/`text-display-md` with a local `leading-[2.375rem]` override (video-cover heading — see `DESIGN.md`'s note on this one-off 36px/38px pairing), `nav-surface-from`/`nav-surface-to` (placeholder video-cover background — see Implementation rules). `Button variant="outline" size="compact"` for the 38px video CTA, matching the neutral bordered Figma button treatment.
 
 ### Accessibility requirements
 
@@ -854,7 +850,7 @@ Not yet evidenced against a Figma mobile/tablet frame (fixed desktop 3-column co
 ### Implementation rules
 
 - **Per-step video thumbnails unavailable in this environment** — same blocked-asset class as `TopHero`'s background photo (`www.figma.com` denied by egress policy). Renders a `nav-surface-from`→`nav-surface-to` dark gradient behind each video-cover section in place of the three distinct reference photos. Status stays **Draft** for this reason — wire to real `imageSrc`/thumbnails once available, matching `VideoPlayer`'s "wire to a real source later" precedent.
-- `step`'s header treatment is a fixed lookup (`STEP_HEADER_CLASSNAME`), not computed — keeps the 3-tier brand scale's colors as a single source of truth rather than an interpolated gradient function. Figma's own Step 1 fill (`border-brand`, `#c07858`) only clears 3.46:1 contrast with white text/icon — below WCAG AA's 4.5:1 for this non-"large text" label — so Step 1 uses `brand-700` (`#9f6348`), a darkened `border-brand` variant at the same 44.483° hue angle (clears 4.83:1 with white) instead of the exact Figma fill. This keeps all 3 steps' text/icon white and consistent, rather than swapping Step 1 alone to a dark `text-foreground` that reads as visually broken next to Steps 2/3. See `DESIGN.md`'s `brand-700` token entry.
+- The header treatment is a single shared constant (`STEP_HEADER_CLASSNAME`), not a per-step lookup — Figma's current design (node `3926:27038`) uses one `utility-brand-700` fill across all 3 steps rather than the earlier 3-tier darkening scale, and `bg-text-brand` is an exact hex match (`#894e34`) so no new token was needed. This also resolves a prior contrast issue: an earlier per-step scale had Step 1 reuse `border-brand` (`#c07858`) directly, which only cleared 3.46:1 with white text — below WCAG AA's 4.5:1 for this non-"large text" label. `text-brand` clears 6.56:1 with white, so all 3 steps are both on-brand and accessible with no per-step exception.
 - The video-cover CTA composes `Button variant="outline" size="compact"` with only `w-fit` local to the CourseCard layout. The verified nested Video Cover instance (`2320:27278`) maps to a 38px shared neutral outline action: one visible neutral border, `shadow-xs`, 20px icon slot, and the shared icon/text gap.
 - The checklist icon (`Check`, `size-3.5`, inside a `bg-muted rounded-full size-6`) is a static, always-confirmed indicator — same semantic category as `BenefitListItem`, not a derived validation state like `PasswordRequirementItem`; don't reuse either of those components here, this is a third, purpose-built row shape (a numbered course step's action list, not a benefit or a password rule).
 

@@ -4,14 +4,11 @@ import { ArrowRight, Check, PlayCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 
-const STEP_HEADER_CLASSNAME: Record<1 | 2 | 3, string> = {
-  1: "bg-brand-700 text-white",
-  2: "bg-text-brand text-white",
-  3: "bg-brand-900 text-white",
-};
+/** Shared step-header background/text — all 3 steps use the same brand fill, see COMPONENTS.md#coursecard. */
+const STEP_HEADER_CLASSNAME = "bg-text-brand text-white";
 
 interface CourseCardProps {
-  /** Which of the fixed 3 steps this card represents — drives the header's accent color. */
+  /** Which of the fixed 3 steps this card represents — drives the "STEP {n}" label. */
   step: 1 | 2 | 3;
   /** Uppercase eyebrow over the video cover, e.g. "BEFORE THE WEEKEND SERVICE". */
   eyebrow: string;
@@ -29,7 +26,8 @@ interface CourseCardProps {
 /**
  * One step in the 3-step "get ready for your HeartChart Weekend" course —
  * see COMPONENTS.md#coursecard. Figma: AMFM Portal "Course Card" component
- * (node 2074:45130), steps 1–3 at nodes 2316:26815 / 2316:26886 / 2318:26954.
+ * (node 2074:45130), steps 1–3 at nodes 2316:26815 / 2316:26886 / 2318:26954;
+ * the shared step-header fill is confirmed at node 3926:27038.
  */
 export function CourseCard({
   step,
@@ -52,7 +50,7 @@ export function CourseCard({
         data-slot="course-card-step-header"
         className={cn(
           "flex items-center justify-between px-6 py-3",
-          STEP_HEADER_CLASSNAME[step]
+          STEP_HEADER_CLASSNAME
         )}
       >
         <p className="text-base font-semibold">STEP {step}</p>

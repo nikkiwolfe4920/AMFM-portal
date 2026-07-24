@@ -4,22 +4,25 @@ import { describe, expect, it, vi } from "vitest";
 import { CourseCard } from "./course-card";
 
 describe("CourseCard", () => {
-  it("uses a contrast-safe step-one header with white text matching Steps 2/3", () => {
-    render(
-      <CourseCard
-        step={1}
-        eyebrow="Before the weekend service"
-        title="Get Your Team Ready"
-        videoCtaLabel="See How It Works"
-        checklist={["Share your QR code and link"]}
-      />
-    );
+  it.each([1, 2, 3] as const)(
+    "uses the same brand header background and white text for step %i",
+    (step) => {
+      render(
+        <CourseCard
+          step={step}
+          eyebrow="Before the weekend service"
+          title="Get Your Team Ready"
+          videoCtaLabel="See How It Works"
+          checklist={["Share your QR code and link"]}
+        />
+      );
 
-    const header = document.querySelector("[data-slot='course-card-step-header']");
+      const header = document.querySelector("[data-slot='course-card-step-header']");
 
-    expect(header).toHaveClass("bg-brand-700", "text-white");
-    expect(screen.getByText("STEP 1")).toBeInTheDocument();
-  });
+      expect(header).toHaveClass("bg-text-brand", "text-white");
+      expect(screen.getByText(`STEP ${step}`)).toBeInTheDocument();
+    }
+  );
 
   it("uses the shared neutral Figma button treatment for the video CTA", () => {
     render(
