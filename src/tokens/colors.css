@@ -55,10 +55,17 @@
   --background-gradient-to: oklch(0.983 0.011 84.578); /* Colors/Yellow/25, #fdf9f1 */
 
   /* Course Card's numbered step-header backgrounds (node 2316:26815 and
-   * siblings) — a 3-tier brand accent scale that darkens per step. Steps 1/2
-   * reuse existing tokens by exact hex match (border-brand #c07858,
-   * text-brand #894e34); brand-900 is the new third tier with no existing
-   * equivalent. */
+   * siblings) — a 3-tier brand accent scale that darkens per step. Step 2
+   * reuses an existing token by exact hex match (text-brand #894e34);
+   * brand-900 is a new tier with no existing equivalent (step 3). Step 1
+   * originally reused border-brand (#c07858) directly, but Figma's
+   * white-on-that-fill pairing only hits 3.46:1 with white text — below
+   * WCAG AA's 4.5:1 for this non-"large text" label. brand-700 is a
+   * darkened variant of the same border-brand hue (same 44.483 hue angle,
+   * scaled ~0.66x in linear RGB) that clears 4.83:1 with white, so Step 1
+   * can use white text/icon like Steps 2/3 instead of the higher-contrast
+   * but off-brand text-foreground swap. */
+  --brand-700: oklch(0.559 0.088 44.483); /* Darkened border-brand for CourseCard step 1, #9f6348 */
   --brand-900: oklch(0.309 0.054 40.586); /* Component colors/Utility/Brand/utility-brand-900, #47261a */
 
   /* Status colors — participation-level indicator (HeartChartSummary). Root-only:
@@ -214,6 +221,7 @@
   --color-overlay: var(--overlay);
   --color-background-gradient-from: var(--background-gradient-from);
   --color-background-gradient-to: var(--background-gradient-to);
+  --color-brand-700: var(--brand-700);
   --color-brand-900: var(--brand-900);
   --color-status-success: var(--status-success);
   --color-status-success-strong: var(--status-success-strong);

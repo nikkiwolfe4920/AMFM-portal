@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 
 const STEP_HEADER_CLASSNAME: Record<1 | 2 | 3, string> = {
-  1: "bg-border-brand text-foreground",
+  1: "bg-brand-700 text-white",
   2: "bg-text-brand text-white",
   3: "bg-brand-900 text-white",
 };

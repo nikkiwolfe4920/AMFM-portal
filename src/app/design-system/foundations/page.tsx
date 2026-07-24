@@ -49,6 +49,11 @@ const COLOR_SWATCHES: { name: string; className: string; hint?: string }[] = [
     hint: "Personalized emphasis on /welcome #e9c481",
   },
   {
+    name: "brand-700",
+    className: "bg-brand-700",
+    hint: "CourseCard step 1 header #9f6348",
+  },
+  {
     name: "brand-900",
     className: "bg-brand-900",
     hint: "CourseCard step 3 header #47261a",
