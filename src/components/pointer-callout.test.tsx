@@ -25,9 +25,9 @@ describe("PointerCallout", () => {
     expect(pointer).not.toBeNull();
   });
 
-  it("renders the diagonal-tail asset and marks it decorative when pointerPosition is bottom-left-diagonal", () => {
+  it("renders the diagonal-tail asset and marks it decorative when pointerPosition is left-diagonal", () => {
     const { container } = render(
-      <PointerCallout pointerPosition="bottom-left-diagonal">
+      <PointerCallout pointerPosition="left-diagonal">
         <p>Callout content</p>
       </PointerCallout>
     );

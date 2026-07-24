@@ -8,18 +8,17 @@ interface PointerCalloutProps {
   /**
    * Which edge the speech-bubble pointer/tail is drawn on. The four cardinal
    * values render a small rotated-square notch cut into that edge.
-   * `"bottom-left-diagonal"` instead renders the long diagonal tail asset
-   * (`/speechbubblepointer.svg`) hanging off the bottom-left corner — used
-   * when the callout needs to point down toward a specific element below
-   * and to the left (e.g. `WeDoCard`'s illustration) rather than just
-   * marking its nearest edge.
+   * `"left-diagonal"` instead renders the long diagonal tail asset
+   * (`/speechbubblepointer.svg`) hanging off the bubble's left edge,
+   * vertically centered — used by `WeDoCard`'s pull-quote bubble, confirmed
+   * against Figma node `4255:30880`.
    */
-  pointerPosition?: "top" | "right" | "bottom" | "left" | "bottom-left-diagonal";
+  pointerPosition?: "top" | "right" | "bottom" | "left" | "left-diagonal";
   className?: string;
 }
 
 const POINTER_POSITION_CLASSES: Record<
-  Exclude<PointerCalloutProps["pointerPosition"], "bottom-left-diagonal" | undefined>,
+  Exclude<PointerCalloutProps["pointerPosition"], "left-diagonal" | undefined>,
   string
 > = {
   top: "-top-1.5 left-6 border-r-0 border-b-0",
@@ -40,12 +39,16 @@ function PointerCallout({
   pointerPosition = "left",
   className,
 }: PointerCalloutProps) {
-  const isDiagonal = pointerPosition === "bottom-left-diagonal";
+  const isDiagonal = pointerPosition === "left-diagonal";
 
   return (
     <div
       data-slot="pointer-callout"
-      className={cn("relative rounded-lg border bg-muted p-4", className)}
+      className={cn(
+        "relative rounded-lg border border-border-secondary bg-muted",
+        isDiagonal ? "px-6 py-4" : "p-4",
+        className
+      )}
     >
       {isDiagonal ? (
         <Image
@@ -55,7 +58,7 @@ function PointerCallout({
           width={18}
           height={20}
           unoptimized
-          className="absolute top-full left-8 -translate-y-px"
+          className="absolute top-1/2 -left-[17px] -translate-y-1/2"
         />
       ) : (
         <span

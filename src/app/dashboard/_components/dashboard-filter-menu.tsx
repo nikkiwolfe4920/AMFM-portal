@@ -25,10 +25,11 @@ function slugify(label: string) {
 /**
  * Demographic filter row (Gender, Relationship Status, Years in
  * Relationship, Kids, Age) — see COMPONENTS.md#dashboardfiltermenu. Each
- * group is a single-select radiogroup, not a tablist — deliberately
- * distinct from HorizontalTabs even though both render as pill segmented
- * controls; see that entry's Implementation rules for why the two must not
- * share an interactive primitive.
+ * group is a single-select radiogroup of independent pill chips, not one
+ * shared pill container — deliberately distinct from HorizontalTabs even
+ * though both render as pill-shaped controls; see that entry's
+ * Implementation rules for why the two must not share an interactive
+ * primitive.
  */
 function DashboardFilterMenu({
   groups,
@@ -40,32 +41,33 @@ function DashboardFilterMenu({
   return (
     <div
       data-slot="dashboard-filter-menu"
-      className={cn("flex flex-col gap-4", className)}
+      className={cn("flex flex-wrap items-start gap-6", className)}
     >
-      <p className="text-sm text-muted-foreground">
-        Showing{" "}
-        <span className="font-semibold text-foreground">
+      <div className="flex shrink-0 flex-col gap-1">
+        <span className="text-sm text-muted-foreground">Showing</span>
+        <span className="text-3xl leading-none font-bold text-foreground">
           {resultCount.toLocaleString()}
-        </span>{" "}
-        of {totalCount.toLocaleString()} people
-      </p>
+        </span>
+        <span className="text-sm text-muted-foreground">
+          of {totalCount.toLocaleString()} people
+        </span>
+      </div>
 
-      <div className="flex flex-wrap gap-x-8 gap-y-4">
+      <div aria-hidden="true" className="hidden h-32 w-px shrink-0 bg-border-secondary sm:block" />
+
+      <div className="flex flex-1 flex-wrap gap-x-16 gap-y-4">
         {groups.map((group) => {
           const labelId = `dashboard-filter-${slugify(group.label)}-label`;
           return (
-            <div key={group.label} className="flex flex-col gap-2">
-              <span
-                id={labelId}
-                className="text-xs font-semibold tracking-[0.24px] text-text-tertiary uppercase"
-              >
+            <div key={group.label} className="flex flex-col gap-3">
+              <span id={labelId} className="text-sm font-semibold text-foreground">
                 {group.label}
               </span>
               <RadioGroupPrimitive.Root
                 value={group.value}
                 onValueChange={(value) => onChange(group.label, value)}
                 aria-labelledby={labelId}
-                className="flex flex-wrap items-center gap-1 rounded-full bg-muted p-1"
+                className="flex flex-wrap items-center gap-1"
               >
                 {group.options.map((option) => {
                   const active = option.value === group.value;
@@ -74,10 +76,10 @@ function DashboardFilterMenu({
                       key={option.value}
                       value={option.value}
                       className={cn(
-                        "focus-visible:ring-ring/50 rounded-full px-3 py-1.5 text-sm font-medium whitespace-nowrap outline-none transition-colors focus-visible:ring-[3px]",
+                        "focus-visible:ring-ring/50 h-7 rounded-full px-3 text-sm whitespace-nowrap outline-none transition-colors focus-visible:ring-[3px]",
                         active
-                          ? "bg-primary text-primary-foreground shadow-xs"
-                          : "text-muted-foreground hover:text-foreground"
+                          ? "bg-foreground text-background"
+                          : "border border-border-secondary bg-background text-text-tertiary hover:bg-accent"
                       )}
                     >
                       {option.label}

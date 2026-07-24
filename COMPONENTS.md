@@ -1663,6 +1663,8 @@ interface HeartChartSummaryProps {
 
 `shadow-card`, `rounded-2xl`/`rounded-md`, `bg-background`, `border` (outer/inner card hairlines, participation-level sub-panel border) + `bg-muted/50` (participation-level sub-panel, badge — `bg-muted/50` reused per `Input`'s established `#fafafa`-over-white precedent, not a new gray token), `text-foreground` (badge text), `text-text-tertiary` (participation-level eyebrow label — the 12px uppercase label needs the darker supporting-copy token for contrast on the muted sub-panel), `text-muted-foreground`/`bg-muted-foreground` (supporting sentence, "Individuals" caption, donut percentage label, inactive bar-segment text, marker triangle+stem), `border-secondary` (donut track ring — exact match, see Implementation rules), `bg-muted` (inactive bar segments), `status-success`/`status-success-strong`, `status-warning`/`status-warning-subtle` (new — see `DESIGN.md` Color tokens and Known gaps). The three action buttons use `Button variant="outline"` and inherit `bg-button-outline-bg`, `border-button-outline-border`, `text-button-outline-fg`, and `text-button-outline-icon` from the shared Button contract.
 
+**Donut value arc is a gradient, not a flat stroke.** The value arc's `<circle>` is painted with `stroke={url(#gradientId)}` referencing an SVG `<linearGradient>` (top-to-bottom, `x1/y1="0%"` → `x2/y2="0%"/"100%"`) built from the same two-stop tone pairs as `ParticipationScale`'s active segment — `status-success-strong` → `status-success` for the success tone, `status-warning-subtle` → `status-warning` for the warning tone — rather than a single flat `stroke-status-success`/`stroke-status-warning`. This is a direct match to Figma's real gradient ring (previously implemented as a flat stroke as a placeholder) and makes the donut and the segmented scale bar read as one consistent color story for a given tone, since they now share the identical gradient stop pair.
+
 **Deliberately not using `text-text-secondary`/`fg-disabled`/`border-black/10` for most of the summary card's own non-button chrome**, even though several are closer pixel matches to Figma's exact grays — `DESIGN.md`'s "Auth/onboarding surfaces are theme-fixed" section scopes those specifically to the fixed-light auth surface family (root-only, no `.dark` value by design). This card is a themed dashboard surface, not a fixed-light one, so reusing those tokens broadly left inactive scale segments, borders, and marker/tint colors stuck in their light-mode value under `.dark` — confirmed by actually toggling `.dark` during implementation and seeing bright, undarkened elements against an otherwise-dark card. Swapped to the equivalent theme-aware generic tokens (`foreground`/`muted-foreground`/`muted`/`border`) for the bulk of the component; the lone exception is the tiny participation-level eyebrow label, which uses existing `text-text-tertiary` because `text-muted-foreground` failed browser accessibility contrast on the muted sub-panel. The action buttons now rely on `Button`'s semantic outline tokens instead of local color overrides — an exception is `border-secondary`, which Figma's own variable export confirmed as the donut track's literal fill and which already carries a verified `.dark` value, so no trade-off was needed there.
 
 ### Accessibility requirements
@@ -1685,7 +1687,7 @@ interface HeartChartSummaryProps {
 - **Marker shape is a downward triangle plus a thin vertical stem** (`bg-muted-foreground`) spanning from just above the bar down into it, matching Figma's "Marker" vector asset (a triangle-topped line, not a bare triangle) — a bare CSS triangle with no stem read as visually incomplete next to Figma's reference.
 - Reuse `Button` (`variant="outline" size="compact"`) for the three 38px action buttons rather than hand-rolling button markup or applying local color overrides — shared `Button` owns the compact geometry, 20px icon slot, icon/text gap, semantic outline colors, border/shadow/focus/hover treatment, and dark-mode fallback.
 - Icons: `lucide-react`'s `Lightbulb`, `TrendingUp`, `QrCode` for Quick Tip / Last 4 Weeks / Share Your Link respectively (matching `iconLibrary` in `components.json`) — Figma's own icon names are `lightbulb-02`, `line-chart-up-02`, `qr-code-01`; these are the closest stable `lucide-react` equivalents, not pixel-identical to Figma's icon set (same category of approximation as `GoogleIcon`).
-- Donut chart is a hand-built SVG (stroke-based ring, not a fetched/rasterized asset) so it can respond to an arbitrary `percentage` value — Figma's version is a set of pre-rendered PNGs per sample state, which can't generalize to real data. Track ring uses `stroke-border-secondary` (confirmed an exact match — see `DESIGN.md` Known gaps); the value arc uses `stroke-status-success`/`stroke-status-warning` per the derived level; the center percentage label uses `text-muted-foreground` (see Design tokens used above for why not Figma's literal `text-secondary-700`). Marked `aria-hidden` (see Accessibility).
+- Donut chart is a hand-built SVG (stroke-based ring, not a fetched/rasterized asset) so it can respond to an arbitrary `percentage` value — Figma's version is a set of pre-rendered PNGs per sample state, which can't generalize to real data. Track ring uses `stroke-border-secondary` (confirmed an exact match — see `DESIGN.md` Known gaps); the value arc's stroke is a per-instance SVG `<linearGradient>` (id generated via `React.useId()` so multiple donuts on one page don't collide) rather than a flat `stroke-status-success`/`stroke-status-warning`, reusing the same two-stop gradient pair as `ParticipationScale`'s active segment for the derived tone — see Design tokens used above; the center percentage label uses `text-muted-foreground` (see Design tokens used above for why not Figma's literal `text-secondary-700`). Marked `aria-hidden` (see Accessibility).
 - Single use site today (no consuming dashboard route yet) — colocated at `src/components` rather than a route's `_components` because it's an app-level (not route-specific) business component per `CLAUDE.md`'s structure guidance, and is expected to be consumed by a future dashboard route. Internal helpers (the donut renderer, the scale bar) are kept as unexported functions in the same file rather than extracted, per `CLAUDE.md`'s anti-premature-abstraction guidance — extract to shared primitives only once a second real chart/scale-bar use case appears.
 - Don't skip the `Known gaps` items above (no dark-mode tokens, approximated donut track color, no 0%-state design, unverified responsive behavior) when promoting this component out of `Draft` — resolve them for real or get explicit product sign-off to ship without them.
 - The outer shell (`p-2 shadow-card rounded-2xl` wrapping an inner bordered `rounded-md` panel) is the same nested-card shape as `AuthCard`, built locally rather than importing/extending it — `AuthCard` is intentionally route-colocated and fixed-width for the auth surface specifically, and (being fixed-light) uses `border-black/10` for its inner hairline where this component uses the theme-aware `border` instead (see the token-choice note above). This is now the *second* real instance of the nested-shell shape; if a third appears, extract it into a shared primitive (e.g. under `src/components`) instead of a third copy-paste.
@@ -2304,9 +2306,11 @@ Church-wide "WeDo" (couples relationship app) engagement snapshot — the counte
 
 ### Anatomy
 
-Outer elevated shell (`ElevatedCard`, same nested outer-shadow-shell/inner-bordered-panel shape as `HeartChartSummary`) → WeDo wordmark logo (top-left) → optional "Next Pulse in {label}" countdown text (top-right) → a two-column row: **left column** — big stat number ("363 Couples", in the WeDo brand red), supporting sentence ("Active in the app today"), and the couple illustration (`public/We-do.png`, rendered at a fixed 186×186px) stacked directly beneath it; **right column** — a `flex-col` stack containing `PointerCallout` (see below), stretched to fill the remaining width, with a large decorative quotation mark (lucide `Quote`, mirrored to read as an opening quote, in the WeDo brand red) above an uppercase "Most of your couples say..." label + pull-quote (with an optional highlighted phrase in the WeDo brand red) + a "Source: {quoteSource}" attribution line, and directly beneath the callout, the action row: two `Button` instances ("See Results", "Share Your Code"), right-aligned (`justify-end`) so their combined right edge lines up with `PointerCallout`'s own right edge.
+Outer elevated shell (`ElevatedCard`, same nested outer-shadow-shell/inner-bordered-panel shape as `HeartChartSummary`) → WeDo wordmark logo (top-left) → optional "Next Pulse in {label}" countdown text (top-right) → a two-column row: **left column** — big stat number ("363 Couples", in the WeDo brand red), supporting sentence ("Active in the app today"), and the couple illustration (`public/We-do.png`, rendered wider-than-tall via `aspect-[223/156] w-full max-w-[223px]`) stacked directly beneath it; **right column** — a `flex-col` stack containing `PointerCallout` (see below), stretched to fill the remaining width, with a large low-opacity serif `&ldquo;` glyph watermarked top-left behind the label (see Design tokens used) above an uppercase "Most of your couples say..." label + pull-quote (with an optional highlighted phrase in the WeDo brand red) + a "Source: {quoteSource}" attribution line, and directly beneath the callout, the action row: two `Button` instances ("See Results", "Share Your Code"), right-aligned (`justify-end`) so their combined right edge lines up with `PointerCallout`'s own right edge.
 
 Corrected from an earlier pass that had put the couple illustration *inside* `PointerCallout`, beside the quote text, and stacked the stat row and the callout full-width on top of each other — re-verified against a native-resolution (1523×4573) full-page screenshot of node `3727:29573`, which shows the illustration sitting under "Active in the app today" in its own column, not next to the quote. Corrected again in a later pass: the action row was pinned full-width to the bottom of the whole card (spanning under both columns); it now lives inside the right column only, right-aligned under `PointerCallout` so it reads as that callout's own action row rather than the card's.
+
+Corrected a third time in the Figma-to-code cleanup pass: the decorative quotation mark was a small solid red Lucide `Quote` icon, and the couple illustration was forced to a square `size-[186px]` — both were placeholders pending closer verification. Figma's real pull-quote mark is a large, low-opacity serif glyph watermarked *behind* the label text (not a small solid icon sitting above it), and the illustration's real proportion is wider-than-tall (~223×156), not square — see Design tokens used and Implementation rules below for the corrected treatment of each.
 
 ### Variants
 
@@ -2341,13 +2345,15 @@ interface WeDoCardProps {
 
 ### Design tokens used
 
-Reuse `HeartChartSummary`'s existing token set for the shared shell/surfaces — `shadow-card`, `rounded-2xl`, `border`, `text-foreground`, `text-muted-foreground`, `text-text-tertiary`. One new token: `wedo-brand` (`text-wedo-brand`) — WeDo's own brand red (Figma `Colors/Red/500`, `#cd4745`), distinct from the app's `primary` terracotta accent, used for the couple-count stat and the quote's highlighted phrase. See `DESIGN.md`'s Color tokens table.
+Reuse `HeartChartSummary`'s existing token set for the shared shell/surfaces — `shadow-card`, `rounded-2xl`, `border`, `text-foreground`, `text-muted-foreground`, `text-text-tertiary`. One new token: `wedo-brand` (`text-wedo-brand`) — WeDo's own brand red (Figma `Colors/Red/500`, `#cd4745`), distinct from the app's `primary` terracotta accent, used for the couple-count stat and the quote's highlighted phrase. Pull-quote body text is `text-base` (bumped up from an earlier `text-sm`, matching Figma's actual quote type scale). See `DESIGN.md`'s Color tokens table.
+
+The decorative quote mark uses `font-display text-8xl text-muted-foreground/75` — the existing display serif family at a large size and a low-opacity neutral tone, not a new token, absolutely positioned (`-top-3 -left-1`) so it reads as a background watermark behind the "Most of your couples say..." label rather than a small solid-color icon sitting above the text.
 
 ### Accessibility requirements
 
 - The couple illustration (`/We-do.png`), positioned beneath the stat/caption in the left column, is decorative (`alt=""`, `aria-hidden="true"`); the quote itself is real DOM text, not baked into an image, so it reaches assistive tech.
 - The WeDo wordmark (`/We-do-logo.svg`) carries a real `alt="WeDo"`, since it's the card's identifying mark, not decorative — same treatment as `HeartChartLogo`.
-- The large decorative quotation mark (lucide `Quote`) is `aria-hidden` — it's a typographic flourish restating that the text below is a quote, which the surrounding "Most of your couples say..." label and curly-quote punctuation already convey to assistive tech.
+- The large decorative quotation mark (a `<span>` rendering `&ldquo;`, not an image) is `aria-hidden` and `select-none` — it's a typographic flourish restating that the text below is a quote, which the surrounding "Most of your couples say..." label and the real curly-quote punctuation wrapping the quote text already convey to assistive tech.
 - Both action buttons render through `Button`, inheriting its focus-visible ring and keyboard behavior; each has a visible text label alongside its icon, so no additional `aria-label` is required.
 - The highlighted phrase inside the quote is conveyed with color alone (a `<span>`, no bold/underline) — this is a stylistic emphasis on already-present text, not new information, so it doesn't trip DESIGN.md's "color is never the only signal" rule (which applies to state/status, not inline typographic emphasis).
 
@@ -2360,13 +2366,13 @@ Sits side-by-side with `HeartChartSummary` at desktop width (each roughly half t
 - Composed on `ElevatedCard` rather than a local copy of the nested-shell shape, per this entry's own prior note and `ElevatedCard`'s Implementation rules.
 - Reuses `Button variant="outline" size="compact"` for both actions, each with a leading `lucide-react` icon (`Eye` for "See Results", `QrCode` for "Share Your Code" — the latter mirroring `HeartChartSummary`'s "Share Your Link" icon choice), matching `HeartChartSummary`'s action-row treatment.
 - **Implemented**: the WeDo wordmark renders from the real exported asset (`public/We-do-logo.svg`, WeDo's brand red `#CD4745`) via `next/image`, unoptimized (same pattern as `HeartChartLogo`) — no longer a hand-authored icon approximation.
-- **Implemented**: the couple illustration renders from the real exported asset (`public/We-do.png`, source asset 990×874px) via `next/image`, decorative and `aria-hidden`, at a fixed display size of `size-[186px]` (`object-contain`, so the non-square source asset letterboxes rather than distorting), in the left column beneath the stat/caption text (`mt-auto` on the image keeps it pinned to the bottom of that column) — not inside `PointerCallout`.
+- **Implemented**: the couple illustration renders from the real exported asset (`public/We-do.png`, source asset 990×874px) via `next/image`, decorative and `aria-hidden`, at `aspect-[223/156] w-full max-w-[223px]` (`object-contain`) rather than an earlier forced-square `size-[186px]` — the source asset's real proportion is wider-than-tall (~223×156), and the fixed square crop was distorting/letterboxing it incorrectly. `aspect-[223/156]` reproduces Figma's actual proportion responsively (scaling with the column's width up to `max-w-[223px]`) instead of copying Figma's fixed absolute pixel size. Sits in the left column beneath the stat/caption text (`mt-auto` keeps it pinned to the bottom of that column) — not inside `PointerCallout`.
 - The stat/caption/image column and the right-hand `flex-col` (holding `PointerCallout` and the action row) sit in a `flex flex-wrap` row (`items-stretch` so the right column matches the left column's height); the right column takes `flex-1 min-w-0` to fill the remaining width and lets the quote text wrap instead of overflowing.
 - The action row (`justify-end`) and `PointerCallout` are both direct children of that same right-hand `flex-col`, not siblings of the left column — this is what makes the buttons' right edge line up with `PointerCallout`'s right edge, rather than the card's own outer edge.
-- **Implemented**: a large decorative quotation mark (lucide `Quote`, `text-wedo-brand`, `-scale-x-100` so its default closing-quote glyph reads as an opening quote) sits above the "Most of your couples say..." label, inside `PointerCallout`'s content — matches the Figma pull-quote's missing quotation-mark glyph.
-- `PointerCallout` renders with `pointerPosition="bottom-left-diagonal"` (see that component's entry) so its tail points down toward the couple illustration in the left column, instead of the plain-notch `"left"` pointer used in an earlier pass.
+- **Corrected**: the decorative quotation mark was previously a small, solid `text-wedo-brand` Lucide `Quote` icon (`-scale-x-100` to read as an opening quote) sitting above the label. Figma's real pull-quote mark is a large (`text-8xl`), low-opacity (`text-muted-foreground/75`) serif (`font-display`) `&ldquo;` glyph, absolutely positioned (`-top-3 -left-1`) as a background watermark *behind* the "Most of your couples say..." label and quote — a plain `<span>`, not an icon component, `aria-hidden` and `select-none` since it's purely decorative.
+- `PointerCallout` renders with `pointerPosition="left-diagonal"` (renamed from an earlier `"bottom-left-diagonal"` — see that component's entry) so its tail hangs off the bubble's left edge, vertically centered, instead of the plain-notch `"left"` pointer used in an even earlier pass.
 - The quote's highlighted phrase is matched by exact substring (`quote.indexOf(highlightedPhrase)`) and wrapped in a `text-wedo-brand` span — this only supports a single, contiguous highlighted run per quote (matches the one confirmed Figma instance); do not extend to multiple highlighted ranges without a confirmed second use case.
-- A connecting caption row ("HeartChart shows you where your people are" / "WeDo helps them get where they want to go") sits below both hero cards on the page — this is page-level connective copy, not part of `WeDoCard`'s or `HeartChartSummary`'s own anatomy; do not fold it into either component.
+- A connecting caption row sits below both hero cards on the page, now built from two `PointerCalloutArrow` instances ("HeartChart shows your people where they are." / "WeDo helps them get where they want to go.") rather than a single plain caption paragraph — this is page-level connective copy, not part of `WeDoCard`'s or `HeartChartSummary`'s own anatomy; do not fold it into either component. See `PointerCalloutArrow`'s own entry (immediately following `PointerCallout` below) — despite the similar name, it is a distinct component from `PointerCallout`.
 
 ### Visual examples
 
@@ -2393,7 +2399,7 @@ Rounded bordered grey container → directional pointer/tail graphic on one edge
 Two pointer treatments, chosen via `pointerPosition`:
 
 - **Cardinal notch** (`"top"` / `"right"` / `"bottom"` / `"left"`) — a small rotated-square notch cut into the given edge, sized and colored to match the container so it reads as a seamless extension of that edge.
-- **Diagonal tail** (`"bottom-left-diagonal"`) — a longer diagonal tail asset (`public/speechbubblepointer.svg`) hanging off the bottom-left corner, tapering to a point down and to the left. Used when the callout needs to point at a specific element below-and-left of the box (`WeDoCard`'s couple illustration) rather than just marking its nearest edge — the cardinal notch can't express that diagonal direction.
+- **Diagonal tail** (`"left-diagonal"`, renamed from an earlier `"bottom-left-diagonal"`) — a longer diagonal tail asset (`public/speechbubblepointer.svg`) hanging off the bubble's **left edge**, vertically centered (`top-1/2 -left-[17px] -translate-y-1/2`), confirmed against Figma node `4255:30880`. This corrects an earlier pass that rendered the tail below the bubble at the bottom-left corner — the confirmed reference shows it centered on the left edge instead, hence the prop rename to drop the now-inaccurate "bottom" in the name.
 
 No interactive/popover variant is validated — see the prior note (still applicable): other elements on the dashboard ("Why does this matter?" on `ScaleChartCard`, "Understanding your data" on the Relationship Health card header) visually resemble a possible trigger for an interactive/on-demand version of this shape, but their interaction model was not confirmed — do not build a second interactive variant until that's verified directly against Figma.
 
@@ -2406,14 +2412,14 @@ None — neither pointer variant has interactive state.
 ```ts
 interface PointerCalloutProps {
   children: React.ReactNode;
-  pointerPosition: "top" | "right" | "bottom" | "left" | "bottom-left-diagonal";
+  pointerPosition: "top" | "right" | "bottom" | "left" | "left-diagonal";
   className?: string;
 }
 ```
 
 ### Design tokens used
 
-`border`, `rounded-lg`, `bg-muted` — a flat, fully-opaque grey fill (not `bg-background`/`bg-card`, and not an alpha-blended `/50` tint like `HeartChartSummary`'s participation-level box). Confirmed against a native-resolution full-page screenshot of node `3727:29573`: the "Most of your couples say..." box renders as a subtle solid grey, distinct from the white card surface behind it. Full opacity is deliberate here, not just a style preference — the pointer/tail overlaps the container's edge, and a translucent fill would double-composite where the tail sits over the box versus over the surrounding white card, producing a visible two-tone seam; a flat `bg-muted` keeps the tail and box the same color everywhere. The `"bottom-left-diagonal"` tail is a static SVG asset (`public/speechbubblepointer.svg`) rather than a Tailwind-styled `<span>`, but its baked-in fill/stroke (`#FAFAFA`/`#E9EAEB`) were colour-matched to `bg-muted`/`border` at export time, so it still reads as the same surface — if either token's value changes, re-export the asset to match.
+`border-border-secondary` (fixed from an earlier, less-precise `border`), `rounded-lg`, `bg-muted` — a flat, fully-opaque grey fill (not `bg-background`/`bg-card`, and not an alpha-blended `/50` tint like `HeartChartSummary`'s participation-level box). Confirmed against a native-resolution full-page screenshot of node `3727:29573`: the "Most of your couples say..." box renders as a subtle solid grey, distinct from the white card surface behind it. Full opacity is deliberate here, not just a style preference — the pointer/tail overlaps the container's edge, and a translucent fill would double-composite where the tail sits over the box versus over the surrounding white card, producing a visible two-tone seam; a flat `bg-muted` keeps the tail and box the same color everywhere. Padding is variant-dependent: the cardinal notch variants keep a uniform `p-4`, while `"left-diagonal"` uses an asymmetric `px-6 py-4` — the extra left inset gives the tail room to sit clear of the content instead of overlapping it. The `"left-diagonal"` tail is a static SVG asset (`public/speechbubblepointer.svg`) rather than a Tailwind-styled `<span>`, but its baked-in fill/stroke (`#FAFAFA`/`#E9EAEB`) were colour-matched to `bg-muted`/`border-border-secondary` at export time, so it still reads as the same surface — if either token's value changes, re-export the asset to match.
 
 ### Accessibility requirements
 
@@ -2427,12 +2433,78 @@ Not yet evidenced against a mobile Figma reference — flag for verification bef
 
 - Extract as its own primitive from the start rather than inlining it inside `WeDoCard` — its visual language (rounded box + pointer tail) is distinct enough from `WeDoCard`'s own anatomy to warrant separation even at a single confirmed use site, unlike e.g. `HeartChartSummary`'s donut chart (which stayed unextracted until a second use case appeared) — this is a judgment call flagged here for visibility, not a hard reuse-count justification.
 - Use a solid background (`bg-muted`) on both the container and the cardinal-notch pointer `<span>`, never an alpha-based tint (`bg-muted/50` etc.) — see Design tokens used above for why the pointer's overlap makes opacity unsafe here, unlike other de-emphasized boxes in this file that have no overlapping child.
-- The `"bottom-left-diagonal"` tail renders via `next/image` (`unoptimized`, matching the rest of this file's exported-SVG pattern), positioned `absolute top-full left-8 -translate-y-px` — the `-translate-y-px` overlap hides the seam against the container's bottom border, same purpose as the cardinal variants' negative edge offsets.
+- The `"left-diagonal"` tail renders via `next/image` (`unoptimized`, matching the rest of this file's exported-SVG pattern), positioned `absolute top-1/2 -left-[17px] -translate-y-1/2` — vertically centered on the bubble's left edge, confirmed against Figma node `4255:30880`. This replaces an earlier `absolute top-full left-8 -translate-y-px` placement (below the bubble, at the bottom-left corner) that predated this node confirmation — the prop value was renamed from `"bottom-left-diagonal"` to `"left-diagonal"` in the same change, since "bottom" no longer describes where the tail renders.
 - Do not add the speculative interactive/popover variant described under Variants above without first confirming the interaction model directly in Figma. If confirmed, it must follow the Radix `Popover`/`Tooltip` ARIA pattern per `DESIGN.md`'s standing rule against hand-rolled custom widgets (already enforced for `Select`/`DropdownMenu`/`Dialog`) — never a plain absolutely-positioned `div`.
 
 ### Visual examples
 
-Rendered live on `/dashboard`, inside `WeDoCard`'s pull-quote (using the `"bottom-left-diagonal"` variant); tested at `src/components/pointer-callout.test.tsx`.
+Rendered live on `/dashboard`, inside `WeDoCard`'s pull-quote (using the `"left-diagonal"` variant); tested at `src/components/pointer-callout.test.tsx`.
+
+---
+
+## PointerCalloutArrow
+
+**Status**: Draft
+**Source**: `src/components/pointer-callout-arrow.tsx`
+**Figma**: No Figma node reachable — the node ID originally linked for this frame did not resolve via this environment's Figma MCP connection. Built instead from screenshots the user pasted directly in chat. This is a real, deliberate provenance gap, not a placeholder to be silently forgotten — re-confirm against the live Figma node once the connection can reach it, same class of gap already flagged for `ParticipationVerticalBarCard`'s gridlines and `StatusSnapshotCard` below.
+
+### Purpose
+
+A small curved-arrow-plus-caption pairing that visually connects `HeartChartSummary` and `WeDoCard` on the dashboard, reading as one sentence split across two instances ("HeartChart shows your people where they are." / "WeDo helps them get where they want to go."). Replaces what used to be a single plain caption paragraph below the two hero cards.
+
+**Explicitly not the same component as `PointerCallout`** despite the similar name — `PointerCallout` is the bordered speech-bubble primitive with a directional pointer/tail (used inside `WeDoCard`'s pull-quote); `PointerCalloutArrow` is a plain arrow-image-plus-text caption with no border, background, or bubble shape at all. Do not confuse the two or attempt to merge them — they solve different problems and share no anatomy beyond both having "pointer" and "callout" in the name.
+
+### Anatomy
+
+Curved arrow image (`/Arrowup-left.svg` or `/Arrowup-right.svg`, 44×44) → caption text (`font-display text-lg text-foreground`), with a leading bold `emphasis` word/phrase followed by a regular-weight `text` sentence fragment.
+
+### Variants
+
+One layout axis, via `side`:
+
+- **`"left"`** — arrow leads the text (default reading order: arrow, then text), pointing up-left. Used under/near `HeartChartSummary`.
+- **`"right"`** — `flex-row-reverse` so the arrow trails the text instead (text, then arrow), pointing up-right. Used under/near `WeDoCard`, so the pair visually mirrors each other across the two hero cards.
+
+### States
+
+None — a static, non-interactive caption. No hover/focus/disabled state applies.
+
+### Properties / API
+
+```ts
+interface PointerCalloutArrowProps {
+  /** Leading emphasized word/phrase, rendered bold (e.g. "HeartChart"). */
+  emphasis: string;
+  /** Rest of the sentence, rendered at regular weight. */
+  text: string;
+  /** Which side the curved arrow renders on. */
+  side: "left" | "right";
+  className?: string;
+}
+```
+
+### Design tokens used
+
+`font-display`, `text-lg`, `text-foreground` — the display serif family already used elsewhere for headline-weight copy (e.g. the dashboard's "Key Insights" `h2`), not a new token. No color/border/background tokens are involved — the component has no visual chrome beyond the arrow image and text.
+
+### Accessibility requirements
+
+- Both arrow assets (`/Arrowup-left.svg`, `/Arrowup-right.svg`) are decorative (`alt=""`, `aria-hidden="true"`) — the caption text alone carries the full meaning, so nothing is lost to assistive tech if the image doesn't load or isn't announced.
+- `emphasis` and `text` render as plain adjacent text (bold + regular weight) inside one `<p>`, not two separate elements with a manufactured gap — screen readers read it as one continuous sentence, matching the visual reading order for both `side` values (the `flex-row-reverse` on `"right"` only reorders the arrow relative to the text visually; the underlying DOM order of `emphasis` before `text` is unchanged, so reading order stays correct regardless of `side`).
+
+### Responsive behavior
+
+Not yet evidenced against a mobile Figma reference (see the provenance gap above) — the dashboard's call site stacks the two instances vertically (`flex-col`) below `lg` and lays them out `flex-row` with `justify-between` at `lg` and above; this stacking behavior was verified in-browser but exact mobile spacing is unconfirmed.
+
+### Implementation rules
+
+- **No Figma node ID for this component** — do not invent one. It was built from screenshots the user pasted directly in chat because the originally-linked node did not resolve via this environment's Figma MCP connection. Treat the current implementation as a best-effort reproduction of those screenshots, not a pixel-verified match; re-verify against the live node once reachable.
+- Two instances are rendered side by side on `/dashboard`, between the `HeartChartSummary`/`WeDoCard` hero row and the "Bedford Campus Participation Profile" card, at the call site in `src/app/dashboard/_components/dashboard-content.tsx` — not inside `HeartChartSummary` or `WeDoCard` themselves, matching this file's existing precedent (see `WeDoCard`'s own note on the prior single-caption-row version) that page-level connective copy between two cards belongs at the page/route level, not folded into either card component.
+- Colocated at `src/components` (not route-colocated under `_components`) since it composes with both `HeartChartSummary` and `WeDoCard`, which already live there — matches those two components' existing app-level placement per `CLAUDE.md`'s structure guidance.
+
+### Visual examples
+
+Rendered live on `/dashboard`, between the hero card row and the "Bedford Campus Participation Profile" card (two instances, `side="left"` and `side="right"`).
 
 ---
 
@@ -2440,15 +2512,15 @@ Rendered live on `/dashboard`, inside `WeDoCard`'s pull-quote (using the `"botto
 
 **Status**: Draft (implemented; rendered on `/dashboard`)
 **Source**: `src/components/participation-vertical-bar-card.tsx`
-**Figma**: AMFM Portal file, node `3727:29573`, "Bedford Campus Participation Profile" card, first column ("Age Groups")
+**Figma**: AMFM Portal file, node `3727:29573`, "Bedford Campus Participation Profile" card, first column ("Age Groups") for the card shell/bars; the gridline treatment specifically has **no reachable Figma node** (see Implementation rules) — rebuilt from a screenshot the user pasted directly in chat.
 
 ### Purpose
 
-Presents a single categorical distribution as a labeled vertical bar chart inside a bordered sub-panel — one of three peer widgets inside the "Participation Profile" card (confirmed instance: "Age Groups").
+Presents a single categorical distribution ("Age Groups") as a labeled vertical bar chart inside a bordered sub-panel — one of three peer widgets inside the "Participation Profile" card.
 
 ### Anatomy
 
-Icon + label header (e.g. leading icon + "Age Groups") → vertical bar chart, one bar per category, with a percentage label above each bar and a category label below each bar.
+Icon + label header (`next/image` icon + "Age Groups") → vertical bar chart area with 4 horizontal gridlines behind the bars → one bar per category, with a bold value label above each bar and a category label below each bar.
 
 ### Variants
 
@@ -2474,20 +2546,26 @@ interface ParticipationVerticalBarCardProps {
 
 ### Design tokens used
 
-Bar fill reads as a light brand/neutral tone in the reference screenshot — exact token not yet confirmed against a direct node pull. **Do not default to the generic `chart-1`…`chart-5` tokens** in `src/tokens/colors.css` — those are the unmodified shadcn/ui scaffold palette, not sourced from this Figma file's actual data-visualization colors (see the audit's DESIGN.md-inconsistencies finding). Confirm real values, or raise a `DESIGN.md` foundations update for a real data-viz palette, before implementing.
+- Card shell: `rounded-xl border` with `p-6 gap-6` (bumped up from an earlier `rounded-md border p-4 gap-4` — the confirmed Figma card is more generously padded than the original pass assumed).
+- Title: `text-base font-bold` (up from `text-sm font-semibold`).
+- Bar fill: `bg-gradient-to-b from-chart-participation-fill-from to-chart-participation-fill-to` — a top-to-bottom two-stop gradient, replacing the single flat `chart-participation-fill` token (which no longer exists in `src/tokens/colors.css`; it was split into this `-from`/`-to` pair once the real gradient fill was confirmed). Bar rounding is `rounded-t-md` (up from `rounded-t-sm`).
+- Value label (above each bar): `text-sm font-bold text-primary` — the app's brand terracotta accent, replacing an earlier small muted-text treatment, so the value reads as the emphasized element per bar.
+- Gridlines: 4 rows of `border-t border-border-secondary`, absolutely positioned behind the bar area via a `grid` with `gridTemplateRows: repeat(4, minmax(0, 1fr))` — screenshot-derived (see Implementation rules), not sourced from a direct node pull.
 
 ### Accessibility requirements
 
-Chart is a visual read of numeric data already rendered as real on-bar percentage/category text labels (not baked into an image or canvas) — same "SVG is `aria-hidden`, text carries the meaning" pattern already established by `HeartChartSummary`'s donut chart.
+Chart is a visual read of numeric data already rendered as real on-bar value/category text labels (not baked into an image or canvas) — same "SVG/decorative markup is `aria-hidden`, text carries the meaning" pattern already established by `HeartChartSummary`'s donut chart. The gridlines are purely decorative background (`aria-hidden="true"`) and carry no data of their own.
 
 ### Responsive behavior
 
-Renders as one of three siblings in a row at desktop width (with `ParticipationHorizontalBarCard` ×2). No mobile Figma reference confirmed — needs mobile-first stacking per `DESIGN.md`'s grid rules before shipping.
+Renders as one of three siblings in a row at desktop width (alongside two `StatusSnapshotCard` instances). No mobile Figma reference confirmed — needs mobile-first stacking per `DESIGN.md`'s grid rules before shipping.
 
 ### Implementation rules
 
-- Share a single underlying chart-rendering approach (SVG, not a raster image) with `FullWidthBarChart` if their visual language is confirmed to match — do not build two independent bar-chart implementations without checking first.
-- Build the donut/bar-rendering logic as hand-built SVG (not a fetched/rasterized asset) so it can respond to arbitrary data, matching `HeartChartSummary`'s existing precedent.
+- Share a single underlying chart-rendering approach (SVG/CSS, not a raster image) with `FullWidthBarChart` if their visual language is confirmed to match — do not build two independent bar-chart implementations without checking first.
+- Bars are hand-built with CSS (gradient-filled `div`s sized by percentage height), not a fetched/rasterized asset, so they can respond to arbitrary data, matching `HeartChartSummary`'s existing precedent.
+- **The 4 horizontal gridlines behind the bars have no reachable Figma node.** The Figma reference originally linked for this exact frame did not resolve via this environment's Figma MCP connection, so the gridline treatment was rebuilt from a screenshot the user pasted directly in chat instead — do not treat `GRIDLINE_ROWS = 4` as a pixel-verified Figma value; re-confirm directly against the live node once reachable, same class of gap as `PointerCalloutArrow` and `StatusSnapshotCard` below.
+- **Icon is now a real `next/image`** (`/age-group-icon.svg`, 23×17) passed in from the call site (`src/app/dashboard/_components/dashboard-content.tsx`), rather than a generic Lucide icon — the component itself still just accepts `icon: React.ReactNode` and renders whatever it's given, so this is a call-site change, not an API change.
 
 ### Visual examples
 
@@ -2495,37 +2573,43 @@ Rendered live on `/dashboard`'s "Bedford Campus Participation Profile" card (Age
 
 ---
 
-## ParticipationHorizontalBarCard
+## StatusSnapshotCard
 
-**Status**: Draft (implemented; rendered on `/dashboard`)
-**Source**: `src/components/participation-horizontal-bar-card.tsx`
-**Figma**: AMFM Portal file, node `3727:29573`, "Bedford Campus Participation Profile" card, second and third columns ("Relationship Status", "Kids")
+**Status**: Draft
+**Source**: `src/components/status-snapshot-card.tsx`
+**Figma**: No Figma node reachable for either variant — the Figma reference originally linked for this frame did not resolve via this environment's Figma MCP connection. Both variants (`"relationship"` and `"kids"`) were confirmed from screenshots the user pasted directly in chat instead; re-verify against the live node once reachable.
+
+**Supersedes `ParticipationHorizontalBarCard`** (`src/components/participation-horizontal-bar-card.tsx`), which has been deleted from the codebase along with its test file. That entry documented a generic icon/label/horizontal-bar-list shape for the "Relationship Status" and "Kids" widgets; this Figma-to-code cleanup pass replaced both with `StatusSnapshotCard`, a purpose-built, variant-driven component with confirmed per-variant iconography and gradient treatment. There is no remaining use site for the old component's shape — do not resurrect it as a third generic bar-list component without a confirmed new use case.
 
 ### Purpose
 
-Presents a categorical distribution as a horizontal bar/list — confirmed reused twice unmodified on this single frame ("Relationship Status", 6 rows; "Kids", 4 rows), the second and third widgets in the "Participation Profile" card.
+Presents a single categorical distribution ("Relationship Status" or "Kids") as a horizontal gradient-pill bar list — two of the three peer widgets inside the "Bedford Campus Participation Profile" card, alongside `ParticipationVerticalBarCard`.
 
 ### Anatomy
 
-Icon + label header → list of rows, each: category label (left) + horizontal bar proportional to value + percentage label (right).
+Icon + label header (`next/image` icon + title) → list of rows, each a thick (`h-12`) rounded-full gradient-pill bar with the row label overlaid on top-left (`pl-4`) and the bold value percentage at the far right, separated by `border-b border-border-secondary` dividers between rows (not after the last row).
 
 ### Variants
 
-None evidenced beyond dataset content — confirmed reused twice with different data and row counts, same visual treatment both times.
+Two, via `variant`:
+
+- **`"relationship"`** — `/relationship-status-icon.svg` icon, sage-gray gradient pill (`chart-status-relationship-from`/`-to`).
+- **`"kids"`** — `/kids-icon.svg` icon, lavender gradient pill (`chart-status-kids-from`/`-to`).
 
 ### States
 
 | State | Behavior |
 |---|---|
-| Default | Data-driven read of caller-supplied `data`. |
-| Empty/loading | Not evidenced in Figma — must be added before shipping, same gap as `ParticipationVerticalBarCard`. |
+| Default | Data-driven read of caller-supplied `data`; each row's bar width scales with its value relative to the dataset's max — see Implementation rules for the exact formula. |
+| Empty | Renders "No data yet." in place of the row list when `data` is empty — matches this file's established empty-state pattern for the other new chart tiles. |
+| Loading | Not evidenced in Figma — must be added before this component is considered production-ready, same gap as its dashboard siblings. |
 
 ### Properties / API
 
 ```ts
-interface ParticipationHorizontalBarCardProps {
+interface StatusSnapshotCardProps {
+  variant: "relationship" | "kids";
   title: string;
-  icon: React.ReactNode;
   data: { label: string; value: number }[];
   className?: string;
 }
@@ -2533,23 +2617,35 @@ interface ParticipationHorizontalBarCardProps {
 
 ### Design tokens used
 
-Not yet confirmed against a direct node pull — same caveat as `ParticipationVerticalBarCard`: verify against a real data-viz palette rather than defaulting to the generic `chart-*` scaffold tokens.
+- Card shell: `rounded-xl border p-6 gap-6` — matches `ParticipationVerticalBarCard`'s sibling card shell exactly, so the three widgets in the "Participation Profile" row read as one consistent set.
+- Title: `text-base font-bold`, matching `ParticipationVerticalBarCard`.
+- Bar pill: `bg-gradient-to-r` per variant — `"relationship"` uses new tokens `chart-status-relationship-from`/`chart-status-relationship-to` (sage-gray); `"kids"` uses new tokens `chart-status-kids-from`/`chart-status-kids-to` (lavender-gray). Both are two-stop left-to-right gradients, added to `src/tokens/colors.css` in this pass. Row label/value text is `text-sm text-foreground` / `text-sm font-bold text-foreground`.
+- Row divider: `border-b border-border-secondary`.
 
 ### Accessibility requirements
 
-Same pattern as `ParticipationVerticalBarCard` — bar is a visual read of already-rendered real text values, not the only signal.
+Each bar's label and value are real DOM text (`pl-4` label overlaid on the bar, value at the row's far right) — not baked into an image — matching this file's "chart is decorative, text carries the meaning" pattern established by `HeartChartSummary`'s donut. The gradient pill itself is `aria-hidden`.
 
 ### Responsive behavior
 
-Same 3-column sibling constraint as `ParticipationVerticalBarCard` — needs mobile-first stacking, not yet evidenced against a mobile frame.
+Renders as one of three siblings in a row at desktop width (alongside `ParticipationVerticalBarCard`). No mobile Figma reference confirmed — needs mobile-first stacking per `DESIGN.md`'s grid rules before shipping.
 
 ### Implementation rules
 
-- Confirmed reused twice on a single frame already clears `CLAUDE.md`'s reusability bar for a shared `src/components` primitive immediately — do not colocate this route-specific (unlike e.g. `PricingCard`'s single-use-site precedent).
+- **No Figma node reachable for this component** — do not invent a node ID. Both variants were built from screenshots pasted directly in chat because the originally-linked node did not resolve via this environment's Figma MCP connection; re-verify pixel values against the live node once reachable.
+- **Bar width uses a documented approximation, not pure proportional scaling**: `MIN_WIDTH_PERCENT = 35`, and each row's rendered width is `35 + (value / max) * (100 - 35)` percent. This floor exists because the screenshots this component was built from show bars that are visibly longer than a pure `(value / max) * 100` scaling would produce — even a low-percentage row (e.g. "Engaged" at 3%) renders as a clearly visible bar, not a near-invisible sliver. This is a screenshot-derived heuristic, not a pixel-verified Figma value; revisit once the source frame is directly reachable.
+- Icon renders via `next/image` (`unoptimized`), sized `size-5`, matching `ParticipationVerticalBarCard`'s icon treatment.
+- Card shell/title styling deliberately mirrors `ParticipationVerticalBarCard` exactly (`rounded-xl border p-6 gap-6`, `text-base font-bold` title) so the three "Participation Profile" widgets read as one set — do not let the two drift apart without a confirmed reason.
 
 ### Visual examples
 
-Rendered live on `/dashboard`'s "Bedford Campus Participation Profile" card (Relationship Status and Kids columns); tested at `src/components/participation-horizontal-bar-card.test.tsx`.
+Rendered live on `/dashboard`'s "Bedford Campus Participation Profile" card (Relationship Status and Kids columns).
+
+---
+
+## (retired) ParticipationHorizontalBarCard
+
+Deleted from the codebase (`src/components/participation-horizontal-bar-card.tsx` and its test no longer exist) — superseded by `StatusSnapshotCard` above. See that entry's Purpose for the full rationale; kept here only as a pointer so a stale search for "ParticipationHorizontalBarCard" lands somewhere useful.
 
 ---
 
@@ -2565,7 +2661,7 @@ Segments a card's content by audience — confirmed used 4 times on this single 
 
 ### Anatomy
 
-Pill-shaped segmented control — a track of tab buttons (2 or 3, confirmed both counts on this frame), one marked active (filled pill) at a time.
+Bordered rounded-rectangle track (`rounded-lg border border-border-secondary p-1`, transparent background) of tab buttons (2 or 3, confirmed both counts on this frame), one marked active (filled pill) at a time. Corrected from an earlier `rounded-full bg-muted p-1` pill-track treatment — Figma's real container is a rounded rectangle with a visible border and no fill, not a filled full pill.
 
 ### Variants
 
@@ -2593,7 +2689,11 @@ interface HorizontalTabsProps {
 
 ### Design tokens used
 
-Not yet confirmed against a direct node pull — likely `bg-muted`/`bg-primary` (active) and `text-muted-foreground`/`text-primary-foreground`, by visual analogy with `HeartChartSummary`'s segmented scale bar (a different, non-interactive component — see Implementation rules). Confirm real values before implementation.
+- Track: `rounded-lg border border-border-secondary p-1` — corrected from an earlier `rounded-full bg-muted p-1` (see Anatomy). No background fill on the track itself.
+- Inactive tab: `h-9 rounded-sm px-3 py-2 text-sm font-semibold text-muted-foreground`, `hover:text-foreground`.
+- Active tab: `bg-muted text-foreground shadow-xs` (`shadow-xs` unchanged) — corrected from an earlier `bg-primary text-primary-foreground`, which read as too strong/brand-colored against Figma's real subtler neutral-fill treatment.
+- Tab size: `h-9 rounded-sm px-3 py-2` — corrected from an earlier `rounded-full px-3 py-1.5` to match the track's rectangular (not pill) shape.
+- Font weight: `font-semibold` — corrected from an earlier `font-medium`.
 
 ### Accessibility requirements
 
@@ -2606,7 +2706,7 @@ Not yet evidenced against a mobile Figma frame — a pill track this narrow may 
 ### Implementation rules
 
 - Confirmed reused 4 times on a single frame clears the reusability bar for a shared primitive immediately (`src/components/ui`, alongside `Select`) — do not colocate route-specific.
-- Visually similar to `HeartChartSummary`'s segmented participation-level bar, but semantically different (interactive tab switch vs. decorative data marker) — keep the two separate components; do not merge them, per `CLAUDE.md`'s "different semantics → don't force a shared generalization" precedent (same reasoning already applied to `PasswordRequirementItem` vs. `BenefitListItem`).
+- Was visually similar to `HeartChartSummary`'s segmented participation-level bar under the earlier pill-shaped treatment; now less so (`rounded-lg`/`rounded-sm`, bordered track vs. `HeartChartSummary`'s `rounded-full` bar) but the two remain semantically different regardless (interactive tab switch vs. decorative data marker) — keep them separate components; do not merge them, per `CLAUDE.md`'s "different semantics → don't force a shared generalization" precedent (same reasoning already applied to `PasswordRequirementItem` vs. `BenefitListItem`).
 - Do not share an interactive primitive with `DashboardFilterMenu` even though both render as pill segmented controls — `DashboardFilterMenu`'s pills are single-select filters (`radiogroup` semantics), not tabs (`tablist` semantics); conflating the two ARIA patterns is a real accessibility defect, not just a styling nuance. Sharing visual tokens/CSS between the two is fine; sharing the interactive primitive itself is not.
 - **Known accessibility tradeoff**: the flat `{tabs, value, onValueChange}` API has no content/panel slot, since each use on `/dashboard` switches data displayed elsewhere in the same card rather than swapping a distinct panel. Radix's `Tabs.Trigger` still provides full `tablist`/`tab` roles, `aria-selected`, and keyboard arrow/Home/End navigation without a mounted `Tabs.Content` — the one gap is that each trigger's `aria-controls` points at a `Tabs.Content` id that doesn't exist in the DOM, so the tab/panel relationship isn't fully wired for assistive tech. This is a deliberate, flagged tradeoff (matching `GlobalNav`'s own "known tradeoff" precedent for hover-driven expand), not an oversight — revisit if a real per-tab panel becomes necessary.
 
@@ -2684,11 +2784,11 @@ Rendered live on `/dashboard`'s "Relationship Health for Bedford Campus" card; t
 
 ### Purpose
 
-Presents a short contextual video ("Quick Snapshot") explaining the currently-highlighted relationship-health zone, alongside a "Next Ministry Steps" call to action.
+Presents a short contextual video ("Quick Snapshot") explaining the currently-highlighted relationship-health zone, alongside a "Next Ministry Steps" call to action. Now also owns the optional zone-summary header block above the video (see Anatomy) — this content used to be rendered by the page as a separate sibling `<div>` next to the card; it's been absorbed into the component itself so the whole "Quick Snapshot" card matches one Figma frame.
 
 ### Anatomy
 
-Video thumbnail/player area (photo, play affordance) → "Quick Snapshot" caption/label → supporting description paragraph → `Button` ("Next Ministry Steps").
+Optional zone-summary header block (`border-b pb-6`, rendered only when `zoneTitle` or `zoneHeadline` is supplied: bold `text-lg` zone title + `text-sm font-medium text-primary` zone headline) → video thumbnail/player area (photo, play affordance) → `title` heading (`text-sm font-semibold text-foreground`, new — previously `title` only appeared in the video's `aria-label` and a now-removed on-video corner caption) → supporting description paragraph → `Button` ("Next Ministry Steps").
 
 ### Variants
 
@@ -2707,6 +2807,10 @@ None evidenced.
 interface SnapshotVideoCardProps {
   title: string;
   description: string;
+  /** Highlighted-zone name (e.g. "Steady"), rendered above a divider before the video. Omitted entirely if not provided. */
+  zoneTitle?: string;
+  /** Zone summary sentence (e.g. "292 people (46%) are Comfortable but coasting"), rendered under zoneTitle. */
+  zoneHeadline?: string;
   onNextSteps?: () => void;
   className?: string;
 }
@@ -2715,11 +2819,11 @@ Exact video/thumbnail props depend on the composition decision below — not fin
 
 ### Design tokens used
 
-Not yet confirmed against a direct node pull.
+Not yet confirmed against a direct node pull for the video/thumbnail area itself. The new header block uses `border-b` (divider), `text-lg` (zone title), `text-sm font-medium text-primary` (zone headline) — the app's brand terracotta accent, not a new token.
 
 ### Accessibility requirements
 
-Depends on the composition decision below: if built on `VideoPlayer`, inherits its existing native `<video>` control accessibility; if built on `CourseCard`'s static video-cover pattern, needs its own play-button `aria-label` and keyboard operability, since that pattern has no in-place scrubber.
+Depends on the composition decision below: if built on `VideoPlayer`, inherits its existing native `<video>` control accessibility; if built on `CourseCard`'s static video-cover pattern, needs its own play-button `aria-label` and keyboard operability, since that pattern has no in-place scrubber. The zone-summary header renders as a real `<h3>` (`zoneTitle`) plus a `<p>` (`zoneHeadline`), so it reaches assistive tech as ordinary text, not baked into the thumbnail image.
 
 ### Responsive behavior
 
@@ -2728,6 +2832,9 @@ Sits beside `CommitmentConnectionChart` at desktop width — not yet evidenced a
 ### Implementation rules
 
 - **No `VideoCard` component exists in this codebase** — despite this pattern's working name, there is no component by that name to reuse. The two existing candidates were `VideoPlayer` (`src/components/video-player.tsx`, a full native `<video>` element with working play/pause/seek/mute/fullscreen, currently wired with a placeholder `src`) and `CourseCard`'s internal video-cover treatment (a static thumbnail + play glyph + heading, no scrubber). **Implemented using the `CourseCard`-style static-preview pattern** (a self-contained `<button>` with a play-affordance overlay, not `VideoPlayer`'s `<video>` element), since the Figma reference shows a static photo + play affordance with no visible scrubber/controls. This is a reasonable default, not a final product decision — confirm with product/design before treating the interaction model as settled. The thumbnail photo itself renders a `nav-surface-from`→`nav-surface-to` gradient placeholder (same blocked-asset class as `TopHero`/`CourseCard`).
+- **`zoneTitle`/`zoneHeadline` header block absorbed from the page.** This content used to be rendered manually by `src/app/dashboard/_components/dashboard-content.tsx` as a sibling `<div>` next to `SnapshotVideoCard`, not part of the component. It's now rendered by the component itself (conditionally, only when either prop is supplied) so the whole "Quick Snapshot" card corresponds to one Figma frame instead of being split across a page-level wrapper and the component.
+- **New `title` heading between the video and the description.** Previously `title` only surfaced via the video button's `aria-label` and a now-removed on-video corner caption; there was no visible `title` text in the card body. A `<p className="text-sm font-semibold text-foreground">{title}</p>` was added between the video and the description paragraph so the title is visible as real body text, matching the Figma reference.
+- **"Next Ministry Steps" button corrected**: was `variant="default"` (filled) and `self-start`; now `variant="outline"` and `self-end`, with a trailing `ArrowRight` icon (`lucide-react`) added — matching the outline-button convention already established by every other dashboard action button (`HeartChartSummary`, `WeDoCard`) and Figma's actual bottom-right-anchored placement.
 
 ### Visual examples
 
@@ -2747,7 +2854,7 @@ Lets an admin narrow `CommitmentConnectionChart` and `FullWidthBarChart` by demo
 
 ### Anatomy
 
-"Showing N of N people" summary line → 5 filter groups, each: group label + a row of pill options (e.g. Gender: All / Male / Female), one pill active per group.
+A 3-line stacked "Showing" stat block ("Showing" / large bold result count / "of {total} people") → a vertical divider (hidden below `sm`) → 5 filter groups, each: a sentence-case group label + a row of independent pill chips (e.g. Gender: All / Male / Female), one chip active per group. Corrected from an earlier pass that rendered the summary as one sentence and each group's chips inside a single shared `bg-muted rounded-full p-1` pill container — Figma's real treatment has no shared pill background per group; each chip is its own independent pill.
 
 ### Variants
 
@@ -2757,9 +2864,9 @@ None evidenced — 5 groups with varying option counts (confirmed range: 2–8 o
 
 | State | Behavior |
 |---|---|
-| Inactive pill | Default unselected treatment. |
-| Active/selected pill | One per group, filled/highlighted. |
-| Hover | Visible hover treatment per `DESIGN.md`'s Interaction principles. |
+| Inactive chip | `border border-border-secondary bg-background text-text-tertiary` — corrected from an earlier plain-text (no border/background) treatment. |
+| Active/selected chip | `bg-foreground text-background` — Figma's exact-match dark near-black fill, confirmed equal to the existing `foreground` token (`#181d27`), no new token needed. Corrected from an earlier `bg-primary text-primary-foreground shadow-xs`, which used the app's brand terracotta instead of Figma's neutral dark fill. |
+| Hover | `hover:bg-accent` on inactive chips; visible hover treatment per `DESIGN.md`'s Interaction principles. |
 | Focus | Visible focus-visible ring. |
 | Disabled | Not evidenced in Figma — flag if a future "zero matching results" option needs one. |
 
@@ -2781,19 +2888,24 @@ interface DashboardFilterMenuProps {
 
 ### Design tokens used
 
-Not yet confirmed against a direct node pull. Verify whether the active-pill fill is meant to share a token with `HorizontalTabs`' active-pill fill or is a deliberately distinct emphasis tier before implementation.
+- Chips: `h-7 rounded-full px-3 text-sm`, `gap-1` between chips within a group (no shared container background) — confirmed distinct from `HorizontalTabs`' bordered track. Active: `bg-foreground text-background`. Inactive: `border border-border-secondary bg-background text-text-tertiary`, `hover:bg-accent`.
+- Group label: `text-sm font-semibold text-foreground`, sentence case — corrected from an earlier `text-xs uppercase tracking-[0.24px] text-text-tertiary` (all-caps eyebrow style); Figma's real label is a plain sentence-case, higher-emphasis heading, not a small muted eyebrow.
+- Stat block: `text-3xl leading-none font-bold` for the count, `text-sm text-muted-foreground` for the "Showing"/"of {total} people" lines.
+- Divider: `h-32 w-px bg-border-secondary`, `hidden` below `sm` — new, sits between the stat block and the first filter group. There is still no divider between each filter group (unchanged from before — this addition is only between the stat block and the groups).
+- Layout gaps: `gap-6` outer row, `gap-x-16 gap-y-4` between/within filter groups — `gap-x-16` approximates a confirmed ~60.5px Figma gap, rounded to the nearest Tailwind scale step (not an exact pixel match).
 
 ### Accessibility requirements
 
-- **Each group is a single-select filter, not a tab** — implement as `role="radiogroup"` (or a native `<fieldset>`/grouped toggle buttons with `aria-pressed`), distinct from `HorizontalTabs`' `tablist`/`tab` pattern, even though the two look visually similar (pill segmented control). Filtering data is not the same interaction as switching a displayed panel — conflating the two ARIA patterns is a real accessibility defect.
-- Each group's label must be programmatically associated with its option row (not just visually adjacent text).
+- **Each group is a single-select filter, not a tab** — implemented as Radix `RadioGroup.Root`/`RadioGroup.Item` (`role="radiogroup"`), distinct from `HorizontalTabs`' `tablist`/`tab` pattern, even though the two look visually similar (pill segmented control). Filtering data is not the same interaction as switching a displayed panel — conflating the two ARIA patterns is a real accessibility defect.
+- Each group's label is programmatically associated with its option row via `aria-labelledby` (a generated `dashboard-filter-{slug}-label` id on the label, referenced by the `RadioGroup.Root`), not just visually adjacent text.
 
 ### Responsive behavior
 
-5 groups in a row will not fit a mobile viewport — not yet evidenced against a mobile Figma reference; needs a documented wrap/collapse behavior (e.g. horizontal scroll, or a disclosure pattern) before shipping.
+5 groups in a row will not fit a mobile viewport — chips wrap (`flex-wrap`) rather than overflowing, and the stat-block divider hides below `sm`; exact mobile spacing is not yet evidenced against a mobile Figma reference.
 
 ### Implementation rules
 
+- Built on Radix `RadioGroup` (`@radix-ui/react-radio-group`), not a plain button group with manual `useState` — matches `DESIGN.md`'s standing rule against hand-rolled custom widgets, and correctly distinguishes this component's `radiogroup` semantics from `HorizontalTabs`' `tablist` semantics (see that entry's Implementation rules for why the two must not share an interactive primitive, even though they may share visual tokens/CSS).
 - Do not build on top of `Select` (this is not a dropdown) or reuse `HorizontalTabs`' interactive primitive directly (different ARIA semantics — see that entry's Implementation rules) even though the pill visual language may be shareable at the styling/token layer.
 - The "Bedford" campus selector in the page header (top of `/dashboard`) reuses the existing `Select` primitive directly (`SelectTrigger` with a call-site `w-36 py-2` className override, the same "override at the call site, no new variant" pattern already established by `Table`'s Profile-type column) — not a new component. It renders a single hardcoded `Bedford` item, matching `FellowshipOfTheParksLogo`'s "no multi-church data model yet" precedent; wire to real campus data once that model exists.
 
@@ -2807,7 +2919,7 @@ Rendered live on `/dashboard`'s "Relationship Health for Bedford Campus" card, b
 
 **Status**: Draft (implemented; rendered on `/dashboard`)
 **Source**: `src/components/full-width-bar-chart.tsx`
-**Figma**: AMFM Portal file, node `3727:29573`, bottom of the "Relationship Health for Bedford Campus" card, below `DashboardFilterMenu`
+**Figma**: AMFM Portal file, Figma's "BarLineChart", node `1243:23077` (bottom of the "Relationship Health for Bedford Campus" card, below `DashboardFilterMenu`) — **this node was confirmed via a direct Figma MCP pull**, unlike several other Dashboard components in this section that were rebuilt from pasted screenshots because their linked nodes didn't resolve in this environment; treat this entry's token/geometry values as confirmed, not approximated.
 
 ### Purpose
 
@@ -2815,7 +2927,7 @@ The detailed, full-width companion to `CommitmentConnectionChart` — breaks the
 
 ### Anatomy
 
-Y-axis category labels (ranked zone list, confirmed order in the reference screenshot: Thriving, Strong, Steady, Hopeful, Reliable, Fickle, Tentative, Stuck, Detached, Shallow, Estranged, Frayed, Broken) → horizontal bars (one per zone) → inline percentage label at each bar's end.
+Y-axis category labels (fixed `w-[74px]` column, ranked zone list, confirmed order in the reference screenshot: Thriving, Strong, Steady, Hopeful, Reliable, Fickle, Tentative, Stuck, Detached, Shallow, Estranged, Frayed, Broken) → a flat `h-6` bar, rounded only on its leading/value end (`rounded-r-sm`) → inline percentage label at each bar's end. Corrected from an earlier pass that rendered each bar as a `rounded-full` pill inside a `bg-muted` track — the confirmed node shows a flat bar with no surrounding track, rounded only on the value end. Row gap widened from `gap-3` to `gap-6`.
 
 ### Variants
 
@@ -2839,7 +2951,9 @@ interface FullWidthBarChartProps {
 
 ### Design tokens used
 
-Bars read as a warmer/darker brand tone than `ParticipationVerticalBarCard`'s bars in the reference screenshot — not yet confirmed against a direct node pull. Same caveat as the other new chart components: verify against a real data-viz palette rather than the generic `chart-*` scaffold tokens (see the audit's DESIGN.md-inconsistencies finding).
+- Bar fill: `bg-gradient-to-r from-primary to-chart-bar-fill-to opacity-80` — a confirmed two-stop gradient at 80% opacity, replacing an earlier flat `bg-primary`. `chart-bar-fill-to` is a brand-new token (`#683b27`, `oklch(0.403 0.071 44.248)`, added to `src/tokens/colors.css`) confirmed via this node's direct Figma pull — **this resolves a previously-documented `DESIGN.md` Known-gap** that flagged this exact bar color as "not reliably resolvable"; if that Known-gap language is still quoted anywhere else in this file, treat it as stale.
+- Row label column: `w-[74px] text-sm font-semibold text-text-secondary` — corrected from an earlier `w-24 text-xs text-muted-foreground` (both the fixed width and the type treatment are now confirmed against the node, not estimated).
+- Value label: `text-xs font-semibold tracking-[0.24px] text-foreground/70` — corrected from an earlier `text-xs font-medium text-foreground`.
 
 ### Accessibility requirements
 

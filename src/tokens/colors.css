@@ -125,20 +125,38 @@
    * converting it through the same oklch pipeline as every value here and
    * getting oklch(0.63 0.067 137.227), identical to the existing token). Only
    * the three lighter tiers below are new. */
+  --chart-pie-green-700: oklch(0.48 0.048 136.545); /* utility-green-700, #516449 — the "Connection to God" pie's 54% (deepest) segment; distinct from status-success, which is the 31% segment in this instance, not the 54% one (see PieChartCard Implementation rules) */
   --chart-pie-green-400: oklch(0.693 0.056 137.459); /* utility-green-400, #8ca583 */
   --chart-pie-green-300: oklch(0.753 0.044 137.572); /* utility-green-300, #a2b69b */
   --chart-pie-green-100: oklch(0.871 0.022 136.604); /* utility-green-100, #ced8ca */
+  --chart-scale-blue-700: oklch(0.442 0.044 217.908); /* Colors/Blue/700, #365963 — ScaleChartCard's headline percentage color */
   --chart-scale-blue-400: oklch(0.657 0.063 217.847); /* Colors/Blue/400, #639bab */
   --chart-scale-blue-100: oklch(0.857 0.027 214.449); /* Colors/Blue/100, #bdd5db */
   --chart-scale-blue-50: oklch(0.922 0.014 213.1); /* Colors/Blue/50, #dbe8eb */
   --chart-scale-blue-25: oklch(0.986 0.003 197.105); /* Colors/Blue/25, #f8fbfb */
-  /* Participation bar fill (Age Groups/Relationship Status/Kids) — distinct
-   * from --background-gradient-from (utility-yellow-50, #f5eee0, the page
-   * shell background) at a slightly deeper tier of the same Figma yellow
-   * scale; kept as its own token rather than reusing background-gradient-from
-   * since the two serve different purposes (page background vs. chart fill)
-   * even though they're visually close. */
-  --chart-participation-fill: oklch(0.919 0.047 82.028); /* utility-yellow-100, #f4e2c2 */
+  /* Participation bar fill (Age Groups vertical bar chart) — a two-stop
+   * top-to-bottom gradient (was a single flat tone before the bars were
+   * confirmed against Figma's real gradient fill), distinct from
+   * --background-gradient-from (utility-yellow-50, #f5eee0, the page shell
+   * background) at a slightly deeper tier of the same Figma yellow scale.
+   * Screenshot-derived (the live Figma node for this chart isn't reachable
+   * by this environment's Figma MCP connection — see DESIGN.md Known gaps),
+   * not pixel-verified — revisit once direct node access is restored. */
+  --chart-participation-fill-from: oklch(0.864 0.07 83.088); /* ~utility-yellow-200, #e9cf9e */
+  --chart-participation-fill-to: oklch(0.956 0.026 87.853); /* ~utility-yellow-50, #f8f0dd */
+  /* Status Snapshot horizontal bar variants (Relationship Status / Kids) — each
+   * a left-to-right two-stop gradient, distinct per variant. Screenshot-derived
+   * (same access gap as chart-participation-fill-from/-to above), not pixel-verified. */
+  --chart-status-relationship-from: oklch(0.89 0.016 130.435); /* sage-gray, #d7ddd2 */
+  --chart-status-relationship-to: oklch(0.963 0.004 121.561); /* #f2f3f0 */
+  --chart-status-kids-from: oklch(0.885 0.019 306.639); /* lavender-gray, #dcd6e3 */
+  --chart-status-kids-to: oklch(0.964 0.006 308.395); /* #f4f2f6 */
+  /* BarLineChart's (FullWidthBarChart) bar fill — confirmed via direct Figma
+   * node pull (node 1243:23077) as a two-stop gradient at 80% opacity, from
+   * utility-brand-600 (exact match to the existing --primary token, reused
+   * rather than duplicated) to utility-brand-800 below. Resolves the
+   * previously-flagged "not reliably resolvable" gap — see DESIGN.md Known gaps. */
+  --chart-bar-fill-to: oklch(0.403 0.071 44.248); /* utility-brand-800, #683b27 */
 
   /* WeDoCard (HeartChart Dashboard, node 3727:29573) — WeDo's own brand red,
    * used for the couple-count stat and the pull-quote's highlighted phrase.
@@ -282,14 +300,22 @@
   --color-chart-pie-purple-500: var(--chart-pie-purple-500);
   --color-chart-pie-purple-300: var(--chart-pie-purple-300);
   --color-chart-pie-purple-100: var(--chart-pie-purple-100);
+  --color-chart-pie-green-700: var(--chart-pie-green-700);
   --color-chart-pie-green-400: var(--chart-pie-green-400);
   --color-chart-pie-green-300: var(--chart-pie-green-300);
   --color-chart-pie-green-100: var(--chart-pie-green-100);
+  --color-chart-scale-blue-700: var(--chart-scale-blue-700);
   --color-chart-scale-blue-400: var(--chart-scale-blue-400);
   --color-chart-scale-blue-100: var(--chart-scale-blue-100);
   --color-chart-scale-blue-50: var(--chart-scale-blue-50);
   --color-chart-scale-blue-25: var(--chart-scale-blue-25);
-  --color-chart-participation-fill: var(--chart-participation-fill);
+  --color-chart-participation-fill-from: var(--chart-participation-fill-from);
+  --color-chart-participation-fill-to: var(--chart-participation-fill-to);
+  --color-chart-status-relationship-from: var(--chart-status-relationship-from);
+  --color-chart-status-relationship-to: var(--chart-status-relationship-to);
+  --color-chart-status-kids-from: var(--chart-status-kids-from);
+  --color-chart-status-kids-to: var(--chart-status-kids-to);
+  --color-chart-bar-fill-to: var(--chart-bar-fill-to);
   --color-wedo-brand: var(--wedo-brand);
   --color-sidebar: var(--sidebar);
   --color-sidebar-foreground: var(--sidebar-foreground);

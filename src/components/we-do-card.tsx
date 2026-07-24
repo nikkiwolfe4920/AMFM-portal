@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { Eye, QrCode, Quote } from "lucide-react";
+import { Eye, QrCode } from "lucide-react";
 
 import { ElevatedCard } from "@/components/elevated-card";
 import { Button } from "@/components/ui/button";
@@ -72,6 +72,9 @@ function WeDoCard({
           <p className="text-base font-semibold text-muted-foreground">
             Active in the app today
           </p>
+          {/* Figma's illustration is wider-than-tall (~223x156, not square) —
+              aspect-[223/156] + object-contain reproduces that proportion
+              responsively instead of copying Figma's fixed absolute position. */}
           <Image
             src="/We-do.png"
             alt=""
@@ -79,22 +82,25 @@ function WeDoCard({
             width={990}
             height={874}
             unoptimized
-            className="mt-auto size-[186px] shrink-0 object-contain"
+            className="mt-auto aspect-[223/156] w-full max-w-[223px] shrink-0 object-contain"
           />
         </div>
 
         <div className="flex min-w-0 flex-1 flex-col gap-3">
-          <PointerCallout pointerPosition="bottom-left-diagonal" className="min-w-0">
+          <PointerCallout pointerPosition="left-diagonal" className="min-w-0 overflow-hidden">
+            {/* Figma's decorative quote mark is a large, low-opacity serif
+                glyph watermarked behind the label, not a small solid icon. */}
+            <span
+              aria-hidden="true"
+              className="pointer-events-none absolute -top-3 -left-1 font-display text-8xl leading-none text-muted-foreground/75 select-none"
+            >
+              &ldquo;
+            </span>
             <div className="flex flex-col gap-1.5">
-              <Quote
-                aria-hidden="true"
-                className="size-6 -scale-x-100 text-wedo-brand"
-                strokeWidth={2.5}
-              />
               <p className="text-xs font-semibold tracking-[0.24px] text-text-tertiary uppercase">
                 Most of your couples say...
               </p>
-              <p className="text-sm text-foreground">
+              <p className="text-base text-foreground">
                 &ldquo;{renderQuote(quote, highlightedPhrase)}&rdquo;
               </p>
               <p className="text-xs text-muted-foreground">Source: {quoteSource}</p>
