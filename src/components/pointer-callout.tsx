@@ -34,15 +34,12 @@ function PointerCallout({
   return (
     <div
       data-slot="pointer-callout"
-      className={cn(
-        "relative rounded-lg border bg-background p-4 shadow-sm",
-        className
-      )}
+      className={cn("relative rounded-lg border bg-muted p-4", className)}
     >
       <span
         aria-hidden="true"
         className={cn(
-          "absolute size-3 rotate-45 border bg-background",
+          "absolute size-3 rotate-45 border bg-muted",
           POINTER_POSITION_CLASSES[pointerPosition]
         )}
       />

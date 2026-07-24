@@ -59,22 +59,19 @@ function WeDoCard({
         )}
       </div>
 
-      <div className="flex flex-col gap-2">
-        <div className="flex items-end gap-2">
-          <span className="text-5xl leading-10 font-semibold tracking-[-0.96px] text-wedo-brand">
-            {coupleCount.toLocaleString()}
-          </span>
-          <span className="pb-0.5 text-base text-muted-foreground">
-            {coupleCount === 1 ? "Couple" : "Couples"}
-          </span>
-        </div>
-        <p className="text-base font-semibold text-muted-foreground">
-          Active in the app today
-        </p>
-      </div>
-
-      <PointerCallout pointerPosition="left">
-        <div className="flex items-start gap-3">
+      <div className="flex flex-wrap items-stretch gap-4">
+        <div className="flex flex-col gap-2">
+          <div className="flex items-end gap-2">
+            <span className="text-5xl leading-10 font-semibold tracking-[-0.96px] text-wedo-brand">
+              {coupleCount.toLocaleString()}
+            </span>
+            <span className="pb-0.5 text-base text-muted-foreground">
+              {coupleCount === 1 ? "Couple" : "Couples"}
+            </span>
+          </div>
+          <p className="text-base font-semibold text-muted-foreground">
+            Active in the app today
+          </p>
           <Image
             src="/We-do.png"
             alt=""
@@ -82,8 +79,11 @@ function WeDoCard({
             width={1196}
             height={1230}
             unoptimized
-            className="size-16 shrink-0 object-contain"
+            className="mt-auto size-16 shrink-0 object-contain"
           />
+        </div>
+
+        <PointerCallout pointerPosition="left" className="min-w-0 flex-1">
           <div className="flex flex-col gap-1.5">
             <p className="text-xs font-semibold tracking-[0.24px] text-text-tertiary uppercase">
               Most of your couples say...
@@ -93,8 +93,8 @@ function WeDoCard({
             </p>
             <p className="text-xs text-muted-foreground">Source: {quoteSource}</p>
           </div>
-        </div>
-      </PointerCallout>
+        </PointerCallout>
+      </div>
 
       <div className="mt-auto flex flex-wrap items-center gap-3">
         <Button variant="outline" size="compact" onClick={onSeeResults}>
