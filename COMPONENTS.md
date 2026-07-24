@@ -2965,8 +2965,9 @@ Full-bleed width at desktop in the reference frame — not yet evidenced against
 
 ### Implementation rules
 
-- Share an underlying horizontal-bar rendering primitive with `ParticipationHorizontalBarCard` if their visual treatment is confirmed close enough (same bar/label/track anatomy at different scale) — evaluate at implementation time rather than assuming two independent components are needed.
+- Share an underlying horizontal-bar rendering primitive with `StatusSnapshotCard` if their visual treatment is confirmed close enough (same bar/label anatomy at different scale) — evaluate at implementation time rather than assuming two independent components are needed. (This superseded `ParticipationHorizontalBarCard`, this entry's original point of comparison — see `StatusSnapshotCard`'s entry.)
 - The zone list here (13 entries) is more granular than `CommitmentConnectionChart`'s quadrant labels (fewer, coarser zone names) — confirm directly against Figma whether these represent the same taxonomy at two granularities or two genuinely different label sets before implementation; do not assume without checking.
+- Node `1243:23077` is confirmed reachable and pixel-verifiable directly — re-pull it for any further refinement instead of relying on the reference screenshot alone.
 
 ### Visual examples
 
@@ -2986,7 +2987,7 @@ Presents a proportional breakdown as a donut/pie chart with a bold headline find
 
 ### Anatomy
 
-Visually-hidden `title` heading (`sr-only`, no visible per-chart title in Figma — the visible "Spiritual Snapshot for Bedford Campus" title and its `HorizontalTabs` (confirmed 3-tab "All/Couples/Singles") belong to the *parent* `Card`'s header, per `Card`'s existing multi-control `CardAction` pattern — not to this tile) → donut chart (center: bold headline text) → legend list (color swatch + label + percentage per segment, confirmed 4 segments per instance).
+Visually-hidden `title` heading (`sr-only`, no visible per-chart title in Figma — the visible "Spiritual Snapshot for Bedford Campus" title and its `HorizontalTabs` (confirmed 3-tab "All/Couples/Singles") belong to the *parent* `Card`'s header, per `Card`'s existing multi-control `CardAction` pattern — not to this tile) → donut chart, 240px diameter (center: bold headline text) → legend list (color swatch pill + bolded value + label per segment, confirmed 4 segments per instance).
 
 ### Variants
 
@@ -3012,7 +3013,12 @@ interface PieChartCardProps {
 
 ### Design tokens used
 
-**Confirmed gap, not yet resolved**: the two instances use distinct color families (Figma variable export confirms a purple scale — `utility-purple-700/500/300/100` — and a green scale — `utility-green-500/400/300/100`) that do not map to this project's existing generic `chart-1`…`chart-5` scaffold tokens in `src/tokens/colors.css`. Raise a `DESIGN.md` foundations update (convert these Figma hex values to `oklch()`, name real tokens) before implementing this component — do not invent inline colors ad hoc at the call site.
+- **Resolved**: the two instances use distinct color families, both now real named tokens in `src/tokens/colors.css` — a purple scale (`chart-pie-purple-700/500/300/100`) for the faith-journey pie and a green scale (`chart-pie-green-700/400/300/100`, plus the existing `status-success` reused for one segment — see below) for the "Connection to God" pie. These no longer map to the generic `chart-1`…`chart-5` scaffold tokens; do not fall back to those.
+- **Segment color correction (`GOD_CONNECTION_PIE` in `dashboard-data.ts`)**: the 54% segment ("Feel deeply connected to God daily") and the 31% segment ("Occasionally connected to God") had their color tokens swapped in an earlier pass. The 54% (deepest/darkest) segment now correctly uses the new `chart-pie-green-700` token (`#516449`, added in this change); the 31% segment uses the existing `status-success` token (`oklch(0.63 0.067 137.227)`, an exact hex match to Figma's `utility-green-500`, `#76936b` — reused rather than duplicated, per this codebase's "confirm exact matches, don't duplicate tokens" convention). Do not swap these back — 54% is the deepest green tier, not `status-success`.
+- Ring geometry: `size` 240px, `strokeWidth` 64px — both confirmed against Figma's container size; the stroke width specifically is a **best-effort estimate**, not a pixel-sampled value, since the raster asset couldn't be pixel-sampled directly. Revisit if a vector/metadata pull becomes possible. (Corrected up from an earlier 160px/24px pass.)
+- Center stat: `font-display text-display-md font-light`, `max-w-[400px]` — corrected from an earlier `text-sm font-medium`, `max-w-60`; the headline stat is meant to read as a large display-weight statement, not small body text.
+- Legend swatch: `h-6 w-10 rounded-[24px]` pill — corrected from an earlier `size-2.5 rounded-full` dot.
+- Legend row layout: `flex items-baseline gap-1`, bold value then label, both `text-foreground` — corrected from an earlier spread layout (`flex-1` pushing the value to the far side of the label, label in `text-muted-foreground`); Figma's real legend keeps the value and label tightly grouped together at equal emphasis, not visually separated with one de-emphasized.
 
 ### Accessibility requirements
 
@@ -3045,7 +3051,7 @@ Presents a single metric as a headline percentage plus a short question/descript
 
 ### Anatomy
 
-Big percentage stat → description line (e.g. "Lack a strong support system?") → horizontal scale/slider track (0%–100%, a "National Average" tick, and the church's own value marker) → "Why does this matter?" link.
+Center-aligned column: big percentage stat → question/description line (e.g. "Lack a strong support system?") → horizontal 0%–100% gradient scale track with a National Average tick and the church's own value fill → a 0%/"National Average: N%"/100% caption row → a leading-icon "Why does this matter?" link. Corrected from an earlier left-aligned layout — the whole card is now `text-center items-center`.
 
 ### Variants
 
@@ -3073,21 +3079,31 @@ interface ScaleChartCardProps {
 
 ### Design tokens used
 
-Scale track reads as a blue/teal tone in the reference screenshot, distinct from every other chart's color family confirmed on this page — not yet resolved against a real token; part of the same data-viz-palette gap flagged under `PieChartCard`. Raise the `DESIGN.md` foundations update before implementing rather than inventing an inline color.
+This is a near-total visual rewrite from the previously-documented placeholder spec — every value below is a correction, not an addition:
+
+- Headline percentage: `font-display text-display-lg font-light text-chart-scale-blue-700` — corrected from an earlier `text-3xl font-semibold text-foreground`. `chart-scale-blue-700` is a brand-new token (`#365963`, added to `src/tokens/colors.css`), distinct from the paler `chart-scale-blue-400/100/50/25` tones already used in the track/fill below.
+- Question/description text: `text-base font-semibold text-foreground` — corrected from an earlier `text-sm text-muted-foreground`; the question now reads as a higher-emphasis heading, not de-emphasized supporting copy.
+- Track: `h-6 bg-gradient-to-r from-chart-scale-blue-25 to-chart-scale-blue-50` — corrected from a flat `h-2 bg-chart-scale-blue-50` (both taller and now a two-stop gradient).
+- Fill bar (this church's value): `bg-gradient-to-r from-chart-scale-blue-400 to-chart-scale-blue-100` — corrected from a flat `bg-chart-scale-blue-400`.
+- National Average marker: `h-10 w-1.5 bg-foreground` — corrected from a much smaller `h-3 w-0.5`.
+- Caption row (0% / National Average / 100%): `text-xs font-medium tracking-[0.24px]` — corrected from `text-[10px]` with no explicit tracking.
+- Card padding/layout: `px-8 pt-6 pb-8 gap-6`, center-aligned (`text-center items-center`) — corrected from `p-4 gap-3`, left-aligned.
+- "Why does this matter?" link: a leading `Play` icon (`lucide-react`) was added before the link text — new, was text-only before.
 
 ### Accessibility requirements
 
-The scale is a labeled range/gauge with two data points (this value, national average). The percentage is already confirmed rendered as real text in Figma; confirm the "national average" value is also real DOM text near the visual (not implied by tick position alone) before implementation.
+The scale is a labeled range/gauge with two data points (this value, national average). Both the headline percentage and the "National Average: N%" caption are real DOM text (not implied by tick/marker position alone) — confirmed in the current implementation, not just planned.
 
 ### Responsive behavior
 
-Renders 3-up in a grid at desktop width in the reference frame (matching `ParticipationVerticalBarCard`/`ParticipationHorizontalBarCard`'s 3-column pattern) — not yet evidenced against a mobile reference; needs documented stacking behavior before shipping.
+Renders 3-up in a grid at desktop width in the reference frame (matching `ParticipationVerticalBarCard`/`StatusSnapshotCard`'s 3-column pattern) — not yet evidenced against a mobile reference; needs documented stacking behavior before shipping.
 
 ### Implementation rules
 
-- The "Why does this matter?" link may trigger `PointerCallout` as an interactive/on-demand variant — this was not confirmed in this pass (see `PointerCallout`'s Variants section). Confirm the actual interaction model directly against Figma before deciding whether this link opens a popover, navigates, or does something else; do not assume.
+- The "Why does this matter?" link may trigger `PointerCallout` as an interactive/on-demand variant — this was not confirmed in this pass (see `PointerCallout`'s Variants section). Confirm the actual interaction model directly against Figma before deciding whether this link opens a popover, navigates, or does something else; do not assume. It currently renders as `Button variant="link" size="inline"` with a leading `Play` icon and no wired navigation.
 - Re-pull the "Scale chart" Figma component set directly (select the node on canvas, not via a page-level frame pull) before finalizing this component's variant list — this audit's tooling could not resolve that sub-component in isolation (see the node-ID caveat above), so the `Default`-only variant list here should be treated as the current confirmed floor, not a claim that no other variants exist.
 - **"Why does this matter?" always renders**, regardless of whether `onWhyDoesThisMatter` is supplied — matching `HeartChartSummary`'s established precedent that a documented action renders even without a wired handler, rather than disappearing from the layout. `/dashboard`'s 6 instances currently pass no handler (no real destination content exists yet for this link).
+- Treat every Design tokens value above as a correction from a prior placeholder pass, not as newly-added polish — if a future audit finds yet another mismatch against Figma, update this entry again rather than assuming the current values are final.
 
 ### Visual examples
 
