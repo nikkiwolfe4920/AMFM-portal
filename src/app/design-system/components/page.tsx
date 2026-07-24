@@ -394,9 +394,9 @@ export default function ComponentsPage() {
       <ComponentShowcase
         name="TopHero"
         status="Draft"
-        purpose="Full-bleed photo hero for a dashboard page's featured training/promo banner — a two-tone heading, supporting copy, and a video CTA."
+        purpose="Full-bleed photo hero for a dashboard page's featured training/promo banner — a two-tone heading, supporting copy, and a video CTA. Fixed 512px height; the photo bleeds to the card's true outer edge with a thin pinstripe border marking the inset."
         docsAnchor="tophero"
-        figmaReference='AMFM Portal — "Featured Training" component (node 2318:26997)'
+        figmaReference='AMFM Portal — "Featured Training" component (node 4194:25820)'
         tokens={[
           "text-nav-foreground",
           "text-highlight-gold",
@@ -415,7 +415,8 @@ export default function ComponentsPage() {
         <p className="text-muted-foreground mt-4 text-xs">
           The real background photo is blocked in this environment (see{" "}
           <code className="bg-muted rounded px-1 py-0.5">COMPONENTS.md#tophero</code>) — renders a
-          gradient placeholder instead. View live at{" "}
+          gradient placeholder instead, bleeding to the card&apos;s true edge behind a pinstripe
+          border, matching where the real photo will sit. View live at{" "}
           <Link href="/heartchart-resources" className="text-text-brand hover:underline">
             /heartchart-resources
           </Link>
@@ -801,7 +802,7 @@ export default function ComponentsPage() {
       <ComponentShowcase
         name="GlobalNav"
         status="Draft"
-        purpose="The app's primary left-hand navigation rail — collapses to an 80px icon rail by default and expands to a 296px labeled panel on hover, with a smooth animated morph between the two."
+        purpose="The app's primary left-hand navigation rail — collapses to an 80px icon rail by default and expands to a 296px labeled panel on hover, with a smooth animated morph between the two. In real app-shell pages the expanded panel overlays content instead of pushing it, and stays pinned open above 1600px viewports."
         docsAnchor="globalnav"
         figmaReference='AMFM Portal — collapsed node 2065:13660 ("Sidebar navigation"), expanded node 3727:25276 ("Content"); the account menu has no Figma node reference, built from a supplied screenshot instead (see Implementation rules)'
         tokens={[
@@ -815,7 +816,15 @@ export default function ComponentsPage() {
           "text-nav-foreground-subtle",
           "bg-nav-success",
         ]}
-        states={["Collapsed (default)", "Expanded (hover/focus)", "Active item", "Hover", "Focus", "Account menu open"]}
+        states={[
+          "Collapsed (default)",
+          "Expanded (hover/focus)",
+          "Pinned open (≥1600px)",
+          "Active item",
+          "Hover",
+          "Focus",
+          "Account menu open",
+        ]}
       >
         <div className="bg-nav-bg flex h-[950px] items-start rounded-xl p-6">
           <GlobalNav activeHref="/marriage-champions" />
@@ -827,7 +836,18 @@ export default function ComponentsPage() {
           Profile, Account Settings, Subscription &amp; Billing, Terms &amp; Privacy) — the rail
           stays expanded while that menu is open. See{" "}
           <code className="bg-muted rounded px-1 py-0.5">COMPONENTS.md#globalnav</code> for the
-          full contract, including why its destination routes are placeholders.
+          full contract, including why its destination routes are placeholders. This gallery
+          instance intentionally renders without the <code className="bg-muted rounded px-1 py-0.5">overlay</code>{" "}
+          prop (so it stays inside this bounded demo box) — visit{" "}
+          <Link href="/marriage-champions" className="text-text-brand hover:underline">
+            /marriage-champions
+          </Link>{" "}
+          or{" "}
+          <Link href="/heartchart-resources" className="text-text-brand hover:underline">
+            /heartchart-resources
+          </Link>{" "}
+          to see the rail overlay page content on hover and stay pinned open at ≥1600px viewport
+          widths.
         </p>
       </ComponentShowcase>
 

@@ -16,9 +16,7 @@ export function MarriageChampionsPageShell({
 }: React.PropsWithChildren) {
   return (
     <div className="from-background-gradient-from to-background-gradient-to flex min-h-screen bg-gradient-to-l">
-      <div className="sticky top-0 h-screen shrink-0 p-3">
-        <GlobalNav />
-      </div>
+      <GlobalNav overlay />
 
       <div className="flex min-w-0 flex-1 flex-col">
         <main className="min-w-0 flex-1 p-8">
