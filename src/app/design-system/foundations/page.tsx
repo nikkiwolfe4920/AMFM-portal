@@ -40,18 +40,13 @@ const COLOR_SWATCHES: { name: string; className: string; hint?: string }[] = [
   {
     name: "text-brand",
     className: "bg-text-brand",
-    hint: "Brand link text #894e34",
+    hint: "Brand link text #894e34; also CourseCard's shared step-header background",
   },
   { name: "overlay", className: "bg-overlay", hint: "Scrim #0a0d12" },
   {
     name: "highlight-gold",
     className: "bg-highlight-gold",
     hint: "Personalized emphasis on /welcome #e9c481",
-  },
-  {
-    name: "brand-900",
-    className: "bg-brand-900",
-    hint: "CourseCard step 3 header #47261a",
   },
 ];
 

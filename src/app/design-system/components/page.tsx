@@ -429,7 +429,7 @@ export default function ComponentsPage() {
         purpose="One step in a fixed 3-step course pattern — numbered header, video-cover CTA, and a supporting checklist."
         docsAnchor="coursecard"
         figmaReference='AMFM Portal — "Course Card" component (node 2074:45130)'
-        tokens={["bg-border-brand", "bg-text-brand", "bg-brand-900", "bg-muted", "text-muted-foreground", "text-primary"]}
+        tokens={["bg-text-brand", "text-white", "bg-muted", "text-muted-foreground", "text-primary"]}
         states={["Step 1", "Step 2", "Step 3"]}
       >
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">

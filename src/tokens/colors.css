@@ -30,7 +30,7 @@
   /* Auth/onboarding-only tokens — root-only by design, see DESIGN.md Foundations */
   --text-secondary: oklch(0.394 0.02 266.047);
   --text-tertiary: oklch(0.46 0.017 264.389);
-  --text-brand: oklch(0.488 0.089 44.008);
+  --text-brand: oklch(0.488 0.089 44.008); /* Also CourseCard's shared step-header background (node 3926:27038) — exact hex match to Figma's utility-brand-700, #894e34 */
   --overlay: oklch(0.158 0.012 260.622);
   --border-secondary: oklch(0.937 0.002 247.84);
   --border-brand: oklch(0.642 0.101 44.483);
@@ -53,13 +53,6 @@
    * class of gap as the status and nav tokens above. */
   --background-gradient-from: oklch(0.951 0.02 84.59); /* Colors/Yellow/50, #f5eee0 */
   --background-gradient-to: oklch(0.983 0.011 84.578); /* Colors/Yellow/25, #fdf9f1 */
-
-  /* Course Card's numbered step-header backgrounds (node 2316:26815 and
-   * siblings) — a 3-tier brand accent scale that darkens per step. Steps 1/2
-   * reuse existing tokens by exact hex match (border-brand #c07858,
-   * text-brand #894e34); brand-900 is the new third tier with no existing
-   * equivalent. */
-  --brand-900: oklch(0.309 0.054 40.586); /* Component colors/Utility/Brand/utility-brand-900, #47261a */
 
   /* Status colors — participation-level indicator (HeartChartSummary). Root-only:
    * no dark-mode value has a Figma reference yet, see DESIGN.md Known gaps. */
@@ -214,7 +207,6 @@
   --color-overlay: var(--overlay);
   --color-background-gradient-from: var(--background-gradient-from);
   --color-background-gradient-to: var(--background-gradient-to);
-  --color-brand-900: var(--brand-900);
   --color-status-success: var(--status-success);
   --color-status-success-strong: var(--status-success-strong);
   --color-status-warning: var(--status-warning);

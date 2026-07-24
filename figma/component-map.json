@@ -135,7 +135,7 @@
     "implementation": "src/components/top-hero.tsx"
   },
   "CourseCard": {
-    "figmaComponent": "AMFM Portal — \"Course Card\" component (node 2074:45130); 3-step pattern at nodes 2316:26815/2316:26886/2318:26954 — per-step video thumbnails blocked, renders a gradient placeholder",
+    "figmaComponent": "AMFM Portal — \"Course Card\" component (node 2074:45130); 3-step pattern at nodes 2316:26815/2316:26886/2318:26954 — per-step video thumbnails blocked, renders a gradient placeholder; shared step-header fill confirmed at node 3926:27038",
     "documentation": "COMPONENTS.md#coursecard",
     "implementation": "src/components/course-card.tsx"
   },
