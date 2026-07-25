@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "check:design-system": "node scripts/design-system-check/index.mjs",
     "start": "next start",
     "lint": "eslint",
     "test": "vitest run"

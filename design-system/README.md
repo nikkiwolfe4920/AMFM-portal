@@ -19,5 +19,6 @@ Figma Design Standards → DESIGN.md → COMPONENTS.md → React Components → 
 | `components/` | `COMPONENTS.md` | `/design-system/components` |
 | `patterns/` | Cross-component compositions documented in `COMPONENTS.md` | `/design-system/patterns` |
 | `pages/` | Full screens (`/`, `/login`) | `/design-system/pages` |
+| `audits/` | Governance plans, audit rules, exception policy, and durable audit summaries | `npm run check:design-system` policy and review evidence |
 
 See `IMPLEMENTATION.md` for the rules an AI agent follows when using this structure to implement new UI.
