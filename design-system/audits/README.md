@@ -114,6 +114,8 @@ Generated screenshots, raw reports, and temporary browser evidence should not be
 
 ## Phase Plan
 
+The follow-up full-source sweep and adversarial checker-hardening plan lives in [`full-source-sweep-plan.md`](./full-source-sweep-plan.md). The phases below describe the baseline governance-checker PR; the follow-up plan describes how to dogfood it against the whole component/pattern/page system without relying on `.engine`.
+
 ### Phase 0: Grounding And Branch Safety
 
 1. Verify branch, upstream, dirty files, staged files, and ignored `.engine` behavior from real Git state.
