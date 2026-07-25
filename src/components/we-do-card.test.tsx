@@ -63,8 +63,9 @@ describe("WeDoCard", () => {
   it("renders a decorative quotation mark above the pull-quote", () => {
     const { container } = render(<WeDoCard coupleCount={363} quote="Test quote" />);
 
-    const quoteMark = container.querySelector('svg[aria-hidden="true"]');
+    const quoteMark = container.querySelector('span[aria-hidden="true"]');
     expect(quoteMark).not.toBeNull();
+    expect(quoteMark).toHaveTextContent("“");
   });
 
   it("shows the default quote source and omits the next-pulse label when not provided", () => {

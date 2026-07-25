@@ -151,12 +151,12 @@ export const GOD_CONNECTION_PIE = {
     {
       label: "Feel deeply connected to God daily",
       value: 54,
-      color: "--color-status-success",
+      color: "--color-chart-pie-green-700",
     },
     {
       label: "Occasionally connected to God",
       value: 31,
-      color: "--color-chart-pie-green-400",
+      color: "--color-status-success",
     },
     {
       label: "Feel disconnected from God right now",

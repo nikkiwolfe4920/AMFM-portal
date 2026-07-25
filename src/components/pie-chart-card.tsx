@@ -29,8 +29,8 @@ interface PieChartCardProps {
  */
 function PieChartCard({ title, centerStat, segments, className }: PieChartCardProps) {
   const total = segments.reduce((sum, segment) => sum + segment.value, 0) || 1;
-  const size = 160;
-  const strokeWidth = 24;
+  const size = 240;
+  const strokeWidth = 64;
   const radius = (size - strokeWidth) / 2;
   const circumference = 2 * Math.PI * radius;
 
@@ -47,7 +47,7 @@ function PieChartCard({ title, centerStat, segments, className }: PieChartCardPr
       <h3 className="sr-only">{title}</h3>
 
       <div className="flex flex-col items-center gap-3">
-        <div className="relative size-40 shrink-0" aria-hidden="true">
+        <div className="relative size-60 shrink-0" aria-hidden="true">
           <svg
             width={size}
             height={size}
@@ -77,21 +77,23 @@ function PieChartCard({ title, centerStat, segments, className }: PieChartCardPr
             ))}
           </svg>
         </div>
-        <p className="max-w-60 text-center text-sm font-medium text-foreground">
+        <p className="max-w-[400px] text-center font-display text-display-md font-light text-foreground">
           {centerStat}
         </p>
       </div>
 
       <ul className="flex w-full flex-col gap-2">
         {segments.map((segment) => (
-          <li key={segment.label} className="flex items-center gap-2 text-xs">
+          <li key={segment.label} className="flex items-center gap-4 text-base text-foreground">
             <span
               aria-hidden="true"
-              className="size-2.5 shrink-0 rounded-full"
+              className="h-6 w-10 shrink-0 rounded-[24px]"
               style={{ backgroundColor: `var(${segment.color})` }}
             />
-            <span className="flex-1 text-muted-foreground">{segment.label}</span>
-            <span className="font-medium text-foreground">{segment.value}%</span>
+            <span className="flex items-baseline gap-1">
+              <span className="font-bold">{segment.value}%</span>
+              <span>{segment.label}</span>
+            </span>
           </li>
         ))}
       </ul>

@@ -1,12 +1,13 @@
 "use client";
 
 import * as React from "react";
-import { Baby, ChartNoAxesColumn, Heart } from "lucide-react";
+import Image from "next/image";
 
 import { HeartChartSummary } from "@/components/heartchart-summary";
 import { WeDoCard } from "@/components/we-do-card";
+import { PointerCalloutArrow } from "@/components/pointer-callout-arrow";
 import { ParticipationVerticalBarCard } from "@/components/participation-vertical-bar-card";
-import { ParticipationHorizontalBarCard } from "@/components/participation-horizontal-bar-card";
+import { StatusSnapshotCard } from "@/components/status-snapshot-card";
 import { CommitmentConnectionChart } from "@/components/commitment-connection-chart";
 import { SnapshotVideoCard } from "@/components/snapshot-video-card";
 import { FullWidthBarChart } from "@/components/full-width-bar-chart";
@@ -94,10 +95,18 @@ export function DashboardContent() {
           nextPulseLabel={WE_DO_CARD.nextPulseLabel}
         />
       </div>
-      <p className="text-center text-sm text-muted-foreground">
-        HeartChart shows you where your people are — WeDo helps them get
-        where they want to go.
-      </p>
+      <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+        <PointerCalloutArrow
+          side="left"
+          emphasis="HeartChart"
+          text="shows your people where they are."
+        />
+        <PointerCalloutArrow
+          side="right"
+          emphasis="WeDo"
+          text="helps them get where they want to go."
+        />
+      </div>
 
       <Card>
         <CardHeader>
@@ -107,19 +116,24 @@ export function DashboardContent() {
           <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
             <ParticipationVerticalBarCard
               title="Age Groups"
-              icon={<ChartNoAxesColumn />}
+              icon={
+                <Image
+                  src="/age-group-icon.svg"
+                  alt=""
+                  aria-hidden="true"
+                  width={23}
+                  height={17}
+                  unoptimized
+                />
+              }
               data={AGE_GROUPS_DATA}
             />
-            <ParticipationHorizontalBarCard
+            <StatusSnapshotCard
+              variant="relationship"
               title="Relationship Status"
-              icon={<Heart />}
               data={RELATIONSHIP_STATUS_DATA}
             />
-            <ParticipationHorizontalBarCard
-              title="Kids"
-              icon={<Baby />}
-              data={KIDS_DATA}
-            />
+            <StatusSnapshotCard variant="kids" title="Kids" data={KIDS_DATA} />
           </div>
         </CardContent>
       </Card>
@@ -145,20 +159,12 @@ export function DashboardContent() {
               highlightedZone={RELATIONSHIP_HEALTH_SUMMARY.highlightedZone}
               zoneLabels={RELATIONSHIP_HEALTH_ZONE_LABELS}
             />
-            <div className="flex flex-col gap-4">
-              <div>
-                <h3 className="text-lg font-semibold text-foreground">
-                  {RELATIONSHIP_HEALTH_SUMMARY.highlightedZone}
-                </h3>
-                <p className="text-sm font-medium text-primary">
-                  {RELATIONSHIP_HEALTH_SUMMARY.headline}
-                </p>
-              </div>
-              <SnapshotVideoCard
-                title="Quick Snapshot"
-                description={RELATIONSHIP_HEALTH_SUMMARY.description}
-              />
-            </div>
+            <SnapshotVideoCard
+              zoneTitle={RELATIONSHIP_HEALTH_SUMMARY.highlightedZone}
+              zoneHeadline={RELATIONSHIP_HEALTH_SUMMARY.headline}
+              title="Quick Snapshot"
+              description={RELATIONSHIP_HEALTH_SUMMARY.description}
+            />
           </div>
 
           <DashboardFilterMenu

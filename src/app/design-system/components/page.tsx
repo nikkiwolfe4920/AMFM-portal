@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { ClipboardCheck, FileBadge, Plus, Share2, Upload } from "lucide-react";
 
 import {
@@ -32,6 +33,29 @@ import {
 import { GoogleIcon } from "@/app/login/_components/google-icon";
 import { HeartChartSummary } from "@/components/heartchart-summary";
 import { WeDoCard } from "@/components/we-do-card";
+import { PointerCallout } from "@/components/pointer-callout";
+import { PointerCalloutArrow } from "@/components/pointer-callout-arrow";
+import { ParticipationVerticalBarCard } from "@/components/participation-vertical-bar-card";
+import { StatusSnapshotCard } from "@/components/status-snapshot-card";
+import {
+  HorizontalTabsDemo,
+  DashboardFilterMenuDemo,
+} from "../_components/dashboard-showcase-demos";
+import { SnapshotVideoCard } from "@/components/snapshot-video-card";
+import { FullWidthBarChart } from "@/components/full-width-bar-chart";
+import { PieChartCard } from "@/components/pie-chart-card";
+import { ScaleChartCard } from "@/components/scale-chart-card";
+import {
+  AGE_GROUPS_DATA,
+  CAUTION_FLAGS_DATA,
+  DASHBOARD_FILTER_GROUPS,
+  FAITH_JOURNEY_PIE,
+  FULL_WIDTH_BAR_CHART_DATA,
+  GOD_CONNECTION_PIE,
+  KIDS_DATA,
+  RELATIONSHIP_HEALTH_SUMMARY,
+  RELATIONSHIP_STATUS_DATA,
+} from "@/app/dashboard/_lib/dashboard-data";
 import { AmfmLogo } from "@/app/create-profile/_components/amfm-logo";
 import { BenefitListItem } from "@/app/create-profile/_components/benefit-list-item";
 import { PasswordRequirementItem } from "@/app/signup/_components/password-requirement-item";
@@ -813,6 +837,8 @@ export default function ComponentsPage() {
           "shadow-card",
           "rounded-2xl",
           "border",
+          "border-border-secondary",
+          "bg-muted",
           "text-foreground",
           "text-muted-foreground",
           "text-text-tertiary",
@@ -825,6 +851,282 @@ export default function ComponentsPage() {
           highlightedPhrase="being a listener"
           nextPulseLabel="2d 10h"
         />
+      </ComponentShowcase>
+
+      <ComponentShowcase
+        name="PointerCallout"
+        status="Draft"
+        purpose="Speech-bubble-style container with a visible directional pointer, used to anchor a short quote or contextual note to a specific piece of content — the shared primitive behind WeDoCard's pull-quote."
+        docsAnchor="pointercallout"
+        figmaReference='AMFM Portal — node 3727:29573, nested inside the WeDoCard instance (_Summary Data region); "left-diagonal" tail confirmed against node 4255:30880'
+        tokens={["border-border-secondary", "rounded-lg", "bg-muted"]}
+        states={["top", "right", "bottom", "left", "left-diagonal"]}
+      >
+        <div className="flex flex-wrap items-start gap-8">
+          <PointerCallout pointerPosition="top" className="w-56">
+            <p className="text-sm text-foreground">Top pointer (cardinal notch)</p>
+          </PointerCallout>
+          <PointerCallout pointerPosition="right" className="w-56">
+            <p className="text-sm text-foreground">Right pointer (cardinal notch)</p>
+          </PointerCallout>
+          <PointerCallout pointerPosition="bottom" className="w-56">
+            <p className="text-sm text-foreground">Bottom pointer (cardinal notch)</p>
+          </PointerCallout>
+          <PointerCallout pointerPosition="left" className="w-56">
+            <p className="text-sm text-foreground">Left pointer (default)</p>
+          </PointerCallout>
+          <PointerCallout pointerPosition="left-diagonal" className="w-64">
+            <p className="text-sm text-foreground">
+              Left-diagonal tail — the variant reused inside WeDoCard&apos;s pull-quote.
+            </p>
+          </PointerCallout>
+        </div>
+      </ComponentShowcase>
+
+      <ComponentShowcase
+        name="PointerCalloutArrow"
+        status="Draft"
+        purpose="Small curved-arrow and serif caption pairing HeartChartSummary with WeDoCard on the dashboard — a plain arrow-and-text caption, distinct from the bordered PointerCallout speech bubble despite the similar name."
+        docsAnchor="pointercalloutarrow"
+        figmaReference={null}
+        tokens={["font-display", "text-lg", "text-foreground"]}
+        states={["left", "right"]}
+      >
+        <div className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
+          <PointerCalloutArrow
+            side="left"
+            emphasis="HeartChart"
+            text="shows your people where they are."
+          />
+          <PointerCalloutArrow
+            side="right"
+            emphasis="WeDo"
+            text="helps them get where they want to go."
+          />
+        </div>
+        <p className="text-muted-foreground mt-4 text-xs">
+          No COMPONENTS.md entry exists yet for this component (it is rendered live on
+          /dashboard, between HeartChartSummary/WeDoCard and the Participation Profile
+          card) — flagging the documentation gap here rather than fabricating a
+          docsAnchor/Figma reference.
+        </p>
+      </ComponentShowcase>
+
+      <ComponentShowcase
+        name="ParticipationVerticalBarCard"
+        status="Draft"
+        purpose="Presents a single categorical distribution as a labeled vertical bar chart inside a bordered sub-panel — one of three peer widgets inside the Bedford Campus Participation Profile card."
+        docsAnchor="participationverticalbarcard"
+        figmaReference='AMFM Portal — node 3727:29573, "Bedford Campus Participation Profile" card, first column ("Age Groups")'
+        tokens={[
+          "border",
+          "border-border-secondary",
+          "chart-participation-fill-from",
+          "chart-participation-fill-to",
+          "text-primary",
+          "text-foreground",
+        ]}
+        states={["Default", "Empty"]}
+      >
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+          <ParticipationVerticalBarCard
+            title="Age Groups"
+            icon={
+              <Image
+                src="/age-group-icon.svg"
+                alt=""
+                aria-hidden="true"
+                width={23}
+                height={17}
+                unoptimized
+              />
+            }
+            data={AGE_GROUPS_DATA}
+          />
+          <ParticipationVerticalBarCard
+            title="Age Groups"
+            icon={
+              <Image
+                src="/age-group-icon.svg"
+                alt=""
+                aria-hidden="true"
+                width={23}
+                height={17}
+                unoptimized
+              />
+            }
+            data={[]}
+          />
+        </div>
+      </ComponentShowcase>
+
+      <ComponentShowcase
+        name="StatusSnapshotCard"
+        status="Draft"
+        purpose="Horizontal gradient-pill bar list for a single categorical distribution — replaces the removed ParticipationHorizontalBarCard for the Relationship Status and Kids dashboard tiles."
+        docsAnchor="statussnapshotcard"
+        figmaReference={null}
+        tokens={[
+          "border",
+          "border-border-secondary",
+          "chart-status-relationship-from",
+          "chart-status-relationship-to",
+          "chart-status-kids-from",
+          "chart-status-kids-to",
+          "text-foreground",
+        ]}
+        states={["relationship", "kids"]}
+      >
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+          <StatusSnapshotCard
+            variant="relationship"
+            title="Relationship Status"
+            data={RELATIONSHIP_STATUS_DATA}
+          />
+          <StatusSnapshotCard variant="kids" title="Kids" data={KIDS_DATA} />
+        </div>
+        <p className="text-muted-foreground mt-4 text-xs">
+          No COMPONENTS.md entry exists yet for this component, and its gradient
+          tokens/source frame are screenshot-derived, not pixel-verified against a
+          reachable Figma node (see the component&apos;s own source comments) —
+          flagging both gaps here rather than fabricating a Figma reference.
+        </p>
+      </ComponentShowcase>
+
+      <ComponentShowcase
+        name="HorizontalTabs"
+        status="Draft"
+        purpose="Pill-shaped segmented control that switches a card's displayed audience — confirmed used 4 times on the dashboard, always inside a Card's CardHeader/CardAction slot."
+        docsAnchor="horizontaltabs"
+        figmaReference='AMFM Portal — node 3727:29573, 4 confirmed instances ("Relationship Health", "Spiritual Snapshot", "Top 3 Caution Flags", "Top 3 Expressed Needs" card headers)'
+        tokens={[
+          "border-border-secondary",
+          "bg-muted",
+          "text-foreground",
+          "text-muted-foreground",
+          "shadow-xs",
+        ]}
+        states={["Selected", "Unselected"]}
+      >
+        <HorizontalTabsDemo />
+      </ComponentShowcase>
+
+      <ComponentShowcase
+        name="DashboardFilterMenu"
+        status="Draft"
+        purpose="Demographic filter row (Gender, Relationship Status, Years in Relationship, Kids, Age) that narrows CommitmentConnectionChart and FullWidthBarChart — each group is an independent single-select pill radiogroup."
+        docsAnchor="dashboardfiltermenu"
+        figmaReference={`AMFM Portal — node 3727:29573, below the "Relationship Health for Bedford Campus" card's chart, above FullWidthBarChart`}
+        tokens={["border-border-secondary", "bg-foreground", "text-background", "text-text-tertiary", "bg-accent"]}
+        states={["Inactive pill", "Active/selected pill"]}
+      >
+        <DashboardFilterMenuDemo groups={DASHBOARD_FILTER_GROUPS} />
+      </ComponentShowcase>
+
+      <ComponentShowcase
+        name="SnapshotVideoCard"
+        status="Draft"
+        purpose="Short contextual video preview explaining the currently-highlighted relationship-health zone, alongside a 'Next Ministry Steps' call to action."
+        docsAnchor="snapshotvideocard"
+        figmaReference='AMFM Portal — node 3727:29573, "Relationship Health for Bedford Campus" card, right column (paired with CommitmentConnectionChart)'
+        tokens={[
+          "from-nav-surface-from",
+          "to-nav-surface-to",
+          "border",
+          "text-foreground",
+          "text-primary",
+          "text-text-tertiary",
+        ]}
+        states={["With zone context", "Without zone context"]}
+      >
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+          <SnapshotVideoCard
+            title="Quick Snapshot"
+            description={RELATIONSHIP_HEALTH_SUMMARY.description}
+            zoneTitle={RELATIONSHIP_HEALTH_SUMMARY.highlightedZone}
+            zoneHeadline={RELATIONSHIP_HEALTH_SUMMARY.headline}
+          />
+          <SnapshotVideoCard
+            title="Quick Snapshot"
+            description={RELATIONSHIP_HEALTH_SUMMARY.description}
+          />
+        </div>
+      </ComponentShowcase>
+
+      <ComponentShowcase
+        name="FullWidthBarChart"
+        status="Draft"
+        purpose="Ranked, full-bleed horizontal bar chart companion to CommitmentConnectionChart, breaking the relationship-health zones into a percentage-labeled bar list."
+        docsAnchor="fullwidthbarchart"
+        figmaReference='AMFM Portal — node 3727:29573 ("Relationship Health for Bedford Campus" card, below DashboardFilterMenu); bar-fill gradient confirmed via direct node pull on node 1243:23077 ("BarLineChart")'
+        tokens={["from-primary", "chart-bar-fill-to", "text-text-secondary", "text-foreground"]}
+        states={["Default", "Empty"]}
+      >
+        <div className="flex flex-col gap-8">
+          <FullWidthBarChart data={FULL_WIDTH_BAR_CHART_DATA} />
+          <div>
+            <p className="text-muted-foreground mb-2 text-xs font-medium">Empty state</p>
+            <FullWidthBarChart data={[]} />
+          </div>
+        </div>
+      </ComponentShowcase>
+
+      <ComponentShowcase
+        name="PieChartCard"
+        status="Draft"
+        purpose="Multi-segment donut chart tile with a headline center stat and a text legend — confirmed reused twice in the Spiritual Snapshot card with different data and color families."
+        docsAnchor="piechartcard"
+        figmaReference='AMFM Portal — node 3727:29573, "Spiritual Snapshot for Bedford Campus" card (2 confirmed instances: faith journey, connection to God)'
+        tokens={[
+          "chart-pie-purple-700",
+          "chart-pie-purple-500",
+          "chart-pie-purple-300",
+          "chart-pie-purple-100",
+          "chart-pie-green-700",
+          "status-success",
+          "chart-pie-green-300",
+          "chart-pie-green-100",
+          "border-border-secondary",
+        ]}
+        states={["Purple palette", "Green palette"]}
+      >
+        <div className="grid grid-cols-1 gap-8 sm:grid-cols-2">
+          <PieChartCard
+            title={FAITH_JOURNEY_PIE.title}
+            centerStat={FAITH_JOURNEY_PIE.centerStat}
+            segments={FAITH_JOURNEY_PIE.segments}
+          />
+          <PieChartCard
+            title={GOD_CONNECTION_PIE.title}
+            centerStat={GOD_CONNECTION_PIE.centerStat}
+            segments={GOD_CONNECTION_PIE.segments}
+          />
+        </div>
+      </ComponentShowcase>
+
+      <ComponentShowcase
+        name="ScaleChartCard"
+        status="Draft"
+        purpose="Presents a single metric as a headline percentage plus a horizontal 0–100% scale plotting the church's value against a National Average marker — confirmed reused 6 times across two cards."
+        docsAnchor="scalechartcard"
+        figmaReference='AMFM Portal — node 3727:29573, "Top 3 Caution Flags for Bedford Campus" and "Top 3 Expressed Needs for Bedford Campus" cards (Figma layer "Scale chart/Default")'
+        tokens={[
+          "chart-scale-blue-700",
+          "chart-scale-blue-400",
+          "chart-scale-blue-100",
+          "chart-scale-blue-50",
+          "chart-scale-blue-25",
+          "border",
+          "text-foreground",
+          "text-muted-foreground",
+        ]}
+        states={["Default"]}
+      >
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+          {CAUTION_FLAGS_DATA.map((flag) => (
+            <ScaleChartCard key={flag.question} {...flag} />
+          ))}
+        </div>
       </ComponentShowcase>
 
       <ComponentShowcase

@@ -1,3 +1,4 @@
+import * as React from "react";
 import { Lightbulb, QrCode, TrendingUp } from "lucide-react";
 
 import { HeartChartLogo } from "@/app/login/_components/heartchart-logo";
@@ -164,6 +165,7 @@ function ParticipationDonut({
   percentage: number;
   tone: "success" | "warning";
 }) {
+  const gradientId = React.useId();
   const size = 90;
   const strokeWidth = 10;
   const radius = (size - strokeWidth) / 2;
@@ -173,6 +175,25 @@ function ParticipationDonut({
   return (
     <div className="relative size-[90px] shrink-0" aria-hidden>
       <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} className="-rotate-90">
+        <defs>
+          {/* Figma's value arc is a gradient, not a flat stroke — reusing the
+              same two-stop pair ParticipationScale's active segment already
+              uses for this tone, so the ring and the scale bar read as one
+              consistent color story. */}
+          <linearGradient id={gradientId} x1="0%" y1="0%" x2="0%" y2="100%">
+            {tone === "success" ? (
+              <>
+                <stop offset="0%" className="[stop-color:var(--color-status-success-strong)]" />
+                <stop offset="100%" className="[stop-color:var(--color-status-success)]" />
+              </>
+            ) : (
+              <>
+                <stop offset="0%" className="[stop-color:var(--color-status-warning-subtle)]" />
+                <stop offset="100%" className="[stop-color:var(--color-status-warning)]" />
+              </>
+            )}
+          </linearGradient>
+        </defs>
         <circle
           cx={size / 2}
           cy={size / 2}
@@ -190,7 +211,7 @@ function ParticipationDonut({
           strokeDashoffset={dashOffset}
           strokeLinecap="round"
           fill="none"
-          className={tone === "success" ? "stroke-status-success" : "stroke-status-warning"}
+          stroke={`url(#${gradientId})`}
         />
       </svg>
       <span className="absolute inset-0 flex items-center justify-center text-base font-medium text-muted-foreground">

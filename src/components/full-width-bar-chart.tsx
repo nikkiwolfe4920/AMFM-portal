@@ -7,31 +7,33 @@ interface FullWidthBarChartProps {
 
 /**
  * Ranked, full-bleed horizontal bar chart companion to
- * CommitmentConnectionChart — see COMPONENTS.md#fullwidthbarchart. Reuses
- * the existing `primary` brand token rather than a new chart token (Figma's
- * bar color is an exact match to `primary`'s source hex) — see DESIGN.md
- * Known gaps for the approximation this entails.
+ * CommitmentConnectionChart (Figma's "BarLineChart", node `1243:23077`) —
+ * see COMPONENTS.md#fullwidthbarchart. The bar fill is a confirmed two-stop
+ * gradient at 80% opacity (utility-brand-600, an exact match to the
+ * existing `primary` token, reused rather than duplicated, to
+ * utility-brand-800 via the new `chart-bar-fill-to` token) — resolves the
+ * previously-flagged "not reliably resolvable" gap, see DESIGN.md Known gaps.
  */
 function FullWidthBarChart({ data, className }: FullWidthBarChartProps) {
   const max = Math.max(...data.map((item) => item.value), 1);
 
   return (
-    <div className={cn("flex w-full flex-col gap-3", className)}>
+    <div className={cn("flex w-full flex-col gap-6", className)}>
       {data.length === 0 ? (
         <p className="text-sm text-muted-foreground">No data yet.</p>
       ) : (
         data.map((item) => (
-          <div key={item.label} className="flex items-center gap-3">
-            <span className="w-24 shrink-0 text-xs text-muted-foreground">
+          <div key={item.label} className="flex items-center gap-2">
+            <span className="w-[74px] shrink-0 text-sm font-semibold text-text-secondary">
               {item.label}
             </span>
-            <div className="h-3 flex-1 overflow-hidden rounded-full bg-muted">
+            <div className="h-6 flex-1">
               <div
-                className="h-full rounded-full bg-primary"
+                className="h-full rounded-r-sm bg-gradient-to-r from-primary to-chart-bar-fill-to opacity-80"
                 style={{ width: `${(item.value / max) * 100}%` }}
               />
             </div>
-            <span className="w-10 shrink-0 text-right text-xs font-medium text-foreground">
+            <span className="w-10 shrink-0 text-right text-xs font-semibold tracking-[0.24px] text-foreground/70">
               {item.value}%
             </span>
           </div>

@@ -25,7 +25,7 @@ function HorizontalTabs({
       onValueChange={onValueChange}
       className={className}
     >
-      <TabsPrimitive.List className="inline-flex items-center gap-1 rounded-full bg-muted p-1">
+      <TabsPrimitive.List className="inline-flex items-center gap-1 rounded-lg border border-border-secondary p-1">
         {tabs.map((tab) => {
           const active = tab.value === value;
           return (
@@ -33,9 +33,9 @@ function HorizontalTabs({
               key={tab.value}
               value={tab.value}
               className={cn(
-                "focus-visible:ring-ring/50 rounded-full px-3 py-1.5 text-sm font-medium whitespace-nowrap outline-none transition-colors focus-visible:ring-[3px]",
+                "focus-visible:ring-ring/50 h-9 rounded-sm px-3 py-2 text-sm font-semibold whitespace-nowrap outline-none transition-colors focus-visible:ring-[3px]",
                 active
-                  ? "bg-primary text-primary-foreground shadow-xs"
+                  ? "bg-muted text-foreground shadow-xs"
                   : "text-muted-foreground hover:text-foreground"
               )}
             >
