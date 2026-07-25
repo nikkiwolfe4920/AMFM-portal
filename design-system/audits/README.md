@@ -65,7 +65,7 @@ The runner deliberately does not scan `scripts/`, tests, fixtures, or generated/
 
 The checker has two validation layers:
 
-1. Unit-level rule tests cover the scanner, file discovery, exception registry, component contract validation, and report formatting.
+1. Unit-level rule tests cover the scanner, file discovery, exception registry, component-map/docs wiring validation, and report formatting.
 2. CLI-level dogfood tests run the real `scripts/design-system-check/index.mjs` command from a temporary Git repository against changed `src/components` files.
 
 The A/B cases intentionally prove both blocked and accepted paths:
@@ -81,7 +81,7 @@ The A/B cases intentionally prove both blocked and accepted paths:
 
 Every arbitrary visual-value exception must record:
 
-- Value and class/property.
+- Exact arbitrary class name currently matched by the checker.
 - File path and component or pattern.
 - Figma file/node or product decision source.
 - Why existing tokens/components do not work.
@@ -107,7 +107,7 @@ Generated screenshots, raw reports, and temporary browser evidence should not be
 
 ## Current Limitations
 
-- This PR does not perform the full historical cleanup sweep. A repo inventory during Phase 1 found existing arbitrary values in current source and docs, including button heights, modal widths, blur values, custom tracking, and design-system demo values. Those need a separate full-sweep PR because silently allowlisting them here would weaken the rule this checker exists to enforce.
+- This PR does not perform the full historical cleanup sweep. A preliminary repo inventory found existing arbitrary values in current source and docs, including button heights, modal widths, blur values, custom tracking, and design-system demo values. Those need a separate full-sweep PR because silently allowlisting them here would weaken the rule this checker exists to enforce.
 - This V1 runner does not yet parse every possible hardcoded visual literal, such as `style={{ gap: "7px" }}` or raw CSS declarations like `gap: 7px`. Those remain target-state violations, but they are future scanner coverage rather than a claim this baseline already enforces.
 - The default runner does not yet emit persisted JSON files; `--json` prints machine-readable output to stdout.
 - DTCG token migration remains future work, not part of this checker baseline.
