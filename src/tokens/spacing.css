@@ -1,8 +1,137 @@
 /*
  * Spacing tokens — see DESIGN.md "Spacing".
- * No custom spacing scale is defined: Tailwind v4's default spacing scale
- * (multiples of 0.25rem) already covers every spacing value verified
- * against the Figma source. This file is the designated home for spacing
- * tokens — add an override here only when a genuinely new value can't be
- * expressed by the default scale, and document it in DESIGN.md.
+ * Tailwind v4's default spacing scale (multiples of 0.25rem) covers the
+ * shared spacing scale verified against the Figma source. This file is the
+ * designated home for spacing/container tokens that cannot be expressed by
+ * the default scale without an arbitrary value. Add one only when the value
+ * is reusable and document it in DESIGN.md.
  */
+
+@theme inline {
+  --breakpoint-xs: 22.5rem;
+  --container-dialog-mobile: calc(100% - 2rem);
+  --container-modal-sm: 34rem;
+  --container-modal-md: 40rem;
+  --container-modal-lg: 48rem;
+  --container-modal-xl: 50rem;
+  --container-modal-settings: 64rem;
+  --container-heartchart-card: 35.25rem;
+  --container-settings-content: 38.5rem;
+  --container-top-hero-copy: 34rem;
+  --container-page-wide: 90rem;
+  --container-video-player: 35rem;
+  --container-pie-center-stat: 25rem;
+}
+
+@utility max-h-modal-shell {
+  max-height: calc(100vh - 2rem);
+}
+
+@utility max-h-modal-frame {
+  max-height: calc(100vh - 3rem);
+}
+
+@utility grid-rows-modal-with-divider {
+  grid-template-rows: auto auto minmax(0, 1fr) auto;
+}
+
+@utility grid-rows-modal-no-divider {
+  grid-template-rows: auto minmax(0, 1fr) auto;
+}
+
+@utility grid-cols-balanced-actions {
+  grid-template-columns: 1fr auto 1fr;
+}
+
+@utility grid-cols-heartchart-link-header {
+  grid-template-columns: minmax(0, 420px) 276px;
+}
+
+@utility grid-cols-dashboard-participation {
+  grid-template-columns: minmax(0, 5fr) minmax(0, 3fr) minmax(0, 3fr);
+}
+
+@utility grid-cols-dashboard-relationship-health {
+  grid-template-columns: minmax(0, 695fr) minmax(0, 564fr);
+}
+
+@utility grid-cols-settings-modal {
+  grid-template-columns: 17.5rem minmax(0, 1fr);
+}
+
+@utility grid-cols-settings-field-pair {
+  grid-template-columns: minmax(0, 11.4375rem) minmax(0, 1fr);
+}
+
+@utility grid-cols-settings-address {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 6rem) minmax(0, 6.5rem);
+}
+
+@utility grid-cols-settings-campus-row {
+  grid-template-columns: minmax(0, 1fr) auto;
+}
+
+@utility grid-rows-card-header {
+  grid-template-rows: auto auto;
+}
+
+@utility grid-cols-card-header-action {
+  grid-template-columns: 1fr auto;
+}
+
+@utility h-global-nav-demo {
+  height: 59.375rem;
+}
+
+@utility max-w-heartchart-card {
+  max-width: var(--container-heartchart-card);
+}
+
+@utility max-w-settings-content {
+  max-width: var(--container-settings-content);
+}
+
+@utility max-w-top-hero-copy {
+  max-width: var(--container-top-hero-copy);
+}
+
+@utility max-w-page-wide {
+  max-width: var(--container-page-wide);
+}
+
+@utility max-w-video-player {
+  max-width: var(--container-video-player);
+}
+
+@utility max-w-pie-center-stat {
+  max-width: var(--container-pie-center-stat);
+}
+
+@utility w-full-width-bar-label {
+  width: 4.625rem;
+}
+
+@utility size-heartchart-donut {
+  width: 5.625rem;
+  height: 5.625rem;
+}
+
+@utility aspect-wedo-illustration {
+  aspect-ratio: 223 / 156;
+}
+
+@utility max-w-wedo-illustration {
+  max-width: 13.9375rem;
+}
+
+@utility left-pointer-callout-tail {
+  left: -1.0625rem;
+}
+
+@utility bottom-heartchart-marker {
+  bottom: 0.1875rem;
+}
+
+@utility w-heartchart-marker-stem {
+  width: 0.09375rem;
+}

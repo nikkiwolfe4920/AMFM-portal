@@ -15,8 +15,8 @@ describe("ParticipationVerticalBarCard", () => {
     );
 
     expect(screen.getByText("Age Groups")).toBeInTheDocument();
-    expect(screen.getByText("<18")).toBeInTheDocument();
-    expect(screen.getByText("18-24")).toBeInTheDocument();
+    expect(screen.getByText("<18")).toHaveClass("text-chart-label");
+    expect(screen.getByText("18-24")).toHaveClass("text-chart-label");
     expect(screen.getByText("10%")).toBeInTheDocument();
     expect(screen.getByText("20%")).toBeInTheDocument();
   });

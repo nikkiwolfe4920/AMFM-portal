@@ -77,7 +77,7 @@ function PieChartCard({ title, centerStat, segments, className }: PieChartCardPr
             ))}
           </svg>
         </div>
-        <p className="max-w-[400px] text-center font-display text-display-md font-light text-foreground">
+        <p className="max-w-pie-center-stat text-center font-display text-display-md font-light text-foreground">
           {centerStat}
         </p>
       </div>
@@ -87,7 +87,7 @@ function PieChartCard({ title, centerStat, segments, className }: PieChartCardPr
           <li key={segment.label} className="flex items-center gap-4 text-base text-foreground">
             <span
               aria-hidden="true"
-              className="h-6 w-10 shrink-0 rounded-[24px]"
+              className="h-6 w-10 shrink-0 rounded-3xl"
               style={{ backgroundColor: `var(${segment.color})` }}
             />
             <span className="flex items-baseline gap-1">

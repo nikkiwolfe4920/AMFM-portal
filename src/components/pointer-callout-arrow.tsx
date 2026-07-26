@@ -39,10 +39,10 @@ function PointerCalloutArrow({
         src={side === "left" ? "/Arrowup-left.svg" : "/Arrowup-right.svg"}
         alt=""
         aria-hidden="true"
-        width={44}
-        height={44}
+        width={59}
+        height={58}
         unoptimized
-        className="shrink-0"
+        className="h-11 w-auto shrink-0"
       />
       <p className="font-display text-lg text-foreground">
         <span className="font-bold">{emphasis}</span> {text}

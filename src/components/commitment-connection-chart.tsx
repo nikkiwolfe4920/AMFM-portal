@@ -1,128 +1,61 @@
+import Image from "next/image";
+
 import { cn } from "@/lib/utils";
 
 interface CommitmentConnectionChartProps {
-  /** Each point's position, 0–100 on both axes. */
-  dataPoints: { commitment: number; connection: number }[];
+  /** Representative response count shown in the accessible chart summary. */
+  responseCount: number;
   highlightedZone: string;
   /** Zone key -> display label, placed evenly around the chart's boundary in key order. */
   zoneLabels: Record<string, string>;
   className?: string;
 }
 
-const SIZE = 320;
-const CENTER = SIZE / 2;
-const RADIUS = CENTER - 48;
+const SCATTERGRAM_IMAGE = {
+  src: "/relationship-health-scattergram.png",
+  width: 685,
+  height: 695,
+};
 
 /**
  * Quadrant scatter/bubble chart mapping people along Commitment × Connection
- * — see COMPONENTS.md#commitmentconnectionchart. Zone label positions are
- * distributed evenly around the circle from `zoneLabels`' key order (Figma's
- * exact per-zone angular placement wasn't independently verifiable in this
- * pass — see that entry's Implementation rules) rather than hardcoding
- * specific unverified angles per zone name.
+ * — see COMPONENTS.md#commitmentconnectionchart. The visible graphic is the
+ * verified Figma raster asset because the source frame uses an illustrated,
+ * hand-labelled scattergram rather than a generic geometric SVG chart.
  */
 function CommitmentConnectionChart({
-  dataPoints,
+  responseCount,
   highlightedZone,
   zoneLabels,
   className,
 }: CommitmentConnectionChartProps) {
-  const zoneEntries = Object.entries(zoneLabels);
+  const zoneNames = Object.values(zoneLabels);
+  const responseLabel =
+    responseCount === 1 ? "1 plotted response" : `${responseCount} plotted responses`;
+  const accessibleSummary = `Commitment and connection scattergram with ${responseLabel}. Highlighted zone: ${highlightedZone}. Zones shown: ${zoneNames.join(", ")}.`;
 
   return (
-    <div className={cn("flex flex-col items-center gap-3", className)}>
-      <div className="flex items-stretch gap-2">
-        <span
-          aria-hidden="true"
-          className="flex shrink-0 [writing-mode:vertical-rl] items-center justify-center rotate-180 text-[10px] font-semibold tracking-widest text-muted-foreground uppercase"
-        >
-          Commitment
-        </span>
-
-        <div className="relative" style={{ width: SIZE, height: SIZE }}>
-          <svg
-            width={SIZE}
-            height={SIZE}
-            viewBox={`0 0 ${SIZE} ${SIZE}`}
-            aria-hidden="true"
-            className="overflow-visible"
-          >
-            <circle
-              cx={CENTER}
-              cy={CENTER}
-              r={RADIUS}
-              className="fill-none stroke-border"
-            />
-            <line
-              x1={CENTER}
-              y1={CENTER - RADIUS}
-              x2={CENTER}
-              y2={CENTER + RADIUS}
-              className="stroke-border"
-              strokeDasharray="2 4"
-            />
-            <line
-              x1={CENTER - RADIUS}
-              y1={CENTER}
-              x2={CENTER + RADIUS}
-              y2={CENTER}
-              className="stroke-border"
-              strokeDasharray="2 4"
-            />
-
-            {dataPoints.map((point, index) => {
-              const cx = CENTER + ((point.connection - 50) / 50) * RADIUS;
-              const cy = CENTER - ((point.commitment - 50) / 50) * RADIUS;
-              return (
-                <circle
-                  key={index}
-                  cx={cx}
-                  cy={cy}
-                  r={2.5}
-                  className="fill-primary/50"
-                />
-              );
-            })}
-
-            <circle
-              cx={CENTER}
-              cy={CENTER}
-              r={48}
-              strokeWidth={2}
-              className="fill-background stroke-primary"
-            />
-          </svg>
-
-          <span className="pointer-events-none absolute inset-0 flex items-center justify-center px-16 text-center text-sm font-semibold tracking-wide text-foreground uppercase">
-            {highlightedZone}
-          </span>
-
-          {zoneEntries.map(([key, label], index) => {
-            const angle =
-              (index / zoneEntries.length) * 2 * Math.PI - Math.PI / 2;
-            const labelRadius = RADIUS + 28;
-            const x = CENTER + Math.cos(angle) * labelRadius;
-            const y = CENTER + Math.sin(angle) * labelRadius;
-            return (
-              <span
-                key={key}
-                className="absolute -translate-x-1/2 -translate-y-1/2 text-center text-[10px] font-medium tracking-wide text-muted-foreground uppercase"
-                style={{ left: x, top: y }}
-              >
-                {label}
-              </span>
-            );
-          })}
-        </div>
-      </div>
-
-      <span
-        aria-hidden="true"
-        className="text-[10px] font-semibold tracking-widest text-muted-foreground uppercase"
-      >
-        Connection
-      </span>
-    </div>
+    <figure
+      data-slot="commitment-connection-chart"
+      role="img"
+      aria-label={accessibleSummary}
+      className={cn("w-full", className)}
+    >
+      <Image
+        src={SCATTERGRAM_IMAGE.src}
+        alt=""
+        width={SCATTERGRAM_IMAGE.width}
+        height={SCATTERGRAM_IMAGE.height}
+        unoptimized
+        className="h-auto w-full"
+      />
+      <figcaption className="sr-only">
+        <span>{highlightedZone}</span>
+        {zoneNames.map((label) => (
+          <span key={label}>{label}</span>
+        ))}
+      </figcaption>
+    </figure>
   );
 }
 

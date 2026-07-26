@@ -14,7 +14,7 @@ const reversedOutlineClasses =
   "border border-button-outline-reversed-border bg-button-outline-reversed-bg text-button-outline-reversed-fg shadow-none hover:bg-button-outline-reversed-hover-bg hover:text-button-outline-reversed-fg focus-visible:border-button-outline-reversed-border [&>svg]:text-button-outline-reversed-icon disabled:opacity-50";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-1.5 whitespace-nowrap rounded-md font-semibold transition-all disabled:pointer-events-none disabled:opacity-50 [&>svg]:pointer-events-none [&>svg:not([class*='size-'])]:size-5 shrink-0 [&>svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive",
+  "inline-flex items-center justify-center gap-1.5 whitespace-nowrap rounded-md font-semibold transition-all disabled:pointer-events-none disabled:opacity-50 [&>svg]:pointer-events-none [&>svg:not([class*='size-'])]:size-5 shrink-0 [&>svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive",
   {
     variants: {
       variant: {
@@ -33,13 +33,13 @@ const buttonVariants = cva(
         link: "text-text-brand underline-offset-4 hover:underline",
       },
       size: {
-        compact: "h-[38px] rounded-md gap-1.5 px-3 py-1.5 text-sm has-[>svg]:px-3",
+        compact: "h-9.5 rounded-md gap-1.5 px-3 py-1.5 text-sm has-[>svg]:px-3",
         control: "h-11 rounded-md gap-1.5 px-3.5 py-2.5 text-sm has-[>svg]:px-3.5",
         controlSegment: "h-full rounded-r-md rounded-l-none gap-1.5 px-3.5 py-0 text-sm has-[>svg]:px-3.5",
-        default: "h-[46px] px-4 py-2 text-base has-[>svg]:px-3",
+        default: "h-11.5 px-4 py-2 text-base has-[>svg]:px-3",
         inline: "h-auto gap-1.5 px-0 py-0 text-sm has-[>svg]:px-0",
-        sm: "h-[42px] rounded-md gap-1.5 px-3 py-2 text-sm has-[>svg]:px-3",
-        lg: "h-[50px] rounded-md px-6 py-2.5 text-base has-[>svg]:px-4",
+        sm: "h-10.5 rounded-md gap-1.5 px-3 py-2 text-sm has-[>svg]:px-3",
+        lg: "h-12.5 rounded-md px-6 py-2.5 text-base has-[>svg]:px-4",
         icon: "size-9 text-sm",
         iconLg: "size-12 text-sm",
       },

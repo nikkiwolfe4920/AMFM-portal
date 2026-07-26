@@ -18,7 +18,7 @@ describe("TopHero", () => {
     expect(screen.getByRole("button", { name: "Watch the Overview" })).toHaveClass(
       "border-button-outline-border",
       "text-button-outline-fg",
-      "h-[46px]",
+      "h-11.5",
       "text-base"
     );
   });

@@ -56,13 +56,13 @@ export function TopHero({
       }
     >
       <div className="flex w-full flex-col justify-center gap-10 px-16 py-10">
-        <div className="flex max-w-[544px] flex-col gap-10">
+        <div className="flex max-w-top-hero-copy flex-col gap-10">
           <div className="flex flex-col gap-4">
             <div className="font-display flex flex-col font-light">
               <p className="text-nav-foreground text-display-lg">
                 {eyebrowHeading}
               </p>
-              <p className="text-display-2xl text-highlight-gold tracking-[-1.44px]">
+              <p className="text-display-2xl text-highlight-gold">
                 {highlightHeading}
               </p>
             </div>

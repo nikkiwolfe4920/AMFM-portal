@@ -33,7 +33,7 @@ function HorizontalTabs({
               key={tab.value}
               value={tab.value}
               className={cn(
-                "focus-visible:ring-ring/50 h-9 rounded-sm px-3 py-2 text-sm font-semibold whitespace-nowrap outline-none transition-colors focus-visible:ring-[3px]",
+                "focus-visible:ring-ring/50 h-9 rounded-sm px-3 py-2 text-sm font-semibold whitespace-nowrap outline-none transition-colors focus-visible:ring-3",
                 active
                   ? "bg-muted text-foreground shadow-xs"
                   : "text-muted-foreground hover:text-foreground"

@@ -55,7 +55,7 @@ function ParticipationVerticalBarCard({
                   style={{ height: `${(item.value / max) * 100}%` }}
                 />
               </div>
-              <span className="text-center text-sm font-medium text-foreground">
+              <span className="text-center text-chart-label font-medium text-foreground">
                 {item.label}
               </span>
             </div>

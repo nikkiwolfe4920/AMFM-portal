@@ -1,0 +1,23 @@
+/*
+ * Effect tokens — see DESIGN.md "Visual effects".
+ * Prefer Tailwind's built-in effect scale when it exactly matches Figma
+ * values. Add named utilities here only for reusable visual effects that the
+ * default scale cannot express.
+ */
+
+@theme inline {
+  --blur-photo: 20px;
+  --blur-inert-preview: 2px;
+}
+
+@utility bg-login-photo {
+  background-image: url("/login-background.jpg");
+}
+
+@utility bg-photo-backdrop-radial-scrim {
+  background-image: radial-gradient(
+    ellipse at center,
+    rgba(10, 13, 18, 0.7) 0%,
+    rgba(10, 13, 18, 0.9) 100%
+  );
+}

@@ -59,7 +59,7 @@ function StatusSnapshotCard({
           width={icon.width}
           height={icon.height}
           unoptimized
-          className="size-5"
+          className="h-5 w-auto shrink-0"
         />
         <span className="text-base font-bold text-foreground">{title}</span>
       </div>

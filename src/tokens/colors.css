@@ -106,7 +106,7 @@
   --chart-4: oklch(0.828 0.189 84.429);
   --chart-5: oklch(0.769 0.188 70.08);
 
-  /* HeartChart Dashboard (node 3727:29573) — data-visualization palette. These
+  /* HeartChart Dashboard (node 4255:30872) — data-visualization palette. These
    * are distinct from the generic chart-1…5 scaffold above (unmodified
    * shadcn/ui defaults, never actually used by a real chart in this codebase)
    * and are named/scoped per chart instance rather than as one shared
@@ -139,14 +139,15 @@
    * confirmed against Figma's real gradient fill), distinct from
    * --background-gradient-from (utility-yellow-50, #f5eee0, the page shell
    * background) at a slightly deeper tier of the same Figma yellow scale.
-   * Screenshot-derived (the live Figma node for this chart isn't reachable
-   * by this environment's Figma MCP connection — see DESIGN.md Known gaps),
-   * not pixel-verified — revisit once direct node access is restored. */
+   * Parent-frame/screenshot verified against dashboard node 4255:30872; exact
+   * child-layer stops have not been independently pixel-sampled from a stable
+   * component node — see DESIGN.md Known gaps. */
   --chart-participation-fill-from: oklch(0.864 0.07 83.088); /* ~utility-yellow-200, #e9cf9e */
   --chart-participation-fill-to: oklch(0.956 0.026 87.853); /* ~utility-yellow-50, #f8f0dd */
   /* Status Snapshot horizontal bar variants (Relationship Status / Kids) — each
-   * a left-to-right two-stop gradient, distinct per variant. Screenshot-derived
-   * (same access gap as chart-participation-fill-from/-to above), not pixel-verified. */
+   * a left-to-right two-stop gradient, distinct per variant. Parent-frame/
+   * screenshot verified against dashboard node 4255:30872; exact child-layer
+   * stops and bar-width geometry have not been independently pixel-sampled. */
   --chart-status-relationship-from: oklch(0.89 0.016 130.435); /* sage-gray, #d7ddd2 */
   --chart-status-relationship-to: oklch(0.963 0.004 121.561); /* #f2f3f0 */
   --chart-status-kids-from: oklch(0.885 0.019 306.639); /* lavender-gray, #dcd6e3 */
@@ -158,7 +159,7 @@
    * previously-flagged "not reliably resolvable" gap — see DESIGN.md Known gaps. */
   --chart-bar-fill-to: oklch(0.403 0.071 44.248); /* utility-brand-800, #683b27 */
 
-  /* WeDoCard (HeartChart Dashboard, node 3727:29573) — WeDo's own brand red,
+  /* WeDoCard (HeartChart Dashboard, node 4255:30872) — WeDo's own brand red,
    * used for the couple-count stat and the pull-quote's highlighted phrase.
    * Distinct from --primary (the app's own terracotta accent): this is
    * Figma's "Colors/Red/500" variable, a different hue entirely. Root-only,

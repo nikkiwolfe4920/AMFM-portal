@@ -11,7 +11,7 @@
 export function AmfmLogo() {
   return (
     <div className="flex h-6 items-center gap-2">
-      <span className="text-text-tertiary text-xs font-medium tracking-[0.24px]">
+      <span className="text-text-tertiary text-xs font-medium tracking-label">
         Powered by
       </span>
       <div
@@ -27,7 +27,7 @@ export function AmfmLogo() {
         </span>
         <span
           aria-hidden="true"
-          className="text-text-tertiary flex flex-col justify-center text-[5.5px] leading-[7px] font-semibold tracking-[0.4px] uppercase"
+          className="text-text-tertiary flex flex-col justify-center text-amfm-logo-caption font-semibold uppercase"
         >
           <span>Association</span>
           <span>of Marriage</span>

@@ -23,22 +23,33 @@ export function PhotoBackdrop({
   children,
 }: React.PropsWithChildren<PhotoBackdropProps>) {
   return (
-    <div className="relative flex min-h-screen w-full flex-col overflow-hidden">
-      <div className="absolute inset-0 bg-[url('/login-background.jpg')] bg-cover bg-center" />
+    <div
+      data-slot="photo-backdrop"
+      className="relative flex min-h-screen w-full flex-col overflow-hidden"
+    >
+      <div
+        data-slot="photo-backdrop-image"
+        className="bg-login-photo absolute inset-0 bg-cover bg-center"
+      />
 
       <div
+        data-slot="photo-backdrop-content"
         className={cn(
           "relative flex flex-1 flex-col items-center justify-center overflow-hidden",
-          scrim === "flat" && "backdrop-blur-[20px]",
+          scrim === "flat" && "backdrop-blur-photo",
           className
         )}
       >
         {scrim === "flat" ? (
-          <div className="bg-overlay absolute inset-0 opacity-85 backdrop-blur-[8px]" />
+          <div
+            data-slot="photo-backdrop-scrim"
+            className="bg-overlay absolute inset-0 opacity-85 backdrop-blur-sm"
+          />
         ) : (
-          // rgba(10,13,18,*) is the `overlay` token's rgb equivalent — Tailwind
-          // arbitrary gradients can't reference a CSS custom property here.
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(10,13,18,0.7)_0%,rgba(10,13,18,0.9)_100%)]" />
+          <div
+            data-slot="photo-backdrop-scrim"
+            className="bg-photo-backdrop-radial-scrim absolute inset-0"
+          />
         )}
         {children}
       </div>

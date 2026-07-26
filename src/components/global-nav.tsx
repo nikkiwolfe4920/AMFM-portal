@@ -109,10 +109,10 @@ const ACCOUNT_MENU_LINKS: NavLinkItem[] = [
 ];
 
 const TRANSITION =
-  "transition-[max-width,opacity,padding,gap] duration-300 ease-in-out motion-reduce:transition-none";
+  "transition-nav-content duration-300 ease-in-out motion-reduce:transition-none";
 const FADE_TRANSITION = "transition-opacity duration-300 ease-in-out motion-reduce:transition-none";
 const INSET_TRANSITION =
-  "transition-[left,right,opacity] duration-300 ease-in-out motion-reduce:transition-none";
+  "transition-nav-inset duration-300 ease-in-out motion-reduce:transition-none";
 
 type RouteStatus = "implemented" | "placeholder" | "external";
 
@@ -249,7 +249,7 @@ export function GlobalNav({
       onBlur={handleBlur}
       className={cn(
         "flex flex-col overflow-hidden rounded-2xl border border-white/8 bg-gradient-to-b from-nav-surface-from/90 to-nav-surface-to/90 backdrop-blur-2xl",
-        "transition-[width] duration-300 ease-in-out motion-reduce:transition-none",
+        "transition-nav-rail duration-300 ease-in-out motion-reduce:transition-none",
         open ? "w-74" : "w-20",
         // `overlay`: fixed to the viewport (not the layout flow), so
         // expanding the rail on hover paints over page content instead of
@@ -303,7 +303,7 @@ export function GlobalNav({
       <div
         aria-hidden="true"
         className={cn(
-          "shrink-0 transition-[width] duration-300 ease-in-out motion-reduce:transition-none",
+          "shrink-0 transition-nav-rail duration-300 ease-in-out motion-reduce:transition-none",
           pinnedOpen ? "w-80" : "w-26"
         )}
       />
@@ -338,7 +338,7 @@ function NavHeader({ open }: { open: boolean }) {
           alt=""
           width={48}
           height={17}
-          className="block h-[17px] w-auto"
+          className="block w-auto"
           unoptimized
         />
       </span>
@@ -392,7 +392,7 @@ function NavSection({
         <p
           aria-hidden={open}
           className={cn(
-            "text-nav-foreground-subtle absolute top-0 text-center text-xs leading-5 font-semibold tracking-[0.24px]",
+            "text-nav-foreground-subtle absolute top-0 text-center text-xs leading-5 font-semibold tracking-label",
             INSET_TRANSITION,
             open ? "inset-x-5 opacity-0" : "inset-x-4 opacity-100"
           )}
@@ -402,7 +402,7 @@ function NavSection({
         <p
           aria-hidden={!open}
           className={cn(
-            "text-nav-foreground-subtle absolute top-0 text-left text-xs leading-5 font-semibold tracking-[0.24px]",
+            "text-nav-foreground-subtle absolute top-0 text-left text-xs leading-5 font-semibold tracking-label",
             INSET_TRANSITION,
             open ? "inset-x-5 opacity-100" : "inset-x-4 opacity-0"
           )}
@@ -444,7 +444,7 @@ function NavItem({
       data-route-status={routeStatus}
       data-prefetch={prefetchDisabled ? "disabled" : undefined}
       className={cn(
-        "focus-visible:ring-ring/50 flex w-full shrink-0 items-center gap-3 rounded-sm px-3 py-2 outline-none focus-visible:ring-[3px]",
+        "focus-visible:ring-ring/50 flex w-full shrink-0 items-center gap-3 rounded-sm px-3 py-2 outline-none focus-visible:ring-3",
         active
           ? "from-nav-active-from to-nav-active-to bg-gradient-to-r"
           : "hover:bg-white/5"
@@ -459,7 +459,7 @@ function NavItem({
       />
       <span
         className={cn(
-          "overflow-hidden text-sm leading-[22px] font-medium whitespace-nowrap",
+          "overflow-hidden text-sm font-medium whitespace-nowrap",
           TRANSITION,
           active ? "text-nav-foreground" : "text-nav-foreground-muted",
           open ? "max-w-60 opacity-100" : "max-w-0 opacity-0"
@@ -485,7 +485,7 @@ function NavAccountCard({
         <button
           type="button"
           className={cn(
-            "border-nav-border focus-visible:ring-ring/50 relative flex h-[68px] w-full shrink-0 gap-4 rounded-xl border outline-none focus-visible:ring-[3px]",
+            "border-nav-border focus-visible:ring-ring/50 relative flex h-17 w-full shrink-0 gap-4 rounded-xl border outline-none focus-visible:ring-3",
             TRANSITION,
             // Collapsed matches Figma's dedicated centered layout (p-0,
             // justify-center) rather than reusing the expanded state's
@@ -506,12 +506,12 @@ function NavAccountCard({
               </span>
               <span
                 aria-hidden="true"
-                className="bg-nav-success border-nav-bg absolute right-[-1px] bottom-[-1px] size-2.5 rounded-full border-[1.5px]"
+                className="bg-nav-success border-nav-bg absolute -right-px -bottom-px size-2.5 rounded-full border-[1.5px]"
               />
             </span>
             <span
               className={cn(
-                "flex min-w-0 flex-col overflow-hidden text-left text-sm leading-[22px] whitespace-nowrap",
+                "flex min-w-0 flex-col overflow-hidden text-left text-sm whitespace-nowrap",
                 TRANSITION,
                 open ? "max-w-40 opacity-100" : "max-w-0 opacity-0"
               )}
@@ -525,7 +525,7 @@ function NavAccountCard({
           <span
             aria-hidden="true"
             className={cn(
-              "absolute top-[7px] right-[7px] flex size-7 items-center justify-center rounded-sm",
+              "absolute top-1.75 right-1.75 flex size-7 items-center justify-center rounded-sm",
               FADE_TRANSITION,
               open ? "opacity-100" : "pointer-events-none opacity-0"
             )}

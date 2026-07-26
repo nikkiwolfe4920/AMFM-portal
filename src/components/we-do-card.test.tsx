@@ -4,6 +4,20 @@ import { describe, expect, it, vi } from "vitest";
 import { WeDoCard } from "./we-do-card";
 
 describe("WeDoCard", () => {
+  it("defaults to the constrained standalone card width", () => {
+    const { container } = render(<WeDoCard coupleCount={363} quote="Test quote" />);
+
+    expect(container.firstElementChild).toHaveClass("max-w-heartchart-card");
+  });
+
+  it("can render fluid width when the parent grid owns sizing", () => {
+    const { container } = render(
+      <WeDoCard width="fluid" coupleCount={363} quote="Test quote" />
+    );
+
+    expect(container.firstElementChild).not.toHaveClass("max-w-heartchart-card");
+  });
+
   it("renders the couple count, quote, and action buttons", () => {
     render(
       <WeDoCard coupleCount={363} quote="Test quote" onSeeResults={vi.fn()} onShareCode={vi.fn()} />
@@ -81,11 +95,11 @@ describe("WeDoCard", () => {
         coupleCount={363}
         quote="Test quote"
         quoteSource="Custom Source"
-        nextPulseLabel="2d 10h"
+        nextPulseLabel="2d 16h"
       />
     );
 
     expect(screen.getByText(/Custom Source/)).toBeInTheDocument();
-    expect(screen.getByText("Next Pulse in 2d 10h")).toBeInTheDocument();
+    expect(screen.getByText("Next Pulse in 2d 16h")).toBeInTheDocument();
   });
 });
