@@ -12,6 +12,7 @@
 
 # testing
 /coverage
+/design-system/audits/.generated/
 
 # next.js
 /.next/

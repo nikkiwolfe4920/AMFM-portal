@@ -15,17 +15,31 @@ function readOption(name) {
   return undefined;
 }
 
-const result = runDesignSystemCheck({
-  root: process.cwd(),
-  baseRef: readOption("base") ?? "origin/main",
-});
-
-if (process.argv.includes("--json")) {
-  process.stdout.write(`${JSON.stringify(result, null, 2)}\n`);
-} else {
-  process.stdout.write(formatHumanReport(result));
+function hasFlag(name) {
+  return process.argv.includes(`--${name}`);
 }
 
-if (result.errors.length > 0) {
+try {
+  const result = runDesignSystemCheck({
+    root: process.cwd(),
+    baseRef: readOption("base") ?? "origin/main",
+    scope:
+      readOption("scope") ??
+      (hasFlag("full-source") ? "full-source" : "changed"),
+  });
+
+  if (process.argv.includes("--json")) {
+    process.stdout.write(`${JSON.stringify(result, null, 2)}\n`);
+  } else {
+    process.stdout.write(formatHumanReport(result));
+  }
+
+  if (result.errors.length > 0 && !hasFlag("report-only")) {
+    process.exitCode = 1;
+  }
+} catch (error) {
+  process.stderr.write(
+    `${error instanceof Error ? error.message : String(error)}\n`
+  );
   process.exitCode = 1;
 }

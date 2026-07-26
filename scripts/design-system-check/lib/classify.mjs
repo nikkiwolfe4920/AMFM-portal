@@ -9,6 +9,48 @@ const DESIGN_UTILITY_PREFIX_PATTERN =
 
 const SELECTOR_OR_STATE_VARIANT_PATTERN =
   /^(?:data|aria|group-data|peer-data|has|\*?:data)-\[/;
+const SIMPLE_CLASS_TOKENS = new Set([
+  "absolute",
+  "antialiased",
+  "block",
+  "border",
+  "capitalize",
+  "clear",
+  "collapse",
+  "container",
+  "contents",
+  "dark",
+  "fixed",
+  "float",
+  "flex",
+  "grid",
+  "group",
+  "grow",
+  "hidden",
+  "inline",
+  "invisible",
+  "isolate",
+  "italic",
+  "lowercase",
+  "outline",
+  "peer",
+  "relative",
+  "resize",
+  "ring",
+  "rounded",
+  "shadow",
+  "shrink",
+  "sr-only",
+  "static",
+  "sticky",
+  "table",
+  "transform",
+  "transition",
+  "truncate",
+  "underline",
+  "uppercase",
+  "visible",
+]);
 
 function splitOutsideBrackets(className) {
   const segments = [];
@@ -77,6 +119,38 @@ function stripComments(sourceText) {
     .replace(/(^|[^:])\/\/.*$/gm, "$1");
 }
 
+function normalizeClassCandidate(className) {
+  return className
+    .trim()
+    .replace(/^[([{,;]+/, "")
+    .replace(/[),;]+$/, "");
+}
+
+function isLikelyClassToken(className) {
+  const normalizedClassName = normalizeClassCandidate(className).replace(
+    /^!/,
+    ""
+  );
+
+  return (
+    normalizedClassName.includes("[") ||
+    normalizedClassName.includes(":") ||
+    normalizedClassName.includes("-") ||
+    normalizedClassName.includes("/") ||
+    SIMPLE_CLASS_TOKENS.has(normalizedClassName)
+  );
+}
+
+function isLikelyClassList(classText) {
+  const classNames = classText.split(/\s+/).filter(Boolean);
+
+  if (classNames.length === 0) return false;
+  if (!classNames.some((className) => className.includes("["))) return false;
+  if (classNames.length === 1) return true;
+
+  return classNames.every(isLikelyClassToken);
+}
+
 export function classifyArbitraryClass(className) {
   if (!className.includes("[")) {
     return {
@@ -124,15 +198,18 @@ export function classifyArbitraryClass(className) {
 }
 
 export function extractClassCandidates(sourceText) {
-  const candidates = new Set();
+  const candidates = [];
   const searchableSource = stripComments(sourceText);
 
   for (const match of searchableSource.matchAll(STRING_LITERAL_PATTERN)) {
     const classText = match[1] ?? match[2] ?? match[3] ?? "";
+    if (!isLikelyClassList(classText)) continue;
+
     for (const className of classText.split(/\s+/)) {
-      if (className.includes("[")) candidates.add(className);
+      const normalizedClassName = normalizeClassCandidate(className);
+      if (normalizedClassName.includes("[")) candidates.push(normalizedClassName);
     }
   }
 
-  return [...candidates].sort();
+  return candidates.sort();
 }

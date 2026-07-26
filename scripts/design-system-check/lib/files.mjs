@@ -51,6 +51,31 @@ export function readScanFiles(root, filePaths) {
     }));
 }
 
+function walkFiles(root, directoryPath) {
+  const fullDirectoryPath = resolveRepoPath(root, directoryPath);
+
+  if (!fs.existsSync(fullDirectoryPath)) return [];
+
+  return fs
+    .readdirSync(fullDirectoryPath, { withFileTypes: true })
+    .flatMap((entry) => {
+      const relativePath = path.posix.join(directoryPath, entry.name);
+
+      if (entry.isDirectory()) {
+        if (entry.name === "node_modules" || entry.name === ".next") return [];
+        return walkFiles(root, relativePath);
+      }
+
+      if (!entry.isFile()) return [];
+
+      return [relativePath];
+    });
+}
+
+export function listProductionSourceFiles(root) {
+  return walkFiles(root, "src").filter(isProductionSourceFile).sort();
+}
+
 function gitOutput(root, args, { failureMessage } = {}) {
   try {
     return execFileSync("git", args, {

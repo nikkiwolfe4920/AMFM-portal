@@ -1,0 +1,643 @@
+{
+  "schemaVersion": 1,
+  "figmaFileKey": "tg3U3gNcIYMn9aY9JYrIZc",
+  "baseline": {
+    "label": "post-PR-59 main",
+    "commit": "12ff0e440ab990747af17169166a70b09c16fce7"
+  },
+  "targets": [
+    {
+      "id": "button-component",
+      "label": "Button component",
+      "route": "/design-system/components#button",
+      "viewport": {
+        "width": 1440,
+        "height": 1100
+      },
+      "figma": {
+        "nodeId": "3273:19658",
+        "name": "Buttons/Button primary reference",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=3273-19658&m=dev"
+      },
+      "relatedFiles": [
+        "src/components/ui/button.tsx",
+        "src/components/ui/button.test.tsx",
+        "src/app/design-system/components/page.tsx",
+        "COMPONENTS.md",
+        "DESIGN.md",
+        "figma/component-map.json"
+      ],
+      "codePreviewFiles": [
+        "src/components/ui/button.tsx",
+        "src/app/design-system/components/page.tsx"
+      ],
+      "notes": "Pilot Figma node is a single primary button reference. Use a broader Figma node before claiming full button-state visual parity."
+    },
+    {
+      "id": "heartchart-link-modal",
+      "label": "HeartChart link modal",
+      "route": "/design-system/components/heart-chart-link-modal",
+      "clipSelector": "[role='dialog']",
+      "clipMargin": 16,
+      "actions": [
+        {
+          "type": "clickText",
+          "text": "Open with settings CTA"
+        },
+        {
+          "type": "waitForSelector",
+          "selector": "[role='dialog']"
+        },
+        {
+          "type": "waitForText",
+          "selector": "[role='dialog']",
+          "text": "Share your HeartChart link"
+        }
+      ],
+      "viewport": {
+        "width": 1440,
+        "height": 1100
+      },
+      "figma": {
+        "nodeId": "4207:25806",
+        "name": "Modal/HeartChart link assigned July MVP frame",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=4207-25806&m=dev"
+      },
+      "relatedFiles": [
+        "src/components/heartchart-modal-shell.tsx",
+        "src/components/heartchart-link-card.tsx",
+        "src/components/heartchart-link-modal.tsx",
+        "src/app/design-system/components/heart-chart-link-modal/page.tsx",
+        "src/components/ui/button.tsx",
+        "src/components/ui/dialog.tsx",
+        "COMPONENTS.md",
+        "DESIGN.md",
+        "figma/component-map.json"
+      ],
+      "codePreviewFiles": [
+        "src/components/heartchart-link-modal.tsx",
+        "src/components/heartchart-link-card.tsx",
+        "src/components/heartchart-modal-shell.tsx",
+        "src/app/design-system/components/heart-chart-link-modal/page.tsx"
+      ],
+      "notes": "Target opens the design-system modal demo and clips the dialog frame for direct comparison with the Figma modal screenshot."
+    },
+    {
+      "id": "invite-user-modal",
+      "label": "Invite user modal",
+      "route": "/design-system/components#inviteusermodal",
+      "baselineUnavailableReason": "No baseline implementation exists at the recorded post-PR-59 commit; this modal is newly introduced in the current July MVP modal pass.",
+      "clipSelector": "[role='dialog']",
+      "clipMargin": 16,
+      "actions": [
+        {
+          "type": "clickText",
+          "text": "Open invite user modal"
+        },
+        {
+          "type": "waitForSelector",
+          "selector": "[role='dialog']"
+        },
+        {
+          "type": "waitForText",
+          "selector": "[role='dialog']",
+          "text": "Invite Team"
+        }
+      ],
+      "viewport": {
+        "width": 1440,
+        "height": 1100
+      },
+      "figma": {
+        "nodeId": "3724:23382",
+        "name": "Modal / invite user",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=3724-23382&m=dev"
+      },
+      "relatedFiles": [
+        "src/components/invite-user-modal.tsx",
+        "src/components/heartchart-modal-shell.tsx",
+        "src/components/ui/button.tsx",
+        "src/components/ui/dialog.tsx",
+        "src/components/ui/input.tsx",
+        "src/components/ui/select.tsx",
+        "src/components/ui/label.tsx",
+        "src/app/design-system/_components/heartchart-modal-demos.tsx",
+        "src/app/design-system/components/page.tsx",
+        "COMPONENTS.md",
+        "DESIGN.md",
+        "figma/component-map.json"
+      ],
+      "codePreviewFiles": [
+        "src/components/invite-user-modal.tsx",
+        "src/components/info-note.tsx",
+        "src/components/heartchart-modal-shell.tsx",
+        "src/app/design-system/_components/heartchart-modal-demos.tsx"
+      ],
+      "notes": "Target opens the design-system modal demo and clips the dialog frame. Route-level invite persistence and delivery behavior are intentionally outside this frontend design-system target."
+    },
+    {
+      "id": "heartchart-quick-tip-modal",
+      "label": "HeartChart quick tip modal",
+      "route": "/design-system/components#heartchartquicktipmodal",
+      "baselineUnavailableReason": "No baseline implementation exists at the recorded post-PR-59 commit; this modal is newly introduced in the current July MVP modal pass.",
+      "clipSelector": "[role='dialog']",
+      "clipMargin": 16,
+      "actions": [
+        {
+          "type": "clickText",
+          "text": "Open Quick Tip modal"
+        },
+        {
+          "type": "waitForSelector",
+          "selector": "[role='dialog']"
+        },
+        {
+          "type": "waitForText",
+          "selector": "[role='dialog']",
+          "text": "Growing Momentum"
+        }
+      ],
+      "viewport": {
+        "width": 1440,
+        "height": 1100
+      },
+      "figma": {
+        "nodeId": "3727:32459",
+        "name": "Modal/quick tip",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=3727-32459&m=dev"
+      },
+      "relatedFiles": [
+        "src/components/heartchart-quick-tip-modal.tsx",
+        "src/components/heartchart-modal-shell.tsx",
+        "src/components/video-player.tsx",
+        "src/components/ui/button.tsx",
+        "src/components/ui/dialog.tsx",
+        "src/app/design-system/_components/heartchart-modal-demos.tsx",
+        "src/app/design-system/components/page.tsx",
+        "public/heartchart-modal-video-poster.jpeg",
+        "COMPONENTS.md",
+        "DESIGN.md",
+        "figma/component-map.json"
+      ],
+      "codePreviewFiles": [
+        "src/components/heartchart-quick-tip-modal.tsx",
+        "src/components/modal-text-section.tsx",
+        "src/components/video-player.tsx",
+        "src/components/heartchart-modal-shell.tsx"
+      ],
+      "notes": "Target opens the video-and-copy modal demo. Real video src/captions are not supplied yet; visual audit checks poster/body/button composition only."
+    },
+    {
+      "id": "heartchart-last-four-weeks-modal",
+      "label": "HeartChart last 4 weeks modal",
+      "route": "/design-system/components#heartchartlastfourweeksmodal",
+      "baselineUnavailableReason": "No baseline implementation exists at the recorded post-PR-59 commit; this modal is newly introduced in the current July MVP modal pass.",
+      "clipSelector": "[role='dialog']",
+      "clipMargin": 16,
+      "actions": [
+        {
+          "type": "clickText",
+          "text": "Open Last 4 Weeks modal"
+        },
+        {
+          "type": "waitForSelector",
+          "selector": "[role='dialog']"
+        },
+        {
+          "type": "waitForText",
+          "selector": "[role='dialog']",
+          "text": "Completed the Last 4 Weeks"
+        }
+      ],
+      "viewport": {
+        "width": 1440,
+        "height": 1100
+      },
+      "figma": {
+        "nodeId": "3727:32514",
+        "name": "Modal / last 4 weeks",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=3727-32514&m=dev"
+      },
+      "relatedFiles": [
+        "src/components/heartchart-last-four-weeks-modal.tsx",
+        "src/components/heartchart-modal-shell.tsx",
+        "src/components/ui/button.tsx",
+        "src/components/ui/dialog.tsx",
+        "src/app/design-system/_components/heartchart-modal-demos.tsx",
+        "src/app/design-system/components/page.tsx",
+        "COMPONENTS.md",
+        "DESIGN.md",
+        "figma/component-map.json"
+      ],
+      "codePreviewFiles": [
+        "src/components/heartchart-last-four-weeks-modal.tsx",
+        "src/components/participation-trend-card.tsx",
+        "src/components/tip-carousel.tsx",
+        "src/components/heartchart-modal-shell.tsx"
+      ],
+      "notes": "Target opens the July MVP trend modal. The code intentionally corrects the Figma screenshot's impossible Apr 23 / Apr 30 x-axis labels to Mar 23 / Mar 30 so the visible chart labels, data, and accessible range agree."
+    },
+    {
+      "id": "heartchart-resources-quick-start-modal",
+      "label": "HeartChart Resources quick-start modal",
+      "route": "/design-system/components#heartchartresourcesquickstartmodal",
+      "baselineUnavailableReason": "No baseline implementation exists at the recorded post-PR-59 commit; this modal is newly introduced in the current July MVP modal pass.",
+      "clipSelector": "[role='dialog']",
+      "clipMargin": 16,
+      "actions": [
+        {
+          "type": "clickText",
+          "text": "Open Quick Start Guide modal"
+        },
+        {
+          "type": "waitForSelector",
+          "selector": "[role='dialog']"
+        },
+        {
+          "type": "waitForText",
+          "selector": "[role='dialog']",
+          "text": "Quick Start Guide"
+        }
+      ],
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "figma": {
+        "nodeId": "3727:32687",
+        "name": "HeartChart Resources / Quick Start Guide modal",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=3727-32687&m=dev"
+      },
+      "relatedFiles": [
+        "src/components/heartchart-resources-quick-start-modal.tsx",
+        "src/components/heartchart-modal-shell.tsx",
+        "src/components/video-player.tsx",
+        "src/components/ui/dialog.tsx",
+        "src/app/design-system/_components/heartchart-modal-demos.tsx",
+        "src/app/design-system/components/page.tsx",
+        "public/heartchart-modal-video-poster.jpeg",
+        "COMPONENTS.md",
+        "DESIGN.md",
+        "figma/component-map.json"
+      ],
+      "codePreviewFiles": [
+        "src/components/heartchart-resources-quick-start-modal.tsx",
+        "src/components/video-player.tsx",
+        "src/components/heartchart-modal-shell.tsx"
+      ],
+      "notes": "Target opens the plain no-frame/no-divider video modal. Real video src/captions are not supplied yet; visual audit checks shell and poster composition only."
+    },
+    {
+      "id": "settings-church-profile-modal",
+      "label": "Settings Church Profile modal",
+      "route": "/design-system/components#churchprofilesettingsmodal",
+      "baselineUnavailableReason": "No baseline implementation exists at the recorded post-PR-59 commit; this settings modal is newly introduced by the current Figma-to-code dogfood run.",
+      "clipSelector": "[role='dialog']",
+      "clipMargin": 16,
+      "actions": [
+        {
+          "type": "clickText",
+          "text": "Open Church Profile settings modal"
+        },
+        {
+          "type": "waitForSelector",
+          "selector": "[role='dialog']"
+        },
+        {
+          "type": "waitForText",
+          "selector": "[role='dialog']",
+          "text": "Church Profile"
+        }
+      ],
+      "viewport": {
+        "width": 1440,
+        "height": 1100
+      },
+      "figma": {
+        "nodeId": "3724:20992",
+        "name": "Modal/Settings/Church Profile",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=3724-20992&m=dev"
+      },
+      "relatedFiles": [
+        "src/components/settings-church-profile-modal.tsx",
+        "src/components/settings-modal-shell.tsx",
+        "src/components/settings-section.tsx",
+        "src/components/settings-asset-upload.tsx",
+        "src/components/settings-campus-list.tsx",
+        "src/components/ui/input-action-group.tsx",
+        "src/components/ui/input.tsx",
+        "src/components/ui/input-group.tsx",
+        "src/components/ui/label.tsx",
+        "src/app/design-system/components/page.tsx",
+        "public/fellowship-of-the-parks-logo.png",
+        "COMPONENTS.md",
+        "DESIGN.md",
+        "figma/component-map.json"
+      ],
+      "codePreviewFiles": [
+        "src/components/settings-church-profile-modal.tsx",
+        "src/components/settings-modal-shell.tsx",
+        "src/components/settings-section.tsx",
+        "src/components/settings-asset-upload.tsx",
+        "src/components/settings-campus-list.tsx",
+        "src/components/ui/input-action-group.tsx"
+      ],
+      "notes": "Target opens the composed settings modal demo and clips the dialog frame. This is a frontend design-system implementation only; upload, persistence, validation, and real settings routing remain caller-owned."
+    },
+    {
+      "id": "settings-church-profile-modal-mobile",
+      "label": "Settings Church Profile modal — mobile",
+      "route": "/design-system/components#churchprofilesettingsmodal",
+      "baselineUnavailableReason": "No baseline implementation exists at the recorded post-PR-59 commit; this settings modal is newly introduced by the current Figma-to-code dogfood run.",
+      "clipSelector": "[role='dialog']",
+      "clipMargin": 16,
+      "actions": [
+        {
+          "type": "clickText",
+          "text": "Open Church Profile settings modal"
+        },
+        {
+          "type": "waitForSelector",
+          "selector": "[role='dialog']"
+        },
+        {
+          "type": "waitForText",
+          "selector": "[role='dialog']",
+          "text": "Church Profile"
+        }
+      ],
+      "viewport": {
+        "width": 390,
+        "height": 900
+      },
+      "figma": {
+        "nodeId": "3724:20992",
+        "name": "Modal/Settings/Church Profile",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=3724-20992&m=dev"
+      },
+      "relatedFiles": [
+        "src/components/settings-church-profile-modal.tsx",
+        "src/components/settings-modal-shell.tsx",
+        "src/components/settings-section.tsx",
+        "src/components/settings-asset-upload.tsx",
+        "src/components/settings-campus-list.tsx",
+        "src/components/ui/input-action-group.tsx",
+        "src/components/ui/input.tsx",
+        "src/components/ui/input-group.tsx",
+        "src/components/ui/label.tsx",
+        "src/app/design-system/components/page.tsx",
+        "public/fellowship-of-the-parks-logo.png",
+        "COMPONENTS.md",
+        "DESIGN.md",
+        "figma/component-map.json"
+      ],
+      "codePreviewFiles": [
+        "src/components/settings-church-profile-modal.tsx",
+        "src/components/settings-modal-shell.tsx",
+        "src/components/settings-section.tsx",
+        "src/components/settings-asset-upload.tsx",
+        "src/components/settings-campus-list.tsx",
+        "src/components/ui/input-action-group.tsx"
+      ],
+      "notes": "Narrow-layout stress target for hidden settings nav, one-column settings form fields, add-campus input/action group, and scroll containment. Figma supplied a desktop reference only for this node."
+    },
+    {
+      "id": "heartchart-link-modal-mobile",
+      "label": "HeartChart link modal — mobile",
+      "route": "/design-system/components/heart-chart-link-modal",
+      "clipSelector": "[role='dialog']",
+      "clipMargin": 16,
+      "actions": [
+        {
+          "type": "clickText",
+          "text": "Open with settings CTA"
+        },
+        {
+          "type": "waitForSelector",
+          "selector": "[role='dialog']"
+        },
+        {
+          "type": "waitForText",
+          "selector": "[role='dialog']",
+          "text": "Share your HeartChart link"
+        }
+      ],
+      "viewport": {
+        "width": 390,
+        "height": 900
+      },
+      "figma": {
+        "nodeId": "4207:25806",
+        "name": "Modal/HeartChart link assigned July MVP frame",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=4207-25806&m=dev"
+      },
+      "relatedFiles": [
+        "src/components/heartchart-modal-shell.tsx",
+        "src/components/heartchart-link-card.tsx",
+        "src/components/heartchart-link-modal.tsx",
+        "src/app/design-system/components/heart-chart-link-modal/page.tsx",
+        "COMPONENTS.md",
+        "DESIGN.md",
+        "figma/component-map.json"
+      ],
+      "codePreviewFiles": [
+        "src/components/heartchart-link-modal.tsx",
+        "src/components/heartchart-link-card.tsx",
+        "src/components/heartchart-modal-shell.tsx"
+      ],
+      "notes": "Narrow-layout stress target for the URL/QR card, hidden desktop preview, footer CTA, and modal shell scroll behavior."
+    },
+    {
+      "id": "invite-user-modal-mobile",
+      "label": "Invite user modal — mobile",
+      "route": "/design-system/components#inviteusermodal",
+      "baselineUnavailableReason": "No baseline implementation exists at the recorded post-PR-59 commit; this modal is newly introduced in the current July MVP modal pass.",
+      "clipSelector": "[role='dialog']",
+      "clipMargin": 16,
+      "actions": [
+        {
+          "type": "clickText",
+          "text": "Open invite user modal"
+        },
+        {
+          "type": "waitForSelector",
+          "selector": "[role='dialog']"
+        },
+        {
+          "type": "waitForText",
+          "selector": "[role='dialog']",
+          "text": "Invite Team"
+        }
+      ],
+      "viewport": {
+        "width": 390,
+        "height": 900
+      },
+      "figma": {
+        "nodeId": "3724:23382",
+        "name": "Modal / invite user",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=3724-23382&m=dev"
+      },
+      "relatedFiles": [
+        "src/components/invite-user-modal.tsx",
+        "src/components/info-note.tsx",
+        "src/components/heartchart-modal-shell.tsx",
+        "src/components/ui/input.tsx",
+        "src/components/ui/select.tsx",
+        "src/components/ui/button.tsx",
+        "COMPONENTS.md",
+        "DESIGN.md",
+        "figma/component-map.json"
+      ],
+      "codePreviewFiles": [
+        "src/components/invite-user-modal.tsx",
+        "src/components/info-note.tsx",
+        "src/components/heartchart-modal-shell.tsx"
+      ],
+      "notes": "Narrow-layout stress target for stacked form fields, informational note wrapping, and footer action layout."
+    },
+    {
+      "id": "heartchart-quick-tip-modal-mobile",
+      "label": "HeartChart quick tip modal — mobile",
+      "route": "/design-system/components#heartchartquicktipmodal",
+      "baselineUnavailableReason": "No baseline implementation exists at the recorded post-PR-59 commit; this modal is newly introduced in the current July MVP modal pass.",
+      "clipSelector": "[role='dialog']",
+      "clipMargin": 16,
+      "actions": [
+        {
+          "type": "clickText",
+          "text": "Open Quick Tip modal"
+        },
+        {
+          "type": "waitForSelector",
+          "selector": "[role='dialog']"
+        },
+        {
+          "type": "waitForText",
+          "selector": "[role='dialog']",
+          "text": "Growing Momentum"
+        }
+      ],
+      "viewport": {
+        "width": 390,
+        "height": 900
+      },
+      "figma": {
+        "nodeId": "3727:32459",
+        "name": "Modal/quick tip",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=3727-32459&m=dev"
+      },
+      "relatedFiles": [
+        "src/components/heartchart-quick-tip-modal.tsx",
+        "src/components/modal-text-section.tsx",
+        "src/components/video-player.tsx",
+        "src/components/heartchart-modal-shell.tsx",
+        "src/components/ui/button.tsx",
+        "COMPONENTS.md",
+        "DESIGN.md",
+        "figma/component-map.json"
+      ],
+      "codePreviewFiles": [
+        "src/components/heartchart-quick-tip-modal.tsx",
+        "src/components/modal-text-section.tsx",
+        "src/components/video-player.tsx",
+        "src/components/heartchart-modal-shell.tsx"
+      ],
+      "notes": "Narrow-layout stress target for flat video media, divided text section, footer CTA, and body scroll behavior."
+    },
+    {
+      "id": "heartchart-last-four-weeks-modal-mobile",
+      "label": "HeartChart last 4 weeks modal — mobile",
+      "route": "/design-system/components#heartchartlastfourweeksmodal",
+      "baselineUnavailableReason": "No baseline implementation exists at the recorded post-PR-59 commit; this modal is newly introduced in the current July MVP modal pass.",
+      "clipSelector": "[role='dialog']",
+      "clipMargin": 16,
+      "actions": [
+        {
+          "type": "clickText",
+          "text": "Open Last 4 Weeks modal"
+        },
+        {
+          "type": "waitForSelector",
+          "selector": "[role='dialog']"
+        },
+        {
+          "type": "waitForText",
+          "selector": "[role='dialog']",
+          "text": "Completed the Last 4 Weeks"
+        }
+      ],
+      "viewport": {
+        "width": 390,
+        "height": 900
+      },
+      "figma": {
+        "nodeId": "3727:32514",
+        "name": "Modal / last 4 weeks",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=3727-32514&m=dev"
+      },
+      "relatedFiles": [
+        "src/components/heartchart-last-four-weeks-modal.tsx",
+        "src/components/participation-trend-card.tsx",
+        "src/components/tip-carousel.tsx",
+        "src/components/heartchart-modal-shell.tsx",
+        "COMPONENTS.md",
+        "DESIGN.md",
+        "figma/component-map.json"
+      ],
+      "codePreviewFiles": [
+        "src/components/heartchart-last-four-weeks-modal.tsx",
+        "src/components/participation-trend-card.tsx",
+        "src/components/tip-carousel.tsx",
+        "src/components/heartchart-modal-shell.tsx"
+      ],
+      "notes": "Narrow-layout stress target for chart edge labels, right-aligned total metric, two-card carousel collapse, and scroll containment."
+    },
+    {
+      "id": "heartchart-resources-quick-start-modal-mobile",
+      "label": "HeartChart Resources quick-start modal — mobile",
+      "route": "/design-system/components#heartchartresourcesquickstartmodal",
+      "baselineUnavailableReason": "No baseline implementation exists at the recorded post-PR-59 commit; this modal is newly introduced in the current July MVP modal pass.",
+      "clipSelector": "[role='dialog']",
+      "clipMargin": 16,
+      "actions": [
+        {
+          "type": "clickText",
+          "text": "Open Quick Start Guide modal"
+        },
+        {
+          "type": "waitForSelector",
+          "selector": "[role='dialog']"
+        },
+        {
+          "type": "waitForText",
+          "selector": "[role='dialog']",
+          "text": "Quick Start Guide"
+        }
+      ],
+      "viewport": {
+        "width": 390,
+        "height": 900
+      },
+      "figma": {
+        "nodeId": "3727:32687",
+        "name": "HeartChart Resources / Quick Start Guide modal",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=3727-32687&m=dev"
+      },
+      "relatedFiles": [
+        "src/components/heartchart-resources-quick-start-modal.tsx",
+        "src/components/video-player.tsx",
+        "src/components/heartchart-modal-shell.tsx",
+        "COMPONENTS.md",
+        "DESIGN.md",
+        "figma/component-map.json"
+      ],
+      "codePreviewFiles": [
+        "src/components/heartchart-resources-quick-start-modal.tsx",
+        "src/components/video-player.tsx",
+        "src/components/heartchart-modal-shell.tsx"
+      ],
+      "notes": "Narrow-layout stress target for the plain no-frame/no-divider video shell and body padding."
+    }
+  ]
+}

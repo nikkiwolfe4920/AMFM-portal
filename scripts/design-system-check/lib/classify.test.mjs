@@ -68,12 +68,36 @@ describe("design-system arbitrary class classifier", () => {
     ).toEqual(expect.arrayContaining(["gap-[7px]", "data-[state=open]:animate-in"]));
   });
 
+  it("trims punctuation that is adjacent to extracted class candidates", () => {
+    expect(
+      extractClassCandidates('const examples = ["(blur-[2px],", "gap-[7px])"];')
+    ).toEqual(["blur-[2px]", "gap-[7px]"]);
+  });
+
   it("extracts arbitrary class candidates from variant and helper string literals", () => {
     expect(
       extractClassCandidates(
         'const button = cva("inline-flex h-[46px]", { variants: { size: { sm: "h-[42px]" } } });'
       )
     ).toEqual(expect.arrayContaining(["h-[46px]", "h-[42px]"]));
+  });
+
+  it("does not extract arbitrary-looking values from obvious prose strings", () => {
+    expect(
+      extractClassCandidates(
+        'const helperText = "Use gap-[7px] here only when documenting a bad export.";'
+      )
+    ).toEqual([]);
+
+    expect(extractClassCandidates('const classList = "grid gap-[7px]";')).toEqual([
+      "gap-[7px]",
+    ]);
+  });
+
+  it("extracts arbitrary candidates from class lists with common bare Tailwind utilities", () => {
+    expect(extractClassCandidates('className="border rounded shadow gap-[7px]"')).toEqual([
+      "gap-[7px]",
+    ]);
   });
 
   it("does not extract class candidates from comments", () => {
