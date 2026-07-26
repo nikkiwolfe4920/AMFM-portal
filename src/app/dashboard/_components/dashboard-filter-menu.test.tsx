@@ -17,7 +17,7 @@ const GROUPS = [
 
 describe("DashboardFilterMenu", () => {
   it("renders each group as a radiogroup, not a tablist", () => {
-    render(
+    const { container } = render(
       <DashboardFilterMenu
         groups={GROUPS}
         onChange={vi.fn()}
@@ -27,6 +27,7 @@ describe("DashboardFilterMenu", () => {
     );
 
     expect(screen.getByRole("radiogroup")).toBeInTheDocument();
+    expect(container.firstElementChild).toHaveClass("rounded-xl", "border", "p-4");
     expect(screen.getByRole("radio", { name: "All" })).toHaveAttribute(
       "aria-checked",
       "true"

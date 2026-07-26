@@ -61,7 +61,7 @@ Reusable interactive action element for triggering a command (form submit, navig
 |---|---|
 | Default | Base variant styling |
 | Hover | `default`: fills `bg-text-brand` (not `bg-primary/90` — verified against Figma's "Primary Hover", not an opacity of `primary`). `outline`/`utilitySegment`: neutral `hover:bg-accent` while retaining the correct standalone/segmented chrome. `outlineReversed`: `hover:bg-button-outline-reversed-hover-bg` while keeping white text/icon color on fixed dark/brand surfaces. Other variants: standard `hover:bg-*` per variant. |
-| Focus | `default`: keeps the `border-white/12` edge, adds a `border-brand`-colored ring (`focus-visible:ring-border-brand focus-visible:ring-4 focus-visible:ring-offset-2`) reproducing Figma's "Primary Focused" (2px white gap + 4px brand ring). Other variants: generic `focus-visible:ring-ring/50 focus-visible:ring-[3px]`. |
+| Focus | `default`: keeps the `border-white/12` edge, adds a `border-brand`-colored ring (`focus-visible:ring-border-brand focus-visible:ring-4 focus-visible:ring-offset-2`) reproducing Figma's "Primary Focused" (2px white gap + 4px brand ring). Other variants: generic `focus-visible:ring-ring/50 focus-visible:ring-3`. |
 | Icons | Icon-leading buttons default to 20px child SVGs, matching Figma's common `Buttons/Button` icon slot. `default`: child SVG icons use `text-button-primary-icon` while labels remain `text-primary-foreground`. `outline`/`utilitySegment`: child SVG icons use `text-button-outline-icon` while labels use `text-button-outline-fg`; those semantic tokens map to Figma's neutral light-surface colors in `:root` and to contrast-safe theme values in `.dark` because Figma has no dark neutral-button reference yet. `outlineReversed`: child SVG icons use `text-button-outline-reversed-icon`. Other variants inherit their own text color unless a verified Figma reference justifies an override. |
 | Disabled | `default`, `outline`, and `utilitySegment`: flat tokens (`bg-muted`, `text-fg-disabled`, child SVGs `text-fg-disabled`, `shadow-xs`, `disabled:opacity-100` to cancel the base fade; `default` also switches to `border-border-secondary`). Other variants: generic `disabled:opacity-50`. |
 | Loading | `loading` prop sets native `disabled`, `aria-busy`, `data-loading`, renders a spinning `Loader2Icon` before children. On `default`, forces the same fill as hover (`bg-text-brand`) rather than the disabled flat gray. |
@@ -77,7 +77,7 @@ React.ComponentProps<"button"> & VariantProps<typeof buttonVariants> & {
 
 ### Design tokens used
 
-`bg-primary`, `text-primary-foreground`, `text-button-primary-icon` (default-variant child SVGs), `bg-text-brand` (hover/loading fill), `text-text-brand` (`link`), `border-border-brand` (focus ring), `bg-button-outline-bg`, `border-button-outline-border`, `text-button-outline-fg`, `text-button-outline-icon`, `bg-button-outline-reversed-bg`, `border-button-outline-reversed-border`, `text-button-outline-reversed-fg`, `text-button-outline-reversed-icon`, `hover:bg-button-outline-reversed-hover-bg`, `bg-muted`, `border-border-secondary`, `text-fg-disabled` (disabled), `shadow-button-inset`, `shadow-xs`. See `DESIGN.md` Color tokens / Shadows.
+`bg-primary`, `text-primary-foreground`, `text-button-primary-icon` (default-variant child SVGs), `bg-text-brand` (hover/loading fill), `text-text-brand` (`link`), `border-border-brand` (focus ring), `bg-button-outline-bg`, `border-button-outline-border`, `text-button-outline-fg`, `text-button-outline-icon`, `bg-button-outline-reversed-bg`, `border-button-outline-reversed-border`, `text-button-outline-reversed-fg`, `text-button-outline-reversed-icon`, `hover:bg-button-outline-reversed-hover-bg`, `bg-muted`, `border-border-secondary`, `text-fg-disabled` (disabled), `shadow-button-inset`, `shadow-xs`, and Tailwind spacing-scale height utilities (`h-9.5`, `h-10.5`, `h-11.5`, `h-12.5`) for the fixed Figma button heights. See `DESIGN.md` Color tokens / Spacing / Shadows.
 
 ### Accessibility requirements
 
@@ -143,7 +143,7 @@ None — a single visual treatment, differentiated only by `type` (`text`, `emai
 
 ### Design tokens used
 
-`bg-background`, `text-foreground`, `placeholder:text-muted-foreground`, `border-input`, `border-border-brand` (focus), `border-border-destructive-subtle` (invalid), `bg-muted/50` + `text-muted-foreground` (disabled). See `DESIGN.md` Color tokens.
+`bg-background`, `text-foreground`, `placeholder:text-muted-foreground`, `border-input`, `border-border-brand` (focus), `border-border-destructive-subtle` (invalid), `bg-muted/50` + `text-muted-foreground` (disabled), `transition-control`. See `DESIGN.md` Color tokens / Motion rules.
 
 ### Accessibility requirements
 
@@ -158,6 +158,7 @@ Full-width by default (`w-full`) within its flex container; no breakpoint-specif
 ### Implementation rules
 
 - Never hardcode colors, border widths, or padding — use the tokens/utilities above.
+- Use `transition-control` for the shared color/box-shadow control transition; do not reintroduce `transition-[color,box-shadow]` in this primitive or its form-control siblings.
 - Stays a bare `<input>` — no business logic (validation wiring, error message rendering) inside the primitive itself (see "No business logic in `src/components/ui`" in `CLAUDE.md`). Build field-level validation UI (including the paired `HelperText`) in the composing component.
 - Figma's reference also shows a trailing help-circle icon — treated as component-browser demo chrome only, not implemented, since no app-level validation wiring exists yet to attach one to. Revisit when real field-level validation lands. The inline error message itself, however, is implemented via `HelperText` (see below) — color alone is never a sufficient invalid signal per `DESIGN.md`.
 
@@ -256,7 +257,7 @@ interface InputGroupProps extends React.ComponentProps<"input"> {
 
 ### Design tokens used
 
-`border-input`, `bg-background`, `text-text-tertiary` (add-on text), `shadow-xs`, `radius-md` — all existing tokens; no new tokens required.
+`border-input`, `bg-background`, `text-text-tertiary` (add-on text), `shadow-xs`, `radius-md`, `transition-control` — all existing tokens/utilities; no new tokens required.
 
 ### Accessibility requirements
 
@@ -270,12 +271,74 @@ Full width (`w-full`) like `Input`; the add-on segment's width is intrinsic to i
 ### Implementation rules
 
 - Compose around the existing `Input` primitive — reuse its exact token set rather than re-declaring border/shadow/radius values, so a future `Input` token change propagates automatically.
+- Use `transition-control` on the wrapper because the wrapper owns the shared focus/invalid border and shadow state for the grouped control.
 - Do not implement a `"trailing"` variant speculatively; add it only once a second real Figma reference exists.
 - **Fixed: the add-on/input boundary had no visible divider.** Figma's "Website" field draws the add-on and text-input segments as two adjacent bordered boxes whose shared inner edge is the only new line visible (the outer edges coincide with the wrapper's own border). Reproduced here as `border-l border-input` on the `<input>` — the same border color the wrapper already uses, so no new token — rather than a second full border on either segment, which the wrapper's own border already provides on the outer edges.
 
 ### Visual examples
 
 Rendered live on `/create-profile`'s "Website" field; referenced at `/design-system/components#inputgroup` and `/design-system/patterns#create-profile-card`.
+
+---
+
+## InputActionGroup
+
+**Status**: Draft (introduced for the Settings/Church Profile add-campus field; reusable anywhere a text input owns one attached trailing action)
+**Source**: `src/components/ui/input-action-group.tsx`
+**Figma**: AMFM Portal file — `Modal/Settings/Church Profile` node `3724:20992`, add-campus field/action row inside the `Settings/Church Profile` instance (`3724:21598`)
+
+### Purpose
+
+Combines a single-line text input with an attached trailing action button so the control reads as one continuous field/action unit. Use this when the action directly operates on the input value, such as adding a campus name.
+
+### Anatomy
+
+Wrapper (`data-slot="input-action-group"`) owns the border, radius, shadow, and focus/invalid/disabled state → bare input (`data-slot="input-action-group-control"`) → trailing `Button variant="default" size="controlSegment"` action.
+
+### Variants
+
+No visual variants yet. The only supported action placement is trailing, because that is the only verified Figma reference. Add another named prop only when a second real design needs it.
+
+### States
+
+Default, focused, invalid (`aria-invalid` on the input), disabled, and action-disabled. The wrapper mirrors the input state via `has-*` selectors, matching `InputGroup`.
+
+### Properties / API
+
+```ts
+interface InputActionGroupProps extends Omit<React.ComponentProps<"input">, "children"> {
+  actionLabel: string;
+  actionAriaLabel?: string;
+  actionIcon?: React.ReactNode;
+  actionDisabled?: boolean;
+  actionType?: "button" | "submit";
+  onAction?: () => void;
+}
+```
+
+### Design tokens used
+
+`border-input`, `bg-background`, `shadow-xs`, `radius-md`, `transition-control`, `border-border-brand`, `border-border-destructive-subtle`, `bg-muted/50`, `text-foreground`, `text-muted-foreground`, plus the attached `Button`'s `default`/`controlSegment` tokens.
+
+### Accessibility requirements
+
+- Always pair the input with a visible `Label` through `htmlFor`/`id`.
+- Use `actionAriaLabel` when the visible action text is intentionally short but the accessible action needs context, e.g. visible `Add` with `aria-label="Add campus"`.
+- Use `actionType="submit"` when the group participates in a form; otherwise use the default `button` type.
+- Do not render the action as an enabled dead control. If the caller cannot handle the action yet, pass `actionDisabled` or omit the callback at the composing component level.
+
+### Responsive behavior
+
+Full-width like `Input` and `InputGroup`; the input truncates/shrinks inside the wrapper while the action segment keeps its intrinsic button width.
+
+### Implementation rules
+
+- Do not hand-style an input plus button in a caller when the action is attached to the input's value. Extend this primitive instead.
+- Do not repeat local `rounded-l-none`, divider, or full-height button classes. The `controlSegment` button size owns the trailing segment geometry.
+
+### Visual examples
+
+Rendered at `/design-system/components#inputactiongroup` and composed inside `ChurchProfileSettingsModal`.
 
 ---
 
@@ -314,7 +377,7 @@ Standard Radix `Select.Root` / `Select.Trigger` / `Select.Content` / `Select.Ite
 
 ### Design tokens used
 
-`border-input`, `bg-background`, `placeholder:text-muted-foreground`, `border-border-brand` (focus), `border-border-destructive-subtle` (invalid), `bg-muted/50` + `text-muted-foreground` (disabled), `shadow-xs`, `radius-md` — the identical token set `Input` uses, plus `lucide-react`'s `ChevronDown` icon at `size-4` (16px, matching Figma's `chevron-down` component and `SelectItem`'s own check-icon size — see Implementation rules for the earlier oversized-icon bug this replaced).
+`border-input`, `bg-background`, `placeholder:text-muted-foreground`, `border-border-brand` (focus), `border-border-destructive-subtle` (invalid), `bg-muted/50` + `text-muted-foreground` (disabled), `shadow-xs`, `radius-md`, `transition-control`, `min-w-32`, `min-w-(--radix-select-trigger-width)` — the identical control token set `Input` uses, plus `lucide-react`'s `ChevronDown` icon at `size-4` (16px, matching Figma's `chevron-down` component and `SelectItem`'s own check-icon size — see Implementation rules for the earlier oversized-icon bug this replaced).
 
 ### Accessibility requirements
 
@@ -329,7 +392,8 @@ Full width (`w-full`) like `Input` on `/create-profile`; also supports a fixed n
 ### Implementation rules
 
 - Hand-authored `src/components/ui/select.tsx` from `@radix-ui/react-select` (installed — `ui.shadcn.com` itself remains unreachable from this environment per `CLAUDE.md`'s shadcn-CLI-unreachable workflow, but the underlying Radix package installs fine from `registry.npmjs.org`), matching upstream shadcn/ui's `select` shape and this project's `Input` token set exactly (`border-input`, `bg-background`, `px-3.5 py-2.5`, `text-base`, `shadow-xs`, focus/invalid/disabled treatment).
-- `SelectContent` caps height via `max-h-(--radix-select-content-available-height)` with an internal scrolling `Viewport`, plus `SelectScrollUpButton`/`SelectScrollDownButton` — verified against the 39-item "Your role" list on `/create-profile` (see Visual examples).
+- `SelectContent` uses `min-w-32` for the default popover minimum and caps height via `max-h-(--radix-select-content-available-height)` with an internal scrolling `Viewport`, plus `SelectScrollUpButton`/`SelectScrollDownButton` — verified against the 39-item "Your role" list on `/create-profile` (see Visual examples).
+- `SelectPrimitive.Viewport` carries `data-slot="select-viewport"` and uses Tailwind's custom-property shorthand `min-w-(--radix-select-trigger-width)` for the Radix trigger-width handoff; do not restore the bracketed arbitrary `min-w-[var(--radix-select-trigger-width)]`.
 - Given the option counts on the referenced frame (39 and 23 items), a searchable combobox variant remains a flagged UX consideration for product/design to weigh in on — not implemented here, since the plain Radix listbox already satisfies the documented contract and no combobox pattern exists elsewhere in the codebase to extend.
 - **Fixed: the trailing chevron floated outside a narrow trigger's border.** `/marriage-champions`'s "Profile type" column renders `SelectTrigger` at a fixed `w-44` (176px) with a long value ("Marriage Champion"); `SelectValue` carried no width-constraining classes, so its intrinsic content width — combined with an oversized `size-6` (24px) chevron eating into the available space — pushed the flex row past the trigger's own box, visually detaching the chevron from the drawn border instead of clipping the text. Fixed in the shared trigger (not the call site) two ways: (1) the chevron is now `size-4` (16px), matching Figma's actual `chevron-down` component size and `SelectItem`'s check icon; (2) the trigger scopes `min-w-0 flex-1 truncate` onto its `[data-slot=select-value]` child via Tailwind's `*:data-[...]:` child-attribute variant, so the value shrinks and truncates with an ellipsis inside any trigger width instead of overflowing. Deliberately *not* `line-clamp-1 flex items-center gap-2` (a pattern seen in some shadcn/ui forks) — `line-clamp-*` sets `display:-webkit-box`, which collides with a same-element `flex` utility's `display:flex` (last one in the generated stylesheet wins, and per CSS's flex-item blockification rules, `flex-1`/`min-w-0` already work on `SelectValue` as a block-level flex-item child of the trigger without needing `display:flex` set on `SelectValue` itself) — the collision silently drops `line-clamp`'s truncation behavior, hard-clipping text mid-character with no visible ellipsis, which is what this fix replaced. Verified in a real browser (computed `text-overflow: ellipsis` rendering correctly) at `/marriage-champions`, and confirmed the full-width `/create-profile` triggers still render unaffected.
 
@@ -399,7 +463,7 @@ Binary on/off selection control, e.g. "This is a trusted device" on `/login`.
 
 ### Anatomy
 
-Radix `Checkbox.Root` (`size-4 rounded-[4px]`) + `Checkbox.Indicator` rendering a `CheckIcon` when checked.
+Radix `Checkbox.Root` (`size-4 rounded-xs`) + `Checkbox.Indicator` rendering a `CheckIcon` when checked.
 
 ### Variants
 
@@ -407,7 +471,7 @@ None.
 
 ### States
 
-Default (unchecked), checked (`data-[state=checked]`, fills `bg-primary`), focused (`focus-visible:ring-ring/50 focus-visible:ring-[3px]`), invalid (`aria-invalid:border-destructive`), disabled (`disabled:opacity-50 disabled:cursor-not-allowed`).
+Default (unchecked), checked (`data-[state=checked]`, fills `bg-primary`), focused (`focus-visible:ring-ring/50 focus-visible:ring-3`), invalid (`aria-invalid:border-destructive`), disabled (`disabled:opacity-50 disabled:cursor-not-allowed`).
 
 ### Properties / API
 
@@ -415,7 +479,7 @@ Default (unchecked), checked (`data-[state=checked]`, fills `bg-primary`), focus
 
 ### Design tokens used
 
-`border-input`, `bg-primary` / `text-primary-foreground` (checked), `border-primary` (checked border), `ring-ring/50` (focus).
+`border-input`, `bg-primary` / `text-primary-foreground` (checked), `border-primary` (checked border), `ring-ring/50` (focus), `rounded-xs` (4px radius).
 
 ### Accessibility requirements
 
@@ -428,7 +492,7 @@ Fixed `size-4` at all breakpoints — a checkbox doesn't need responsive resizin
 
 ### Implementation rules
 
-- `4px` corner radius is a deliberate arbitrary value (doesn't land on the `radius` scale) — don't stretch `rounded-sm`/`rounded-xs` to fit it instead.
+- The 4px corner radius is now the `rounded-xs` radius token. Do not reintroduce `rounded-[4px]` at the call site.
 
 ### Visual examples
 
@@ -785,7 +849,7 @@ interface TopHeroProps {
 
 ### Responsive behavior
 
-Not yet evidenced against a Figma mobile/tablet frame (the reference is a fixed desktop-width composition, same category of gap as `HeartChartSummary`/`PricingCard`). The heading column caps at `max-w-[544px]` per Figma; the outer `ElevatedCard` is fluid-width but fixed at `h-128` (512px), matching the Figma frame's exact height (confirmed via `get_metadata` on node `4194:25820`: `width=1352 height=512`) at every viewport — this card does not get shorter on narrower screens.
+Not yet evidenced against a Figma mobile/tablet frame (the reference is a fixed desktop-width composition, same category of gap as `HeartChartSummary`/`PricingCard`). The heading column caps at `max-w-top-hero-copy` (544px) per Figma; the outer `ElevatedCard` is fluid-width but fixed at `h-128` (512px), matching the Figma frame's exact height (confirmed via `get_metadata` on node `4194:25820`: `width=1352 height=512`) at every viewport — this card does not get shorter on narrower screens.
 
 ### Implementation rules
 
@@ -847,7 +911,7 @@ interface CourseCardProps {
 
 ### Design tokens used
 
-`bg-text-brand` (all 3 steps' shared header background, see Variants), `text-white` (header text/icons, plus video-cover text), `bg-muted` (checklist icon circle — Figma's `#f5f5f5` "bg-tertiary" is a near-exact match to the existing `muted` token), `text-muted-foreground` (checklist text + icon), `text-primary` (inline links within checklist text, exact match to Figma's `#aa6140`), `font-display`/`text-display-md` with a local `leading-[2.375rem]` override (video-cover heading — see `DESIGN.md`'s note on this one-off 36px/38px pairing). `Button variant="outline" size="compact"` for the 38px video CTA, matching the neutral bordered Figma button treatment.
+`bg-text-brand` (all 3 steps' shared header background, see Variants), `text-white` (header text/icons, plus video-cover text), `bg-muted` (checklist icon circle — Figma's `#f5f5f5` "bg-tertiary" is a near-exact match to the existing `muted` token), `text-muted-foreground` (checklist text + icon), `text-primary` (inline links within checklist text, exact match to Figma's `#aa6140`), `font-display text-display-md leading-display-sm` (video-cover heading — see `DESIGN.md`'s note on this sourced 36px/38px pairing). `Button variant="outline" size="compact"` for the 38px video CTA, matching the neutral bordered Figma button treatment.
 
 ### Accessibility requirements
 
@@ -958,7 +1022,7 @@ Each sub-component is `React.ComponentProps<"div">` — no custom props beyond `
 
 ### Design tokens used
 
-`bg-card`, `text-card-foreground`, default `border`, `shadow-sm`. On `/create-profile`, the call site overrides the default border/shadow via `className` (`border-none shadow-xl rounded-2xl gap-0 py-0`), and renders section dividers as plain `border-border-secondary border-t` `div`s nested *inside* `CardHeader`/`CardFooter` rather than as a `border-b`/`border-t` class on the sub-components themselves (see Implementation rules for why) — all existing tokens/Tailwind built-ins, no new ones added.
+`bg-card`, `text-card-foreground`, default `border`, `shadow-sm`, `grid-rows-card-header`, and `grid-cols-card-header-action`. On `/create-profile`, the call site overrides the default border/shadow via `className` (`border-none shadow-xl rounded-2xl gap-0 py-0`), and renders section dividers as plain `border-border-secondary border-t` `div`s nested *inside* `CardHeader`/`CardFooter` rather than as a `border-b`/`border-t` class on the sub-components themselves (see Implementation rules for why) — all existing tokens/Tailwind built-ins or named layout utilities.
 
 ### Accessibility requirements
 
@@ -971,12 +1035,13 @@ Fluid width by default (fills its container); no built-in breakpoint behavior �
 ### Implementation rules
 
 - Keep this primitive matching upstream shadcn/ui shape exactly — a flat single-surface card. Don't bend it to fit a non-flat shape (see `AuthCard` below for why that pattern lives elsewhere).
+- `CardHeader` uses named layout utilities for its inherited upstream grid: `grid-rows-card-header` preserves the two-row title/description template and `has-data-[slot=card-action]:grid-cols-card-header-action` preserves the optional `CardAction` column. Do not restore `grid-rows-[auto_auto]` or `has-data-[slot=card-action]:grid-cols-[1fr_auto]` in the primitive; add another named layout utility only if a second reusable Card header anatomy is verified.
 - **`/create-profile` deliberately uses this theme-aware `Card` rather than the fixed-light `AuthCard` pattern** used by `/login`/`/signup` — `AuthCard`'s nested outer-shell/inner-bordered-panel anatomy doesn't match this frame's flat, section-divided shape (header/content/footer separated by full-width rules, no inner sub-panel), while `Card`'s existing `CardHeader`/`CardContent`/`CardFooter` composition is an exact structural fit with zero modification to the primitive. This is a call-site decision, not a `Card` contract change.
-- **Fixed: `cn()` was silently dropping `text-display-md`/`text-display-sm` whenever paired with a text-color utility, rendering `CardTitle` at the browser default size instead of 36px.** `tailwind-merge`'s built-in `font-size` class group only recognizes Tailwind's default `text-*` scale (`xs`/`sm`/`base`/`lg`/...); it doesn't know about this project's custom `--text-display-sm`/`--text-display-md` theme keys (`src/tokens/typography.css`), so it fell through to the generic `text-color` group — the same group `text-foreground` belongs to. Any `cn(..., "text-display-md text-foreground", ...)` call (exactly `CardTitle`'s usage on `/create-profile`) therefore had `text-display-md` silently removed, keeping only `text-foreground` and leaving the title at its inherited font-size. **Fixed at the root** in `src/lib/utils.ts` by extending `tailwind-merge`'s `font-size` group (`extendTailwindMerge({ extend: { classGroups: { "font-size": [{ text: ["display-sm", "display-md"] }] } } })`) rather than patching every call site — this protects every future use of the display scale, not just `CardTitle`'s. Verify with `node -e "console.log(require('tailwind-merge').twMerge('text-display-md', 'text-foreground'))"` — before the fix this printed only `text-foreground`.
-- **`CardTitle`'s base `leading-none` still fights the display scale's paired line-height** (`text-display-md` carries its own 40px line-height, but `leading-none` sets `line-height: 1` on a separate, non-conflicting `tailwind-merge` group, so which one wins depends on Tailwind's internal utility-emission order, not class order in the JSX). Rather than rely on that, `/create-profile`'s `CardTitle` explicitly adds `leading-[2.5rem]` (40px, `DESIGN.md`'s documented `display-md` line-height) — an unambiguous `leading-*` vs `leading-*` conflict that `tailwind-merge` resolves correctly. Do this for any other `CardTitle` using the display scale; don't assume the token's own line-height wins by default.
+- **Fixed: `cn()` was silently dropping custom display-scale classes whenever paired with a text-color utility, rendering display headings at inherited browser sizes.** `tailwind-merge`'s built-in `font-size` class group only recognizes Tailwind's default `text-*` scale (`xs`/`sm`/`base`/`lg`/...); it doesn't know about this project's custom `--text-display-sm`/`--text-display-md`/`--text-display-lg`/`--text-display-2xl` theme keys (`src/tokens/typography.css`), so it fell through to the generic `text-color` group — the same group `text-foreground` belongs to. Any `cn(..., "text-display-md text-foreground", ...)` call (exactly `CardTitle`'s usage on `/create-profile`) therefore had `text-display-md` silently removed, keeping only `text-foreground` and leaving the title at its inherited font-size. **Fixed at the root** in `src/lib/utils.ts` by extending `tailwind-merge`'s `font-size` group for all four display tokens rather than patching every call site — this protects every future use of the display scale, not just `CardTitle`.
+- **`CardTitle`'s base `leading-none` still fights the display scale's paired line-height** (`text-display-md` carries its own 40px line-height, but `leading-none` sets `line-height: 1` on a separate, non-conflicting `tailwind-merge` group, so which one wins depends on Tailwind's internal utility-emission order, not class order in the JSX). Rather than rely on that, `/create-profile`'s `CardTitle` explicitly adds `leading-display-md` (40px, `DESIGN.md`'s documented `display-md` line-height) — an unambiguous named `leading-*` vs `leading-*` conflict that `tailwind-merge` resolves correctly. Do this for any other `CardTitle` using the display scale; don't assume the token's own line-height wins by default.
 - **Don't put `border-t`/`border-b` directly on `CardHeader`/`CardFooter` when also overriding their padding** — `card.tsx`'s base classes include self-referential arbitrary-variant rules (`[.border-b]:pb-6` / `[.border-t]:pt-6`) that add padding *only when the element also carries that literal border class*. Because Tailwind compiles `[.border-b]:pb-6` to a two-class compound selector (higher CSS specificity than a plain single-class `pb-5`), a plain padding override loses to it even when it appears later via `cn()` — `tailwind-merge` doesn't recognize the bracket-variant form as conflicting with a plain `pb-*`/`pt-*` class, so both end up in the class list and CSS specificity (not source order) decides. `/create-profile`'s header/footer instead render the divider as a plain child `div` (`border-border-secondary border-t`, no bracket-variant involved) and set `CardHeader`/`CardFooter`'s own padding as ordinary non-conflicting utilities.
 - **`/create-profile`'s modal restyled to a flush, zero-gap flex layout matching the Figma frame exactly**, rather than relying on `Card`'s default `gap-6`/`py-6`: the Figma `Modal` node has *no* implicit spacing between its header/content/actions sections — every gap is an explicit padding value or spacer, so leaving `Card`'s default `gap-6` (24px) in place double-counted spacing on top of each section's own padding. The call site overrides `Card` to `gap-0 py-0` and expresses every gap as the section's own padding/margin, verified against the Figma node metadata (`Onboarding/Create Profile`, node `1909:25769`): `CardHeader` `pt-6`(24px)+`px-6`(24px), `gap-4`(16px) between the title block and `HeartChartLogo`, `gap-0.5`(2px) between `CardTitle`/`CardDescription`, then a divider `div` with `mt-5`(20px) before it; `CardContent` keeps its existing `pt-5`(20px); `CardFooter` uses `pt-8`(32px) before its divider `div`, then a `flex justify-end px-6 py-6`(24px top and bottom) row for the button. **Fixed: the button row previously used `pb-6` only (no top padding)**, which read as the divider running directly into the button — the Figma `Divider-wrap` graphic under the footer is a ~25px gradient/shadow asset (not a plain hairline) with its visible line inset within that height, so it never actually sits flush against the actions row the way a bare 1px line does. Since this divider is approximated here as a plain 1px `border-t` (the same class of simplification as `AmfmLogo`'s text approximation below, since the exact gradient asset isn't available — see that entry's Implementation rules for why), that graphic's baked-in breathing room has to be restored explicitly: `py-6` gives the button even padding above (between it and the divider) and below (between it and the card edge), matching `pt-8`'s gap above the divider on the other side.
-- ~~The `Onboarding/Create Profile` Figma frame specifies a title/description in a serif "Financier Display" font not yet defined in `DESIGN.md`~~ **Resolved**: `DESIGN.md`'s Typography system now defines `font-display`/`text-display-md`, rendering the real, licensed `Financier Display` face (self-hosted via `next/font/local`, replacing the earlier `Fraunces` Google Fonts substitute). `/create-profile`'s `CardTitle` renders `font-display text-display-md leading-[2.5rem] font-light text-foreground` (was `text-3xl font-semibold tracking-tight`); `CardDescription` renders `text-text-tertiary` (was the generic `text-muted-foreground`, a different gray — Figma's description color resolves to the `text-tertiary` token, `#535862`, exactly).
+- ~~The `Onboarding/Create Profile` Figma frame specifies a title/description in a serif "Financier Display" font not yet defined in `DESIGN.md`~~ **Resolved**: `DESIGN.md`'s Typography system now defines `font-display`/`text-display-md`, rendering the real, licensed `Financier Display` face (self-hosted via `next/font/local`, replacing the earlier `Fraunces` Google Fonts substitute). `/create-profile`'s `CardTitle` renders `font-display text-display-md leading-display-md font-light text-foreground` (was `text-3xl font-semibold tracking-tight`); `CardDescription` renders `text-text-tertiary` (was the generic `text-muted-foreground`, a different gray — Figma's description color resolves to the `text-tertiary` token, `#535862`, exactly).
 - **`/create-profile`'s content column widened**: the Figma frame places a `368px`-wide `PricingCard` beside the form fields (`gap-[40px]`/`gap-10`), so the page's `Card` call site now uses `max-w-4xl` (was `max-w-2xl`) to fit both columns without cramping the fields column; below `lg`, the two columns stack (fields, then `PricingCard`) per `DESIGN.md`'s mobile-first layout rules — no Figma mobile reference exists for this frame, so the stacking behavior is a deliberate application of the general grid rules, not a pixel-sourced breakpoint.
 - **Multi-action `CardAction` composition (see Variants)**: when `CardAction` holds more than one control, lay them out with `flex items-center gap-*` (stacking `flex-col` below `sm`) at the call site. Implemented on `/marriage-champions`: because this composition also needs to stack vertically below `sm` (unlike every prior single-accessory `CardAction` use, which never needed responsive behavior), that page's `CardHeader` overrides the primitive's default `grid` layout with `flex flex-col gap-4 ... sm:flex-row sm:items-start sm:justify-between` at the call site, wrapping `CardTitle`/`CardDescription` in a plain `div` — `CardAction`'s own base classes (`col-start-2 row-span-2 ...`) are grid-only positioning utilities that become harmless no-ops once the parent is a flex container, so no change to `CardHeader`/`CardAction` themselves was needed. Verified in a real browser at 390px/834px/1512px widths — see `Table`'s Responsive behavior above for the same page's other breakpoint verification.
 
@@ -998,7 +1063,7 @@ Modal overlay for focused, blocking tasks or supplementary content (e.g. the hom
 
 ### Anatomy
 
-`Dialog` (Radix root) → `DialogTrigger` → `DialogPortal` → `DialogOverlay` (scrim) + `DialogContent` (surface, optional built-in `DialogClose`) → `DialogHeader` (`DialogTitle` + `DialogDescription`) / `DialogFooter`.
+`Dialog` (Radix root) → `DialogTrigger` → `DialogPortal` → `DialogOverlay` (scrim) + `DialogContent` (surface, optional built-in `DialogClose`, centered with standard `top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2`) → `DialogHeader` (`DialogTitle` + `DialogDescription`) / `DialogFooter`.
 
 ### Variants
 
@@ -1006,7 +1071,7 @@ Modal overlay for focused, blocking tasks or supplementary content (e.g. the hom
 
 ### States
 
-Open / closed, animated via `tw-animate-css` (`animate-in`/`animate-out`, `fade-in-0`/`fade-out-0`, `zoom-in-95`/`zoom-out-95`) driven by Radix's `data-state`. Close button: default / hover (`hover:bg-accent hover:text-foreground`) / focus (`focus-visible:ring-[3px]`).
+Open / closed, animated via `tw-animate-css` (`animate-in`/`animate-out`, `fade-in-0`/`fade-out-0`, `zoom-in-95`/`zoom-out-95`) driven by Radix's `data-state`. Close button: default / hover (`hover:bg-accent hover:text-foreground`) / focus (`focus-visible:ring-3`).
 
 ### Properties / API
 
@@ -1014,7 +1079,7 @@ Open / closed, animated via `tw-animate-css` (`animate-in`/`animate-out`, `fade-
 
 ### Design tokens used
 
-`bg-background`/`text-foreground` (theme-aware surface, unlike the fixed-light `AuthCard`), `bg-overlay/50` (scrim), `rounded-2xl`, Tailwind's built-in `shadow-2xl`, `text-muted-foreground` (close icon).
+`bg-background`/`text-foreground` (theme-aware surface, unlike the fixed-light `AuthCard`), `bg-overlay/50` (scrim), `rounded-2xl`, `max-w-dialog-mobile` (mobile viewport gutter), Tailwind's built-in `shadow-2xl`, `text-muted-foreground` (close icon).
 
 ### Accessibility requirements
 
@@ -1024,7 +1089,7 @@ Open / closed, animated via `tw-animate-css` (`animate-in`/`animate-out`, `fade-
 
 ### Responsive behavior
 
-`w-full max-w-[calc(100%-2rem)]` on mobile, `sm:max-w-3xl` from `sm` up — never full-bleed edge-to-edge past mobile widths. Content inside (e.g. `DposystemStory`'s carousel) manages its own internal responsive layout.
+`w-full max-w-dialog-mobile` on mobile, `sm:max-w-3xl` from `sm` up — never full-bleed edge-to-edge past mobile widths. Content inside (e.g. `DposystemStory`'s carousel) manages its own internal responsive layout.
 
 ### Implementation rules
 
@@ -1040,23 +1105,23 @@ Rendered at `/design-system/components#dialog` and via the homepage "Learn More"
 
 ## HeartChartModalShell
 
-**Status**: Draft (shared modal foundation verified against the four HeartChart modal frames; URL content is implemented via `HeartChartLinkCard`/`HeartChartLinkModal`; video/chart/tip modal content remains future work)
+**Status**: Draft (shared modal foundation verified against the five July 2026 MVP modal frames; content is implemented via `HeartChartLinkModal`, `InviteUserModal`, `HeartChartQuickTipModal`, `HeartChartLastFourWeeksModal`, and `HeartChartResourcesQuickStartModal`)
 **Source**: `src/components/heartchart-modal-shell.tsx`
-**Figma**: AMFM Portal file — HeartChart link Modal (current verified node `1903:19737`; earlier component reference `3724:20579`), Modal / quick tip (`3727:32459`), Modal / last 4 weeks (`3727:32514`), HeartChart Resources / Quick Start (`3727:32687`)
+**Figma**: AMFM Portal file — Modal/HeartChart link (assigned node `4207:25806`; current verified node `1903:19737`; earlier component reference `3724:20579`), Modal / invite user (`3724:23382`), Modal / quick tip (`3727:32459`), Modal / last 4 weeks (`3727:32514`), HeartChart Resources / Quick Start (`3727:32687`)
 
 ### Purpose
 
-Reusable shell for the HeartChart modal family: shared overlay, centered rounded surface, title/close header, optional divider, body slot, optional footer/action area, and Figma-sized width variants. Content atoms such as the HeartChart URL row, video player, chart, and tips carousel compose inside this shell rather than each modal re-declaring its own chrome.
+Reusable shell for the July 2026 MVP modal family: shared overlay, centered rounded surface, title/close header, optional divider, body slot, optional footer/action area, and Figma-sized width variants. Content atoms such as the HeartChart URL row, invite form, video player, chart, and tips carousel compose inside this shell rather than each modal re-declaring its own chrome.
 
 ### Anatomy
 
-`Dialog` root → `DialogTrigger asChild` → `DialogContent` with `bg-overlay/85 backdrop-blur-[8px]` overlay override and capped-height grid rows → optional inner framed panel (`data-slot="heartchart-modal-frame"`) → padded `DialogHeader` (`DialogTitle` + `sr-only` `DialogDescription` + optional `headerContent`) → optional divider (`data-slot="heartchart-modal-divider"`) → scrollable body slot (`data-slot="heartchart-modal-body"`) → optional shell footer wrapper (`data-slot="heartchart-modal-footer"`) containing the primitive `DialogFooter` (`data-slot="dialog-footer"`).
+`Dialog` root → `DialogTrigger asChild` → `DialogContent` with `bg-overlay/85 backdrop-blur-sm` overlay override and capped-height grid rows → optional inner framed panel (`data-slot="heartchart-modal-frame"`) → padded `DialogHeader` (`DialogTitle` + `sr-only` `DialogDescription` + optional `headerContent`) → optional divider (`data-slot="heartchart-modal-divider"`) → scrollable body slot (`data-slot="heartchart-modal-body"`) → optional shell footer wrapper (`data-slot="heartchart-modal-footer"`) containing the primitive `DialogFooter` (`data-slot="dialog-footer"`).
 
 ### Variants
 
 | Prop | Values | Use for |
 |---|---|---|
-| `size` | `"sm"` / `"md"` / `"lg"` / `"xl"` | Maps the four Figma modal widths: 544px, 640px, 768px, 800px. |
+| `size` | `"sm"` / `"md"` / `"lg"` / `"xl"` | Maps the four Figma modal width tokens: `max-w-modal-sm` (544px), `max-w-modal-md` (640px), `max-w-modal-lg` (768px), `max-w-modal-xl` (800px). |
 | `framed` | `true` / `false` | `true` renders the inner bordered panel used by the HeartChart link, quick tip, and last-four-weeks modals; `false` supports the plainer Quick Start video modal. |
 | `showDivider` | `true` / `false` | `true` renders the title/body separator and uses a four-row shell grid; `false` removes the separator and switches to a three-row shell grid so the body remains the scroll row. |
 
@@ -1088,7 +1153,7 @@ type HeartChartModalShellProps = Omit<ComponentProps<typeof Dialog>, "children">
 
 ### Design tokens used
 
-`bg-background`, `bg-overlay/85`, `backdrop-blur-[8px]`, `border-border-secondary`, `bg-secondary`, `text-foreground`, `rounded-2xl`, `rounded-md`, `shadow-2xl` — all existing tokens/utilities. No new design token was introduced for the modal shell.
+`bg-background`, `bg-overlay/85`, `backdrop-blur-sm` (Tailwind's built-in 8px blur), `border-border-secondary`, `bg-secondary`, `text-foreground`, `rounded-2xl`, `rounded-md`, `shadow-2xl`, `max-w-modal-*`, `max-h-modal-shell`, `max-h-modal-frame`, `grid-rows-modal-with-divider`, `grid-rows-modal-no-divider`.
 
 ### Accessibility requirements
 
@@ -1101,21 +1166,575 @@ type HeartChartModalShellProps = Omit<ComponentProps<typeof Dialog>, "children">
 
 ### Responsive behavior
 
-Mobile remains `w-full max-w-[calc(100%-2rem)]` via `DialogContent`; from `sm` up, `size` maps to the Figma desktop widths (`sm:max-w-[544px]`, `sm:max-w-[640px]`, `sm:max-w-[768px]`, `sm:max-w-[800px]`). Content inside the body slot owns its own responsive behavior.
+Mobile remains `w-full max-w-dialog-mobile` via `DialogContent`; from `sm` up, `size` maps to the Figma desktop widths (`sm:max-w-modal-sm`, `sm:max-w-modal-md`, `sm:max-w-modal-lg`, `sm:max-w-modal-xl`). Content inside the body slot owns its own responsive behavior.
 
-The shell caps the dialog at `max-h-[calc(100vh-2rem)]`; framed shells cap the inner panel at `max-h-[calc(100vh-3rem)]`, and the body slot carries `min-h-0 overflow-y-auto` so tall chart/resource/video content scrolls inside the modal without clipping the header or footer. Divider-present shells use `grid-rows-[auto_auto_minmax(0,1fr)_auto]`; divider-free shells use `grid-rows-[auto_minmax(0,1fr)_auto]` so the body row remains the constrained scroll region.
+The shell caps the dialog at `max-h-modal-shell`; framed shells cap the inner panel at `max-h-modal-frame`, and the body slot carries `min-h-0 overflow-y-auto` so tall chart/resource/video content scrolls inside the modal without clipping the header or footer. Divider-present shells use `grid-rows-modal-with-divider`; divider-free shells use `grid-rows-modal-no-divider` so the body row remains the constrained scroll region.
 
 ### Implementation rules
 
-- Compose this shell for HeartChart modal-family screens before adding modal-specific content; do not copy modal header/body/footer chrome per modal.
+- Compose this shell for July MVP modal-family screens before adding modal-specific content; do not copy modal header/body/footer chrome per modal.
 - Keep content-specific logic out of the shell. QR/link copying, video controls, charts, and carousel behavior belong in dedicated child components with their own tests.
 - Preserve primitive metadata inside composed shell slots: the shell footer wrapper uses `data-slot="heartchart-modal-footer"`, while the nested `DialogFooter` keeps `data-slot="dialog-footer"`.
 - Use existing tokens and `DialogContent.overlayClassName`; do not introduce a parallel overlay, dialog primitive, or raw-color modal style.
-- The shell is a foundation component, not a complete page pattern. It becomes production-ready only after at least one full HeartChart modal pattern is implemented and browser-validated through `/design-system`.
+- The shell is a foundation component, not a complete page pattern. Keep it Draft until the full July MVP modal family is browser-validated through `/design-system` and visual-audited against Figma.
 
 ### Visual examples
 
 Rendered at `/design-system/components#heartchartmodalshell`.
+
+---
+
+## SettingsModalShell
+
+**Status**: Draft (introduced from the Figma Settings/Church Profile modal; generic to the settings modal family, not HeartChart-specific)
+**Source**: `src/components/settings-modal-shell.tsx`
+**Figma**: AMFM Portal file — `Modal/Settings/Church Profile` node `3724:20992`, `Settings/Church Profile` instance node `3724:21598`
+
+### Purpose
+
+Reusable shell for account/settings modals with a left settings nav, modal title/description header, close button, and scrollable content pane. This is separate from `HeartChartModalShell` because the Figma anatomy is materially different: persistent settings navigation, a 1024px by 768px desktop frame, and a content pane with long form sections.
+
+### Anatomy
+
+`Dialog` root → `DialogTrigger asChild` → `DialogContent` with `bg-overlay/85 backdrop-blur-sm` overlay → grid shell (`data-slot="settings-modal-shell"`) → left `aside` nav (`data-slot="settings-modal-nav"`) on desktop → compact wrapped mobile nav (`data-slot="settings-modal-mobile-nav"`) below `md` → main content column (`data-slot="settings-modal-main"`) with `DialogHeader`, focused `DialogTitle`, `DialogDescription`, and scrollable body slot (`data-slot="settings-modal-body"`).
+
+### Variants
+
+No named visual variants yet. The shell accepts `navItems`, `activeNavItemId`, and `children` slots; additional settings-modal shapes should extend those slots only after another real Figma frame proves the need.
+
+### States
+
+Closed/open inherited from `Dialog`; active nav item via `aria-current="page"`; hover/focus on nav links and close button.
+
+### Properties / API
+
+```ts
+interface SettingsNavItem {
+  id: string;
+  label: string;
+  href: string;
+  icon: ElementType<{ className?: string; "aria-hidden"?: boolean }>;
+}
+
+interface SettingsModalShellProps extends Omit<ComponentProps<typeof Dialog>, "children"> {
+  title: string;
+  description: string;
+  trigger: ReactElement;
+  navItems: SettingsNavItem[];
+  activeNavItemId: string;
+  children: ReactNode;
+  className?: string;
+}
+```
+
+### Design tokens used
+
+`bg-background`, `bg-secondary`, `bg-muted`, `bg-overlay/85`, `backdrop-blur-sm`, `border-border-secondary`, `text-foreground`, `text-text-secondary`, `text-text-tertiary`, `text-fg-quaternary`, `font-display`, `text-display-md`, `leading-display-md`, `rounded-xl`, `shadow-card`, `max-w-modal-settings`, `max-h-modal-shell`, `grid-cols-settings-modal`.
+
+### Accessibility requirements
+
+- Built on the shared Radix-backed `Dialog`, preserving focus trap, Escape close, return focus, and close-button semantics.
+- `DialogTitle` is required and receives initial focus on open so the first input is not auto-focused or text-selected.
+- `DialogDescription` is visible below the title because the Figma frame includes visible supporting copy.
+- The settings nav is a real `nav aria-label="Settings"`, and the active item must set `aria-current="page"`.
+- The compact mobile nav is a real `nav aria-label="Settings sections"` with the same active-item semantics, so settings sections remain reachable when the desktop rail is hidden.
+
+### Responsive behavior
+
+Desktop uses the Figma-derived 1024px modal width and `17.5rem / 1fr` shell grid. Below `md`, the left rail becomes a compact wrapped nav and the content becomes a single-column modal with the same scroll containment; no mobile Figma reference was returned for this node, so the mobile behavior is a conservative accessibility fallback.
+
+### Implementation rules
+
+- Use this shell for settings/account modals before adding another settings-specific dialog wrapper.
+- Do not copy the left-nav/modal-body chrome into individual settings modal patterns.
+- Keep product persistence, active panel state, and routing outside the shell. Nav links may be placeholders in design-system demos, but real app callers must pass real destinations or a route/state layer that updates `activeNavItemId` and the rendered `children`.
+
+### Visual examples
+
+Rendered through `ChurchProfileSettingsModal` at `/design-system/components#churchprofilesettingsmodal`.
+
+---
+
+## SettingsSection
+
+**Status**: Draft
+**Source**: `src/components/settings-section.tsx`
+**Figma**: AMFM Portal file — `Modal/Settings/Church Profile` node `3724:20992`, section groups labelled `CHURCH LOGO`, `BASIC INFORMATION`, and `CAMPUSES`
+
+### Purpose
+
+Reusable settings-form section molecule: uppercase label plus rounded secondary panel. Use it for settings modal sections that share the same label/panel treatment.
+
+### Anatomy
+
+`section[data-slot="settings-section"]` → uppercase heading → panel wrapper (`data-slot="settings-section-panel"`) containing caller-provided controls.
+
+### Design tokens used
+
+`bg-secondary`, `text-muted-foreground`, `tracking-label`, `rounded-2xl`, and spacing-scale utilities (`gap-4`, `p-8`).
+
+### Accessibility requirements
+
+The section title is visible text, not a decorative label. Keep form controls inside labelled with their own `Label`; the section heading does not replace field labels.
+
+### Implementation rules
+
+- Do not inline repeated rounded secondary settings panels in settings modal patterns.
+- Use `panelClassName` only for a real section-specific layout need; do not use it to patch colors, radii, or arbitrary spacing.
+
+### Visual examples
+
+Rendered at `/design-system/components#settingssection` and composed inside `ChurchProfileSettingsModal`.
+
+---
+
+## SettingsAssetUpload
+
+**Status**: Draft
+**Source**: `src/components/settings-asset-upload.tsx`
+**Figma**: AMFM Portal file — `Modal/Settings/Church Profile` node `3724:20992`, `CHURCH LOGO` upload block
+
+### Purpose
+
+Reusable asset-upload row for settings sections: preview area, upload action, remove action, and accepted-file helper text.
+
+### Anatomy
+
+Root (`data-slot="settings-asset-upload"`) → fixed preview container (`data-slot="settings-asset-upload-preview"`) → action stack with `Button variant="outline" size="control"` upload action, `Button variant="link" size="inline"` remove action, and helper copy.
+
+### Design tokens used
+
+`bg-secondary`, `text-muted-foreground`, `text-text-tertiary`, `text-foreground`, `rounded-xs`, plus shared `Button` outline/link tokens and spacing-scale utilities.
+
+### Accessibility requirements
+
+- Preview content must provide its own accessible name when meaningful, such as `FellowshipOfTheParksLogo` using `alt="Fellowship of the Parks"`.
+- Upload and remove are real buttons. Disable them when no callback exists so demos do not expose enabled dead controls.
+- Use `removeLabel` for visible copy and `removeAriaLabel` when Figma uses short visible copy like "Remove" but the accessible name should identify the asset being removed.
+
+### Implementation rules
+
+- Keep upload file-picker, validation, and persistence outside this presentational molecule until the real app flow exists.
+- Do not hardcode a specific logo inside the molecule; pass the asset slot from the composed settings modal.
+
+### Visual examples
+
+Rendered at `/design-system/components#settingsassetupload` and composed inside `ChurchProfileSettingsModal`.
+
+---
+
+## SettingsCampusList
+
+**Status**: Draft
+**Source**: `src/components/settings-campus-list.tsx`
+**Figma**: AMFM Portal file — `Modal/Settings/Church Profile` node `3724:20992`, `CAMPUSES` list rows
+
+### Purpose
+
+Reusable campus-list molecule for settings forms: named campus rows with edit/remove utility actions.
+
+### Anatomy
+
+Outer list surface (`data-slot="settings-campus-list"`) → divided `ul` → each row uses `grid-cols-settings-campus-row` → truncated campus name → ghost icon actions.
+
+### Design tokens used
+
+`bg-secondary`, `border-border-secondary`, `text-foreground`, `text-fg-quaternary`, `rounded-2xl`, `grid-cols-settings-campus-row`, and shared `Button variant="ghost" size="icon"`.
+
+### Accessibility requirements
+
+- Each utility button must include the campus name in its accessible label, e.g. `Edit Bedford` and `Remove Bedford`.
+- Utility actions disable when the matching callback is omitted; do not leave enabled no-op buttons in demos or incomplete integrations.
+
+### Implementation rules
+
+- Do not duplicate campus row markup in a composed settings modal.
+- Keep row mutation/persistence outside this molecule. The callbacks receive the full `SettingsCampus` object for the caller to handle.
+
+### Visual examples
+
+Rendered at `/design-system/components#settingscampuslist` and composed inside `ChurchProfileSettingsModal`.
+
+---
+
+## ChurchProfileSettingsModal
+
+**Status**: Draft (Figma-to-code dogfood target for `Modal/Settings/Church Profile`)
+**Source**: `src/components/settings-church-profile-modal.tsx`
+**Figma**: AMFM Portal file — `Modal/Settings/Church Profile` node `3724:20992`, `Settings/Church Profile` instance node `3724:21598`
+
+### Purpose
+
+Composed Church Profile settings modal pattern built from `SettingsModalShell`, `SettingsSection`, `SettingsAssetUpload`, `SettingsCampusList`, `Input`, `InputGroup`, `InputActionGroup`, `Label`, and `Button`. It captures the frontend design-system structure only; API persistence, validation schema, upload mechanics, and real settings routes remain caller-owned.
+
+### Anatomy
+
+`SettingsModalShell` with active `Church Profile` nav → Church Logo section with `SettingsAssetUpload` and `FellowshipOfTheParksLogo` → Basic Information section with labelled text fields and URL `InputGroup` → Campus section with `SettingsCampusList` and add-campus `InputActionGroup`.
+
+### States
+
+Closed/open, active nav item, disabled logo/campus actions when callbacks are omitted, controlled add-campus text input, disabled Add action until the input contains non-whitespace text and `onAddCampus` exists.
+
+### Properties / API
+
+```ts
+interface ChurchProfileSettingsModalProps {
+  trigger: ReactElement;
+  churchName?: string;
+  averageWeeklyAttendance?: string;
+  website?: string;
+  streetAddress?: string;
+  city?: string;
+  state?: string;
+  zip?: string;
+  campuses?: SettingsCampus[];
+  onUploadLogo?: () => void;
+  onRemoveLogo?: () => void;
+  onEditCampus?: (campus: SettingsCampus) => void;
+  onRemoveCampus?: (campus: SettingsCampus) => void;
+  onAddCampus?: (campusName: string) => void;
+}
+```
+
+### Design tokens used
+
+Settings shell/section tokens, shared form-control tokens, `grid-cols-settings-field-pair`, `grid-cols-settings-address`, `max-w-settings-content`, `FellowshipOfTheParksLogo`, and shared `Button` variants.
+
+### Accessibility requirements
+
+- Modal title and description are visible and wired through Radix `DialogTitle`/`DialogDescription`.
+- Every form control has a visible `Label`.
+- The required city label uses `Label required`, while the input also carries native `required`.
+- Add-campus submission trims whitespace before invoking `onAddCampus`.
+- This component does not claim validation or persistence beyond packaging the add-campus string for the caller.
+
+### Responsive behavior
+
+Desktop matches the settings shell's 1024px frame and scrollable main pane. Field rows collapse to one column below `sm`; the settings rail becomes the shell's compact mobile nav below `md` to preserve section access while keeping input usability.
+
+### Implementation rules
+
+- Reuse the settings shell and settings molecules; do not re-declare modal chrome, section panels, upload row, campus rows, or input/action-group structure locally.
+- Keep all side effects outside the design-system component. This modal is a presentational/prototype contract for product ingestion.
+- The lower scrollable content was partially truncated in the Figma MCP context, so fields below the first viewport are represented conservatively using the visible labels and existing form primitives; verify against a fuller Figma export before claiming production pixel parity for off-screen fields.
+
+### Visual examples
+
+Rendered at `/design-system/components#churchprofilesettingsmodal` and tracked in `design-system/audits/visual-comparisons/targets.json` as `settings-church-profile-modal`.
+
+---
+
+## InfoNote
+
+**Status**: Draft (promoted from `InviteUserModal` once the modal-family audit identified informational note copy as a reusable molecule)
+**Source**: `src/components/info-note.tsx`
+**Figma**: AMFM Portal file — Modal / invite user (`3724:23382`), informational role note
+
+### Purpose
+
+Reusable low-emphasis informational note for modal and page surfaces: icon, secondary background, border, and semantic note role. Use this instead of re-declaring the invite-user modal's gray note surface or introducing ad hoc icon/text callouts.
+
+### Anatomy
+
+Outer note (`data-slot="info-note"`, `role="note"` by default) → decorative icon (`data-slot="info-note-icon"`) → content wrapper (`data-slot="info-note-content"`) with caller-supplied text/inline emphasis.
+
+### Variants
+
+| Prop | Values | Use for |
+|---|---|---|
+| `icon` | lucide icon component | Defaults to `Info`; pass another icon only when the note's meaning genuinely changes. |
+| `role` | inherited div role | Defaults to `"note"`; override only for a more specific semantic region. |
+
+### States
+
+Default, custom icon. No alert/error/live-region state exists yet; use a future `Alert`/validation primitive rather than overloading this passive note.
+
+### Properties / API
+
+```ts
+interface InfoNoteProps extends ComponentProps<"div"> {
+  icon?: LucideIcon;
+  iconClassName?: string;
+}
+```
+
+### Design tokens used
+
+`bg-secondary`, `border-border-secondary`, `text-text-secondary`, `text-foreground`, `rounded-md`.
+
+### Accessibility requirements
+
+- Default `role="note"` gives assistive technology a semantic passive note without implying urgency.
+- The icon is decorative (`aria-hidden="true"`); the note's meaning must be present in visible text.
+- Keep emphasis inside caller content semantic (`strong`, `span.font-semibold`, etc.); do not encode meaning by icon color alone.
+
+### Responsive behavior
+
+Inline flex note that wraps content naturally. Width is caller-owned by the containing modal/page slot.
+
+### Implementation rules
+
+- Use `InfoNote` for passive informational copy inside modals before adding another gray bordered callout.
+- Do not pass modal-specific `data-slot` values that hide the component's own `data-slot="info-note"` metadata; locate modal-specific context through the parent form/body slot.
+- Keep this component passive. Validation errors, warnings, or dismissible alerts should become their own components with separate accessibility contracts.
+
+### Visual examples
+
+Rendered at `/design-system/components#infonote` and composed by `/design-system/components#inviteusermodal`.
+
+---
+
+## ModalTextSection
+
+**Status**: Draft (promoted from `HeartChartQuickTipModal` to keep modal body copy/divider anatomy reusable)
+**Source**: `src/components/modal-text-section.tsx`
+**Figma**: AMFM Portal file — Modal/quick tip (`3727:32459`), "Growing Momentum" section
+
+### Purpose
+
+Reusable modal body text block: labelled section, optional top divider, section heading, and stacked supporting copy. It prevents every text-heavy modal from restating the same divider/heading/copy spacing locally.
+
+### Anatomy
+
+Section (`data-slot="modal-text-section"`) → generated heading id → heading → content stack (`data-slot="modal-text-section-content"`).
+
+### Variants
+
+| Prop | Values | Use for |
+|---|---|---|
+| `divided` | `true` / `false` | `true` renders the Figma top divider + `pt-6`; set `false` only when a parent surface already provides separation. |
+
+### States
+
+Divided, undivided.
+
+### Properties / API
+
+```ts
+interface ModalTextSectionProps extends Omit<ComponentProps<"section">, "title"> {
+  title: ReactNode;
+  children: ReactNode;
+  divided?: boolean;
+}
+```
+
+### Design tokens used
+
+`border-border-secondary`, `text-foreground`, `text-text-secondary`.
+
+### Accessibility requirements
+
+- The section is labelled by its visible heading via `aria-labelledby`.
+- Caller content remains real text/semantic markup; do not pass a pre-rendered image of copy.
+
+### Responsive behavior
+
+Single-column and width-fluid. The parent modal shell owns body scroll and width.
+
+### Implementation rules
+
+- Use this for simple modal text sections before adding local `border-t pt-6` stacks.
+- Keep the component structural only. Do not add modal-specific copy, routing, footer buttons, or video behavior here.
+
+### Visual examples
+
+Rendered at `/design-system/components#modaltextsection` and composed by `/design-system/components#heartchartquicktipmodal`.
+
+---
+
+## ParticipationTrendChart
+
+**Status**: Draft (promoted from `HeartChartLastFourWeeksModal`; chart is data-driven inline SVG, not an image export)
+**Source**: `src/components/participation-trend-card.tsx`
+**Figma**: AMFM Portal file — Modal / last 4 weeks (`3727:32514`), March 23-April 19 chart block
+
+### Purpose
+
+Reusable accessible line/area trend chart for compact participation counts. It exists so modal/page consumers can share the same geometry, edge-label alignment, tokenized grid/line styling, and `role="img"` contract.
+
+### Anatomy
+
+Chart wrapper (`data-slot="participation-trend-chart"`, `role="img"`) → SVG grid/y labels → x-axis label groups (`data-slot="participation-trend-axis-label"`) → filled area → stroked trend line.
+
+### Variants
+
+| Prop | Values | Use for |
+|---|---|---|
+| `maxValue` | `number` | Defaults to `4`, matching the July MVP last-four-weeks chart scale. If data exceeds this value, the chart expands its internal scale so the line stays inside the SVG viewport. |
+| `xAxisLabels` | `string[]` | Evenly distributed visible x-axis labels; first/last labels are edge-aligned. |
+
+### States
+
+Default populated chart, empty data (renders axes but no polygon/polyline), single data point (centers the point horizontally).
+
+### Properties / API
+
+```ts
+interface ParticipationTrendPoint {
+  label: string;
+  value: number;
+}
+
+interface ParticipationTrendChartProps extends ComponentProps<"div"> {
+  points: ParticipationTrendPoint[];
+  ariaLabel: string;
+  xAxisLabels: string[];
+  maxValue?: number;
+}
+```
+
+### Design tokens used
+
+`stroke-border-secondary`, `fill-fg-quaternary`, `fill-primary/10`, `stroke-primary`.
+
+### Accessibility requirements
+
+- Wrapper uses `role="img"` plus required `ariaLabel`; callers must summarize the chart's time range and purpose.
+- Visible labels must agree with the data range. Do not repeat the impossible Figma screenshot labels (`Apr 23`/`Apr 30`) for a March 23-April 19 dataset.
+- The first x-axis label uses `text-anchor="start"` at the plot start; the last uses `text-anchor="end"` at the SVG's right content edge so edge labels and final data point align with adjacent right-aligned metric text.
+
+### Responsive behavior
+
+SVG uses a fixed viewBox and scales to available width. Parent/card controls width.
+
+### Implementation rules
+
+- Keep geometry in one component. Do not copy line/area SVG math into individual modals.
+- Use token classes for grid, fill, label, and stroke colors; do not inline raw SVG colors.
+- If future data needs tooltips, keyboard point navigation, or a richer charting library, expand this component's contract first rather than introducing a second chart primitive.
+
+### Visual examples
+
+Rendered inside `/design-system/components#participationtrendcard` and composed by `/design-system/components#heartchartlastfourweeksmodal`.
+
+---
+
+## ParticipationTrendCard
+
+**Status**: Draft (promoted from `HeartChartLastFourWeeksModal` so the metric + chart block is reusable on modal and page surfaces)
+**Source**: `src/components/participation-trend-card.tsx`
+**Figma**: AMFM Portal file — Modal / last 4 weeks (`3727:32514`), chart + total-count block
+
+### Purpose
+
+Reusable participation trend summary card: date-range heading, right-aligned total metric, and the shared `ParticipationTrendChart`. Use this when a modal/page needs the same count-over-time summary rather than restating chart and metric layout locally.
+
+### Anatomy
+
+Section (`data-slot="participation-trend-card"`) → header row with date-range heading + total block (`data-slot="participation-trend-total"`) → `ParticipationTrendChart`.
+
+### Variants
+
+No visual variant prop yet. Data, labels, and `maxValue` are caller supplied.
+
+### States
+
+Default, empty data through the nested chart, alternate total labels.
+
+### Properties / API
+
+```ts
+interface ParticipationTrendCardProps extends Omit<ComponentProps<"section">, "title"> {
+  dateRange: string;
+  total: number | string;
+  totalLabel: string;
+  points: ParticipationTrendPoint[];
+  chartAriaLabel: string;
+  xAxisLabels: string[];
+  maxValue?: number;
+}
+```
+
+### Design tokens used
+
+`text-foreground`, `text-muted-foreground`, plus `ParticipationTrendChart` tokens.
+
+### Accessibility requirements
+
+- The section is labelled by its visible date-range heading.
+- Total metric remains text, not an SVG label, so it is readable and selectable.
+- Nested chart must receive a descriptive `chartAriaLabel`.
+
+### Responsive behavior
+
+Header row uses `justify-between` and wraps text naturally inside the parent modal/page width; chart scales fluidly.
+
+### Implementation rules
+
+- Compose this in the Last 4 Weeks modal and any future participation-summary surface.
+- Keep chart behavior in `ParticipationTrendChart`; do not add alternate SVG implementations inside the card.
+
+### Visual examples
+
+Rendered at `/design-system/components#participationtrendcard` and composed by `/design-system/components#heartchartlastfourweeksmodal`.
+
+---
+
+## TipCarousel
+
+**Status**: Draft (promoted from `HeartChartLastFourWeeksModal` after the modal-family audit identified the guidance-card carousel as reusable)
+**Source**: `src/components/tip-carousel.tsx`
+**Figma**: AMFM Portal file — Modal / last 4 weeks (`3727:32514`), invitation tip cards + arrow controls + pagination dots
+
+### Purpose
+
+Reusable two-card guidance carousel for modal/page tips: visible article cards, labelled live region, pagination dots, and shared outline icon buttons.
+
+### Anatomy
+
+Carousel wrapper (`data-slot="tip-carousel"`) → labelled live grid → visible tip articles (`data-slot="tip-carousel-card"`) → decorative dot row (`data-slot="tip-carousel-dot"`) → previous/next `Button variant="outline" size="icon"` controls.
+
+### Variants
+
+| Prop | Values | Use for |
+|---|---|---|
+| `visibleItemCount` | `1` / `2` | Defaults to `2`; the second card is hidden until the `sm` breakpoint so narrow modal bodies show one card at a time. Use `1` for layouts that should never show paired cards. |
+| `previousLabel` / `nextLabel` | `string` | Override when multiple carousels appear on one screen and labels need more specificity. |
+
+### States
+
+First page, next page, previous page, single-page disabled controls.
+
+### Properties / API
+
+```ts
+interface TipCarouselItem {
+  title: string;
+  description: ReactNode;
+}
+
+interface TipCarouselProps extends ComponentProps<"div"> {
+  items: TipCarouselItem[];
+  ariaLabel: string;
+  visibleItemCount?: 1 | 2;
+  previousLabel?: string;
+  nextLabel?: string;
+}
+```
+
+### Design tokens used
+
+`bg-background`, `border-border-secondary`, `text-foreground`, `text-text-secondary`, `bg-primary`, `bg-muted`, shared `Button variant="outline" size="icon"`.
+
+### Accessibility requirements
+
+- Visible item grid has a caller-supplied `ariaLabel` and `aria-live="polite"` so card changes are announced without becoming intrusive.
+- Tip cards are real `<article>` elements with visible headings.
+- Previous/next controls are real buttons and become disabled only when there is one item total. A two-item default carousel still pages because narrow viewports show one card at a time.
+- Dots are decorative and hidden from assistive tech.
+
+### Responsive behavior
+
+One visible card by default; two visible columns from `sm` up when `visibleItemCount={2}`. Arrow buttons sit just outside the card grid's horizontal edges and remain shared outline icon buttons.
+
+### Implementation rules
+
+- Use this for simple guidance/tip carousels before implementing a second local carousel.
+- Keep item shape intentionally small. If a future carousel needs media, links, or progress persistence, extend this component deliberately with tests instead of forking the modal.
+
+### Visual examples
+
+Rendered at `/design-system/components#tipcarousel` and composed by `/design-system/components#heartchartlastfourweeksmodal`.
 
 ---
 
@@ -1161,7 +1780,7 @@ interface HeartChartLinkCardProps {
 
 ### Design tokens used
 
-`bg-secondary`, `bg-background`, `border-border-secondary`, `border-input`, `text-text-secondary`, `text-muted-foreground`, `text-fg-quaternary`, `bg-button-outline-bg`, `border-button-outline-border`, `text-button-outline-fg`, `text-button-outline-icon`, `shadow-xs`, `shadow-sm`, `rounded-md`, `rounded-sm`.
+`bg-secondary`, `bg-background`, `border-border-secondary`, `border-input`, `text-text-secondary`, `text-muted-foreground`, `text-fg-quaternary`, `bg-button-outline-bg`, `border-button-outline-border`, `text-button-outline-fg`, `text-button-outline-icon`, `shadow-xs`, `shadow-sm`, `rounded-md`, `rounded-sm`, `size-16.5`, `grid-cols-balanced-actions`.
 
 ### Accessibility requirements
 
@@ -1174,7 +1793,7 @@ interface HeartChartLinkCardProps {
 
 ### Responsive behavior
 
-Stacks vertically on narrow screens so the URL input and actions do not overflow; the QR preview is centered, the labelled URL control stays full-width and truncates inside the native input, and the compact actions center as a share/download group below `360px` because the full spacer grid is wider than the available content. From `360px` up, the action grid centers the "Download QR" button with the share icon positioned to its left. From `sm` up, QR, field, and download action sit in a single row while the share affordance is absolutely positioned at the card's top-right edge, matching the Figma modal card.
+Stacks vertically on narrow screens so the URL input and actions do not overflow; the QR preview is centered, the labelled URL control stays full-width and truncates inside the native input, and the compact actions center as a share/download group below `xs`/360px because the full spacer grid is wider than the available content. From `xs` up, `grid-cols-balanced-actions` centers the "Download QR" button with the share icon positioned to its left. From `sm` up, QR, field, and download action sit in a single row while the share affordance is absolutely positioned at the card's top-right edge, matching the Figma modal card.
 
 ### Implementation rules
 
@@ -1230,7 +1849,7 @@ interface HeartChartLinkModalProps {
 
 ### Design tokens used
 
-Shell tokens from `HeartChartModalShell`, plus `text-text-tertiary`, `text-text-brand`, `bg-secondary`, `bg-background`, `border-input`, `text-fg-quaternary`, `shadow-button-inset`, `Button variant="link" size="inline"` for the upload settings CTA, and existing `Button` default-variant styling with `size="compact"` for "Add a campus" (`text-button-primary-icon` on its leading icon).
+Shell tokens from `HeartChartModalShell`, plus `text-text-tertiary`, `text-text-brand`, `bg-secondary`, `bg-background`, `border-input`, `text-fg-quaternary`, `shadow-button-inset`, `grid-cols-heartchart-link-header`, `h-55`, `w-69`, `Button variant="link" size="inline"` for the upload settings CTA, and existing `Button` default-variant styling with `size="compact"` for "Add a campus" (`text-button-primary-icon` on its leading icon).
 
 ### Accessibility requirements
 
@@ -1242,7 +1861,7 @@ Shell tokens from `HeartChartModalShell`, plus `text-text-tertiary`, `text-text-
 
 ### Responsive behavior
 
-Uses the 800px shell width on desktop. Header content collapses to one column on narrow screens and hides the decorative preview so text and URL controls remain usable. The composed `HeartChartLinkCard` stacks in compressed layouts, centering the QR preview and share/download actions while keeping the URL control full-width.
+Uses the 800px shell width on desktop. Header content collapses to one column on narrow screens and switches to `grid-cols-heartchart-link-header` at `md`, matching the Figma text/phone-preview split without repeating arbitrary grid math. The decorative preview is hidden below `md` so text and URL controls remain usable. The composed `HeartChartLinkCard` stacks in compressed layouts, centering the QR preview and share/download actions while keeping the URL control full-width.
 
 ### Implementation rules
 
@@ -1254,7 +1873,256 @@ Uses the 800px shell width on desktop. Header content collapses to one column on
 
 ### Visual examples
 
-Rendered at `/design-system/components#heartchartlinkmodal`, with a dedicated detail page at `/design-system/components/heart-chart-link-modal`.
+Rendered at `/design-system/components#heartchartlinkmodal`, grouped with the July MVP modal family at `/design-system/patterns#heartchart-modal-family`, with a dedicated detail page at `/design-system/components/heart-chart-link-modal`.
+
+---
+
+## InviteUserModal
+
+**Status**: Draft (July 2026 MVP modal pattern; frontend-only invite form and footer actions, with real submission behavior delegated to the caller)
+**Source**: `src/components/invite-user-modal.tsx`
+**Figma**: AMFM Portal file — Modal / invite user (`3724:23382`)
+
+### Purpose
+
+Invite-team modal pattern composed from `HeartChartModalShell`, `Input`, `Select`, `Label`, and `Button`. It captures the visual/modal contract for inviting team members while leaving persistence, validation messaging, and delivery side effects outside the design-system component.
+
+### Anatomy
+
+`HeartChartModalShell size="md"` → header title + supporting church-name copy → body form (`data-slot="invite-user-modal-form"`) containing labelled email input, labelled role select, and shared `InfoNote` → footer actions: `Cancel` and `Send invite`.
+
+### Variants
+
+No formal visual variant prop yet. `defaultRole` supports `"marriage-champion"` and `"admin"` because those are the role options represented by this modal. Add new roles through the option list only after the product role model is known.
+
+### States
+
+Closed/open, empty email, selected role, disabled submit when `onSendInvite` is omitted, footer cancel close.
+
+### Properties / API
+
+```ts
+type InviteUserRole = "admin" | "marriage-champion";
+
+interface InviteUserSubmitPayload {
+  email: string;
+  role: InviteUserRole;
+}
+
+interface InviteUserModalProps {
+  trigger: ReactElement;
+  churchName: string;
+  defaultRole?: InviteUserRole;
+  onCancel?: () => void;
+  onSendInvite?: (payload: InviteUserSubmitPayload) => void;
+}
+```
+
+### Design tokens used
+
+Shell tokens from `HeartChartModalShell`, plus `bg-secondary`, `border-border-secondary`, `text-text-tertiary`, `text-text-secondary`, `text-foreground`, shared `InfoNote`, `Button variant="outline" size="control"`, default `Button size="control"`, shared `Input`, shared `Select`, and shared `Label`.
+
+### Accessibility requirements
+
+- Modal title is the visible `DialogTitle`: "Invite Team".
+- Email and role controls use visible labels. The email input keeps the Figma placeholder but also includes hidden helper text that multiple addresses may be comma separated.
+- The role note composes `InfoNote`, which uses `role="note"` and visible text, not a purely decorative icon-only alert.
+- Cancel composes `DialogClose asChild` around the shared outline button so it closes through Radix behavior. Send is a real submit button associated to the form via a `React.useId()`-derived form ID, so multiple mounted modal instances do not duplicate DOM IDs or cross-wire footer submit behavior.
+- The submit callback is caller-owned and receives the current email field value plus selected role. This component does not imply network behavior, validation schema, toast copy, or user mutation.
+
+### Responsive behavior
+
+Uses the 640px `size="md"` shell. The body form is single-column and scrolls inside the shell body if constrained. Footer buttons inherit `DialogFooter` wrapping/alignment behavior.
+
+### Implementation rules
+
+- Reuse existing `Input`, `Select`, `Label`, and `Button`; do not inline form-control chrome in this modal.
+- Keep validation and delivery side effects outside the presentational design-system component until the real product flow exists; the component only packages the visible form payload for the caller.
+- Passive informational notes must use `InfoNote`; do not duplicate the gray bordered note surface inside another modal.
+
+### Visual examples
+
+Rendered at `/design-system/components#inviteusermodal` and grouped with the July MVP modal family at `/design-system/patterns#heartchart-modal-family`.
+
+---
+
+## HeartChartQuickTipModal
+
+**Status**: Draft (July 2026 MVP HeartChart modal pattern; uses a Figma-derived poster while real video source/captions remain unsupplied)
+**Source**: `src/components/heartchart-quick-tip-modal.tsx`
+**Figma**: AMFM Portal file — Modal/quick tip (`3727:32459`)
+
+### Purpose
+
+Quick-tip modal pattern for surfacing a short HeartChart video, supporting participation guidance, and a footer action into HeartChart Resources.
+
+### Anatomy
+
+`HeartChartModalShell size="sm"` → body `VideoPlayer surface="flat"` → shared `ModalTextSection` with "Growing Momentum" heading and two copy paragraphs → footer primary action `Go to HeartChart Resources`.
+
+### Variants
+
+`posterSrc` can replace the default Figma-derived poster image. `videoSrc` and `captionsSrc` pass through to `VideoPlayer` for real media wiring once supplied. The component intentionally does not expose typography, spacing, or arbitrary content-layout overrides; new content structures should become separate modal components or reusable body blocks.
+
+### States
+
+Closed/open, video poster loaded, footer action disabled when `onGoToResources` is omitted.
+
+### Properties / API
+
+```ts
+interface HeartChartQuickTipModalProps {
+  trigger: ReactElement;
+  posterSrc?: string;
+  videoSrc?: string;
+  captionsSrc?: string;
+  onGoToResources?: () => void;
+}
+```
+
+### Design tokens used
+
+Shell tokens from `HeartChartModalShell`, plus shared `VideoPlayer surface="flat"`, shared `ModalTextSection`, and default `Button size="control"`.
+
+### Accessibility requirements
+
+- Modal title is the visible `DialogTitle`: "Quick Tip".
+- `VideoPlayer` receives `title="Quick Tip video"` so the video region has an accessible name.
+- Footer action has visible text and a decorative leading `FileHeart` icon.
+- The poster image is visual context; until real `videoSrc` and `captionsSrc` values are supplied, this component must not claim completed media accessibility beyond the existing `VideoPlayer` contract.
+
+### Responsive behavior
+
+Uses the 544px `size="sm"` shell. The video keeps the shared 16:9 player behavior and body content stays stacked so the modal can scroll inside the shell on small viewports.
+
+### Implementation rules
+
+- Do not fork the video player or button style locally. Because the modal shell already owns the raised surface, modal-embedded media uses `VideoPlayer surface="flat"` rather than stripping shadows with caller `className`.
+- Keep the content-specific footer action as a caller callback; navigation/routing belongs to the app surface that consumes this modal.
+- Use `ModalTextSection` for the divided heading/body copy block. If multiple future tip modals share the same video/text/footer body anatomy, extract a higher-level video-content modal body component before adding duplicates.
+
+### Visual examples
+
+Rendered at `/design-system/components#heartchartquicktipmodal` and grouped with the July MVP modal family at `/design-system/patterns#heartchart-modal-family`.
+
+---
+
+## HeartChartLastFourWeeksModal
+
+**Status**: Draft (July 2026 MVP HeartChart modal pattern; chart/card and tip carousel now compose promoted reusable components)
+**Source**: `src/components/heartchart-last-four-weeks-modal.tsx`
+**Figma**: AMFM Portal file — Modal / last 4 weeks (`3727:32514`)
+
+### Purpose
+
+Participation-trend modal pattern that explains the last-four-weeks HeartChart completion trend and provides practical invitation prompts.
+
+### Anatomy
+
+`HeartChartModalShell size="md"` → intro copy → shared `ParticipationTrendCard` with date range, total count, and accessible `ParticipationTrendChart` (`data-slot="participation-trend-chart"`) → tip section with heading and shared `TipCarousel` (`data-slot="tip-carousel"`) containing two visible tip cards.
+
+### Variants
+
+No public variant props yet. The current data is fixed demo/Figma content for the design-system page. If real trend data is introduced, pass it through typed data props and preserve the same chart/tip semantics instead of copying the component.
+
+### States
+
+Closed/open, visible trend data, first carousel position, previous/next carousel movement.
+
+### Properties / API
+
+```ts
+interface HeartChartLastFourWeeksModalProps {
+  trigger: ReactElement;
+}
+```
+
+### Design tokens used
+
+Shell tokens from `HeartChartModalShell`, plus shared `ParticipationTrendCard`, shared `ParticipationTrendChart`, and shared `TipCarousel` tokens.
+
+### Accessibility requirements
+
+- Modal title is the visible `DialogTitle`: "Completed the Last 4 Weeks".
+- Trend chart wrapper uses `role="img"` with an accessible label summarizing the March 23 through April 19 chart intent. The chart is a data-driven inline SVG, not an image export or D3/Recharts dependency. The code intentionally corrects the Figma screenshot's impossible `Apr 23` / `Apr 30` axis labels to `Mar 23` / `Mar 30` so visible labels, data, and accessible range agree.
+- X-axis edge labels align to the plot/content bounds: the first label uses `text-anchor="start"` at the plot start, the last label/data point reaches the SVG's right edge with `text-anchor="end"` so `Apr 19` lines up with the right-aligned total-count block, and interior labels remain centered.
+- Tip cards are real articles with visible headings.
+- Carousel arrows are real buttons with labels "Previous tip" and "Next tip" and update the visible tip cards.
+
+### Responsive behavior
+
+Uses the 640px `size="md"` shell. The chart scales to available width. Tip cards collapse to one column on narrow layouts and two columns from `sm` up.
+
+### Implementation rules
+
+- Keep chart geometry inside `ParticipationTrendChart`; do not copy SVG math back into this modal.
+- Keep carousel movement covered by `TipCarousel` tests before adding new carousel states or data props.
+- This modal owns the July MVP explanatory copy and demo data only. Reusable chart/card/carousel behavior belongs in the promoted components.
+
+### Visual examples
+
+Rendered at `/design-system/components#heartchartlastfourweeksmodal` and grouped with the July MVP modal family at `/design-system/patterns#heartchart-modal-family`.
+
+---
+
+## HeartChartResourcesQuickStartModal
+
+**Status**: Draft (July 2026 MVP HeartChart Resources modal; plain video shell uses a Figma-derived poster while real video source/captions remain unsupplied)
+**Source**: `src/components/heartchart-resources-quick-start-modal.tsx`
+**Figma**: AMFM Portal file — HeartChart Resources / Quick Start Guide modal (`3727:32687`)
+
+### Purpose
+
+Plain Quick Start Guide video modal for the HeartChart Resources surface. It exists as one of the five July 2026 MVP modals and proves the shared modal shell can support the no-inner-frame/no-divider variant.
+
+### Anatomy
+
+`HeartChartModalShell size="lg" framed={false} showDivider={false}` → body `VideoPlayer surface="flat"`.
+
+### Variants
+
+`posterSrc` can replace the default Figma-derived poster image. `videoSrc` and `captionsSrc` pass through to `VideoPlayer` for real media wiring once supplied. Shell structure remains fixed because this modal is specifically the plain video-only variant.
+
+### States
+
+Closed/open, video poster loaded. No footer actions.
+
+### Properties / API
+
+```ts
+interface HeartChartResourcesQuickStartModalProps {
+  trigger: ReactElement;
+  posterSrc?: string;
+  videoSrc?: string;
+  captionsSrc?: string;
+}
+```
+
+### Design tokens used
+
+Shell tokens from `HeartChartModalShell`, `grid-rows-modal-no-divider`, shared `VideoPlayer surface="flat"`, and `bg-background`.
+
+### Accessibility requirements
+
+- Modal title is the visible `DialogTitle`: "Quick Start Guide".
+- The shell receives a descriptive hidden transcript summary so screen readers are not left with only a generic dialog name.
+- `VideoPlayer` receives `title="Quick Start Guide video"` so the video region has an accessible name.
+- Real captions/transcript behavior is still blocked on real video/caption assets; do not mark media accessibility complete until those assets exist.
+
+### Responsive behavior
+
+Uses the 768px `size="lg"` shell. Because the design is plain video-only, it disables the inner framed panel and title/body divider while retaining the shared close control and capped shell height.
+
+### Implementation rules
+
+- Use this component for the HeartChart Resources Quick Start Guide modal; do not rebuild a separate plain-video dialog.
+- Keep the poster/image asset replaceable through `posterSrc`; keep real video/caption assets replaceable through `videoSrc` and `captionsSrc`.
+- Because this video already sits inside a modal shell, keep it on `VideoPlayer surface="flat"`; use the raised player only for standalone/page-level video cards.
+- If future resource video modals add author metadata, summary text, or CTAs, create a new resource video modal body component rather than adding unrelated optional branches here.
+
+### Visual examples
+
+Rendered at `/design-system/components#heartchartresourcesquickstartmodal` and grouped with the July MVP modal family at `/design-system/patterns#heartchart-modal-family`.
 
 ---
 
@@ -1262,7 +2130,7 @@ Rendered at `/design-system/components#heartchartlinkmodal`, with a dedicated de
 
 **Status**: Production Ready
 **Source**: `src/components/photo-backdrop.tsx`
-**Figma**: AMFM Portal file, node `1909:25767` ("Onboarding/login"), node `1909:25768` ("Onboarding/sign up"), node `1909:25769` ("Onboarding/Create Profile") — all three use the same two arbitrary blur values (`backdrop-blur-[20px]` content layer, `backdrop-blur-[8px]` overlay) and `bg-overlay`/85% scrim (the `"flat"` variant, default). **Not yet confirmed**: whether the sign-up/Create Profile screens' background photos are the same asset as `public/login-background.jpg` or distinct exports — verify before assuming this component needs no changes for those routes. Also node `1909:25772` ("Onboarding/First run church admin") — the `"radial"` variant, used on `/welcome`; this screen's background photo is a distinct church-congregation photo in Figma but currently reuses `public/login-background.jpg` as a stand-in (product decision — see `DESIGN.md` Known gaps).
+**Figma**: AMFM Portal file, node `1909:25767` ("Onboarding/login"), node `1909:25768` ("Onboarding/sign up"), node `1909:25769` ("Onboarding/Create Profile") — all three use the same two blur values (20px content layer, 8px overlay) and `bg-overlay`/85% scrim (the `"flat"` variant, default). These are implemented as `backdrop-blur-photo` and Tailwind's built-in `backdrop-blur-sm`, respectively. **Not yet confirmed**: whether the sign-up/Create Profile screens' background photos are the same asset as `public/login-background.jpg` or distinct exports — verify before assuming this component needs no changes for those routes. Also node `1909:25772` ("Onboarding/First run church admin") — the `"radial"` variant, used on `/welcome`; this screen's background photo is a distinct church-congregation photo in Figma but currently reuses `public/login-background.jpg` as a stand-in (product decision — see `DESIGN.md` Known gaps).
 
 ### Purpose
 
@@ -1270,14 +2138,14 @@ Full-bleed background photo + dark scrim shared by any onboarding-style surface 
 
 ### Anatomy
 
-Outer full-viewport container → absolutely-positioned background image (`bg-[url('/login-background.jpg')] bg-cover bg-center`) → a scrim-tinted content layer (`children`) — the scrim itself is one of two treatments, see Variants.
+Outer full-viewport container (`data-slot="photo-backdrop"`) → absolutely-positioned background image (`data-slot="photo-backdrop-image"`, `bg-login-photo bg-cover bg-center`) → a scrim-tinted content layer (`data-slot="photo-backdrop-content"`, containing `children`) — the scrim itself is one of two treatments, see Variants.
 
 ### Variants (`scrim` prop)
 
 | Variant | Treatment | Use for |
 |---|---|---|
-| `"flat"` (default) | `bg-overlay` at `opacity-85`, layered on a two-stage blur (`backdrop-blur-[20px]` content / `backdrop-blur-[8px]` overlay) | `/login`, `/signup`, `/create-profile`, `/` — the original treatment, unchanged |
-| `"radial"` | An unblurred radial-gradient vignette (`rgba(10,13,18,.7)` center → `rgba(10,13,18,.9)` edge — the `overlay` token's rgb equivalent; Tailwind arbitrary gradients can't reference the CSS custom property directly) | `/welcome` (first-run church admin) |
+| `"flat"` (default) | `bg-overlay` at `opacity-85`, layered on a two-stage blur (`backdrop-blur-photo` content / `backdrop-blur-sm` overlay) | `/login`, `/signup`, `/create-profile`, `/` — the original treatment, unchanged |
+| `"radial"` | An unblurred radial-gradient vignette (`bg-photo-backdrop-radial-scrim`, the `overlay` token's rgb equivalent) | `/welcome` (first-run church admin) |
 
 Adding `scrim="radial"` (or omitting `scrim` for the existing default) is fully backward-compatible — no visual change to any existing consumer.
 
@@ -1296,7 +2164,7 @@ None — static decorative backdrop, for either variant.
 
 ### Design tokens used
 
-`bg-overlay` (`"flat"` scrim, `opacity-85`), `backdrop-blur-[20px]` / `backdrop-blur-[8px]` (arbitrary blur values, `"flat"` only — no blur token exists yet; don't invent one without a second real use case per `CLAUDE.md`'s anti-premature-abstraction guidance). `"radial"` uses a hardcoded `rgba(10,13,18,*)` gradient rather than a token reference — see Implementation rules.
+`bg-login-photo`, `bg-overlay` (`"flat"` scrim, `opacity-85`), `backdrop-blur-photo` (20px custom effect token), `backdrop-blur-sm` (Tailwind's built-in 8px blur), and `bg-photo-backdrop-radial-scrim` (radial scrim utility in `src/tokens/effects.css`).
 
 ### Accessibility requirements
 
@@ -1310,7 +2178,7 @@ Decorative background image — no `alt` text needed (it's a CSS background, not
 
 - Shared across routes — changes here affect every consuming page; verify `/login`, `/signup`, `/create-profile`, `/`, and `/welcome` all still look correct after any edit.
 - Don't duplicate this pattern per-route; extend `className` (and now `scrim`) instead — this is exactly why the radial vignette became a variant of this component rather than a second, parallel backdrop implementation.
-- The `"radial"` gradient's `rgba(10,13,18,*)` values are the `overlay` token's rgb equivalent, hardcoded because Tailwind's arbitrary `bg-[radial-gradient(...)]` syntax can't cleanly reference a CSS custom property inline. If a second radial/gradient scrim use case appears, revisit converting this to a real token-driven gradient instead of a second hardcoded value.
+- The `"radial"` gradient's `rgba(10,13,18,*)` values are the `overlay` token's rgb equivalent and are centralized as `bg-photo-backdrop-radial-scrim` in `src/tokens/effects.css`. Do not reintroduce inline `bg-[radial-gradient(...)]` call-site classes for this treatment.
 - **Every consumer's direct `children` element must carry `relative z-10` (or equivalent).** The scrim layer (either variant) is `absolute inset-0` and is rendered as a sibling of `children` inside the same positioned parent; CSS stacks positioned elements above non-positioned ones regardless of DOM order, so an unpositioned `children` root paints — and receives pointer events — *underneath* the scrim even though the scrim appears first in JSX. `/login`, `/signup`, `/`, and `/create-profile` all apply `relative z-10` to their child (`AuthCard`, the hero `div`, `Card`); `/welcome` was missing it (its content silently sat under the scrim) and has been fixed to match — see `DESIGN.md`'s "Stacking order on full-bleed backdrops" for the general rule. Don't rely on incidental positioning (e.g. a child that happens to be `relative` for other reasons) — set it explicitly so the requirement survives refactors.
 
 ### Visual examples
@@ -1470,7 +2338,7 @@ Renders the AMFM ministry wordmark with a "Powered by" caption — the inverse p
 
 ### Anatomy
 
-"Powered by" caption text (`text-xs`, `font-medium`, `tracking-[0.24px]`, `text-text-tertiary`) + adjacent logo mark, itself two stacked pieces read off the Figma screenshot: the `font-display font-semibold text-foreground` wordmark ("amfm") and, to its right, a 3-line, tiny (`text-[5.5px]`/`leading-[7px]`) tracked-uppercase caption ("Association" / "of Marriage" / "& Family Ministries", `text-text-tertiary`) — the real mark's flattened Figma vector renders both pieces as one image, which the previous version of this component omitted entirely.
+"Powered by" caption text (`text-xs`, `font-medium`, `tracking-label`, `text-text-tertiary`) + adjacent logo mark, itself two stacked pieces read off the Figma screenshot: the `font-display font-semibold text-foreground` wordmark ("amfm") and, to its right, a 3-line `text-amfm-logo-caption` caption ("Association" / "of Marriage" / "& Family Ministries", `text-text-tertiary`) — the real mark's flattened Figma vector renders both pieces as one image, which the previous version of this component omitted entirely.
 
 **Note on `font-semibold` (600)**: `Financier Display` (see `DESIGN.md` Typography system) only ships static 300/400/500/700/900 weight files, no 600 — the browser's standard font-weight matching falls back to the nearest heavier available weight (700, Bold) for this wordmark rather than a true semibold cut. Pre-existing behavior (the prior `Fraunces` substitute only loaded 300/400 and hit the same fallback), not a regression introduced by the Financier Display migration.
 
@@ -1484,7 +2352,7 @@ No props — fixed layout (`flex h-6 items-center gap-2`), matching `HeartChartL
 
 ### Design tokens used
 
-`text-text-tertiary`, `text-xs` (caption); `font-display`, `text-foreground` (wordmark approximation); `text-text-tertiary` again for the tiny tagline lines. The tagline's `text-[5.5px]`/`leading-[7px]`/`tracking-[0.4px]` are one-off arbitrary values, not tokens — sized by eye against the Figma screenshot's ~24px-tall mark, the same tier of hand-tuning as `GoogleIcon`'s path coordinates. The real mark, once available, would be a raster/vector asset and not token-driven.
+`text-text-tertiary`, `text-xs`, `tracking-label` (caption); `font-display`, `text-foreground` (wordmark approximation); `text-amfm-logo-caption` + `text-text-tertiary` for the tiny tagline lines. `text-amfm-logo-caption` centralizes the sourced tiny caption size/line-height/tracking in `src/tokens/typography.css` so the component does not carry undocumented arbitrary type values. The real mark, once available, would be a raster/vector asset and not token-driven.
 
 ### Accessibility requirements
 
@@ -1588,7 +2456,7 @@ No props — content is authored inline (`SLIDES` constant); not designed to be 
 
 ### Responsive behavior
 
-Slide height is `h-[min(70vh,560px)]`; slide content padding scales `px-6 py-8` (mobile) → `sm:px-12 sm:py-10`; lists inside slides go `grid-cols-1` → `sm:grid-cols-2`.
+Slide height is `h-[min(70vh,560px)]`, registered as a temporary `no-undocumented-arbitrary-visual-values` exception because it is a component-specific viewport clamp rather than a reusable spacing scale value; slide content padding scales `px-6 py-8` (mobile) → `sm:px-12 sm:py-10`; lists inside slides go `grid-cols-1` → `sm:grid-cols-2`.
 
 ### Implementation rules
 
@@ -1652,6 +2520,8 @@ interface HeartChartSummaryProps {
   percentage: number;
   completedCount: number;
   totalAttenders: number;
+  /** `constrained` matches the standalone component reference; `fluid` lets a parent layout own width. */
+  width?: "constrained" | "fluid";
   onQuickTip?: () => void;
   onViewLastFourWeeks?: () => void;
   onShareLink?: () => void;
@@ -1676,8 +2546,9 @@ interface HeartChartSummaryProps {
 
 ### Responsive behavior
 
-- Not yet responsive below its Figma-authored desktop width (the source frame is a fixed `564px`) — this is a known follow-up, not a deliberate fixed-width decision like `AuthCard`. Before shipping into a real dashboard route, verify against `DESIGN.md`'s Layout/grid rules (mobile-first, single column below `sm`) and add `sm:`/`md:` breakpoint handling for the stat row (donut + numbers) and the 3-button action row (which will need to wrap or stack on narrow viewports) — flagged here rather than guessed, since no dashboard route or Figma mobile frame exists yet to verify against.
-- The card itself is otherwise fluid-width (`w-full`) so it can be dropped into a responsive grid per `DESIGN.md`'s Grid system once a consuming page exists.
+- Defaults to the constrained standalone reference width (`width="constrained"`, `max-w-heartchart-card`) for component-gallery usage and one-off embeds.
+- Uses `width="fluid"` on `/dashboard` so the parent two-column grid owns the card width, matching the live dashboard frame (`4255:30872`) where `HeartChartSummary` and `WeDoCard` fill their grid columns instead of keeping the narrower standalone cap.
+- Internal rows wrap (`flex-wrap`) for narrower containers; exact mobile/tablet Figma spacing for this dashboard card remains unconfirmed, so do not add breakpoint-specific visual changes without a mobile reference or browser evidence.
 
 ### Implementation rules
 
@@ -1787,7 +2658,7 @@ Standard Radix `DropdownMenu.Root`/`Trigger`/`Content`/`Item` props (`open`, `on
 
 ### Design tokens used
 
-`bg-popover`, `text-popover-foreground`, `bg-accent`/`text-accent-foreground` (focus), `text-destructive` (destructive variant), default `border`/`shadow-md` — the same token pattern as `Select`'s listbox. Callers may override via `className` for a fixed-theme surface — see `GlobalNav`'s account menu below, which overrides to its `nav-*` tokens instead of the swappable `popover` tokens, since it's an extension of `GlobalNav`'s theme-fixed dark chrome, not a themed app-surface popover.
+`bg-popover`, `text-popover-foreground`, `bg-accent`/`text-accent-foreground` (focus), `text-destructive` (destructive variant), `min-w-32`, default `border`/`shadow-md` — the same token pattern as `Select`'s listbox. Callers may override via `className` for a fixed-theme surface — see `GlobalNav`'s account menu below, which overrides to its `nav-*` tokens instead of the swappable `popover` tokens, since it's an extension of `GlobalNav`'s theme-fixed dark chrome, not a themed app-surface popover.
 
 ### Accessibility requirements
 
@@ -1801,6 +2672,7 @@ Content width is caller-controlled (`className`); Radix's own collision detectio
 ### Implementation rules
 
 - Hand-authored `src/components/ui/dropdown-menu.tsx` from `@radix-ui/react-dropdown-menu` (added to `package.json`; installs fine from `registry.npmjs.org` despite `ui.shadcn.com` itself being unreachable — same `CLAUDE.md` shadcn-CLI-unreachable workflow already used for `Select`/`Dialog`), matching upstream shadcn/ui's `dropdown-menu` shape (`data-slot` attributes, the same destructive/inset `data-*` styling hooks).
+- Menu and submenu content use `min-w-32`, matching the 8rem default minimum without a bracketed arbitrary class. Keep width changes caller-owned through `className` rather than hardcoding a second primitive minimum.
 - Includes the full upstream primitive surface (checkbox/radio items, labels, separators, submenus) even though `GlobalNav`'s account menu today only uses `DropdownMenuItem` — kept as a single generic primitive rather than a stripped-down one-off, consistent with `Select`/`Dialog` both shipping their full Radix-mapped surface.
 
 ### Visual examples
@@ -1838,7 +2710,7 @@ None — a single component with two rail states (see below) plus an independent
 | Expanded (hover / focus) | `w-74` (296px), triggered by hovering the rail with a pointer, or focusing anything inside it via keyboard (see Implementation rules — neither Figma reference shows a dedicated toggle chrome, and the task that introduced this behavior explicitly calls for hover instead of the earlier click-to-toggle). Every item's label grows in (`max-width`/`opacity` transition). Section headings switch to their long form ("Your Church"/"Ministry Tools"), left-aligned. The header cross-fades to the full logo lockup. The account card grows to show name, email, and a `ChevronsUpDown` affordance. When `overlay` is set, this expansion **overlays** page content instead of pushing it — see Implementation rules. |
 | Pinned open (≥1600px viewport) | Same visual as "Expanded" above, but forced regardless of hover/focus/`defaultOpen`, and it stays that way for as long as the viewport is ≥1600px — see `PINNED_OPEN_QUERY` in Implementation rules. When `overlay` is set, the reserved layout space (the spacer) widens to match, so the permanently-open rail no longer overlays content at this width — it becomes a real part of the layout, matching a persistent-sidebar pattern instead of a transient hover flyout. |
 | Active item (e.g. "Home", "Our Marriage Champions") | `bg-gradient-to-r from-nav-active-from to-nav-active-to` pill, `text-nav-foreground` label, icon at `opacity-70` — present in **both** collapsed and expanded states, matching both Figma references exactly. Also sets `aria-current="page"`. `active` is derived from the current route via `usePathname()` (exact match against `item.href`), not stored per nav-data item — see Implementation rules. |
-| Hover / Focus (items) | Not pixel-sourced (Figma shows only default/active) — added by product decision per `DESIGN.md`'s Interaction principles ("every interactive control has a visible hover/focus treatment"): `hover:bg-white/5` on inactive items, `focus-visible:ring-ring/50 focus-visible:ring-[3px]` on every interactive element (items, account card). |
+| Hover / Focus (items) | Not pixel-sourced (Figma shows only default/active) — added by product decision per `DESIGN.md`'s Interaction principles ("every interactive control has a visible hover/focus treatment"): `hover:bg-white/5` on inactive items, `focus-visible:ring-ring/50 focus-visible:ring-3` on every interactive element (items, account card). |
 | Account menu open | Clicking the account card (avatar + name, works in either rail state) opens a `DropdownMenu` flyout to its side — see `DropdownMenu` above. The rail stays expanded for as long as the menu is open, even if the pointer leaves the rail, so the flyout never appears anchored to a collapsed/hidden trigger. |
 | External link (Marriage Ministry Profile, WeDo) | `target="_blank" rel="noopener noreferrer"` plus a `sr-only` "(opens in a new tab)" suffix on the label — not a Figma-visible affordance, added for accessibility. |
 
@@ -1859,7 +2731,7 @@ Uncontrolled by design (internal `useState`, now driven by hover/focus/account-m
 
 ### Design tokens used
 
-`nav-bg`, `nav-surface-from`/`nav-surface-to` (chrome gradient, `/90` opacity), `nav-border`, `nav-active-from`/`nav-active-to` (active-item gradient), `nav-foreground`, `nav-foreground-muted`, `nav-foreground-subtle`, `nav-success` (online indicator) — see `DESIGN.md` Color tokens for the full table and why these are independent, theme-fixed tokens rather than reusing coincidentally-equal swappable ones (`muted-foreground`, `text-tertiary`, `foreground`). Also `border-white/8` (outer chrome border, a Tailwind opacity modifier — no new token needed), `backdrop-blur-2xl` (Tailwind's built-in 40px blur, exactly matching Figma's "Backdrop blurs/backdrop-blur-xl" effect radius — Figma's own name for this effect doesn't line up with Tailwind's `blur-xl`/24px, but the *value* does match `blur-2xl`/40px, so no arbitrary blur value was needed, unlike `PhotoBackdrop`'s `backdrop-blur-[20px]`/`[8px]`), `w-20`/`w-74`/`w-26`/`w-80`/`max-w-40`/`max-w-60` (Tailwind v4's dynamic spacing-scale utilities — real scale values, not arbitrary/bracketed ones, since Tailwind v4 generates any `w-<n>`/`max-w-<n>` from the shared `--spacing` variable; `w-26`/`w-80` are the `overlay` spacer's collapsed/pinned-open reserved widths — see Implementation rules). The account menu overrides `DropdownMenu`'s default `bg-popover`/`text-popover-foreground` with `bg-nav-surface-from`/`border-nav-border`/`text-nav-foreground` instead, since it's a fixed-dark extension of the rail, not a themed app-surface popover. `z-40` (the `overlay` rail's stacking level — above ordinary page content, below `Dialog`/`DropdownMenu`'s `z-50`; see DESIGN.md's Stacking order note).
+`nav-bg`, `nav-surface-from`/`nav-surface-to` (chrome gradient, `/90` opacity), `nav-border`, `nav-active-from`/`nav-active-to` (active-item gradient), `nav-foreground`, `nav-foreground-muted`, `nav-foreground-subtle`, `nav-success` (online indicator) — see `DESIGN.md` Color tokens for the full table and why these are independent, theme-fixed tokens rather than reusing coincidentally-equal swappable ones (`muted-foreground`, `text-tertiary`, `foreground`). Also `border-white/8` (outer chrome border, a Tailwind opacity modifier — no new token needed), `backdrop-blur-2xl` (Tailwind's built-in 40px blur, exactly matching Figma's "Backdrop blurs/backdrop-blur-xl" effect radius — Figma's own name for this effect doesn't line up with Tailwind's `blur-xl`/24px, but the *value* does match `blur-2xl`/40px, so no arbitrary blur value was needed), `tracking-label` (section-heading letter spacing), `transition-nav-rail`/`transition-nav-content`/`transition-nav-inset` (named motion utilities), and `w-20`/`w-74`/`w-26`/`w-80`/`h-17`/`max-w-40`/`max-w-60` (Tailwind v4's dynamic spacing-scale utilities — real scale values, not arbitrary/bracketed ones, since Tailwind v4 generates them from the shared `--spacing` variable; `w-26`/`w-80` are the `overlay` spacer's collapsed/pinned-open reserved widths, and `h-17` is the account-card height — see Implementation rules). The account menu overrides `DropdownMenu`'s default `bg-popover`/`text-popover-foreground` with `bg-nav-surface-from`/`border-nav-border`/`text-nav-foreground` instead, since it's a fixed-dark extension of the rail, not a themed app-surface popover. `z-40` (the `overlay` rail's stacking level — above ordinary page content, below `Dialog`/`DropdownMenu`'s `z-50`; see DESIGN.md's Stacking order note). The account online indicator's `border-[1.5px]` is a registered temporary exception because rounding to 1px or 2px visibly changes the small fixed-dark punch-through ring.
 
 ### Accessibility requirements
 
@@ -1886,7 +2758,7 @@ Above **1600px** (`PINNED_OPEN_QUERY`, tracked via `window.matchMedia`), the rai
 - **Pinned open ≥1600px, tracked via `matchMedia`, not a Tailwind breakpoint class**: `pinnedOpen` is real `useState`, synced from `window.matchMedia(PINNED_OPEN_QUERY).matches` in an effect (`change` listener, cleaned up on unmount) rather than expressed as `min-[1600px]:` utility overrides sprinkled across every conditional class in the component. This was chosen because `open`'s visual states (labels, headings, header logo, account card) are already driven by a single JS boolean throughout the file — folding a second, viewport-driven "force open" signal into that same boolean via `syncOpen()` keeps one code path for "what does open/closed look like," rather than duplicating every ternary with a parallel breakpoint-scoped override. `Escape` does not un-pin the rail while the viewport is ≥1600px — `syncOpen()` recomputes `open` from all four signals including `pinnedOpen` immediately after `Escape` clears `hoveredRef`/`focusedRef`, so the rail snaps back open, matching "stays pinned open" rather than being dismissible at this width.
 - **`overlay` prop: fixed rail + in-flow spacer, so expansion overlays content instead of pushing it**: when `overlay` is `true`, the rail itself renders `fixed inset-y-3 left-3 z-40` (escaping normal layout flow entirely, pinned to the viewport) instead of `h-full` inside its caller's flex/grid box, and a second, plain in-flow `aria-hidden` spacer element (width `w-26` collapsed / `w-80` pinned-open — see Design tokens used) is rendered as a sibling *before* it. The spacer is what surrounding layout (e.g. `MarriageChampionsPageShell`'s outer flex row) actually sees and reserves space for; the rail floats above it and above whatever content sits to its right. Because the rail no longer participates in the layout's box model, expanding it via hover/focus grows its `fixed` box past the spacer's reserved width and paints over the adjacent content (at `z-40`, above ordinary page content but below `Dialog`/`DropdownMenu`'s `z-50`) instead of shoving that content sideways — this is the fix for the reported "nav slides content over" bug. `overlay` defaults to `false` (a plain in-flow `h-full` element, exactly the pre-existing behavior) so the `/design-system` gallery's bounded demo box isn't affected — see Properties/API.
 - **Why this couldn't stay purely "the caller decides positioning"**: the rail previously documented itself as not assuming its own screen position (letting a caller-provided `sticky`/`h-screen`/`p-3` wrapper handle placement). That approach can't produce overlay-not-push behavior on its own: a flex sibling's box always reserves space for its rendered width, so *any* width-animating flex item pushes adjacent siblings, regardless of how the caller wraps it. Overlay behavior requires removing the rail from flow (`fixed`) plus a matching in-flow placeholder — both are now owned by the rail itself (gated behind `overlay`) rather than re-implemented per call site, so the two real app-shell consumers (`MarriageChampionsPageShell`, `/heartchart-resources`) don't each hand-roll the same spacer math. The trade-off: those two call sites must pass `overlay` explicitly and must not also wrap `GlobalNav` in their own `sticky`/`p-3` box (both have had that wrapper removed in the same change) — see Known gaps in `DESIGN.md` if a third consumer needs a different arrangement.
-- **Same markup, animated, not two swapped renders**: every collapsed/expanded difference (labels, section headings, header logo, account-card text) is implemented as one continuously-mounted DOM tree with `transition-[width]` (root) and `transition-[max-width,opacity,padding,gap]` (content) — never a conditional swap between two different JSX trees — so the collapse/expand reads as one smooth morph. See `DESIGN.md` Motion rules.
+- **Same markup, animated, not two swapped renders**: every collapsed/expanded difference (labels, section headings, header logo, account-card text) is implemented as one continuously-mounted DOM tree with named motion utilities (`transition-nav-rail`, `transition-nav-content`, `transition-nav-inset`) — never a conditional swap between two different JSX trees — so the collapse/expand reads as one smooth morph. See `DESIGN.md` Motion rules.
 - **Icons are `lucide-react` "closest stable equivalent" substitutes**, not traced Untitled-UI SVGs, matching the precedent set by `Select`'s `ChevronDown` and `BenefitListItem`'s `CircleCheck`. Two are worth flagging specifically since Figma's own component-description tags didn't match their rendered glyph (verified by screenshotting each node directly rather than trusting the tags): "Loveology" renders as a `»` double-chevron in Figma, not an atom/molecule as its Figma description tags suggested — mapped to `ChevronsRight`. "Small Groups" ("intersect-three") renders as three overlapping circles, not a lightning bolt as its tags suggested — mapped to `Blend`. "WeDo"'s heart-with-swirl glyph has no close `lucide-react` equivalent; `HeartHandshake` was chosen for semantic fit (partnership/community), not pixel similarity. The account menu's icons (`User`, `Building2`, `Settings`, `CreditCard`, `FileText`) are likewise semantic-fit `lucide-react` substitutes read off the supplied screenshot, not traced from a Figma node.
 - **Header logo is now the real exported asset, not hand-authored text**: `public/AMFM_Collaped.svg` (48×17, collapsed logomark) and `public/AMFM_Expanded.svg` (169×33, expanded lockup) were supplied directly and are rendered via `next/image` (`unoptimized`, matching `HeartChartLogo`'s precedent for pre-rasterized static SVG exports) inside two absolutely-positioned, opacity-cross-faded layers — the same cross-fade structure the old text version used, just with real images instead of a `font-display` approximation. This resolved the collapsed-state clipping/off-center bug: the collapsed asset's 48px intrinsic width exactly fills the 80px rail's 48px content area (80 − 2×16px `px-4`), so it renders flush within the existing padding with no separate centering math needed. See `DESIGN.md` Known gaps for the resolution note.
 - **Expanded-state logo indent is set directly on the logo layer (`left-5`), not via padding on the header wrapper**: the header `<div>` used to carry `px-5`/`px-4`, but both logo layers are `absolute inset-0`/`inset-y-0`, and an absolutely positioned child resolves its inset against its containing block's *padding box* — so that padding had no effect on either layer. It happened to look correct in the collapsed state only because the collapsed asset is centered (`justify-center`) inside the full-width box, and centering a box is unaffected by equal left/right padding being ignored. The expanded lockup is left-aligned instead, so it rendered flush against the rail's true left edge (`x=0`) rather than the intended 20px indent that lines up with "Your Church" below it. Fixed by dropping the wrapper's now-inert padding and setting `left-5` directly on the expanded layer, mirroring the identical rule for section headings immediately below.
@@ -1908,7 +2780,7 @@ Rendered live in the Marriage Champions shell (`/marriage-champions`, `/marriage
 
 ## VideoPlayer
 
-**Status**: Draft — implemented and functional (real `<video>` element, working play/pause/seek/mute/fullscreen), but shipped without a real video asset/captions file and with several states built from generic interaction principles rather than a Figma reference (see States and Implementation rules)
+**Status**: Draft — implemented with a real `<video>` element and source-backed play/pause/seek/mute/fullscreen controls, but current product routes ship without real video assets/captions. When `src` is omitted, the component renders a static poster-only visual preview and does not expose fake media controls (see States and Implementation rules)
 **Source**: `src/components/video-player.tsx` (promoted from `src/app/welcome/_components/`, see Implementation rules)
 **Figma**: AMFM Portal file, node `1894:16438` ("Video player 16:9"), within `Onboarding/First run church admin` (node `1909:25772`); second confirmed instance on "Our Marriage Champions / Empty" (node `3724:23167`), "Video player 16:9" node `3724:23180` — first appearance of any video-playback UI in the file (distinct from `DposystemStory`, which has no audio/video playback of its own)
 
@@ -1918,26 +2790,33 @@ Plays an embedded video with a branded poster/paused state and a persistent scru
 
 ### Anatomy
 
-- Outer container: 16:9 aspect box (`aspect-video`), `rounded-2xl`, hairline border, elevated drop shadow (see Design tokens)
-- Real `<video>` element, `poster`/`src`, `object-cover`, fills the container; an optional `<track kind="captions">` child when `captionsSrc` is supplied
-- Centered play-button overlay (shown only while paused): `size-16` circle, `backdrop-blur-[8px]`, translucent dark fill, centered play glyph (20px) — the whole circle is a real `<button>`
-- Bottom gradient action bar (`bg-gradient-to-b from-transparent to-overlay/30`, `pt-10 pb-4 px-5`):
+- Outer container: 16:9 aspect box (`aspect-video`), `rounded-2xl`, and one of the documented surface treatments below
+- Real `<video>` element, `poster`/`src`, `object-cover`, fills the container; an optional `<track kind="captions">` child when both `src` and `captionsSrc` are supplied
+- Centered play overlay while source-backed media is paused: `size-16` circle, `backdrop-blur-sm`, translucent dark fill, centered play glyph (20px) — the whole circle is a real `<button>` only when `src` exists
+- Static poster-only mode when `src` is omitted: same visual poster, play glyph, bottom chrome, decorative scrubber thumb, and optional `staticDurationLabel` as non-interactive/`aria-hidden` preview context; no `<button>`s or seek slider are exposed
+- Source-backed bottom gradient action bar (`bg-gradient-to-b from-transparent to-overlay/30`, `pt-10 pb-4 px-5`):
   - Play/pause icon button (16px icon, 8px padding, `rounded-sm`) — icon swaps with playback state
   - Mute/unmute icon button (same treatment) — icon swaps with mute state
   - Elapsed-time label (`text-xs font-semibold text-white`), live from `video.currentTime`
-  - Scrubber: a real `<input type="range">` (accessible seek control) layered over two `aria-hidden` fill `div`s (buffered progress, played progress) on a `backdrop-blur-[4px]` translucent track
+  - Scrubber: a real `<input type="range">` (accessible seek control) layered over two `aria-hidden` fill `div`s (buffered progress, played progress) on a `backdrop-blur-xs` translucent track
   - Remaining-time label, live (`duration − currentTime`)
   - Fullscreen icon button (`video.requestFullscreen()`)
 
 ### Variants
 
-None — one visual treatment; content is driven entirely by props (`src`/`poster`/`title`/`captionsSrc`) and live playback state, not a caller-chosen variant.
+`surface` controls only the outer elevation/chrome; content is still driven by props (`src`/`poster`/`title`/`captionsSrc`) and live playback state.
+
+| Variant | Treatment | Use for |
+|---|---|---|
+| `"raised"` (default) | `border border-black/10 shadow-media-card` | Standalone/page-level video cards where the player itself is the raised surface |
+| `"flat"` | `border-0 shadow-none` | Modal-embedded video where the modal shell already owns elevation and framing |
 
 ### States
 
 | State | Behavior | Figma-sourced? |
 |---|---|---|
 | Paused (poster) | Poster visible, play-button overlay shown, elapsed time `00:00` | Yes — the only state with a direct Figma reference |
+| Static poster-only | Poster and player chrome visible as non-interactive context when `src` is omitted; no fake buttons or seek slider are exposed | Yes visually, but intentionally not interactive until media exists |
 | Playing | Play-button overlay hides, transport play icon swaps to pause, progress fill advances live off real `<video>` events | No — implemented via native `<video>` playback + generic icon-swap convention, not a Figma reference |
 | Muted / unmuted | Volume icon swaps (`Volume2`/`VolumeX`) | No — generic convention |
 | Seeking | Real `<input type="range">`, keyboard- and pointer-operable, updates `video.currentTime` | No — added specifically to satisfy the accessibility requirement below; no Figma equivalent to diverge from |
@@ -1949,25 +2828,30 @@ None — one visual treatment; content is driven entirely by props (`src`/`poste
 
 ```ts
 interface VideoPlayerProps {
-  src?: string;     // no real video asset supplied yet — see Implementation rules
+  src?: string;     // omitted routes render static poster-only preview — see Implementation rules
   poster: string;
   title: string;    // accessible name for the player region
-  captionsSrc?: string; // optional <track> captions file — no real file supplied yet
+  captionsSrc?: string; // optional <track> captions file, used only with a real src
+  staticDurationLabel?: string; // visual-only runtime label for poster-only previews
+  surface?: "raised" | "flat"; // defaults to "raised"
   className?: string;
 }
 ```
 
 ### Design tokens used
 
-- `backdrop-blur-[8px]` — reuse, exact match to `PhotoBackdrop`'s existing overlay blur value.
-- `backdrop-blur-[4px]` — arbitrary blur value (no third-blur token exists yet); this is now the third distinct arbitrary blur radius in the app alongside `PhotoBackdrop`'s `[20px]`/`[8px]`. Not yet a forced token per `CLAUDE.md`'s anti-premature-abstraction guidance, but worth tracking if a fourth appears.
+- `backdrop-blur-sm` — Tailwind's built-in 8px blur, exact match to the paused play-button overlay reference.
+- `backdrop-blur-xs` — Tailwind's built-in 4px blur, exact match to the scrubber track reference.
 - Translucent dark fills (play-button overlay, gradient action bar, scrubber track) use `bg-overlay`/`to-overlay` at partial opacity (`/30`) rather than a new alpha token — Figma's own variable for this fill is misleadingly named `alpha-white-30` but resolves numerically to the same near-black as the existing `overlay` token (`#0a0d12`).
-- The outer shadow (`shadow-[0px_16px_32px_-4px_rgba(0,0,0,0.7)]`) does not match any existing shadow token (Tailwind's built-in `shadow-2xl` has a different offset/blur/spread/opacity) — kept as a one-off arbitrary value since this is the only use site so far; revisit as a candidate `shadow-*` token (e.g. `shadow-media-card`) if a second floating-card-over-photo use case appears, per `DESIGN.md`'s Shadows section.
-- `border-black/10` — reuse, same hairline treatment as `AuthCard`'s inner panel.
+- `shadow-media-card` — custom media shadow token in `src/tokens/shadows.css`; used only by `surface="raised"` instead of repeating the old `shadow-[...]` value.
+- `border-black/10` — reuse, same hairline treatment as `AuthCard`'s inner panel; used only by `surface="raised"`.
+- `shadow-none` / `border-0` — explicit flat modal-media treatment for `surface="flat"` so modal call sites do not remove elevation ad hoc.
 
 ### Accessibility requirements
 
-- Built on a real `<video>` element with real keyboard-operable transport controls (native `<button>`s, a native `<input type="range">` for seeking) — not a decorative image with click handlers.
+- Built on a real `<video>` element with real keyboard-operable transport controls (native `<button>`s, a native `<input type="range">` for seeking) when `src` is supplied — not a decorative image with click handlers.
+- When `src` is omitted, the poster/player chrome is static and `aria-hidden`; the component must not expose keyboard- or screen-reader-visible play, mute, seek, or fullscreen controls that cannot operate real media.
+- `staticDurationLabel` is visual-only poster metadata. Use it only when the Figma frame or supplied video reference gives the runtime; do not use it to imply playback exists.
 - The scrubber is a native `<input type="range">` (`aria-label="Seek"`, `aria-valuetext` announcing "current of total" time) rather than a hand-rolled `div` — satisfies the requirement flagged when this component was first documented.
 - The scrubber carries a generated `id` and stable `name="video-seek"` so browser autofill/form-field heuristics do not flag the design-system page while preserving its accessible `aria-label`.
 - Every icon-only transport control (play/pause, mute/unmute, fullscreen) has an `aria-label` that updates with state (e.g. `"Play"`/`"Pause"`), the same requirement `Button`'s `size="icon"` already carries.
@@ -1976,19 +2860,20 @@ interface VideoPlayerProps {
 
 ### Responsive behavior
 
-Fluid width (`w-full aspect-video`), unlike the Figma frame's fixed `560×315` — extended to be fluid since no mobile/tablet Figma reference exists (the same category of gap already tracked for `HeartChartSummary`/`PricingCard`), and a fixed-pixel player would overflow on mobile viewports. The call site (`/welcome`) constrains it with `max-w-[560px]` to match Figma's exact size at wider viewports.
+Fluid width (`w-full aspect-video`), unlike the Figma frame's fixed `560×315` — extended to be fluid since no mobile/tablet Figma reference exists (the same category of gap already tracked for `HeartChartSummary`/`PricingCard`), and a fixed-pixel player would overflow on mobile viewports. Call sites constrain it with `max-w-video-player` to match Figma's exact 560px width at wider viewports without repeating arbitrary max-width classes.
 
 ### Implementation rules
 
 - **Promoted to `src/components/video-player.tsx`** (was `src/app/welcome/_components/video-player.tsx`) once `/marriage-champions-empty` confirmed a second real use site, per `CLAUDE.md`'s Component Creation Process and this entry's own previously-documented promotion condition — not assumed preemptively when only `/welcome` used it.
+- Use `surface="flat"` for video inside a modal shell. Use the default raised surface for standalone/page-level cards. Do not pass shadow/border-removal classes from the caller; add or document a surface variant instead.
 - Icons map to `lucide-react`'s `Play`, `Pause`, `Volume2`, `VolumeX`, `Maximize2` as the closest stable equivalents — matching the project's established "closest stable substitute" precedent (`GoogleIcon`, `Select`'s `ChevronDown`, `GlobalNav`'s icon set).
-- **No real video source or captions file exists yet** — `/welcome` renders this component without a `src`/`captionsSrc` (poster-only; clicking play has no video to actually play). Wire both to real assets before this leaves Draft, per the same "flag, don't hide" precedent as `AmfmLogo`/`SignupSuccess`.
+- **No real video source or captions file exists yet** — `/welcome`, `/marriage-champions-empty`, and the July MVP video modals currently omit `src`/`captionsSrc`, so they render poster-only previews with non-interactive visual chrome. `HeartChartQuickTipModal` and `HeartChartResourcesQuickStartModal` pass `staticDurationLabel="08:24"` because that runtime is visible in the Figma/video reference, not because media playback exists. Wire real source and captions assets before this leaves Draft, per the same "flag, don't hide" precedent as `AmfmLogo`/`SignupSuccess`.
 - Hover/focus treatments on the transport buttons were not given an explicit visual per `DESIGN.md`'s Interaction principles ("every interactive control has a visible hover/focus treatment") — currently rely on the browser default only. This is a real gap, not a deliberate decision; add explicit `hover:`/`focus-visible:` treatments before promoting out of Draft.
 - Playing/buffering-visual/fullscreen behavior was implemented against real native `<video>`/Fullscreen-API semantics rather than a Figma reference, since none exists — this is a deliberate "resolve with sensible engineering defaults, flag clearly" decision (matching `GlobalNav`'s precedent for its undesigned hover states), not a guess dressed up as verified.
 
 ### Visual examples
 
-Rendered at `/design-system/components#videoplayer` (poster-only, no source) and live on `/welcome` and `/marriage-champions-empty`; referenced at `/design-system/patterns#welcome-hero`.
+Rendered at `/design-system/components#videoplayer` (poster-only, no source, no active controls) and live on `/welcome` and `/marriage-champions-empty`; referenced at `/design-system/patterns#welcome-hero`.
 
 ---
 
@@ -2142,7 +3027,7 @@ The page-level chrome shared by both Figma states of the "Our Marriage Champions
 
 ### Anatomy
 
-Outer gradient flex row (sticky `GlobalNav` in a `p-3` rail + a `flex-1` main column) → `<main>` (`p-8`) → header row (`<h1 className="font-display text-display-md font-light">` + `FellowshipOfTheParksLogo`, wrapping on narrow viewports via `flex-wrap`) → `children` (the page's own content, e.g. an `ElevatedCard`).
+Outer gradient flex row (`GlobalNav overlay` + the nav's in-flow spacer + a `flex-1` main column) → `<main>` (`p-8`) → header row (`<h1 className="font-display text-display-md min-w-80 font-light">` + `FellowshipOfTheParksLogo`, wrapping on narrow viewports via `flex-wrap`) → `children` (the page's own content, e.g. an `ElevatedCard`).
 
 ### Variants
 
@@ -2160,7 +3045,7 @@ React.PropsWithChildren
 
 ### Design tokens used
 
-`from-background-gradient-from`/`to-background-gradient-to` (page shell gradient), `font-display`/`text-display-md` (page `<h1>`, matching the page-level-heading precedent already established for `/heartchart-resources`), `text-foreground`. See `DESIGN.md`'s Color tokens / Typography system.
+`from-background-gradient-from`/`to-background-gradient-to` (page shell gradient), `font-display`/`text-display-md` (page `<h1>`, matching the page-level-heading precedent already established for `/heartchart-resources`), `min-w-80` (scale-backed 320px minimum heading width), `text-foreground`. See `DESIGN.md`'s Color tokens / Typography system.
 
 ### Accessibility requirements
 
@@ -2168,7 +3053,7 @@ One `<h1>` per page (satisfied by the header row), `<main>` landmark wraps the p
 
 ### Responsive behavior
 
-Header row wraps (`flex-wrap`) below the point where the `<h1>`'s `min-w-[320px]` and the logo can no longer sit on one line, matching the pre-extraction behavior on `/marriage-champions`. `GlobalNav`'s own rail-to-panel responsive behavior is unchanged (see `COMPONENTS.md#globalnav`).
+Header row wraps (`flex-wrap`) below the point where the `<h1>`'s `min-w-80` (320px) and the logo can no longer sit on one line, matching the pre-extraction behavior on `/marriage-champions`. `GlobalNav`'s own rail-to-panel responsive behavior is unchanged (see `COMPONENTS.md#globalnav`).
 
 ### Implementation rules
 
@@ -2244,7 +3129,7 @@ Renders its `children` as an inert, faded backdrop — blurred and fading into t
 
 ### Anatomy
 
-Single wrapping `<div>` (`aria-hidden`, `relative`, `overflow-hidden`) containing: the blurred inert `children` (`blur-[2px] pointer-events-none select-none`) plus an absolutely-positioned fade mask (`bg-gradient-to-b from-background/0 to-background`) covering the full area.
+Single wrapping `<div>` (`aria-hidden`, `relative`, `overflow-hidden`) containing: the blurred inert `children` (`blur-inert-preview pointer-events-none select-none`) plus an absolutely-positioned fade mask (`bg-gradient-to-b from-background/0 to-background`) covering the full area.
 
 ### Variants
 
@@ -2264,7 +3149,7 @@ interface BlurOverlayProps extends React.PropsWithChildren {
 
 ### Design tokens used
 
-`bg-background` (fade-mask end color — see Implementation rules for why this diverges from Figma's hardcoded white). No new tokens required; `blur-[2px]` is an arbitrary value matching Figma's own layer effect exactly, not promoted to a token for a single use site (same precedent as `VideoPlayer`'s one-off `backdrop-blur-[4px]`). Child opacity is intentionally not lowered: a browser accessibility audit flagged the previous `opacity-30` treatment because visible text inside the decorative preview no longer met contrast, while the blur + fade mask already communicates the inactive state.
+`blur-inert-preview` (2px custom effect token), `bg-background` (fade-mask end color — see Implementation rules for why this diverges from Figma's hardcoded white). Child opacity is intentionally not lowered: a browser accessibility audit flagged the previous `opacity-30` treatment because visible text inside the decorative preview no longer met contrast, while the blur + fade mask already communicates the inactive state.
 
 ### Accessibility requirements
 
@@ -2290,7 +3175,7 @@ Rendered at `/design-system/foundations#blur-overlay` and `/design-system/compon
 
 ## Dashboard components (HeartChart Dashboard)
 
-The 11 entries below were added from the design system audit of the Figma "HeartChart Dashboard / premium" frame (node `3727:29573`), then implemented on `/dashboard` (`src/app/dashboard/page.tsx`, composed via `src/app/dashboard/_components/dashboard-content.tsx`). Status/Source lines below now point at real code; sample data lives in `src/app/dashboard/_lib/dashboard-data.ts` (representative, not wired to a real backend — same caveat as `src/lib/team-members.ts`). **Node-ID caveat**: several nested instance IDs inside this frame did not resolve reliably when queried in isolation during the audit (a scoping quirk of this file's deeply-nested instances, not a tooling failure on the top-level frame) — the visual implementation was verified against full-resolution screenshots and the confirmed top-level frame metadata instead; re-select each sub-component directly in Figma to pixel-verify exact per-node values if that becomes necessary later.
+The 11 entries below were added from the design system audit of the Figma "HeartChart Dashboard / premium" frame (current live node `4255:30872`; older reference `3727:29573` moved), then implemented on `/dashboard` (`src/app/dashboard/page.tsx`, composed via `src/app/dashboard/_components/dashboard-content.tsx`). Status/Source lines below now point at real code; sample data lives in `src/app/dashboard/_lib/dashboard-data.ts` (representative, not wired to a real backend — same caveat as `src/lib/team-members.ts`). **Node-ID caveat**: several nested instance IDs inside this frame do not resolve reliably when queried in isolation during the audit (a scoping quirk of this file's deeply-nested instances, not a tooling failure on the top-level frame) — visual implementation should be verified against full-resolution screenshots and the confirmed top-level frame metadata unless a stable component-node URL is available.
 
 ---
 
@@ -2298,7 +3183,7 @@ The 11 entries below were added from the design system audit of the Figma "Heart
 
 **Status**: Draft (implemented and rendered on `/dashboard`; real WeDo wordmark and couple illustration now in place — see Implementation rules)
 **Source**: `src/components/we-do-card.tsx`
-**Figma**: AMFM Portal file, node `3727:29573` ("HeartChart Dashboard / premium"), `_Summary Data` region, right-hand instance (paired with `HeartChartSummary` on the left)
+**Figma**: AMFM Portal file, node `4255:30872` ("HeartChart Dashboard / premium"), `_Summary Data` region, right-hand instance (paired with `HeartChartSummary` on the left)
 
 ### Purpose
 
@@ -2306,9 +3191,9 @@ Church-wide "WeDo" (couples relationship app) engagement snapshot — the counte
 
 ### Anatomy
 
-Outer elevated shell (`ElevatedCard`, same nested outer-shadow-shell/inner-bordered-panel shape as `HeartChartSummary`) → WeDo wordmark logo (top-left) → optional "Next Pulse in {label}" countdown text (top-right) → a two-column row: **left column** — big stat number ("363 Couples", in the WeDo brand red), supporting sentence ("Active in the app today"), and the couple illustration (`public/We-do.png`, rendered wider-than-tall via `aspect-[223/156] w-full max-w-[223px]`) stacked directly beneath it; **right column** — a `flex-col` stack containing `PointerCallout` (see below), stretched to fill the remaining width, with a large low-opacity serif `&ldquo;` glyph watermarked top-left behind the label (see Design tokens used) above an uppercase "Most of your couples say..." label + pull-quote (with an optional highlighted phrase in the WeDo brand red) + a "Source: {quoteSource}" attribution line, and directly beneath the callout, the action row: two `Button` instances ("See Results", "Share Your Code"), right-aligned (`justify-end`) so their combined right edge lines up with `PointerCallout`'s own right edge.
+Outer elevated shell (`ElevatedCard`, same nested outer-shadow-shell/inner-bordered-panel shape as `HeartChartSummary`) → WeDo wordmark logo (top-left) → optional "Next Pulse in {label}" countdown text (top-right) → a two-column row: **left column** — big stat number ("363 Couples", in the WeDo brand red), supporting sentence ("Active in the app today"), and the couple illustration (`public/We-do.png`, rendered wider-than-tall via `aspect-wedo-illustration w-full max-w-wedo-illustration`) stacked directly beneath it; **right column** — a `flex-col` stack containing `PointerCallout` (see below), stretched to fill the remaining width, with a large low-opacity serif `&ldquo;` glyph watermarked top-left behind the label (see Design tokens used) above an uppercase "Most of your couples say..." label + pull-quote (with an optional highlighted phrase in the WeDo brand red) + a "Source: {quoteSource}" attribution line, and directly beneath the callout, the action row: two `Button` instances ("See Results", "Share Your Code"), right-aligned (`justify-end`) so their combined right edge lines up with `PointerCallout`'s own right edge.
 
-Corrected from an earlier pass that had put the couple illustration *inside* `PointerCallout`, beside the quote text, and stacked the stat row and the callout full-width on top of each other — re-verified against a native-resolution (1523×4573) full-page screenshot of node `3727:29573`, which shows the illustration sitting under "Active in the app today" in its own column, not next to the quote. Corrected again in a later pass: the action row was pinned full-width to the bottom of the whole card (spanning under both columns); it now lives inside the right column only, right-aligned under `PointerCallout` so it reads as that callout's own action row rather than the card's.
+Corrected from an earlier pass that had put the couple illustration *inside* `PointerCallout`, beside the quote text, and stacked the stat row and the callout full-width on top of each other — re-verified against a native-resolution (1523×4573) full-page screenshot of node `4255:30872`, which shows the illustration sitting under "Active in the app today" in its own column, not next to the quote. Corrected again in a later pass: the action row was pinned full-width to the bottom of the whole card (spanning under both columns); it now lives inside the right column only, right-aligned under `PointerCallout` so it reads as that callout's own action row rather than the card's.
 
 Corrected a third time in the Figma-to-code cleanup pass: the decorative quotation mark was a small solid red Lucide `Quote` icon, and the couple illustration was forced to a square `size-[186px]` — both were placeholders pending closer verification. Figma's real pull-quote mark is a large, low-opacity serif glyph watermarked *behind* the label text (not a small solid icon sitting above it), and the illustration's real proportion is wider-than-tall (~223×156), not square — see Design tokens used and Implementation rules below for the corrected treatment of each.
 
@@ -2335,8 +3220,10 @@ interface WeDoCardProps {
   highlightedPhrase?: string;
   /** Attribution line under the quote, e.g. "Your Current WeDo Pulse". Defaults to "Your Current WeDo Pulse". */
   quoteSource?: string;
-  /** Countdown copy rendered as "Next Pulse in {nextPulseLabel}", e.g. "2d 10h". Omitted entirely if not provided. */
+  /** Countdown copy rendered as "Next Pulse in {nextPulseLabel}", e.g. "2d 16h". Omitted entirely if not provided. */
   nextPulseLabel?: string;
+  /** `constrained` matches the standalone component reference; `fluid` lets a parent layout own width. */
+  width?: "constrained" | "fluid";
   onSeeResults?: () => void;
   onShareCode?: () => void;
   className?: string;
@@ -2359,14 +3246,14 @@ The decorative quote mark uses `font-display text-8xl text-muted-foreground/75` 
 
 ### Responsive behavior
 
-Sits side-by-side with `HeartChartSummary` at desktop width (each roughly half the row) via the parent grid (`grid-cols-1 lg:grid-cols-2`); stacks to a single full-width column below `lg`. No mobile/tablet Figma reference was found for this frame — the stacking behavior itself is verified in-browser, but exact mobile spacing/type-scale adjustments are unconfirmed, same category of gap already tracked for `HeartChartSummary`.
+Defaults to the constrained standalone reference width (`width="constrained"`, `max-w-heartchart-card`) for component-gallery usage and one-off embeds. Uses `width="fluid"` on `/dashboard` so the parent two-column grid owns the card width, matching the live dashboard frame (`4255:30872`) where `WeDoCard` and `HeartChartSummary` fill their grid columns. The dashboard call site stacks the two cards to a single full-width column below `lg`; exact mobile/tablet Figma spacing/type-scale adjustments are unconfirmed, same category of gap tracked for `HeartChartSummary`.
 
 ### Implementation rules
 
 - Composed on `ElevatedCard` rather than a local copy of the nested-shell shape, per this entry's own prior note and `ElevatedCard`'s Implementation rules.
 - Reuses `Button variant="outline" size="compact"` for both actions, each with a leading `lucide-react` icon (`Eye` for "See Results", `QrCode` for "Share Your Code" — the latter mirroring `HeartChartSummary`'s "Share Your Link" icon choice), matching `HeartChartSummary`'s action-row treatment.
 - **Implemented**: the WeDo wordmark renders from the real exported asset (`public/We-do-logo.svg`, WeDo's brand red `#CD4745`) via `next/image`, unoptimized (same pattern as `HeartChartLogo`) — no longer a hand-authored icon approximation.
-- **Implemented**: the couple illustration renders from the real exported asset (`public/We-do.png`, source asset 990×874px) via `next/image`, decorative and `aria-hidden`, at `aspect-[223/156] w-full max-w-[223px]` (`object-contain`) rather than an earlier forced-square `size-[186px]` — the source asset's real proportion is wider-than-tall (~223×156), and the fixed square crop was distorting/letterboxing it incorrectly. `aspect-[223/156]` reproduces Figma's actual proportion responsively (scaling with the column's width up to `max-w-[223px]`) instead of copying Figma's fixed absolute pixel size. Sits in the left column beneath the stat/caption text (`mt-auto` keeps it pinned to the bottom of that column) — not inside `PointerCallout`.
+- **Implemented**: the couple illustration renders from the real exported asset (`public/We-do.png`, source asset 990×874px) via `next/image`, decorative and `aria-hidden`, at `aspect-wedo-illustration w-full max-w-wedo-illustration` (`object-contain`) rather than an earlier forced-square `size-[186px]` — the source asset's real proportion is wider-than-tall (~223×156), and the fixed square crop was distorting/letterboxing it incorrectly. `aspect-wedo-illustration` reproduces Figma's actual proportion responsively (scaling with the column's width up to `max-w-wedo-illustration`) instead of copying Figma's fixed absolute pixel size. Sits in the left column beneath the stat/caption text (`mt-auto` keeps it pinned to the bottom of that column) — not inside `PointerCallout`.
 - The stat/caption/image column and the right-hand `flex-col` (holding `PointerCallout` and the action row) sit in a `flex flex-wrap` row (`items-stretch` so the right column matches the left column's height); the right column takes `flex-1 min-w-0` to fill the remaining width and lets the quote text wrap instead of overflowing.
 - The action row (`justify-end`) and `PointerCallout` are both direct children of that same right-hand `flex-col`, not siblings of the left column — this is what makes the buttons' right edge line up with `PointerCallout`'s right edge, rather than the card's own outer edge.
 - **Corrected**: the decorative quotation mark was previously a small, solid `text-wedo-brand` Lucide `Quote` icon (`-scale-x-100` to read as an opening quote) sitting above the label. Figma's real pull-quote mark is a large (`text-8xl`), low-opacity (`text-muted-foreground/75`) serif (`font-display`) `&ldquo;` glyph, absolutely positioned (`-top-3 -left-1`) as a background watermark *behind* the "Most of your couples say..." label and quote — a plain `<span>`, not an icon component, `aria-hidden` and `select-none` since it's purely decorative.
@@ -2384,7 +3271,7 @@ Rendered live on `/dashboard` (hero row, alongside `HeartChartSummary`) and at `
 
 **Status**: Draft (implemented; only the static variant — see Variants)
 **Source**: `src/components/pointer-callout.tsx`
-**Figma**: AMFM Portal file, node `3727:29573`, nested inside the `WeDoCard` instance (`_Summary Data` region)
+**Figma**: AMFM Portal file, node `4255:30872`, nested inside the `WeDoCard` instance (`_Summary Data` region)
 
 ### Purpose
 
@@ -2399,7 +3286,7 @@ Rounded bordered grey container → directional pointer/tail graphic on one edge
 Two pointer treatments, chosen via `pointerPosition`:
 
 - **Cardinal notch** (`"top"` / `"right"` / `"bottom"` / `"left"`) — a small rotated-square notch cut into the given edge, sized and colored to match the container so it reads as a seamless extension of that edge.
-- **Diagonal tail** (`"left-diagonal"`, renamed from an earlier `"bottom-left-diagonal"`) — a longer diagonal tail asset (`public/speechbubblepointer.svg`) hanging off the bubble's **left edge**, vertically centered (`top-1/2 -left-[17px] -translate-y-1/2`), confirmed against Figma node `4255:30880`. This corrects an earlier pass that rendered the tail below the bubble at the bottom-left corner — the confirmed reference shows it centered on the left edge instead, hence the prop rename to drop the now-inaccurate "bottom" in the name.
+- **Diagonal tail** (`"left-diagonal"`, renamed from an earlier `"bottom-left-diagonal"`) — a longer diagonal tail asset (`public/speechbubblepointer.svg`) hanging off the bubble's **left edge**, vertically centered (`top-1/2 left-pointer-callout-tail -translate-y-1/2`), confirmed against Figma node `4255:30880`. This corrects an earlier pass that rendered the tail below the bubble at the bottom-left corner — the confirmed reference shows it centered on the left edge instead, hence the prop rename to drop the now-inaccurate "bottom" in the name.
 
 No interactive/popover variant is validated — see the prior note (still applicable): other elements on the dashboard ("Why does this matter?" on `ScaleChartCard`, "Understanding your data" on the Relationship Health card header) visually resemble a possible trigger for an interactive/on-demand version of this shape, but their interaction model was not confirmed — do not build a second interactive variant until that's verified directly against Figma.
 
@@ -2419,7 +3306,7 @@ interface PointerCalloutProps {
 
 ### Design tokens used
 
-`border-border-secondary` (fixed from an earlier, less-precise `border`), `rounded-lg`, `bg-muted` — a flat, fully-opaque grey fill (not `bg-background`/`bg-card`, and not an alpha-blended `/50` tint like `HeartChartSummary`'s participation-level box). Confirmed against a native-resolution full-page screenshot of node `3727:29573`: the "Most of your couples say..." box renders as a subtle solid grey, distinct from the white card surface behind it. Full opacity is deliberate here, not just a style preference — the pointer/tail overlaps the container's edge, and a translucent fill would double-composite where the tail sits over the box versus over the surrounding white card, producing a visible two-tone seam; a flat `bg-muted` keeps the tail and box the same color everywhere. Padding is variant-dependent: the cardinal notch variants keep a uniform `p-4`, while `"left-diagonal"` uses an asymmetric `px-6 py-4` — the extra left inset gives the tail room to sit clear of the content instead of overlapping it. The `"left-diagonal"` tail is a static SVG asset (`public/speechbubblepointer.svg`) rather than a Tailwind-styled `<span>`, but its baked-in fill/stroke (`#FAFAFA`/`#E9EAEB`) were colour-matched to `bg-muted`/`border-border-secondary` at export time, so it still reads as the same surface — if either token's value changes, re-export the asset to match.
+`border-border-secondary` (fixed from an earlier, less-precise `border`), `rounded-lg`, `bg-muted` — a flat, fully-opaque grey fill (not `bg-background`/`bg-card`, and not an alpha-blended `/50` tint like `HeartChartSummary`'s participation-level box). Confirmed against a native-resolution full-page screenshot of node `4255:30872`: the "Most of your couples say..." box renders as a subtle solid grey, distinct from the white card surface behind it. Full opacity is deliberate here, not just a style preference — the pointer/tail overlaps the container's edge, and a translucent fill would double-composite where the tail sits over the box versus over the surrounding white card, producing a visible two-tone seam; a flat `bg-muted` keeps the tail and box the same color everywhere. Padding is variant-dependent: the cardinal notch variants keep a uniform `p-4`, while `"left-diagonal"` uses an asymmetric `px-6 py-4` — the extra left inset gives the tail room to sit clear of the content instead of overlapping it. The `"left-diagonal"` tail is a static SVG asset (`public/speechbubblepointer.svg`) rather than a Tailwind-styled `<span>`, but its baked-in fill/stroke (`#FAFAFA`/`#E9EAEB`) were colour-matched to `bg-muted`/`border-border-secondary` at export time, so it still reads as the same surface — if either token's value changes, re-export the asset to match.
 
 ### Accessibility requirements
 
@@ -2433,7 +3320,7 @@ Not yet evidenced against a mobile Figma reference — flag for verification bef
 
 - Extract as its own primitive from the start rather than inlining it inside `WeDoCard` — its visual language (rounded box + pointer tail) is distinct enough from `WeDoCard`'s own anatomy to warrant separation even at a single confirmed use site, unlike e.g. `HeartChartSummary`'s donut chart (which stayed unextracted until a second use case appeared) — this is a judgment call flagged here for visibility, not a hard reuse-count justification.
 - Use a solid background (`bg-muted`) on both the container and the cardinal-notch pointer `<span>`, never an alpha-based tint (`bg-muted/50` etc.) — see Design tokens used above for why the pointer's overlap makes opacity unsafe here, unlike other de-emphasized boxes in this file that have no overlapping child.
-- The `"left-diagonal"` tail renders via `next/image` (`unoptimized`, matching the rest of this file's exported-SVG pattern), positioned `absolute top-1/2 -left-[17px] -translate-y-1/2` — vertically centered on the bubble's left edge, confirmed against Figma node `4255:30880`. This replaces an earlier `absolute top-full left-8 -translate-y-px` placement (below the bubble, at the bottom-left corner) that predated this node confirmation — the prop value was renamed from `"bottom-left-diagonal"` to `"left-diagonal"` in the same change, since "bottom" no longer describes where the tail renders.
+- The `"left-diagonal"` tail renders via `next/image` (`unoptimized`, matching the rest of this file's exported-SVG pattern), positioned `absolute top-1/2 left-pointer-callout-tail -translate-y-1/2` — vertically centered on the bubble's left edge, confirmed against Figma node `4255:30880`. This replaces an earlier `absolute top-full left-8 -translate-y-px` placement (below the bubble, at the bottom-left corner) that predated this node confirmation — the prop value was renamed from `"bottom-left-diagonal"` to `"left-diagonal"` in the same change, since "bottom" no longer describes where the tail renders.
 - Do not add the speculative interactive/popover variant described under Variants above without first confirming the interaction model directly in Figma. If confirmed, it must follow the Radix `Popover`/`Tooltip` ARIA pattern per `DESIGN.md`'s standing rule against hand-rolled custom widgets (already enforced for `Select`/`DropdownMenu`/`Dialog`) — never a plain absolutely-positioned `div`.
 
 ### Visual examples
@@ -2446,7 +3333,7 @@ Rendered live on `/dashboard`, inside `WeDoCard`'s pull-quote (using the `"left-
 
 **Status**: Draft
 **Source**: `src/components/pointer-callout-arrow.tsx`
-**Figma**: No Figma node reachable — the node ID originally linked for this frame did not resolve via this environment's Figma MCP connection. Built instead from screenshots the user pasted directly in chat. This is a real, deliberate provenance gap, not a placeholder to be silently forgotten — re-confirm against the live Figma node once the connection can reach it, same class of gap already flagged for `ParticipationVerticalBarCard`'s gridlines and `StatusSnapshotCard` below.
+**Figma**: AMFM Portal file, parent frame node `4255:30872`, connecting caption row between `HeartChartSummary` and `WeDoCard`. The parent dashboard frame now resolves through Figma MCP; the original child node for the caption row still has not been independently verified as a stable standalone node, so exact arrow placement remains parent-frame/screenshot verified.
 
 ### Purpose
 
@@ -2456,7 +3343,7 @@ A small curved-arrow-plus-caption pairing that visually connects `HeartChartSumm
 
 ### Anatomy
 
-Curved arrow image (`/Arrowup-left.svg` or `/Arrowup-right.svg`, 44×44) → caption text (`font-display text-lg text-foreground`), with a leading bold `emphasis` word/phrase followed by a regular-weight `text` sentence fragment.
+Curved arrow image (`/Arrowup-left.svg` or `/Arrowup-right.svg`, scaled to `h-11 w-auto` from the asset's intrinsic 59×58 ratio) → caption text (`font-display text-lg text-foreground`), with a leading bold `emphasis` word/phrase followed by a regular-weight `text` sentence fragment.
 
 ### Variants
 
@@ -2498,7 +3385,7 @@ Not yet evidenced against a mobile Figma reference (see the provenance gap above
 
 ### Implementation rules
 
-- **No Figma node ID for this component** — do not invent one. It was built from screenshots the user pasted directly in chat because the originally-linked node did not resolve via this environment's Figma MCP connection. Treat the current implementation as a best-effort reproduction of those screenshots, not a pixel-verified match; re-verify against the live node once reachable.
+- The parent dashboard frame is node `4255:30872`; do not invent a more specific child node ID until Figma exposes a stable one. Treat exact arrow placement as parent-frame/screenshot verified, not independently pixel-sampled from a child component node.
 - Two instances are rendered side by side on `/dashboard`, between the `HeartChartSummary`/`WeDoCard` hero row and the "Bedford Campus Participation Profile" card, at the call site in `src/app/dashboard/_components/dashboard-content.tsx` — not inside `HeartChartSummary` or `WeDoCard` themselves, matching this file's existing precedent (see `WeDoCard`'s own note on the prior single-caption-row version) that page-level connective copy between two cards belongs at the page/route level, not folded into either card component.
 - Colocated at `src/components` (not route-colocated under `_components`) since it composes with both `HeartChartSummary` and `WeDoCard`, which already live there — matches those two components' existing app-level placement per `CLAUDE.md`'s structure guidance.
 
@@ -2512,7 +3399,7 @@ Rendered live on `/dashboard`, between the hero card row and the "Bedford Campus
 
 **Status**: Draft (implemented; rendered on `/dashboard`)
 **Source**: `src/components/participation-vertical-bar-card.tsx`
-**Figma**: AMFM Portal file, node `3727:29573`, "Bedford Campus Participation Profile" card, first column ("Age Groups") for the card shell/bars; the gridline treatment specifically has **no reachable Figma node** (see Implementation rules) — rebuilt from a screenshot the user pasted directly in chat.
+**Figma**: AMFM Portal file, node `4255:30872`, "Bedford Campus Participation Profile" card, first column ("Age Groups") for the card shell/bars; exact gridline/gradient values are parent-frame/screenshot verified, not independently pixel-sampled from a stable child component node.
 
 ### Purpose
 
@@ -2550,7 +3437,8 @@ interface ParticipationVerticalBarCardProps {
 - Title: `text-base font-bold` (up from `text-sm font-semibold`).
 - Bar fill: `bg-gradient-to-b from-chart-participation-fill-from to-chart-participation-fill-to` — a top-to-bottom two-stop gradient, replacing the single flat `chart-participation-fill` token (which no longer exists in `src/tokens/colors.css`; it was split into this `-from`/`-to` pair once the real gradient fill was confirmed). Bar rounding is `rounded-t-md` (up from `rounded-t-sm`).
 - Value label (above each bar): `text-sm font-bold text-primary` — the app's brand terracotta accent, replacing an earlier small muted-text treatment, so the value reads as the emphasized element per bar.
-- Gridlines: 4 rows of `border-t border-border-secondary`, absolutely positioned behind the bar area via a `grid` with `gridTemplateRows: repeat(4, minmax(0, 1fr))` — screenshot-derived (see Implementation rules), not sourced from a direct node pull.
+- Category label (below each bar): `text-chart-label font-medium text-foreground` — uses the compact data-visualization label token from `DESIGN.md`, not general UI `text-sm`.
+- Gridlines: 4 rows of `border-t border-border-secondary`, absolutely positioned behind the bar area via a `grid` with `gridTemplateRows: repeat(4, minmax(0, 1fr))` — parent-frame/screenshot verified (see Implementation rules), not independently sourced from a stable child node pull.
 
 ### Accessibility requirements
 
@@ -2558,14 +3446,15 @@ Chart is a visual read of numeric data already rendered as real on-bar value/cat
 
 ### Responsive behavior
 
-Renders as one of three siblings in a row at desktop width (alongside two `StatusSnapshotCard` instances). No mobile Figma reference confirmed — needs mobile-first stacking per `DESIGN.md`'s grid rules before shipping.
+Renders as the wider first column in the dashboard Participation Profile row at desktop width (alongside two narrower `StatusSnapshotCard` instances). The parent composition owns this ratio via `grid-cols-dashboard-participation` (5:3:3) so the component stays reusable and does not bake dashboard-specific width math into its own API. No mobile Figma reference confirmed — mobile stacks to one column per `DESIGN.md`'s grid rules.
 
 ### Implementation rules
 
 - Share a single underlying chart-rendering approach (SVG/CSS, not a raster image) with `FullWidthBarChart` if their visual language is confirmed to match — do not build two independent bar-chart implementations without checking first.
 - Bars are hand-built with CSS (gradient-filled `div`s sized by percentage height), not a fetched/rasterized asset, so they can respond to arbitrary data, matching `HeartChartSummary`'s existing precedent.
-- **The 4 horizontal gridlines behind the bars have no reachable Figma node.** The Figma reference originally linked for this exact frame did not resolve via this environment's Figma MCP connection, so the gridline treatment was rebuilt from a screenshot the user pasted directly in chat instead — do not treat `GRIDLINE_ROWS = 4` as a pixel-verified Figma value; re-confirm directly against the live node once reachable, same class of gap as `PointerCalloutArrow` and `StatusSnapshotCard` below.
+- **The 4 horizontal gridlines behind the bars are parent-frame/screenshot verified.** The dashboard parent frame resolves at `4255:30872`, but the exact gridline child layer still has not been independently pulled as a stable node — do not treat `GRIDLINE_ROWS = 4` as an independently pixel-sampled Figma value without a stable child-node reference.
 - **Icon is now a real `next/image`** (`/age-group-icon.svg`, 23×17) passed in from the call site (`src/app/dashboard/_components/dashboard-content.tsx`), rather than a generic Lucide icon — the component itself still just accepts `icon: React.ReactNode` and renders whatever it's given, so this is a call-site change, not an API change.
+- **Dashboard width ratio belongs to the parent composition.** `src/app/dashboard/_components/dashboard-content.tsx` wraps this card and its two `StatusSnapshotCard` siblings in `data-slot="dashboard-participation-profile-grid"` with `lg:grid-cols-dashboard-participation`, a named spacing utility sourced from the full `4255:30872` dashboard frame. Do not replace it with equal `lg:grid-cols-3` or an inline bracketed grid template.
 
 ### Visual examples
 
@@ -2577,7 +3466,7 @@ Rendered live on `/dashboard`'s "Bedford Campus Participation Profile" card (Age
 
 **Status**: Draft
 **Source**: `src/components/status-snapshot-card.tsx`
-**Figma**: No Figma node reachable for either variant — the Figma reference originally linked for this frame did not resolve via this environment's Figma MCP connection. Both variants (`"relationship"` and `"kids"`) were confirmed from screenshots the user pasted directly in chat instead; re-verify against the live node once reachable.
+**Figma**: AMFM Portal file, parent frame node `4255:30872`, "Bedford Campus Participation Profile" card, "Relationship Status" and "Kids" columns. The parent dashboard frame resolves through Figma MCP; exact variant bar gradients and width-scaling remain parent-frame/screenshot verified rather than independently pixel-sampled from stable child component nodes.
 
 **Supersedes `ParticipationHorizontalBarCard`** (`src/components/participation-horizontal-bar-card.tsx`), which has been deleted from the codebase along with its test file. That entry documented a generic icon/label/horizontal-bar-list shape for the "Relationship Status" and "Kids" widgets; this Figma-to-code cleanup pass replaced both with `StatusSnapshotCard`, a purpose-built, variant-driven component with confirmed per-variant iconography and gradient treatment. There is no remaining use site for the old component's shape — do not resurrect it as a third generic bar-list component without a confirmed new use case.
 
@@ -2593,7 +3482,7 @@ Icon + label header (`next/image` icon + title) → list of rows, each a thick (
 
 Two, via `variant`:
 
-- **`"relationship"`** — `/relationship-status-icon.svg` icon, sage-gray gradient pill (`chart-status-relationship-from`/`-to`).
+- **`"relationship"`** — `/relationship-status-icon.svg` icon, scaled to `h-5 w-auto` from its intrinsic 22×20 ratio, sage-gray gradient pill (`chart-status-relationship-from`/`-to`).
 - **`"kids"`** — `/kids-icon.svg` icon, lavender gradient pill (`chart-status-kids-from`/`-to`).
 
 ### States
@@ -2628,14 +3517,15 @@ Each bar's label and value are real DOM text (`pl-4` label overlaid on the bar, 
 
 ### Responsive behavior
 
-Renders as one of three siblings in a row at desktop width (alongside `ParticipationVerticalBarCard`). No mobile Figma reference confirmed — needs mobile-first stacking per `DESIGN.md`'s grid rules before shipping.
+Renders as one of the two narrower columns in the dashboard Participation Profile row at desktop width (alongside the wider `ParticipationVerticalBarCard`). The parent composition owns this ratio via `grid-cols-dashboard-participation` (5:3:3) so the component stays reusable and does not bake dashboard-specific width math into its own API. No mobile Figma reference confirmed — mobile stacks to one column per `DESIGN.md`'s grid rules.
 
 ### Implementation rules
 
-- **No Figma node reachable for this component** — do not invent a node ID. Both variants were built from screenshots pasted directly in chat because the originally-linked node did not resolve via this environment's Figma MCP connection; re-verify pixel values against the live node once reachable.
-- **Bar width uses a documented approximation, not pure proportional scaling**: `MIN_WIDTH_PERCENT = 35`, and each row's rendered width is `35 + (value / max) * (100 - 35)` percent. This floor exists because the screenshots this component was built from show bars that are visibly longer than a pure `(value / max) * 100` scaling would produce — even a low-percentage row (e.g. "Engaged" at 3%) renders as a clearly visible bar, not a near-invisible sliver. This is a screenshot-derived heuristic, not a pixel-verified Figma value; revisit once the source frame is directly reachable.
-- Icon renders via `next/image` (`unoptimized`), sized `size-5`, matching `ParticipationVerticalBarCard`'s icon treatment.
+- The parent dashboard frame is node `4255:30872`; do not invent a more specific child node ID until Figma exposes a stable one for each variant.
+- **Bar width uses a documented approximation, not pure proportional scaling**: `MIN_WIDTH_PERCENT = 35`, and each row's rendered width is `35 + (value / max) * (100 - 35)` percent. This floor exists because the parent-frame screenshot shows bars that are visibly longer than a pure `(value / max) * 100` scaling would produce — even a low-percentage row (e.g. "Engaged" at 3%) renders as a clearly visible bar, not a near-invisible sliver. This is a screenshot-derived heuristic, not an independently pixel-sampled Figma value; revisit once stable child-node geometry is available.
+- Icon renders via `next/image` (`unoptimized`), scaled with `h-5 w-auto` so each SVG preserves its intrinsic ratio while matching `ParticipationVerticalBarCard`'s visual icon height.
 - Card shell/title styling deliberately mirrors `ParticipationVerticalBarCard` exactly (`rounded-xl border p-6 gap-6`, `text-base font-bold` title) so the three "Participation Profile" widgets read as one set — do not let the two drift apart without a confirmed reason.
+- **Dashboard width ratio belongs to the parent composition.** `src/app/dashboard/_components/dashboard-content.tsx` wraps this card and its `ParticipationVerticalBarCard` sibling in `data-slot="dashboard-participation-profile-grid"` with `lg:grid-cols-dashboard-participation`, a named spacing utility sourced from the full `4255:30872` dashboard frame. Do not replace it with equal `lg:grid-cols-3` or an inline bracketed grid template.
 
 ### Visual examples
 
@@ -2653,7 +3543,7 @@ Deleted from the codebase (`src/components/participation-horizontal-bar-card.tsx
 
 **Status**: Draft (implemented; a real ARIA-controls/tabpanel linkage is not wired — see Implementation rules)
 **Source**: `src/components/ui/tabs.tsx`
-**Figma**: AMFM Portal file, node `3727:29573` — 4 confirmed instances: "Relationship Health for Bedford Campus" card header (2-tab: Couples/Singles), "Spiritual Snapshot for Bedford Campus" card header (3-tab: All/Couples/Singles), "Top 3 Caution Flags for Bedford Campus" card header (2-tab: Couples/Singles), "Top 3 Expressed Needs for Bedford Campus" card header (2-tab: Couples/Singles)
+**Figma**: AMFM Portal file, node `4255:30872` — 4 confirmed instances: "Relationship Health for Bedford Campus" card header (2-tab: Couples/Singles), "Spiritual Snapshot for Bedford Campus" card header (3-tab: All/Couples/Singles), "Top 3 Caution Flags for Bedford Campus" card header (2-tab: Couples/Singles), "Top 3 Expressed Needs for Bedford Campus" card header (2-tab: Couples/Singles)
 
 ### Purpose
 
@@ -2718,34 +3608,34 @@ Rendered live on `/dashboard` (4 instances: Relationship Health, Spiritual Snaps
 
 ## CommitmentConnectionChart
 
-**Status**: Draft (implemented; zone label positions are evenly distributed, not pixel-verified per-zone — see Implementation rules)
+**Status**: Draft (implemented with the verified Figma scattergram asset; response count remains representative/static for the design-system app)
 **Source**: `src/components/commitment-connection-chart.tsx`
-**Figma**: AMFM Portal file, node `3727:29573`, "Scattergram" instance inside the "Relationship Health for Bedford Campus" card (metadata tree ID `0:4918` — unreliable for direct re-query, re-confirm on canvas before implementation per the node-ID caveat above)
+**Figma**: AMFM Portal file, node `4255:30872`, "Scattergram" instance inside the "Relationship Health for Bedford Campus" card. The visible graphic is cropped from the verified full `Scattergram` screenshot into `public/relationship-health-scattergram.png`.
 
 ### Purpose
 
-The centerpiece relationship-health chart — a quadrant scatter/bubble plot mapping individuals along two axes (Commitment × Connection), surfacing named relationship-health zones with a highlighted "center of mass" zone (confirmed sample: "Steady").
+The centerpiece relationship-health chart — a quadrant scatter/bubble plot mapping individuals along two axes (Commitment × Connection), surfacing named relationship-health zones with a highlighted "center of mass" zone (confirmed sample: "Steady"). In this design-system repository it renders the verified Figma graphic asset, while exposing an accessible summary based on the representative response-count props.
 
 ### Anatomy
 
-Circular quadrant background with zone labels positioned around its boundary → scattered dot cloud (one dot per data point — confirmed via a hidden repeated `_Dot` child node in the Figma source, i.e. the cloud is built from a repeated component, not a rasterized background image) → a highlighted center circle labeling the dominant zone → two axis labels ("Commitment" vertical, "Connection" horizontal) with low/high directional indicators.
+`figure[data-slot="commitment-connection-chart"]` with `role="img"` and an `aria-label` summary → decorative `next/image` rendering `public/relationship-health-scattergram.png` → `sr-only` figcaption preserving the highlighted zone and zone labels as real text for audit/tests.
 
 ### Variants
 
-None evidenced — one chart shape, entirely data-driven.
+None evidenced — one chart shape for the current dashboard frame. Content props feed the accessible summary; the visible graphic is the verified static Figma asset. Do not pass point geometry into this component until a true live-filtered data-viz implementation exists.
 
 ### States
 
 | State | Behavior |
 |---|---|
-| Default | Renders the current filtered dataset (see `DashboardFilterMenu`, `HorizontalTabs`). |
+| Default | Renders the verified Figma scattergram asset and summarizes the current representative response count/highlighted zone for assistive tech. |
 | Empty | Not evidenced in Figma — needed once filters can produce a zero-result set; must be added before shipping. |
 
 ### Properties / API
 
 ```ts
 interface CommitmentConnectionChartProps {
-  dataPoints: { commitment: number; connection: number }[];
+  responseCount: number;
   highlightedZone: string;
   zoneLabels: Record<string, string>;
   className?: string;
@@ -2754,21 +3644,21 @@ interface CommitmentConnectionChartProps {
 
 ### Design tokens used
 
-Not yet confirmed against a direct node pull. Dot color reads consistent with a brand/terracotta tone (`primary`/`text-brand` family) and zone label text reads consistent with a muted gray (`text-muted-foreground`/`text-text-tertiary`) in the reference screenshot — confirm exact values before implementation.
+The visible chart colors/hand-drawn labels live inside `public/relationship-health-scattergram.png`, cropped from the verified Figma `Scattergram` screenshot. Parent dashboard layout uses `grid-cols-dashboard-relationship-health` (695:564) so the graphic card and snapshot card match Figma's left/right ratio without an inline bracketed grid template.
 
 ### Accessibility requirements
 
-- The chart SVG itself is `aria-hidden` — same pattern as `HeartChartSummary`'s donut.
-- A scatter plot of many individual data points has no meaningful per-point text equivalent. The adjacent text panel (confirmed present in Figma: e.g. "Steady — 292 people (46%) are Comfortable but coasting") must fully carry the chart's headline finding in real text, matching `HeartChartSummary`'s "text carries the meaning" precedent. Whether a full data-table fallback is warranted for a chart this data-dense was not resolved in this pass — raise with product/design before shipping rather than deciding unilaterally.
+- The decorative raster image uses `alt=""`; the wrapper owns `role="img"` and an `aria-label` that summarizes plotted response count, highlighted zone, and zone labels.
+- The adjacent `SnapshotVideoCard` still carries the key interpretation in real text (e.g. "Steady — 292 people (46%) are Comfortable but coasting"), matching `HeartChartSummary`'s "text carries the meaning" precedent. A full data-table fallback for every plotted individual is intentionally not implemented in this design-system pass because the visible chart is a verified static Figma asset, not a live point renderer.
 
 ### Responsive behavior
 
-Fixed circular geometry — not yet evidenced to scale below its Figma-authored desktop width. Needs a real mobile Figma reference before a responsive behavior can be documented, same category of gap as `HeartChartSummary`.
+Scales fluidly inside the parent grid column and stacks above `SnapshotVideoCard` on narrow screens. The desktop parent row uses `grid-cols-dashboard-relationship-health` (695:564) with `gap-6`, matching the verified Figma metadata for the `Scattergram` top row.
 
 ### Implementation rules
 
-- Hand-build as SVG (or equivalent), not a fetched/rasterized asset — Figma's own per-sample export is static, but this component must respond to arbitrary data, matching `HeartChartSummary`'s donut-chart precedent for the same reason.
-- Exact zone label copy/spelling should be re-verified directly against the Figma text nodes before implementation — this entry's labels are read off a screenshot, not a direct text-node pull, per the node-ID caveat above.
+- Do not reintroduce the earlier fixed `320px` hand-built SVG; it visibly under-scaled the chart and lost the hand-labelled Figma graphic language.
+- If the product later needs live-filtered point geometry, add a true data-viz implementation as a new deliberate enhancement with its own accessibility fallback. Do not silently replace this verified Figma asset with ad hoc SVG geometry in a visual cleanup pass.
 
 ### Visual examples
 
@@ -2780,7 +3670,7 @@ Rendered live on `/dashboard`'s "Relationship Health for Bedford Campus" card; t
 
 **Status**: Draft (implemented as a static preview, per the `CourseCard`-style composition — see Implementation rules; product/design should still confirm this over a full `VideoPlayer`)
 **Source**: `src/components/snapshot-video-card.tsx`
-**Figma**: AMFM Portal file, node `3727:29573`, "Relationship Health for Bedford Campus" card, right column (paired with `CommitmentConnectionChart`)
+**Figma**: AMFM Portal file, node `4255:30872`, "Relationship Health for Bedford Campus" card, right column (paired with `CommitmentConnectionChart`)
 
 ### Purpose
 
@@ -2788,7 +3678,7 @@ Presents a short contextual video ("Quick Snapshot") explaining the currently-hi
 
 ### Anatomy
 
-Optional zone-summary header block (`border-b pb-6`, rendered only when `zoneTitle` or `zoneHeadline` is supplied: bold `text-lg` zone title + `text-sm font-medium text-primary` zone headline) → video thumbnail/player area (photo, play affordance) → `title` heading (`text-sm font-semibold text-foreground`, new — previously `title` only appeared in the video's `aria-label` and a now-removed on-video corner caption) → supporting description paragraph → `Button` ("Next Ministry Steps").
+Bordered card shell (`rounded-xl border bg-background p-6`) → optional zone-summary header block (`border-b pb-6`, rendered only when `zoneTitle` or `zoneHeadline` is supplied: bold `text-lg` zone title + `text-sm font-medium text-primary` zone headline) → video thumbnail using `public/relationship-health-snapshot-video.png` (static preview by default, labelled play button only when `onPlay` is supplied) → `title` heading (`text-sm font-semibold text-foreground`) → supporting description paragraph → shared outline action styling for "Next Ministry Steps" (real `Button` only when `onNextSteps` is supplied).
 
 ### Variants
 
@@ -2798,7 +3688,8 @@ None evidenced.
 
 | State | Behavior |
 |---|---|
-| Default | Static thumbnail, as observed in Figma. |
+| Default | Static thumbnail, as observed in Figma. If no handlers are supplied, preview controls are non-focusable visual references only. |
+| Wired actions | `onPlay` makes the thumbnail a labelled play button; `onNextSteps` makes the CTA a real shared `Button`. |
 | Play/playing | Not evidenced in the current Figma reference (a static frame) — must be defined once wired to a real video source, per the composition choice below. |
 
 ### Properties / API
@@ -2811,30 +3702,31 @@ interface SnapshotVideoCardProps {
   zoneTitle?: string;
   /** Zone summary sentence (e.g. "292 people (46%) are Comfortable but coasting"), rendered under zoneTitle. */
   zoneHeadline?: string;
+  onPlay?: () => void;
   onNextSteps?: () => void;
   className?: string;
 }
 ```
-Exact video/thumbnail props depend on the composition decision below — not finalized.
+No public video-source prop exists yet; this design-system pass renders the static Figma thumbnail. Omitted handlers intentionally produce non-interactive visual previews, not no-op buttons.
 
 ### Design tokens used
 
-Not yet confirmed against a direct node pull for the video/thumbnail area itself. The new header block uses `border-b` (divider), `text-lg` (zone title), `text-sm font-medium text-primary` (zone headline) — the app's brand terracotta accent, not a new token.
+Card shell uses `rounded-xl border bg-background p-6`, matching the right-column Figma card. The header block uses `border-b`, `text-lg` (zone title), and `text-sm font-medium text-primary` (zone headline). The thumbnail is the Figma-cropped `public/relationship-health-snapshot-video.png`; the CTA uses shared `Button variant="outline" size="compact"`.
 
 ### Accessibility requirements
 
-Depends on the composition decision below: if built on `VideoPlayer`, inherits its existing native `<video>` control accessibility; if built on `CourseCard`'s static video-cover pattern, needs its own play-button `aria-label` and keyboard operability, since that pattern has no in-place scrubber. The zone-summary header renders as a real `<h3>` (`zoneTitle`) plus a `<p>` (`zoneHeadline`), so it reaches assistive tech as ordinary text, not baked into the thumbnail image.
+The thumbnail becomes a real `<button>` with `aria-label="Play {title} video"` only when `onPlay` is provided; otherwise it is a non-focusable visual preview (`aria-hidden`) so the design-system render does not expose a dead control. The thumbnail image itself is decorative (`alt=""`). The zone-summary header renders as a real `<h3>` (`zoneTitle`) plus a `<p>` (`zoneHeadline`), so it reaches assistive tech as ordinary text, not baked into the thumbnail image.
 
 ### Responsive behavior
 
-Sits beside `CommitmentConnectionChart` at desktop width — not yet evidenced against a mobile Figma reference; needs a documented stacking behavior before shipping.
+Sits beside `CommitmentConnectionChart` at desktop width inside `grid-cols-dashboard-relationship-health` (695:564); stacks below the chart on narrow screens. No separate mobile Figma reference is confirmed.
 
 ### Implementation rules
 
-- **No `VideoCard` component exists in this codebase** — despite this pattern's working name, there is no component by that name to reuse. The two existing candidates were `VideoPlayer` (`src/components/video-player.tsx`, a full native `<video>` element with working play/pause/seek/mute/fullscreen, currently wired with a placeholder `src`) and `CourseCard`'s internal video-cover treatment (a static thumbnail + play glyph + heading, no scrubber). **Implemented using the `CourseCard`-style static-preview pattern** (a self-contained `<button>` with a play-affordance overlay, not `VideoPlayer`'s `<video>` element), since the Figma reference shows a static photo + play affordance with no visible scrubber/controls. This is a reasonable default, not a final product decision — confirm with product/design before treating the interaction model as settled. The thumbnail photo itself renders a `nav-surface-from`→`nav-surface-to` gradient placeholder (same blocked-asset class as `TopHero`/`CourseCard`).
+- **No `VideoCard` component exists in this codebase** — despite this pattern's working name, there is no component by that name to reuse. The two existing candidates were `VideoPlayer` (`src/components/video-player.tsx`, a full native `<video>` element with source-backed controls and static poster-only mode when `src` is omitted) and `CourseCard`'s internal video-cover treatment (a static thumbnail + play glyph + heading, no scrubber). **Implemented using the `CourseCard`-style static-preview pattern** (not `VideoPlayer`'s source-backed control surface), since the Figma reference is a static dashboard preview. The preview is non-interactive unless `onPlay` is supplied, at which point it becomes a labelled `<button>`. The thumbnail is no longer a gradient placeholder; it is cropped from the verified `4255:30881` `Scattergram` screenshot into `public/relationship-health-snapshot-video.png`.
 - **`zoneTitle`/`zoneHeadline` header block absorbed from the page.** This content used to be rendered manually by `src/app/dashboard/_components/dashboard-content.tsx` as a sibling `<div>` next to `SnapshotVideoCard`, not part of the component. It's now rendered by the component itself (conditionally, only when either prop is supplied) so the whole "Quick Snapshot" card corresponds to one Figma frame instead of being split across a page-level wrapper and the component.
 - **New `title` heading between the video and the description.** Previously `title` only surfaced via the video button's `aria-label` and a now-removed on-video corner caption; there was no visible `title` text in the card body. A `<p className="text-sm font-semibold text-foreground">{title}</p>` was added between the video and the description paragraph so the title is visible as real body text, matching the Figma reference.
-- **"Next Ministry Steps" button corrected**: was `variant="default"` (filled) and `self-start`; now `variant="outline"` and `self-end`, with a trailing `ArrowRight` icon (`lucide-react`) added — matching the outline-button convention already established by every other dashboard action button (`HeartChartSummary`, `WeDoCard`) and Figma's actual bottom-right-anchored placement.
+- **"Next Ministry Steps" action corrected**: was `variant="default"` (filled) and `self-start`; now uses the shared outline button styling at `self-end`, with a trailing `ArrowRight` icon (`lucide-react`) added — matching the outline-button convention already established by every other dashboard action button (`HeartChartSummary`, `WeDoCard`) and Figma's actual bottom-right-anchored placement. It is a real `Button` only when `onNextSteps` is supplied; otherwise it renders as a non-focusable visual reference.
 
 ### Visual examples
 
@@ -2846,7 +3738,7 @@ Rendered live on `/dashboard`'s "Relationship Health for Bedford Campus" card, a
 
 **Status**: Draft (implemented; rendered on `/dashboard`)
 **Source**: `src/app/dashboard/_components/dashboard-filter-menu.tsx` (route-colocated per `CLAUDE.md`'s colocation rule, since no second dashboard-style route exists yet to justify promoting it to `src/components`; revisit once a second real use site appears, matching `PricingCard`'s precedent)
-**Figma**: AMFM Portal file, node `3727:29573`, below the "Relationship Health for Bedford Campus" card's chart, above `FullWidthBarChart`
+**Figma**: AMFM Portal file, node `4255:30872`, below the "Relationship Health for Bedford Campus" card's chart, above `FullWidthBarChart`
 
 ### Purpose
 
@@ -2854,7 +3746,7 @@ Lets an admin narrow `CommitmentConnectionChart` and `FullWidthBarChart` by demo
 
 ### Anatomy
 
-A 3-line stacked "Showing" stat block ("Showing" / large bold result count / "of {total} people") → a vertical divider (hidden below `sm`) → 5 filter groups, each: a sentence-case group label + a row of independent pill chips (e.g. Gender: All / Male / Female), one chip active per group. Corrected from an earlier pass that rendered the summary as one sentence and each group's chips inside a single shared `bg-muted rounded-full p-1` pill container — Figma's real treatment has no shared pill background per group; each chip is its own independent pill.
+Bordered shell (`rounded-xl border bg-background p-4`) → a 3-line stacked "Showing" stat block ("Showing" / large bold result count / "of {total} people") → a vertical divider (hidden below `sm`) → 5 filter groups, each: a sentence-case group label + a row of independent pill chips (e.g. Gender: All / Male / Female), one chip active per group. Corrected from an earlier pass that rendered the summary as one sentence and each group's chips inside a single shared `bg-muted rounded-full p-1` pill container — Figma's real treatment has no shared pill background per group; each chip is its own independent pill.
 
 ### Variants
 
@@ -2888,6 +3780,7 @@ interface DashboardFilterMenuProps {
 
 ### Design tokens used
 
+- Shell: `rounded-xl border bg-background p-4`, matching Figma's filter-strip container around the stat block, divider, and groups.
 - Chips: `h-7 rounded-full px-3 text-sm`, `gap-1` between chips within a group (no shared container background) — confirmed distinct from `HorizontalTabs`' bordered track. Active: `bg-foreground text-background`. Inactive: `border border-border-secondary bg-background text-text-tertiary`, `hover:bg-accent`.
 - Group label: `text-sm font-semibold text-foreground`, sentence case — corrected from an earlier `text-xs uppercase tracking-[0.24px] text-text-tertiary` (all-caps eyebrow style); Figma's real label is a plain sentence-case, higher-emphasis heading, not a small muted eyebrow.
 - Stat block: `text-3xl leading-none font-bold` for the count, `text-sm text-muted-foreground` for the "Showing"/"of {total} people" lines.
@@ -2927,7 +3820,7 @@ The detailed, full-width companion to `CommitmentConnectionChart` — breaks the
 
 ### Anatomy
 
-Y-axis category labels (fixed `w-[74px]` column, ranked zone list, confirmed order in the reference screenshot: Thriving, Strong, Steady, Hopeful, Reliable, Fickle, Tentative, Stuck, Detached, Shallow, Estranged, Frayed, Broken) → a flat `h-6` bar, rounded only on its leading/value end (`rounded-r-sm`) → inline percentage label at each bar's end. Corrected from an earlier pass that rendered each bar as a `rounded-full` pill inside a `bg-muted` track — the confirmed node shows a flat bar with no surrounding track, rounded only on the value end. Row gap widened from `gap-3` to `gap-6`.
+Y-axis category labels (fixed `w-full-width-bar-label` column, ranked zone list, confirmed order in the reference screenshot: Thriving, Strong, Steady, Hopeful, Reliable, Fickle, Tentative, Stuck, Detached, Shallow, Estranged, Frayed, Broken) → a flat `h-6` bar, rounded only on its leading/value end (`rounded-r-sm`) → inline percentage label at each bar's end. Corrected from an earlier pass that rendered each bar as a `rounded-full` pill inside a `bg-muted` track — the confirmed node shows a flat bar with no surrounding track, rounded only on the value end. Row gap widened from `gap-3` to `gap-6`.
 
 ### Variants
 
@@ -2952,8 +3845,8 @@ interface FullWidthBarChartProps {
 ### Design tokens used
 
 - Bar fill: `bg-gradient-to-r from-primary to-chart-bar-fill-to opacity-80` — a confirmed two-stop gradient at 80% opacity, replacing an earlier flat `bg-primary`. `chart-bar-fill-to` is a brand-new token (`#683b27`, `oklch(0.403 0.071 44.248)`, added to `src/tokens/colors.css`) confirmed via this node's direct Figma pull — **this resolves a previously-documented `DESIGN.md` Known-gap** that flagged this exact bar color as "not reliably resolvable"; if that Known-gap language is still quoted anywhere else in this file, treat it as stale.
-- Row label column: `w-[74px] text-sm font-semibold text-text-secondary` — corrected from an earlier `w-24 text-xs text-muted-foreground` (both the fixed width and the type treatment are now confirmed against the node, not estimated).
-- Value label: `text-xs font-semibold tracking-[0.24px] text-foreground/70` — corrected from an earlier `text-xs font-medium text-foreground`.
+- Row label column: `w-full-width-bar-label text-sm font-semibold text-text-secondary` — corrected from an earlier `w-24 text-xs text-muted-foreground` (both the fixed width and the type treatment are now confirmed against the node, not estimated).
+- Value label: `text-xs font-semibold tracking-label text-foreground/70` — corrected from an earlier `text-xs font-medium text-foreground`; uses the shared label-tracking token instead of a bracketed Figma value.
 
 ### Accessibility requirements
 
@@ -2979,7 +3872,7 @@ Rendered live on `/dashboard`'s "Relationship Health for Bedford Campus" card, b
 
 **Status**: Draft (implemented; the surrounding tabs live on the parent `Card`, not this tile — see Anatomy)
 **Source**: `src/components/pie-chart-card.tsx`
-**Figma**: AMFM Portal file, node `3727:29573`, "Spiritual Snapshot for Bedford Campus" card — 2 confirmed instances ("9% of people are new to following Jesus", "31% of people occasionally feel connected to God")
+**Figma**: AMFM Portal file, node `4255:30872`, "Spiritual Snapshot for Bedford Campus" card — 2 confirmed instances ("9% of people are new to following Jesus", "31% of people occasionally feel connected to God")
 
 ### Purpose
 
@@ -3016,8 +3909,8 @@ interface PieChartCardProps {
 - **Resolved**: the two instances use distinct color families, both now real named tokens in `src/tokens/colors.css` — a purple scale (`chart-pie-purple-700/500/300/100`) for the faith-journey pie and a green scale (`chart-pie-green-700/400/300/100`, plus the existing `status-success` reused for one segment — see below) for the "Connection to God" pie. These no longer map to the generic `chart-1`…`chart-5` scaffold tokens; do not fall back to those.
 - **Segment color correction (`GOD_CONNECTION_PIE` in `dashboard-data.ts`)**: the 54% segment ("Feel deeply connected to God daily") and the 31% segment ("Occasionally connected to God") had their color tokens swapped in an earlier pass. The 54% (deepest/darkest) segment now correctly uses the new `chart-pie-green-700` token (`#516449`, added in this change); the 31% segment uses the existing `status-success` token (`oklch(0.63 0.067 137.227)`, an exact hex match to Figma's `utility-green-500`, `#76936b` — reused rather than duplicated, per this codebase's "confirm exact matches, don't duplicate tokens" convention). Do not swap these back — 54% is the deepest green tier, not `status-success`.
 - Ring geometry: `size` 240px, `strokeWidth` 64px — both confirmed against Figma's container size; the stroke width specifically is a **best-effort estimate**, not a pixel-sampled value, since the raster asset couldn't be pixel-sampled directly. Revisit if a vector/metadata pull becomes possible. (Corrected up from an earlier 160px/24px pass.)
-- Center stat: `font-display text-display-md font-light`, `max-w-[400px]` — corrected from an earlier `text-sm font-medium`, `max-w-60`; the headline stat is meant to read as a large display-weight statement, not small body text.
-- Legend swatch: `h-6 w-10 rounded-[24px]` pill — corrected from an earlier `size-2.5 rounded-full` dot.
+- Center stat: `font-display text-display-md font-light`, `max-w-pie-center-stat` — corrected from an earlier `text-sm font-medium`, `max-w-60`; the headline stat is meant to read as a large display-weight statement, not small body text.
+- Legend swatch: `h-6 w-10 rounded-3xl` pill — corrected from an earlier `size-2.5 rounded-full` dot. `rounded-3xl` is Tailwind's built-in 24px radius, matching the sourced pill radius without a bracketed class.
 - Legend row layout: `flex items-baseline gap-1`, bold value then label, both `text-foreground` — corrected from an earlier spread layout (`flex-1` pushing the value to the far side of the label, label in `text-muted-foreground`); Figma's real legend keeps the value and label tightly grouped together at equal emphasis, not visually separated with one de-emphasized.
 
 ### Accessibility requirements
@@ -3043,7 +3936,7 @@ Rendered live on `/dashboard`'s "Spiritual Snapshot for Bedford Campus" card (2 
 
 **Status**: Draft (implemented; "Why does this matter?" always renders — see Implementation rules)
 **Source**: `src/components/scale-chart-card.tsx`
-**Figma**: AMFM Portal file, node `3727:29573`, "Top 3 Caution Flags for Bedford Campus" and "Top 3 Expressed Needs for Bedford Campus" cards — 6 confirmed instances total (3 per card), Figma layer name "Scale chart/Default"
+**Figma**: AMFM Portal file, node `4255:30872`, "Top 3 Caution Flags for Bedford Campus" and "Top 3 Expressed Needs for Bedford Campus" cards — 6 confirmed instances total (3 per card), Figma layer name "Scale chart/Default"
 
 ### Purpose
 
@@ -3086,7 +3979,7 @@ This is a near-total visual rewrite from the previously-documented placeholder s
 - Track: `h-6 bg-gradient-to-r from-chart-scale-blue-25 to-chart-scale-blue-50` — corrected from a flat `h-2 bg-chart-scale-blue-50` (both taller and now a two-stop gradient).
 - Fill bar (this church's value): `bg-gradient-to-r from-chart-scale-blue-400 to-chart-scale-blue-100` — corrected from a flat `bg-chart-scale-blue-400`.
 - National Average marker: `h-10 w-1.5 bg-foreground` — corrected from a much smaller `h-3 w-0.5`.
-- Caption row (0% / National Average / 100%): `text-xs font-medium tracking-[0.24px]` — corrected from `text-[10px]` with no explicit tracking.
+- Caption row (0% / National Average / 100%): `text-chart-label font-medium tracking-label` — corrected from `text-[10px]` with no explicit tracking and from a later bracketed `tracking-[0.24px]` drift; see `DESIGN.md`'s chart-label and label-tracking rules.
 - Card padding/layout: `px-8 pt-6 pb-8 gap-6`, center-aligned (`text-center items-center`) — corrected from `p-4 gap-3`, left-aligned.
 - "Why does this matter?" link: a leading `Play` icon (`lucide-react`) was added before the link text — new, was text-only before.
 

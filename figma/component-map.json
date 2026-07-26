@@ -2,12 +2,103 @@
   "Button": {
     "figmaComponent": "AMFM Portal — node 3273:19658 (\"Primary\" button set, default size 46px) and sibling nodes; icon-leading primary buttons confirmed on node 1894:16263 (\"Get Started\" CTA, lg size 50px), node 3724:23184 (\"Invite Marriage Champions\" CTA, sm size 42px), and node 1903:19737 (HeartChart link modal \"Add a campus\" CTA, compact size 38px), all resolving icons to button-primary-icon; common Figma Buttons/Button icon slot is 20px with effective 6px icon/text spacing; HeartChart standalone neutral controls in node 1903:19737 map to variant=outline size=control using semantic neutral outline tokens plus shadow-xs (Figma exports shadow-xs-skeuomorphic, but the implementation avoids reusing the primary shadow-button-inset token because it overdraws the neutral edge in browser review); reversed dark/brand-surface links and CTAs map to variant=outlineReversed, with Footer CTA node 1909:25789 using size=sm (42px); the input-attached Copy segment maps to variant=utilitySegment size=controlSegment; chrome-free upload-logo text-button instances in nodes 1903:19737 / 3724:20579 map to variant=link size=inline; CourseCard video CTA node 2320:27278 and HeartChartSummary actions node 1670:36217 map to variant=outline size=compact (38px); ResourceListItem's 48px resource-table action maps to variant=outline size=iconLg",
     "documentation": "COMPONENTS.md#button",
-    "implementation": "src/components/ui/button.tsx"
+    "implementation": "src/components/ui/button.tsx",
+    "figmaSources": [
+      {
+        "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",
+        "nodeId": "3273:19658",
+        "name": "Button Figma reference (3273:19658)",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=3273-19658&m=dev",
+        "role": "primary-reference",
+        "lastVerified": "2026-07-25"
+      },
+      {
+        "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",
+        "nodeId": "1894:16263",
+        "name": "Button Figma reference (1894:16263)",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=1894-16263&m=dev",
+        "role": "supporting-reference",
+        "lastVerified": "2026-07-25"
+      },
+      {
+        "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",
+        "nodeId": "3724:23184",
+        "name": "Button Figma reference (3724:23184)",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=3724-23184&m=dev",
+        "role": "supporting-reference",
+        "lastVerified": "2026-07-25"
+      },
+      {
+        "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",
+        "nodeId": "1903:19737",
+        "name": "Button Figma reference (1903:19737)",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=1903-19737&m=dev",
+        "role": "supporting-reference",
+        "lastVerified": "2026-07-25"
+      },
+      {
+        "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",
+        "nodeId": "1909:25789",
+        "name": "Button Figma reference (1909:25789)",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=1909-25789&m=dev",
+        "role": "supporting-reference",
+        "lastVerified": "2026-07-25"
+      },
+      {
+        "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",
+        "nodeId": "3724:20579",
+        "name": "Button Figma reference (3724:20579)",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=3724-20579&m=dev",
+        "role": "supporting-reference",
+        "lastVerified": "2026-07-25"
+      },
+      {
+        "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",
+        "nodeId": "2320:27278",
+        "name": "Button Figma reference (2320:27278)",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=2320-27278&m=dev",
+        "role": "supporting-reference",
+        "lastVerified": "2026-07-25"
+      },
+      {
+        "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",
+        "nodeId": "1670:36217",
+        "name": "Button Figma reference (1670:36217)",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=1670-36217&m=dev",
+        "role": "supporting-reference",
+        "lastVerified": "2026-07-25"
+      }
+    ]
   },
   "Input": {
     "figmaComponent": "AMFM Portal — node 3272:19436 (\"Input\" field set) and sibling nodes",
     "documentation": "COMPONENTS.md#input",
-    "implementation": "src/components/ui/input.tsx"
+    "implementation": "src/components/ui/input.tsx",
+    "figmaSources": [
+      {
+        "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",
+        "nodeId": "3272:19436",
+        "name": "Input Figma reference (3272:19436)",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=3272-19436&m=dev",
+        "role": "primary-reference",
+        "lastVerified": "2026-07-25"
+      }
+    ]
+  },
+  "HelperText": {
+    "figmaComponent": "AMFM Portal — node 3272:19436 (\"Input\" field set), hidden \"Hint text\" slot",
+    "documentation": "COMPONENTS.md#helpertext",
+    "implementation": "src/components/ui/helper-text.tsx",
+    "figmaSources": [
+      {
+        "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",
+        "nodeId": "3272:19436",
+        "name": "HelperText Figma reference (3272:19436)",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=3272-19436&m=dev",
+        "role": "primary-reference",
+        "lastVerified": "2026-07-25"
+      }
+    ]
   },
   "Label": {
     "figmaComponent": "",
@@ -17,7 +108,53 @@
   "Checkbox": {
     "figmaComponent": "AMFM Portal — Onboarding/login node 1909:25767 (\"trusted device\" control)",
     "documentation": "COMPONENTS.md#checkbox",
-    "implementation": "src/components/ui/checkbox.tsx"
+    "implementation": "src/components/ui/checkbox.tsx",
+    "figmaSources": [
+      {
+        "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",
+        "nodeId": "1909:25767",
+        "name": "Checkbox Figma reference (1909:25767)",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=1909-25767&m=dev",
+        "role": "primary-reference",
+        "lastVerified": "2026-07-25"
+      }
+    ]
+  },
+  "PasswordRequirementItem": {
+    "figmaComponent": "AMFM Portal — Onboarding/sign up node 1909:25768, nodes 1909:25225-1909:25229",
+    "documentation": "COMPONENTS.md#passwordrequirementitem",
+    "implementation": "src/app/signup/_components/password-requirement-item.tsx",
+    "figmaSources": [
+      {
+        "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",
+        "nodeId": "1909:25768",
+        "name": "PasswordRequirementItem Figma reference (1909:25768)",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=1909-25768&m=dev",
+        "role": "primary-reference",
+        "lastVerified": "2026-07-25"
+      },
+      {
+        "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",
+        "nodeId": "1909:25225",
+        "name": "PasswordRequirementItem Figma reference (1909:25225)",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=1909-25225&m=dev",
+        "role": "supporting-reference",
+        "lastVerified": "2026-07-25"
+      },
+      {
+        "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",
+        "nodeId": "1909:25229",
+        "name": "PasswordRequirementItem Figma reference (1909:25229)",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=1909-25229&m=dev",
+        "role": "supporting-reference",
+        "lastVerified": "2026-07-25"
+      }
+    ]
+  },
+  "SignupSuccess": {
+    "figmaComponent": "",
+    "documentation": "COMPONENTS.md#signupsuccess",
+    "implementation": "src/app/signup/_components/signup-success.tsx"
   },
   "Card": {
     "figmaComponent": "",
@@ -27,37 +164,346 @@
   "Dialog": {
     "figmaComponent": "AMFM Portal — node 1829:19828 (modal chrome reference)",
     "documentation": "COMPONENTS.md#dialog",
-    "implementation": "src/components/ui/dialog.tsx"
+    "implementation": "src/components/ui/dialog.tsx",
+    "figmaSources": [
+      {
+        "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",
+        "nodeId": "1829:19828",
+        "name": "Dialog Figma reference (1829:19828)",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=1829-19828&m=dev",
+        "role": "primary-reference",
+        "lastVerified": "2026-07-25"
+      }
+    ]
   },
   "HeartChartModalShell": {
-    "figmaComponent": "AMFM Portal — HeartChart link Modal (current verified node 1903:19737; earlier component reference 3724:20579), Modal / quick tip (node 3727:32459), Modal / last 4 weeks (node 3727:32514), HeartChart Resources / Quick Start (node 3727:32687)",
+    "figmaComponent": "AMFM Portal — July 2026 MVP modal family: Modal/HeartChart link (assigned node 4207:25806; prior verified node 1903:19737 and component reference 3724:20579), Modal / invite user (node 3724:23382), Modal/quick tip (node 3727:32459), Modal / last 4 weeks (node 3727:32514), HeartChart Resources / Quick Start (node 3727:32687)",
     "documentation": "COMPONENTS.md#heartchartmodalshell",
-    "implementation": "src/components/heartchart-modal-shell.tsx"
+    "implementation": "src/components/heartchart-modal-shell.tsx",
+    "figmaSources": [
+      {
+        "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",
+        "nodeId": "4207:25806",
+        "name": "Modal/HeartChart link assigned July MVP frame",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=4207-25806&m=dev",
+        "role": "variant-reference",
+        "lastVerified": "2026-07-25"
+      },
+      {
+        "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",
+        "nodeId": "3724:23382",
+        "name": "Modal / invite user",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=3724-23382&m=dev",
+        "role": "variant-reference",
+        "lastVerified": "2026-07-25"
+      },
+      {
+        "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",
+        "nodeId": "3727:32459",
+        "name": "Modal/quick tip",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=3727-32459&m=dev",
+        "role": "variant-reference",
+        "lastVerified": "2026-07-25"
+      },
+      {
+        "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",
+        "nodeId": "3727:32514",
+        "name": "Modal / last 4 weeks",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=3727-32514&m=dev",
+        "role": "variant-reference",
+        "lastVerified": "2026-07-25"
+      },
+      {
+        "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",
+        "nodeId": "3727:32687",
+        "name": "HeartChart Resources / Quick Start Guide modal",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=3727-32687&m=dev",
+        "role": "variant-reference",
+        "lastVerified": "2026-07-25"
+      }
+    ],
+    "visualTargets": [
+      "heartchart-link-modal",
+      "heartchart-link-modal-mobile",
+      "invite-user-modal",
+      "invite-user-modal-mobile",
+      "heartchart-quick-tip-modal",
+      "heartchart-quick-tip-modal-mobile",
+      "heartchart-last-four-weeks-modal",
+      "heartchart-last-four-weeks-modal-mobile",
+      "heartchart-resources-quick-start-modal",
+      "heartchart-resources-quick-start-modal-mobile"
+    ]
   },
   "HeartChartLinkCard": {
     "figmaComponent": "AMFM Portal — HeartChart link Modal (current verified node 1903:19737; earlier component reference 3724:20579), nested \"_HeartChart - Church - URL\" row; Figma share-04 maps to lucide ExternalLink",
     "documentation": "COMPONENTS.md#heartchartlinkcard",
-    "implementation": "src/components/heartchart-link-card.tsx"
+    "implementation": "src/components/heartchart-link-card.tsx",
+    "figmaSources": [
+      {
+        "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",
+        "nodeId": "4207:25806",
+        "name": "Modal/HeartChart link assigned July MVP frame",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=4207-25806&m=dev",
+        "role": "primary-reference",
+        "lastVerified": "2026-07-25"
+      },
+      {
+        "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",
+        "nodeId": "1903:19737",
+        "name": "HeartChart link modal verified instance",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=1903-19737&m=dev",
+        "role": "supporting-reference",
+        "lastVerified": "2026-07-25"
+      }
+    ],
+    "visualTargets": [
+      "heartchart-link-modal",
+      "heartchart-link-modal-mobile"
+    ]
   },
   "HeartChartLinkModal": {
     "figmaComponent": "AMFM Portal — HeartChart link Modal (current verified node 1903:19737; earlier component reference 3724:20579)",
     "documentation": "COMPONENTS.md#heartchartlinkmodal",
-    "implementation": "src/components/heartchart-link-modal.tsx"
+    "implementation": "src/components/heartchart-link-modal.tsx",
+    "figmaSources": [
+      {
+        "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",
+        "nodeId": "4207:25806",
+        "name": "Modal/HeartChart link assigned July MVP frame",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=4207-25806&m=dev",
+        "role": "primary-reference",
+        "lastVerified": "2026-07-25"
+      }
+    ],
+    "visualTargets": [
+      "heartchart-link-modal",
+      "heartchart-link-modal-mobile"
+    ]
+  },
+  "InviteUserModal": {
+    "figmaComponent": "AMFM Portal — Modal / invite user (node 3724:23382)",
+    "documentation": "COMPONENTS.md#inviteusermodal",
+    "implementation": "src/components/invite-user-modal.tsx",
+    "figmaSources": [
+      {
+        "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",
+        "nodeId": "3724:23382",
+        "name": "Modal / invite user",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=3724-23382&m=dev",
+        "role": "primary-reference",
+        "lastVerified": "2026-07-25"
+      }
+    ],
+    "visualTargets": [
+      "invite-user-modal",
+      "invite-user-modal-mobile"
+    ]
+  },
+  "HeartChartQuickTipModal": {
+    "figmaComponent": "AMFM Portal — Modal/quick tip (node 3727:32459)",
+    "documentation": "COMPONENTS.md#heartchartquicktipmodal",
+    "implementation": "src/components/heartchart-quick-tip-modal.tsx",
+    "figmaSources": [
+      {
+        "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",
+        "nodeId": "3727:32459",
+        "name": "Modal/quick tip",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=3727-32459&m=dev",
+        "role": "primary-reference",
+        "lastVerified": "2026-07-25"
+      }
+    ],
+    "visualTargets": [
+      "heartchart-quick-tip-modal",
+      "heartchart-quick-tip-modal-mobile"
+    ]
+  },
+  "HeartChartLastFourWeeksModal": {
+    "figmaComponent": "AMFM Portal — Modal / last 4 weeks (node 3727:32514)",
+    "documentation": "COMPONENTS.md#heartchartlastfourweeksmodal",
+    "implementation": "src/components/heartchart-last-four-weeks-modal.tsx",
+    "figmaSources": [
+      {
+        "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",
+        "nodeId": "3727:32514",
+        "name": "Modal / last 4 weeks",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=3727-32514&m=dev",
+        "role": "primary-reference",
+        "lastVerified": "2026-07-25"
+      }
+    ],
+    "visualTargets": [
+      "heartchart-last-four-weeks-modal",
+      "heartchart-last-four-weeks-modal-mobile"
+    ]
+  },
+  "HeartChartResourcesQuickStartModal": {
+    "figmaComponent": "AMFM Portal — HeartChart Resources / Quick Start Guide modal (node 3727:32687)",
+    "documentation": "COMPONENTS.md#heartchartresourcesquickstartmodal",
+    "implementation": "src/components/heartchart-resources-quick-start-modal.tsx",
+    "figmaSources": [
+      {
+        "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",
+        "nodeId": "3727:32687",
+        "name": "HeartChart Resources / Quick Start Guide modal",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=3727-32687&m=dev",
+        "role": "primary-reference",
+        "lastVerified": "2026-07-25"
+      }
+    ],
+    "visualTargets": [
+      "heartchart-resources-quick-start-modal",
+      "heartchart-resources-quick-start-modal-mobile"
+    ]
+  },
+  "InfoNote": {
+    "figmaComponent": "AMFM Portal — Modal / invite user (node 3724:23382), informational role note",
+    "documentation": "COMPONENTS.md#infonote",
+    "implementation": "src/components/info-note.tsx",
+    "figmaSources": [
+      {
+        "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",
+        "nodeId": "3724:23382",
+        "name": "Modal / invite user role note",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=3724-23382&m=dev",
+        "role": "supporting-reference",
+        "lastVerified": "2026-07-25"
+      }
+    ],
+    "visualTargets": [
+      "invite-user-modal",
+      "invite-user-modal-mobile"
+    ]
+  },
+  "ModalTextSection": {
+    "figmaComponent": "AMFM Portal — Modal/quick tip (node 3727:32459), Growing Momentum body section",
+    "documentation": "COMPONENTS.md#modaltextsection",
+    "implementation": "src/components/modal-text-section.tsx",
+    "figmaSources": [
+      {
+        "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",
+        "nodeId": "3727:32459",
+        "name": "Modal/quick tip Growing Momentum body section",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=3727-32459&m=dev",
+        "role": "supporting-reference",
+        "lastVerified": "2026-07-25"
+      }
+    ],
+    "visualTargets": [
+      "heartchart-quick-tip-modal",
+      "heartchart-quick-tip-modal-mobile"
+    ]
+  },
+  "ParticipationTrendChart": {
+    "figmaComponent": "AMFM Portal — Modal / last 4 weeks (node 3727:32514), March 23-April 19 chart",
+    "documentation": "COMPONENTS.md#participationtrendchart",
+    "implementation": "src/components/participation-trend-card.tsx",
+    "figmaSources": [
+      {
+        "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",
+        "nodeId": "3727:32514",
+        "name": "Modal / last 4 weeks March 23-April 19 chart",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=3727-32514&m=dev",
+        "role": "supporting-reference",
+        "lastVerified": "2026-07-25"
+      }
+    ],
+    "visualTargets": [
+      "heartchart-last-four-weeks-modal",
+      "heartchart-last-four-weeks-modal-mobile"
+    ]
+  },
+  "ParticipationTrendCard": {
+    "figmaComponent": "AMFM Portal — Modal / last 4 weeks (node 3727:32514), date-range total + trend chart block",
+    "documentation": "COMPONENTS.md#participationtrendcard",
+    "implementation": "src/components/participation-trend-card.tsx",
+    "figmaSources": [
+      {
+        "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",
+        "nodeId": "3727:32514",
+        "name": "Modal / last 4 weeks date-range total and trend card",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=3727-32514&m=dev",
+        "role": "supporting-reference",
+        "lastVerified": "2026-07-25"
+      }
+    ],
+    "visualTargets": [
+      "heartchart-last-four-weeks-modal",
+      "heartchart-last-four-weeks-modal-mobile"
+    ]
+  },
+  "TipCarousel": {
+    "figmaComponent": "AMFM Portal — Modal / last 4 weeks (node 3727:32514), invitation tip carousel",
+    "documentation": "COMPONENTS.md#tipcarousel",
+    "implementation": "src/components/tip-carousel.tsx",
+    "figmaSources": [
+      {
+        "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",
+        "nodeId": "3727:32514",
+        "name": "Modal / last 4 weeks invitation tip carousel",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=3727-32514&m=dev",
+        "role": "supporting-reference",
+        "lastVerified": "2026-07-25"
+      }
+    ],
+    "visualTargets": [
+      "heartchart-last-four-weeks-modal",
+      "heartchart-last-four-weeks-modal-mobile"
+    ]
   },
   "PhotoBackdrop": {
     "figmaComponent": "AMFM Portal — Onboarding/login node 1909:25767 (\"flat\" scrim, background photo treatment); Onboarding/First run church admin node 1909:25772 (\"radial\" scrim variant)",
     "documentation": "COMPONENTS.md#photobackdrop",
-    "implementation": "src/components/photo-backdrop.tsx"
+    "implementation": "src/components/photo-backdrop.tsx",
+    "figmaSources": [
+      {
+        "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",
+        "nodeId": "1909:25767",
+        "name": "PhotoBackdrop Figma reference (1909:25767)",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=1909-25767&m=dev",
+        "role": "primary-reference",
+        "lastVerified": "2026-07-25"
+      },
+      {
+        "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",
+        "nodeId": "1909:25772",
+        "name": "PhotoBackdrop Figma reference (1909:25772)",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=1909-25772&m=dev",
+        "role": "supporting-reference",
+        "lastVerified": "2026-07-25"
+      }
+    ]
   },
   "AuthCard": {
     "figmaComponent": "AMFM Portal — Onboarding/login node 1909:25767 (card shell)",
     "documentation": "COMPONENTS.md#authcard",
-    "implementation": "src/app/login/_components/auth-card.tsx"
+    "implementation": "src/app/login/_components/auth-card.tsx",
+    "figmaSources": [
+      {
+        "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",
+        "nodeId": "1909:25767",
+        "name": "AuthCard Figma reference (1909:25767)",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=1909-25767&m=dev",
+        "role": "primary-reference",
+        "lastVerified": "2026-07-25"
+      }
+    ]
   },
   "HeartChartLogo": {
     "figmaComponent": "AMFM Portal — Onboarding/login node 1909:25767 (exported wordmark asset)",
     "documentation": "COMPONENTS.md#heartchartlogo",
-    "implementation": "src/app/login/_components/heartchart-logo.tsx"
+    "implementation": "src/app/login/_components/heartchart-logo.tsx",
+    "figmaSources": [
+      {
+        "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",
+        "nodeId": "1909:25767",
+        "name": "HeartChartLogo Figma reference (1909:25767)",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=1909-25767&m=dev",
+        "role": "primary-reference",
+        "lastVerified": "2026-07-25"
+      }
+    ]
   },
   "GoogleIcon": {
     "figmaComponent": "",
@@ -77,32 +523,220 @@
   "HeartChartSummary": {
     "figmaComponent": "AMFM Portal — node 1993:36348 (\"HeartChart Summary\" component set: Growing 1640:23457/1670:36217, Low 1670:36549, Exceptional 1670:36610)",
     "documentation": "COMPONENTS.md#heartchartsummary",
-    "implementation": "src/components/heartchart-summary.tsx"
+    "implementation": "src/components/heartchart-summary.tsx",
+    "figmaSources": [
+      {
+        "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",
+        "nodeId": "1993:36348",
+        "name": "HeartChartSummary Figma reference (1993:36348)",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=1993-36348&m=dev",
+        "role": "primary-reference",
+        "lastVerified": "2026-07-25"
+      },
+      {
+        "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",
+        "nodeId": "1640:23457",
+        "name": "HeartChartSummary Figma reference (1640:23457)",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=1640-23457&m=dev",
+        "role": "supporting-reference",
+        "lastVerified": "2026-07-25"
+      },
+      {
+        "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",
+        "nodeId": "1670:36217",
+        "name": "HeartChartSummary Figma reference (1670:36217)",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=1670-36217&m=dev",
+        "role": "supporting-reference",
+        "lastVerified": "2026-07-25"
+      },
+      {
+        "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",
+        "nodeId": "1670:36549",
+        "name": "HeartChartSummary Figma reference (1670:36549)",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=1670-36549&m=dev",
+        "role": "supporting-reference",
+        "lastVerified": "2026-07-25"
+      },
+      {
+        "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",
+        "nodeId": "1670:36610",
+        "name": "HeartChartSummary Figma reference (1670:36610)",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=1670-36610&m=dev",
+        "role": "supporting-reference",
+        "lastVerified": "2026-07-25"
+      }
+    ]
   },
   "Select": {
     "figmaComponent": "AMFM Portal — Onboarding/Create Profile node 1909:25769, nodes 1909:25261 (\"Your role\") and 1909:25262 (\"Your primary goal\"); chevron-down icon node 10:338",
     "documentation": "COMPONENTS.md#select",
-    "implementation": "src/components/ui/select.tsx"
+    "implementation": "src/components/ui/select.tsx",
+    "figmaSources": [
+      {
+        "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",
+        "nodeId": "1909:25769",
+        "name": "Select Figma reference (1909:25769)",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=1909-25769&m=dev",
+        "role": "primary-reference",
+        "lastVerified": "2026-07-25"
+      },
+      {
+        "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",
+        "nodeId": "1909:25261",
+        "name": "Select Figma reference (1909:25261)",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=1909-25261&m=dev",
+        "role": "supporting-reference",
+        "lastVerified": "2026-07-25"
+      },
+      {
+        "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",
+        "nodeId": "1909:25262",
+        "name": "Select Figma reference (1909:25262)",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=1909-25262&m=dev",
+        "role": "supporting-reference",
+        "lastVerified": "2026-07-25"
+      },
+      {
+        "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",
+        "nodeId": "10:338",
+        "name": "Select Figma reference (10:338)",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=10-338&m=dev",
+        "role": "supporting-reference",
+        "lastVerified": "2026-07-25"
+      }
+    ]
   },
   "InputGroup": {
     "figmaComponent": "AMFM Portal — Onboarding/Create Profile node 1909:25769, node 1909:25259 (\"Website\" field)",
     "documentation": "COMPONENTS.md#inputgroup",
-    "implementation": "src/components/ui/input-group.tsx"
+    "implementation": "src/components/ui/input-group.tsx",
+    "figmaSources": [
+      {
+        "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",
+        "nodeId": "1909:25769",
+        "name": "InputGroup Figma reference (1909:25769)",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=1909-25769&m=dev",
+        "role": "primary-reference",
+        "lastVerified": "2026-07-25"
+      },
+      {
+        "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",
+        "nodeId": "1909:25259",
+        "name": "InputGroup Figma reference (1909:25259)",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=1909-25259&m=dev",
+        "role": "supporting-reference",
+        "lastVerified": "2026-07-25"
+      }
+    ]
   },
   "BenefitListItem": {
     "figmaComponent": "AMFM Portal — Onboarding/Create Profile node 1909:25769, check-circle icon node 10:6386, instances 1909:25272-1909:25275, 2852:117176, 2852:117164",
     "documentation": "COMPONENTS.md#benefitlistitem",
-    "implementation": "src/app/create-profile/_components/benefit-list-item.tsx"
+    "implementation": "src/app/create-profile/_components/benefit-list-item.tsx",
+    "figmaSources": [
+      {
+        "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",
+        "nodeId": "1909:25769",
+        "name": "BenefitListItem Figma reference (1909:25769)",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=1909-25769&m=dev",
+        "role": "primary-reference",
+        "lastVerified": "2026-07-25"
+      },
+      {
+        "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",
+        "nodeId": "10:6386",
+        "name": "BenefitListItem Figma reference (10:6386)",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=10-6386&m=dev",
+        "role": "supporting-reference",
+        "lastVerified": "2026-07-25"
+      },
+      {
+        "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",
+        "nodeId": "1909:25272",
+        "name": "BenefitListItem Figma reference (1909:25272)",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=1909-25272&m=dev",
+        "role": "supporting-reference",
+        "lastVerified": "2026-07-25"
+      },
+      {
+        "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",
+        "nodeId": "1909:25275",
+        "name": "BenefitListItem Figma reference (1909:25275)",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=1909-25275&m=dev",
+        "role": "supporting-reference",
+        "lastVerified": "2026-07-25"
+      },
+      {
+        "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",
+        "nodeId": "2852:117176",
+        "name": "BenefitListItem Figma reference (2852:117176)",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=2852-117176&m=dev",
+        "role": "supporting-reference",
+        "lastVerified": "2026-07-25"
+      },
+      {
+        "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",
+        "nodeId": "2852:117164",
+        "name": "BenefitListItem Figma reference (2852:117164)",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=2852-117164&m=dev",
+        "role": "supporting-reference",
+        "lastVerified": "2026-07-25"
+      }
+    ]
   },
   "PricingCard": {
     "figmaComponent": "AMFM Portal — Onboarding/Create Profile node 1909:25769, node 1909:25264 (\"Pricing card\")",
     "documentation": "COMPONENTS.md#pricingcard",
-    "implementation": "src/app/create-profile/_components/pricing-card.tsx"
+    "implementation": "src/app/create-profile/_components/pricing-card.tsx",
+    "figmaSources": [
+      {
+        "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",
+        "nodeId": "1909:25769",
+        "name": "PricingCard Figma reference (1909:25769)",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=1909-25769&m=dev",
+        "role": "primary-reference",
+        "lastVerified": "2026-07-25"
+      },
+      {
+        "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",
+        "nodeId": "1909:25264",
+        "name": "PricingCard Figma reference (1909:25264)",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=1909-25264&m=dev",
+        "role": "supporting-reference",
+        "lastVerified": "2026-07-25"
+      }
+    ]
   },
   "AmfmLogo": {
     "figmaComponent": "AMFM Portal — Onboarding/Create Profile node 1909:25769, node 1909:25281 (\"Logo\") + node 1909:25280 (\"Powered by\" caption) — asset blocked, implemented as a text approximation",
     "documentation": "COMPONENTS.md#amfmlogo",
-    "implementation": "src/app/create-profile/_components/amfm-logo.tsx"
+    "implementation": "src/app/create-profile/_components/amfm-logo.tsx",
+    "figmaSources": [
+      {
+        "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",
+        "nodeId": "1909:25769",
+        "name": "AmfmLogo Figma reference (1909:25769)",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=1909-25769&m=dev",
+        "role": "primary-reference",
+        "lastVerified": "2026-07-25"
+      },
+      {
+        "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",
+        "nodeId": "1909:25281",
+        "name": "AmfmLogo Figma reference (1909:25281)",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=1909-25281&m=dev",
+        "role": "supporting-reference",
+        "lastVerified": "2026-07-25"
+      },
+      {
+        "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",
+        "nodeId": "1909:25280",
+        "name": "AmfmLogo Figma reference (1909:25280)",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=1909-25280&m=dev",
+        "role": "supporting-reference",
+        "lastVerified": "2026-07-25"
+      }
+    ]
   },
   "DropdownMenu": {
     "figmaComponent": "",
@@ -112,61 +746,673 @@
   "GlobalNav": {
     "figmaComponent": "AMFM Portal — collapsed/default state node 2065:13660 (\"Sidebar navigation\"); expanded/exposed state node 3727:25276 (\"Content\"); expanded-state logo lockup node 3727:25279 (\"Logo\") — exported as public/AMFM_Collaped.svg / public/AMFM_Expanded.svg. Account-card flyout menu has no Figma node, built from a supplied screenshot.",
     "documentation": "COMPONENTS.md#globalnav",
-    "implementation": "src/components/global-nav.tsx"
+    "implementation": "src/components/global-nav.tsx",
+    "figmaSources": [
+      {
+        "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",
+        "nodeId": "2065:13660",
+        "name": "GlobalNav Figma reference (2065:13660)",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=2065-13660&m=dev",
+        "role": "primary-reference",
+        "lastVerified": "2026-07-25"
+      },
+      {
+        "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",
+        "nodeId": "3727:25276",
+        "name": "GlobalNav Figma reference (3727:25276)",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=3727-25276&m=dev",
+        "role": "supporting-reference",
+        "lastVerified": "2026-07-25"
+      },
+      {
+        "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",
+        "nodeId": "3727:25279",
+        "name": "GlobalNav Figma reference (3727:25279)",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=3727-25279&m=dev",
+        "role": "supporting-reference",
+        "lastVerified": "2026-07-25"
+      }
+    ]
   },
   "VideoPlayer": {
     "figmaComponent": "AMFM Portal — node 1894:16438 (\"Video player 16:9\"), within Onboarding/First run church admin (node 1909:25772); second instance node 3724:23180, within \"Our Marriage Champions / Empty\" (node 3724:23167) — no real video asset or captions file supplied yet",
     "documentation": "COMPONENTS.md#videoplayer",
-    "implementation": "src/components/video-player.tsx"
+    "implementation": "src/components/video-player.tsx",
+    "figmaSources": [
+      {
+        "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",
+        "nodeId": "1894:16438",
+        "name": "VideoPlayer Figma reference (1894:16438)",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=1894-16438&m=dev",
+        "role": "primary-reference",
+        "lastVerified": "2026-07-25"
+      },
+      {
+        "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",
+        "nodeId": "1909:25772",
+        "name": "VideoPlayer Figma reference (1909:25772)",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=1909-25772&m=dev",
+        "role": "supporting-reference",
+        "lastVerified": "2026-07-25"
+      },
+      {
+        "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",
+        "nodeId": "3724:23180",
+        "name": "VideoPlayer Figma reference (3724:23180)",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=3724-23180&m=dev",
+        "role": "supporting-reference",
+        "lastVerified": "2026-07-25"
+      },
+      {
+        "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",
+        "nodeId": "3724:23167",
+        "name": "VideoPlayer Figma reference (3724:23167)",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=3724-23167&m=dev",
+        "role": "supporting-reference",
+        "lastVerified": "2026-07-25"
+      }
+    ]
+  },
+  "Table": {
+    "figmaComponent": "AMFM Portal — Our Marriage Champions / Populated node 3724:23444, Table frame",
+    "documentation": "COMPONENTS.md#table",
+    "implementation": "src/components/ui/table.tsx",
+    "figmaSources": [
+      {
+        "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",
+        "nodeId": "3724:23444",
+        "name": "Table Figma reference (3724:23444)",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=3724-23444&m=dev",
+        "role": "primary-reference",
+        "lastVerified": "2026-07-25"
+      }
+    ]
+  },
+  "StatusTag": {
+    "figmaComponent": "AMFM Portal — Our Marriage Champions / Populated node 3724:23444, Table cell status instances",
+    "documentation": "COMPONENTS.md#statustag",
+    "implementation": "src/components/ui/status-tag.tsx",
+    "figmaSources": [
+      {
+        "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",
+        "nodeId": "3724:23444",
+        "name": "StatusTag Figma reference (3724:23444)",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=3724-23444&m=dev",
+        "role": "primary-reference",
+        "lastVerified": "2026-07-25"
+      }
+    ]
   },
   "ResourceListItem": {
     "figmaComponent": "AMFM Portal — HeartChart Resources node 2361:19280, \"Table cell\" instances across the Optional Resources (2318:27034/2318:27041/2318:27048) and Premium Resources (2309:20747/2309:20754/2309:20738) cards",
     "documentation": "COMPONENTS.md#resourcelistitem",
-    "implementation": "src/components/resource-list-item.tsx"
+    "implementation": "src/components/resource-list-item.tsx",
+    "figmaSources": [
+      {
+        "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",
+        "nodeId": "2361:19280",
+        "name": "ResourceListItem Figma reference (2361:19280)",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=2361-19280&m=dev",
+        "role": "primary-reference",
+        "lastVerified": "2026-07-25"
+      },
+      {
+        "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",
+        "nodeId": "2318:27034",
+        "name": "ResourceListItem Figma reference (2318:27034)",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=2318-27034&m=dev",
+        "role": "supporting-reference",
+        "lastVerified": "2026-07-25"
+      },
+      {
+        "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",
+        "nodeId": "2318:27041",
+        "name": "ResourceListItem Figma reference (2318:27041)",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=2318-27041&m=dev",
+        "role": "supporting-reference",
+        "lastVerified": "2026-07-25"
+      },
+      {
+        "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",
+        "nodeId": "2318:27048",
+        "name": "ResourceListItem Figma reference (2318:27048)",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=2318-27048&m=dev",
+        "role": "supporting-reference",
+        "lastVerified": "2026-07-25"
+      },
+      {
+        "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",
+        "nodeId": "2309:20747",
+        "name": "ResourceListItem Figma reference (2309:20747)",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=2309-20747&m=dev",
+        "role": "supporting-reference",
+        "lastVerified": "2026-07-25"
+      },
+      {
+        "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",
+        "nodeId": "2309:20754",
+        "name": "ResourceListItem Figma reference (2309:20754)",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=2309-20754&m=dev",
+        "role": "supporting-reference",
+        "lastVerified": "2026-07-25"
+      },
+      {
+        "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",
+        "nodeId": "2309:20738",
+        "name": "ResourceListItem Figma reference (2309:20738)",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=2309-20738&m=dev",
+        "role": "supporting-reference",
+        "lastVerified": "2026-07-25"
+      }
+    ]
   },
   "ElevatedCard": {
     "figmaComponent": "AMFM Portal — shared nested-shell shape confirmed on TopHero/\"Featured Training\" (node 2318:26997) and the HeartChart Resources cards (node 2361:19280, e.g. 2309:20702/2309:20730)",
     "documentation": "COMPONENTS.md#elevatedcard",
-    "implementation": "src/components/elevated-card.tsx"
+    "implementation": "src/components/elevated-card.tsx",
+    "figmaSources": [
+      {
+        "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",
+        "nodeId": "2318:26997",
+        "name": "ElevatedCard Figma reference (2318:26997)",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=2318-26997&m=dev",
+        "role": "primary-reference",
+        "lastVerified": "2026-07-25"
+      },
+      {
+        "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",
+        "nodeId": "2361:19280",
+        "name": "ElevatedCard Figma reference (2361:19280)",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=2361-19280&m=dev",
+        "role": "supporting-reference",
+        "lastVerified": "2026-07-25"
+      },
+      {
+        "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",
+        "nodeId": "2309:20702",
+        "name": "ElevatedCard Figma reference (2309:20702)",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=2309-20702&m=dev",
+        "role": "supporting-reference",
+        "lastVerified": "2026-07-25"
+      },
+      {
+        "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",
+        "nodeId": "2309:20730",
+        "name": "ElevatedCard Figma reference (2309:20730)",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=2309-20730&m=dev",
+        "role": "supporting-reference",
+        "lastVerified": "2026-07-25"
+      }
+    ]
   },
   "TopHero": {
     "figmaComponent": "AMFM Portal — \"Featured Training\" component (node 4194:25820, superseding node 2318:26997) — background photo wired to public/Featured Training.png",
     "documentation": "COMPONENTS.md#tophero",
-    "implementation": "src/components/top-hero.tsx"
+    "implementation": "src/components/top-hero.tsx",
+    "figmaSources": [
+      {
+        "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",
+        "nodeId": "4194:25820",
+        "name": "TopHero Figma reference (4194:25820)",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=4194-25820&m=dev",
+        "role": "primary-reference",
+        "lastVerified": "2026-07-25"
+      },
+      {
+        "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",
+        "nodeId": "2318:26997",
+        "name": "TopHero Figma reference (2318:26997)",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=2318-26997&m=dev",
+        "role": "supporting-reference",
+        "lastVerified": "2026-07-25"
+      }
+    ]
   },
   "CourseCard": {
     "figmaComponent": "AMFM Portal — \"Course Card\" component (node 2074:45130); 3-step pattern at nodes 2316:26815/2316:26886/2318:26954 — per-step video-cover photos wired to public/Step-1.png, Step-2.png, Step-3.png; shared step-header fill confirmed at node 3926:27038",
     "documentation": "COMPONENTS.md#coursecard",
-    "implementation": "src/components/course-card.tsx"
+    "implementation": "src/components/course-card.tsx",
+    "figmaSources": [
+      {
+        "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",
+        "nodeId": "2074:45130",
+        "name": "CourseCard Figma reference (2074:45130)",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=2074-45130&m=dev",
+        "role": "primary-reference",
+        "lastVerified": "2026-07-25"
+      },
+      {
+        "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",
+        "nodeId": "2316:26815",
+        "name": "CourseCard Figma reference (2316:26815)",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=2316-26815&m=dev",
+        "role": "supporting-reference",
+        "lastVerified": "2026-07-25"
+      },
+      {
+        "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",
+        "nodeId": "2316:26886",
+        "name": "CourseCard Figma reference (2316:26886)",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=2316-26886&m=dev",
+        "role": "supporting-reference",
+        "lastVerified": "2026-07-25"
+      },
+      {
+        "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",
+        "nodeId": "2318:26954",
+        "name": "CourseCard Figma reference (2318:26954)",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=2318-26954&m=dev",
+        "role": "supporting-reference",
+        "lastVerified": "2026-07-25"
+      },
+      {
+        "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",
+        "nodeId": "3926:27038",
+        "name": "CourseCard Figma reference (3926:27038)",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=3926-27038&m=dev",
+        "role": "supporting-reference",
+        "lastVerified": "2026-07-25"
+      }
+    ]
   },
   "FooterCta": {
     "figmaComponent": "AMFM Portal — \"Footer CTA\" component (node 1909:25789) — background texture asset blocked, renders a flat bg-primary fill",
     "documentation": "COMPONENTS.md#footercta",
-    "implementation": "src/components/footer-cta.tsx"
+    "implementation": "src/components/footer-cta.tsx",
+    "figmaSources": [
+      {
+        "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",
+        "nodeId": "1909:25789",
+        "name": "FooterCta Figma reference (1909:25789)",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=1909-25789&m=dev",
+        "role": "primary-reference",
+        "lastVerified": "2026-07-25"
+      }
+    ]
   },
   "MarriageChampionsPageShell": {
     "figmaComponent": "AMFM Portal — \"Our Marriage Champions\" screen's shared \"Page header\" instance, confirmed identical across \"Populated\" (node 3724:23444) and \"Empty\" (node 3724:23167)",
     "documentation": "COMPONENTS.md#marriagechampionspageshell",
-    "implementation": "src/components/marriage-champions-page-shell.tsx"
+    "implementation": "src/components/marriage-champions-page-shell.tsx",
+    "figmaSources": [
+      {
+        "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",
+        "nodeId": "3724:23444",
+        "name": "MarriageChampionsPageShell Figma reference (3724:23444)",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=3724-23444&m=dev",
+        "role": "primary-reference",
+        "lastVerified": "2026-07-25"
+      },
+      {
+        "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",
+        "nodeId": "3724:23167",
+        "name": "MarriageChampionsPageShell Figma reference (3724:23167)",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=3724-23167&m=dev",
+        "role": "supporting-reference",
+        "lastVerified": "2026-07-25"
+      }
+    ]
   },
   "FellowshipOfTheParksLogo": {
     "figmaComponent": "AMFM Portal — \"Our Marriage Champions\" screen's header lockup (nodes 3724:23444 and 3724:23167) — asset export host unreachable, cropped from a rendered screenshot rather than the original vector",
     "documentation": "COMPONENTS.md#fellowshipoftheparkslogo",
-    "implementation": "src/components/fellowship-of-the-parks-logo.tsx"
+    "implementation": "src/components/fellowship-of-the-parks-logo.tsx",
+    "figmaSources": [
+      {
+        "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",
+        "nodeId": "3724:23444",
+        "name": "FellowshipOfTheParksLogo Figma reference (3724:23444)",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=3724-23444&m=dev",
+        "role": "primary-reference",
+        "lastVerified": "2026-07-25"
+      },
+      {
+        "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",
+        "nodeId": "3724:23167",
+        "name": "FellowshipOfTheParksLogo Figma reference (3724:23167)",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=3724-23167&m=dev",
+        "role": "supporting-reference",
+        "lastVerified": "2026-07-25"
+      }
+    ]
   },
   "BlurOverlay": {
     "figmaComponent": "AMFM Portal — \"Our Marriage Champions / Empty\" (node 3724:23167), \"image 54\" backdrop layer (node 3724:23178)",
     "documentation": "COMPONENTS.md#bluroverlay",
-    "implementation": "src/components/blur-overlay.tsx"
+    "implementation": "src/components/blur-overlay.tsx",
+    "figmaSources": [
+      {
+        "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",
+        "nodeId": "3724:23167",
+        "name": "BlurOverlay Figma reference (3724:23167)",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=3724-23167&m=dev",
+        "role": "primary-reference",
+        "lastVerified": "2026-07-25"
+      },
+      {
+        "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",
+        "nodeId": "3724:23178",
+        "name": "BlurOverlay Figma reference (3724:23178)",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=3724-23178&m=dev",
+        "role": "supporting-reference",
+        "lastVerified": "2026-07-25"
+      }
+    ]
   },
   "WeDoCard": {
-    "figmaComponent": "AMFM Portal — node 3727:29573 (\"HeartChart Dashboard / premium\"), \"_Summary Data\" region, right-hand instance; couple illustration exported as public/We-do.png (186x186 display size), decorative quotation mark has no Figma vector reference and is implemented as lucide-react's Quote icon",
+    "figmaComponent": "AMFM Portal — node 4255:30872 (\"HeartChart Dashboard / premium\"), \"_Summary Data\" region, right-hand instance; couple illustration exported as public/We-do.png and rendered via aspect-wedo-illustration/max-w-wedo-illustration, decorative quotation mark is the verified large low-opacity display glyph treatment",
     "documentation": "COMPONENTS.md#wedocard",
-    "implementation": "src/components/we-do-card.tsx"
+    "implementation": "src/components/we-do-card.tsx",
+    "figmaSources": [
+      {
+        "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",
+        "nodeId": "4255:30872",
+        "name": "WeDoCard Figma reference (4255:30872)",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=4255-30872&m=dev",
+        "role": "primary-reference",
+        "lastVerified": "2026-07-25"
+      }
+    ]
   },
   "PointerCallout": {
-    "figmaComponent": "AMFM Portal — node 3727:29573, nested inside the WeDoCard instance (\"_Summary Data\" region); diagonal-tail variant's asset exported as public/speechbubblepointer.svg",
+    "figmaComponent": "AMFM Portal — node 4255:30872, nested inside the WeDoCard instance (\"_Summary Data\" region); diagonal-tail variant's asset exported as public/speechbubblepointer.svg",
     "documentation": "COMPONENTS.md#pointercallout",
-    "implementation": "src/components/pointer-callout.tsx"
+    "implementation": "src/components/pointer-callout.tsx",
+    "figmaSources": [
+      {
+        "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",
+        "nodeId": "4255:30872",
+        "name": "PointerCallout Figma reference (4255:30872)",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=4255-30872&m=dev",
+        "role": "primary-reference",
+        "lastVerified": "2026-07-25"
+      }
+    ]
+  },
+  "PointerCalloutArrow": {
+    "figmaComponent": "AMFM Portal — parent frame node 4255:30872, connecting caption row between HeartChartSummary and WeDoCard; parent-frame/screenshot verified because the exact caption child node has not been independently verified as a stable standalone node",
+    "documentation": "COMPONENTS.md#pointercalloutarrow",
+    "implementation": "src/components/pointer-callout-arrow.tsx",
+    "figmaSources": [
+      {
+        "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",
+        "nodeId": "4255:30872",
+        "name": "PointerCalloutArrow Figma reference (4255:30872)",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=4255-30872&m=dev",
+        "role": "primary-reference",
+        "lastVerified": "2026-07-25"
+      }
+    ]
+  },
+  "ParticipationVerticalBarCard": {
+    "figmaComponent": "AMFM Portal — node 4255:30872, Bedford Campus Participation Profile card, Age Groups column",
+    "documentation": "COMPONENTS.md#participationverticalbarcard",
+    "implementation": "src/components/participation-vertical-bar-card.tsx",
+    "figmaSources": [
+      {
+        "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",
+        "nodeId": "4255:30872",
+        "name": "ParticipationVerticalBarCard Figma reference (4255:30872)",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=4255-30872&m=dev",
+        "role": "primary-reference",
+        "lastVerified": "2026-07-25"
+      }
+    ]
+  },
+  "StatusSnapshotCard": {
+    "figmaComponent": "AMFM Portal — node 4255:30872, Bedford Campus Participation Profile card, Relationship Status and Kids columns",
+    "documentation": "COMPONENTS.md#statussnapshotcard",
+    "implementation": "src/components/status-snapshot-card.tsx",
+    "figmaSources": [
+      {
+        "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",
+        "nodeId": "4255:30872",
+        "name": "StatusSnapshotCard Figma reference (4255:30872)",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=4255-30872&m=dev",
+        "role": "primary-reference",
+        "lastVerified": "2026-07-25"
+      }
+    ]
+  },
+  "HorizontalTabs": {
+    "figmaComponent": "AMFM Portal — node 4255:30872, dashboard card header tab instances",
+    "documentation": "COMPONENTS.md#horizontaltabs",
+    "implementation": "src/components/ui/tabs.tsx",
+    "figmaSources": [
+      {
+        "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",
+        "nodeId": "4255:30872",
+        "name": "HorizontalTabs Figma reference (4255:30872)",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=4255-30872&m=dev",
+        "role": "primary-reference",
+        "lastVerified": "2026-07-25"
+      }
+    ]
+  },
+  "CommitmentConnectionChart": {
+    "figmaComponent": "AMFM Portal — node 4255:30872, Relationship Health for Bedford Campus card, Scattergram instance; visible chart asset cropped from node 4255:30881 into public/relationship-health-scattergram.png",
+    "documentation": "COMPONENTS.md#commitmentconnectionchart",
+    "implementation": "src/components/commitment-connection-chart.tsx",
+    "assets": [
+      "public/relationship-health-scattergram.png"
+    ],
+    "figmaSources": [
+      {
+        "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",
+        "nodeId": "4255:30872",
+        "name": "CommitmentConnectionChart Figma reference (4255:30872)",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=4255-30872&m=dev",
+        "role": "primary-reference",
+        "lastVerified": "2026-07-25"
+      },
+      {
+        "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",
+        "nodeId": "4255:30881",
+        "name": "CommitmentConnectionChart scattergram asset source (4255:30881)",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=4255-30881&m=dev",
+        "role": "asset-reference",
+        "lastVerified": "2026-07-25"
+      }
+    ]
+  },
+  "SnapshotVideoCard": {
+    "figmaComponent": "AMFM Portal — node 4255:30872, Relationship Health for Bedford Campus card, right-column Quick Snapshot card; video thumbnail cropped from node 4255:30881 into public/relationship-health-snapshot-video.png",
+    "documentation": "COMPONENTS.md#snapshotvideocard",
+    "implementation": "src/components/snapshot-video-card.tsx",
+    "assets": [
+      "public/relationship-health-snapshot-video.png"
+    ],
+    "figmaSources": [
+      {
+        "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",
+        "nodeId": "4255:30872",
+        "name": "SnapshotVideoCard Figma reference (4255:30872)",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=4255-30872&m=dev",
+        "role": "primary-reference",
+        "lastVerified": "2026-07-25"
+      },
+      {
+        "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",
+        "nodeId": "4255:30881",
+        "name": "SnapshotVideoCard thumbnail asset source (4255:30881)",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=4255-30881&m=dev",
+        "role": "asset-reference",
+        "lastVerified": "2026-07-25"
+      }
+    ]
+  },
+  "DashboardFilterMenu": {
+    "figmaComponent": "AMFM Portal — node 4255:30872, dashboard filter groups below the relationship-health chart",
+    "documentation": "COMPONENTS.md#dashboardfiltermenu",
+    "implementation": "src/app/dashboard/_components/dashboard-filter-menu.tsx",
+    "figmaSources": [
+      {
+        "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",
+        "nodeId": "4255:30872",
+        "name": "DashboardFilterMenu Figma reference (4255:30872)",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=4255-30872&m=dev",
+        "role": "primary-reference",
+        "lastVerified": "2026-07-25"
+      }
+    ]
+  },
+  "FullWidthBarChart": {
+    "figmaComponent": "AMFM Portal — node 4255:30872, full-width relationship-health bar chart below DashboardFilterMenu",
+    "documentation": "COMPONENTS.md#fullwidthbarchart",
+    "implementation": "src/components/full-width-bar-chart.tsx",
+    "figmaSources": [
+      {
+        "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",
+        "nodeId": "4255:30872",
+        "name": "FullWidthBarChart Figma reference (4255:30872)",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=4255-30872&m=dev",
+        "role": "primary-reference",
+        "lastVerified": "2026-07-25"
+      }
+    ]
+  },
+  "PieChartCard": {
+    "figmaComponent": "AMFM Portal — node 4255:30872, Spiritual Snapshot for Bedford Campus card pie-chart instances",
+    "documentation": "COMPONENTS.md#piechartcard",
+    "implementation": "src/components/pie-chart-card.tsx",
+    "figmaSources": [
+      {
+        "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",
+        "nodeId": "4255:30872",
+        "name": "PieChartCard Figma reference (4255:30872)",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=4255-30872&m=dev",
+        "role": "primary-reference",
+        "lastVerified": "2026-07-25"
+      }
+    ]
+  },
+  "ScaleChartCard": {
+    "figmaComponent": "AMFM Portal — node 4255:30872, Top 3 Caution Flags and Top 3 Expressed Needs scale chart instances",
+    "documentation": "COMPONENTS.md#scalechartcard",
+    "implementation": "src/components/scale-chart-card.tsx",
+    "figmaSources": [
+      {
+        "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",
+        "nodeId": "4255:30872",
+        "name": "ScaleChartCard Figma reference (4255:30872)",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=4255-30872&m=dev",
+        "role": "primary-reference",
+        "lastVerified": "2026-07-25"
+      }
+    ]
+  },
+  "InputActionGroup": {
+    "figmaComponent": "AMFM Portal — Modal/Settings/Church Profile node 3724:20992, add-campus field/action row within Settings/Church Profile instance node 3724:21598",
+    "documentation": "COMPONENTS.md#inputactiongroup",
+    "implementation": "src/components/ui/input-action-group.tsx",
+    "figmaSources": [
+      {
+        "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",
+        "nodeId": "3724:20992",
+        "name": "Modal/Settings/Church Profile add-campus field/action row",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=3724-20992&m=dev",
+        "role": "supporting-reference",
+        "lastVerified": "2026-07-25"
+      }
+    ],
+    "visualTargets": [
+      "settings-church-profile-modal",
+      "settings-church-profile-modal-mobile"
+    ]
+  },
+  "SettingsModalShell": {
+    "figmaComponent": "AMFM Portal — Modal/Settings/Church Profile node 3724:20992, Settings/Church Profile modal shell instance node 3724:21598",
+    "documentation": "COMPONENTS.md#settingsmodalshell",
+    "implementation": "src/components/settings-modal-shell.tsx",
+    "figmaSources": [
+      {
+        "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",
+        "nodeId": "3724:20992",
+        "name": "Modal/Settings/Church Profile shell and navigation",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=3724-20992&m=dev",
+        "role": "primary-reference",
+        "lastVerified": "2026-07-25"
+      }
+    ],
+    "visualTargets": [
+      "settings-church-profile-modal",
+      "settings-church-profile-modal-mobile"
+    ]
+  },
+  "SettingsSection": {
+    "figmaComponent": "AMFM Portal — Modal/Settings/Church Profile node 3724:20992, CHURCH LOGO / BASIC INFORMATION / CAMPUSES section groups",
+    "documentation": "COMPONENTS.md#settingssection",
+    "implementation": "src/components/settings-section.tsx",
+    "figmaSources": [
+      {
+        "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",
+        "nodeId": "3724:20992",
+        "name": "Modal/Settings/Church Profile section groups",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=3724-20992&m=dev",
+        "role": "supporting-reference",
+        "lastVerified": "2026-07-25"
+      }
+    ],
+    "visualTargets": [
+      "settings-church-profile-modal",
+      "settings-church-profile-modal-mobile"
+    ]
+  },
+  "SettingsAssetUpload": {
+    "figmaComponent": "AMFM Portal — Modal/Settings/Church Profile node 3724:20992, CHURCH LOGO upload block",
+    "documentation": "COMPONENTS.md#settingsassetupload",
+    "implementation": "src/components/settings-asset-upload.tsx",
+    "figmaSources": [
+      {
+        "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",
+        "nodeId": "3724:20992",
+        "name": "Modal/Settings/Church Profile logo upload block",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=3724-20992&m=dev",
+        "role": "supporting-reference",
+        "lastVerified": "2026-07-25"
+      }
+    ],
+    "visualTargets": [
+      "settings-church-profile-modal",
+      "settings-church-profile-modal-mobile"
+    ]
+  },
+  "SettingsCampusList": {
+    "figmaComponent": "AMFM Portal — Modal/Settings/Church Profile node 3724:20992, CAMPUSES list rows and add-campus control",
+    "documentation": "COMPONENTS.md#settingscampuslist",
+    "implementation": "src/components/settings-campus-list.tsx",
+    "figmaSources": [
+      {
+        "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",
+        "nodeId": "3724:20992",
+        "name": "Modal/Settings/Church Profile campus list and add-campus control",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=3724-20992&m=dev",
+        "role": "supporting-reference",
+        "lastVerified": "2026-07-25"
+      }
+    ],
+    "visualTargets": [
+      "settings-church-profile-modal",
+      "settings-church-profile-modal-mobile"
+    ]
+  },
+  "ChurchProfileSettingsModal": {
+    "figmaComponent": "AMFM Portal — Modal/Settings/Church Profile node 3724:20992 / Settings/Church Profile instance node 3724:21598",
+    "documentation": "COMPONENTS.md#churchprofilesettingsmodal",
+    "implementation": "src/components/settings-church-profile-modal.tsx",
+    "figmaSources": [
+      {
+        "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",
+        "nodeId": "3724:20992",
+        "name": "Modal/Settings/Church Profile",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=3724-20992&m=dev",
+        "role": "primary-reference",
+        "lastVerified": "2026-07-25"
+      }
+    ],
+    "visualTargets": [
+      "settings-church-profile-modal",
+      "settings-church-profile-modal-mobile"
+    ]
   }
 }

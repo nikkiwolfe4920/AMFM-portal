@@ -40,7 +40,7 @@ export function HeartChartLinkCard({
     >
       <div
         data-slot="heartchart-link-qr"
-        className="flex size-[66px] shrink-0 items-center justify-center self-center overflow-hidden rounded-sm bg-background p-1 shadow-sm sm:self-auto"
+        className="flex size-16.5 shrink-0 items-center justify-center self-center overflow-hidden rounded-sm bg-background p-1 shadow-sm sm:self-auto"
       >
         {qrImageSrc ? (
           <Image
@@ -98,7 +98,7 @@ export function HeartChartLinkCard({
 
       <div
         data-slot="heartchart-link-actions"
-        className="flex w-full shrink-0 items-center justify-center gap-1 min-[360px]:grid min-[360px]:grid-cols-[1fr_auto_1fr] min-[360px]:gap-2 sm:flex sm:w-auto sm:self-stretch sm:items-end sm:justify-start sm:gap-2"
+        className="flex w-full shrink-0 items-center justify-center gap-1 xs:grid xs:grid-cols-balanced-actions xs:gap-2 sm:flex sm:w-auto sm:self-stretch sm:items-end sm:justify-start sm:gap-2"
       >
         <Button
           type="button"

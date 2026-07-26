@@ -8,6 +8,7 @@ Index into `COMPONENTS.md`'s component entries. Full contracts (anatomy, variant
 | Input | [Input](../../COMPONENTS.md#input) | `src/components/ui/input.tsx` | Production Ready |
 | HelperText | [HelperText](../../COMPONENTS.md#helpertext) | `src/components/ui/helper-text.tsx` | Production Ready |
 | InputGroup | [InputGroup](../../COMPONENTS.md#inputgroup) | `src/components/ui/input-group.tsx` | Production Ready |
+| InputActionGroup | [InputActionGroup](../../COMPONENTS.md#inputactiongroup) | `src/components/ui/input-action-group.tsx` | Draft |
 | Select | [Select](../../COMPONENTS.md#select) | `src/components/ui/select.tsx` | Production Ready |
 | Label | [Label](../../COMPONENTS.md#label) | `src/components/ui/label.tsx` | Production Ready |
 | Checkbox | [Checkbox](../../COMPONENTS.md#checkbox) | `src/components/ui/checkbox.tsx` | Production Ready |
@@ -22,8 +23,22 @@ Index into `COMPONENTS.md`'s component entries. Full contracts (anatomy, variant
 | Card | [Card](../../COMPONENTS.md#card) | `src/components/ui/card.tsx` | Production Ready |
 | Dialog | [Dialog](../../COMPONENTS.md#dialog) | `src/components/ui/dialog.tsx` | Production Ready |
 | HeartChartModalShell | [HeartChartModalShell](../../COMPONENTS.md#heartchartmodalshell) | `src/components/heartchart-modal-shell.tsx` | Draft |
+| SettingsModalShell | [SettingsModalShell](../../COMPONENTS.md#settingsmodalshell) | `src/components/settings-modal-shell.tsx` | Draft |
+| SettingsSection | [SettingsSection](../../COMPONENTS.md#settingssection) | `src/components/settings-section.tsx` | Draft |
+| SettingsAssetUpload | [SettingsAssetUpload](../../COMPONENTS.md#settingsassetupload) | `src/components/settings-asset-upload.tsx` | Draft |
+| SettingsCampusList | [SettingsCampusList](../../COMPONENTS.md#settingscampuslist) | `src/components/settings-campus-list.tsx` | Draft |
+| ChurchProfileSettingsModal | [ChurchProfileSettingsModal](../../COMPONENTS.md#churchprofilesettingsmodal) | `src/components/settings-church-profile-modal.tsx` | Draft |
+| InfoNote | [InfoNote](../../COMPONENTS.md#infonote) | `src/components/info-note.tsx` | Draft |
+| ModalTextSection | [ModalTextSection](../../COMPONENTS.md#modaltextsection) | `src/components/modal-text-section.tsx` | Draft |
+| ParticipationTrendChart | [ParticipationTrendChart](../../COMPONENTS.md#participationtrendchart) | `src/components/participation-trend-card.tsx` | Draft |
+| ParticipationTrendCard | [ParticipationTrendCard](../../COMPONENTS.md#participationtrendcard) | `src/components/participation-trend-card.tsx` | Draft |
+| TipCarousel | [TipCarousel](../../COMPONENTS.md#tipcarousel) | `src/components/tip-carousel.tsx` | Draft |
 | HeartChartLinkCard | [HeartChartLinkCard](../../COMPONENTS.md#heartchartlinkcard) | `src/components/heartchart-link-card.tsx` | Draft |
 | HeartChartLinkModal | [HeartChartLinkModal](../../COMPONENTS.md#heartchartlinkmodal) | `src/components/heartchart-link-modal.tsx` | Draft |
+| InviteUserModal | [InviteUserModal](../../COMPONENTS.md#inviteusermodal) | `src/components/invite-user-modal.tsx` | Draft |
+| HeartChartQuickTipModal | [HeartChartQuickTipModal](../../COMPONENTS.md#heartchartquicktipmodal) | `src/components/heartchart-quick-tip-modal.tsx` | Draft |
+| HeartChartLastFourWeeksModal | [HeartChartLastFourWeeksModal](../../COMPONENTS.md#heartchartlastfourweeksmodal) | `src/components/heartchart-last-four-weeks-modal.tsx` | Draft |
+| HeartChartResourcesQuickStartModal | [HeartChartResourcesQuickStartModal](../../COMPONENTS.md#heartchartresourcesquickstartmodal) | `src/components/heartchart-resources-quick-start-modal.tsx` | Draft |
 | PhotoBackdrop | [PhotoBackdrop](../../COMPONENTS.md#photobackdrop) | `src/components/photo-backdrop.tsx` | Production Ready |
 | AuthCard | [AuthCard](../../COMPONENTS.md#authcard) | `src/app/login/_components/auth-card.tsx` | Production Ready |
 | HeartChartLogo | [HeartChartLogo](../../COMPONENTS.md#heartchartlogo) | `src/app/login/_components/heartchart-logo.tsx` | Production Ready |
@@ -41,6 +56,17 @@ Index into `COMPONENTS.md`'s component entries. Full contracts (anatomy, variant
 | MarriageChampionsPageShell | [MarriageChampionsPageShell](../../COMPONENTS.md#marriagechampionspageshell) | `src/components/marriage-champions-page-shell.tsx` | Draft |
 | FellowshipOfTheParksLogo | [FellowshipOfTheParksLogo](../../COMPONENTS.md#fellowshipoftheparkslogo) | `src/components/fellowship-of-the-parks-logo.tsx` | Draft |
 | BlurOverlay | [BlurOverlay](../../COMPONENTS.md#bluroverlay) | `src/components/blur-overlay.tsx` | Draft |
+| WeDoCard | [WeDoCard](../../COMPONENTS.md#wedocard) | `src/components/we-do-card.tsx` | Draft |
+| PointerCallout | [PointerCallout](../../COMPONENTS.md#pointercallout) | `src/components/pointer-callout.tsx` | Draft |
+| ParticipationVerticalBarCard | [ParticipationVerticalBarCard](../../COMPONENTS.md#participationverticalbarcard) | `src/components/participation-vertical-bar-card.tsx` | Draft |
+| ParticipationHorizontalBarCard | [ParticipationHorizontalBarCard](../../COMPONENTS.md#participationhorizontalbarcard) | `src/components/participation-horizontal-bar-card.tsx` | Draft |
+| HorizontalTabs | [HorizontalTabs](../../COMPONENTS.md#horizontaltabs) | `src/components/ui/tabs.tsx` | Draft |
+| CommitmentConnectionChart | [CommitmentConnectionChart](../../COMPONENTS.md#commitmentconnectionchart) | `src/components/commitment-connection-chart.tsx` | Draft |
+| SnapshotVideoCard | [SnapshotVideoCard](../../COMPONENTS.md#snapshotvideocard) | `src/components/snapshot-video-card.tsx` | Draft |
+| DashboardFilterMenu | [DashboardFilterMenu](../../COMPONENTS.md#dashboardfiltermenu) | `src/app/dashboard/_components/dashboard-filter-menu.tsx` | Draft |
+| FullWidthBarChart | [FullWidthBarChart](../../COMPONENTS.md#fullwidthbarchart) | `src/components/full-width-bar-chart.tsx` | Draft |
+| PieChartCard | [PieChartCard](../../COMPONENTS.md#piechartcard) | `src/components/pie-chart-card.tsx` | Draft |
+| ScaleChartCard | [ScaleChartCard](../../COMPONENTS.md#scalechartcard) | `src/components/scale-chart-card.tsx` | Draft |
 
 See `figma/component-map.json` for each component's Figma reference and `figma/figma-links.md` for the human-readable version.
 

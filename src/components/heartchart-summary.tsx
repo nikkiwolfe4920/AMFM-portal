@@ -59,6 +59,8 @@ interface HeartChartSummaryProps {
   percentage: number;
   completedCount: number;
   totalAttenders: number;
+  /** `constrained` matches the standalone component reference; `fluid` lets a parent layout own width. */
+  width?: "constrained" | "fluid";
   onQuickTip?: () => void;
   onViewLastFourWeeks?: () => void;
   onShareLink?: () => void;
@@ -69,6 +71,7 @@ export function HeartChartSummary({
   percentage,
   completedCount,
   totalAttenders,
+  width = "constrained",
   onQuickTip,
   onViewLastFourWeeks,
   onShareLink,
@@ -79,7 +82,13 @@ export function HeartChartSummary({
   const tone = getTone(level);
 
   return (
-    <div className={cn("shadow-card w-full max-w-[564px] rounded-2xl bg-background p-2", className)}>
+    <div
+      className={cn(
+        "shadow-card w-full rounded-2xl bg-background p-2",
+        width === "constrained" && "max-w-heartchart-card",
+        className
+      )}
+    >
       <div className="flex flex-col gap-6 rounded-md border bg-background px-4 py-5">
         <div className="flex w-full items-start justify-between gap-4">
           <HeartChartLogo />
@@ -93,7 +102,7 @@ export function HeartChartSummary({
               <div className="flex items-end gap-2">
                 <span
                   className={cn(
-                    "text-5xl leading-10 font-semibold tracking-[-0.96px]",
+                    "text-5xl leading-10 font-semibold tracking-stat-value",
                     tone === "success" ? "text-status-success" : "text-status-warning"
                   )}
                 >
@@ -110,7 +119,7 @@ export function HeartChartSummary({
           </div>
 
           <div className="flex flex-col gap-3 rounded-md border bg-muted/50 px-5 pt-4 pb-5">
-            <p className="text-text-tertiary text-xs font-semibold tracking-[0.24px]">
+            <p className="text-text-tertiary text-xs font-semibold tracking-label">
               CHURCH-WIDE PARTICIPATION LEVEL
             </p>
             <ParticipationScale percentage={clampedPercentage} level={level} />
@@ -153,7 +162,7 @@ function LiveDataBadge() {
   return (
     <div className="inline-flex shrink-0 items-center gap-1 rounded-full border bg-muted/50 py-0.5 pr-2 pl-1.5">
       <span aria-hidden className="inline-flex size-2 rounded-full bg-status-success" />
-      <span className="text-xs font-medium tracking-[0.24px] text-foreground">Live Data</span>
+      <span className="text-xs font-medium tracking-label text-foreground">Live Data</span>
     </div>
   );
 }
@@ -173,7 +182,7 @@ function ParticipationDonut({
   const dashOffset = circumference - (percentage / 100) * circumference;
 
   return (
-    <div className="relative size-[90px] shrink-0" aria-hidden>
+    <div className="relative size-heartchart-donut shrink-0" aria-hidden>
       <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} className="-rotate-90">
         <defs>
           {/* Figma's value arc is a gradient, not a flat stroke — reusing the
@@ -239,15 +248,15 @@ function ParticipationScale({
     <div className="relative flex h-9 w-full items-start">
       <div
         aria-hidden
-        className="absolute top-[-8px] bottom-[3px] z-[3] w-3 -translate-x-1/2"
+        className="absolute -top-2 bottom-heartchart-marker z-3 w-3 -translate-x-1/2"
         style={{ left: `${markerPosition}%` }}
       >
         <div className="mx-auto flex h-full w-3 flex-col items-center">
-          <div className="size-0 shrink-0 border-x-[6px] border-t-[8px] border-x-transparent border-t-muted-foreground" />
-          <div className="w-[1.5px] flex-1 bg-muted-foreground" />
+          <div className="size-0 shrink-0 border-x-6 border-t-8 border-x-transparent border-t-muted-foreground" />
+          <div className="w-heartchart-marker-stem flex-1 bg-muted-foreground" />
         </div>
       </div>
-      <div className="relative z-[2] flex h-full w-full overflow-hidden rounded-full">
+      <div className="relative z-2 flex h-full w-full overflow-hidden rounded-full">
         <div aria-hidden className="pointer-events-none absolute inset-0 rounded-full bg-muted-foreground mix-blend-overlay" />
         {SCALE_SEGMENTS.map((segment, index) => {
           const isActive = segment.level === level;
@@ -263,7 +272,7 @@ function ParticipationScale({
             >
               <span
                 className={cn(
-                  "text-xs font-medium tracking-[0.24px]",
+                  "text-xs font-medium tracking-label",
                   isActive ? "text-white" : "text-muted-foreground"
                 )}
               >

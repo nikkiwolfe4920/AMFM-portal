@@ -104,7 +104,7 @@ const DISPLAY_TYPE_SCALE = [
   },
   {
     name: "text-display-2xl",
-    className: "font-display text-display-2xl font-light tracking-[-1.44px]",
+    className: "font-display text-display-2xl font-light",
     hint: "72px / 90px — /welcome main heading",
   },
 ];
@@ -262,7 +262,7 @@ export default function FoundationsPage() {
       <Section
         id="blur-overlay"
         title="Blur overlay"
-        description="Renders real content as an inert, blurred backdrop (blur-[2px], fading to the surrounding surface color) so it reads as 'there, but not yet actionable' behind a centered empty-state call-to-action — see BlurOverlay in COMPONENTS.md. Introduced for /marriage-champions-empty (Figma node 3724:23178)."
+        description="Renders real content as an inert, blurred backdrop (blur-inert-preview, fading to the surrounding surface color) so it reads as 'there, but not yet actionable' behind a centered empty-state call-to-action — see BlurOverlay in COMPONENTS.md. Introduced for /marriage-champions-empty (Figma node 3724:23178)."
       >
         <div className="overflow-hidden rounded-lg border">
           <BlurOverlay>

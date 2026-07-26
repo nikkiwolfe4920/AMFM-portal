@@ -1,4 +1,5 @@
 import Link from "next/link";
+import type { ReactNode } from "react";
 import { ArrowRight } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -43,6 +44,13 @@ import { CourseCard } from "@/components/course-card";
 import { ElevatedCard } from "@/components/elevated-card";
 import { ResourceListItem } from "@/components/resource-list-item";
 import { FooterCta } from "@/components/footer-cta";
+import {
+  HeartChartLastFourWeeksModalDemo,
+  HeartChartLinkModalDemo,
+  HeartChartQuickTipModalDemo,
+  HeartChartResourcesQuickStartModalDemo,
+  InviteUserModalDemo,
+} from "../_components/heartchart-modal-demos";
 
 import { Section } from "../_components/showcase";
 
@@ -61,6 +69,31 @@ const PATTERN_FREE_MEMBERSHIP_BENEFITS = [
   "Get up and running in one Sunday",
   "No credit card needed",
 ];
+
+function ModalPatternCard({
+  title,
+  figma,
+  composition,
+  children,
+}: {
+  title: string;
+  figma: string;
+  composition: string;
+  children: ReactNode;
+}) {
+  return (
+    <div className="flex flex-col gap-4 rounded-lg border p-5">
+      <div className="flex flex-col gap-1">
+        <h3 className="text-base font-semibold">{title}</h3>
+        <p className="text-muted-foreground text-sm">{composition}</p>
+      </div>
+      <p className="text-muted-foreground text-xs">
+        <span className="font-medium text-foreground">Figma:</span> {figma}
+      </p>
+      <div>{children}</div>
+    </div>
+  );
+}
 
 export default function PatternsPage() {
   return (
@@ -209,7 +242,7 @@ export default function PatternsPage() {
             <CardHeader className="flex flex-col gap-0 px-6 pt-6">
               <div className="flex w-full items-center gap-4">
                 <div className="flex flex-1 flex-col gap-0.5">
-                  <CardTitle className="font-display text-display-md leading-[2.5rem] text-foreground font-light">
+                  <CardTitle className="font-display text-display-md leading-display-md text-foreground font-light">
                     Create profile
                   </CardTitle>
                   <CardDescription className="text-text-tertiary">
@@ -325,12 +358,12 @@ export default function PatternsPage() {
         title="Welcome hero — /welcome"
         description="PhotoBackdrop (radial scrim) + a personalized heading + VideoPlayer + Button, composed on /welcome (the first-run church-admin screen — side nav hidden per Figma's dev annotation). Rendered here at a reduced height so it fits the page layout — see /welcome for the live full-screen version."
       >
-        <div className="relative h-[640px] overflow-hidden rounded-lg">
-          <div className="absolute inset-0 bg-[url('/login-background.jpg')] bg-cover bg-center" />
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(10,13,18,0.7)_0%,rgba(10,13,18,0.9)_100%)]" />
+        <div className="relative h-160 overflow-hidden rounded-lg">
+          <div className="bg-login-photo absolute inset-0 bg-cover bg-center" />
+          <div className="bg-photo-backdrop-radial-scrim absolute inset-0" />
           <div className="relative flex h-full flex-col items-center justify-center gap-10 px-8 py-12 text-center">
             <div className="flex flex-col items-center gap-2">
-              <p className="font-display text-display-2xl text-nav-foreground font-light tracking-[-1.44px]">
+              <p className="font-display text-display-2xl text-nav-foreground font-light">
                 Welcome, Jordan.
               </p>
               <p className="font-display text-display-lg text-nav-foreground-muted font-light">
@@ -383,6 +416,53 @@ export default function PatternsPage() {
           </Link>
           .
         </p>
+      </Section>
+
+      <Section
+        id="heartchart-modal-family"
+        title="HeartChart July MVP modal family"
+        description="Shared HeartChartModalShell compositions for the five July MVP overlays. Lower-level shell, chart, card, text, carousel, video, input, select, and button pieces remain documented under Components; this section shows the reusable modal patterns those pieces create."
+      >
+        <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 xl:grid-cols-3">
+          <ModalPatternCard
+            title="Share HeartChart link"
+            figma="Modal/HeartChart link node 4207:25806 and related link-card node 3724:20579."
+            composition="Header copy + optional upload-logo link + phone preview + HeartChartLinkCard + add-campus footer action."
+          >
+            <HeartChartLinkModalDemo
+              label="Open HeartChart link modal"
+              settingsHref="https://example.com/settings"
+            />
+          </ModalPatternCard>
+          <ModalPatternCard
+            title="Invite user"
+            figma="Modal / invite user node 3724:23382."
+            composition="Header copy + email Input + role Select + InfoNote + cancel/send footer actions."
+          >
+            <InviteUserModalDemo label="Open invite user modal" />
+          </ModalPatternCard>
+          <ModalPatternCard
+            title="Quick tip"
+            figma="Modal/quick tip node 3727:32459."
+            composition="VideoPlayer + ModalTextSection + resource CTA footer action."
+          >
+            <HeartChartQuickTipModalDemo label="Open Quick Tip modal" />
+          </ModalPatternCard>
+          <ModalPatternCard
+            title="Last 4 weeks"
+            figma="Modal / last 4 weeks node 3727:32514."
+            composition="Guidance copy + ParticipationTrendCard + TipCarousel."
+          >
+            <HeartChartLastFourWeeksModalDemo label="Open Last 4 Weeks modal" />
+          </ModalPatternCard>
+          <ModalPatternCard
+            title="Resources quick start"
+            figma="HeartChart Resources Modals node 3727:32687."
+            composition="Plain no-frame/no-divider modal shell + flat VideoPlayer."
+          >
+            <HeartChartResourcesQuickStartModalDemo label="Open Quick Start Guide modal" />
+          </ModalPatternCard>
+        </div>
       </Section>
 
       <Section

@@ -33,7 +33,7 @@ import {
   GOD_CONNECTION_PIE,
   HEART_CHART_SUMMARY,
   KIDS_DATA,
-  RELATIONSHIP_HEALTH_SCATTER_POINTS,
+  RELATIONSHIP_HEALTH_RESPONSE_COUNT,
   RELATIONSHIP_HEALTH_SUMMARY,
   RELATIONSHIP_HEALTH_ZONE_LABELS,
   RELATIONSHIP_STATUS_DATA,
@@ -84,11 +84,13 @@ export function DashboardContent() {
     <div className="flex flex-col gap-6">
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
         <HeartChartSummary
+          width="fluid"
           percentage={HEART_CHART_SUMMARY.percentage}
           completedCount={HEART_CHART_SUMMARY.completedCount}
           totalAttenders={HEART_CHART_SUMMARY.totalAttenders}
         />
         <WeDoCard
+          width="fluid"
           coupleCount={WE_DO_CARD.coupleCount}
           quote={WE_DO_CARD.quote}
           highlightedPhrase={WE_DO_CARD.highlightedPhrase}
@@ -113,7 +115,10 @@ export function DashboardContent() {
           <CardTitle>Bedford Campus Participation Profile</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
+          <div
+            data-slot="dashboard-participation-profile-grid"
+            className="grid grid-cols-1 gap-4 lg:grid-cols-dashboard-participation"
+          >
             <ParticipationVerticalBarCard
               title="Age Groups"
               icon={
@@ -153,9 +158,12 @@ export function DashboardContent() {
           </CardAction>
         </CardHeader>
         <CardContent className="flex flex-col gap-6">
-          <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+          <div
+            data-slot="dashboard-relationship-health-grid"
+            className="grid grid-cols-1 gap-6 lg:grid-cols-dashboard-relationship-health"
+          >
             <CommitmentConnectionChart
-              dataPoints={RELATIONSHIP_HEALTH_SCATTER_POINTS}
+              responseCount={RELATIONSHIP_HEALTH_RESPONSE_COUNT}
               highlightedZone={RELATIONSHIP_HEALTH_SUMMARY.highlightedZone}
               zoneLabels={RELATIONSHIP_HEALTH_ZONE_LABELS}
             />
@@ -170,8 +178,8 @@ export function DashboardContent() {
           <DashboardFilterMenu
             groups={filterGroups}
             onChange={handleFilterChange}
-            resultCount={1309}
-            totalCount={1309}
+            resultCount={RELATIONSHIP_HEALTH_RESPONSE_COUNT}
+            totalCount={RELATIONSHIP_HEALTH_RESPONSE_COUNT}
           />
 
           <FullWidthBarChart data={FULL_WIDTH_BAR_CHART_DATA} />

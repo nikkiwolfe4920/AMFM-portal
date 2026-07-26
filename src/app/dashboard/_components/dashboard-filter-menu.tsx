@@ -41,7 +41,10 @@ function DashboardFilterMenu({
   return (
     <div
       data-slot="dashboard-filter-menu"
-      className={cn("flex flex-wrap items-start gap-6", className)}
+      className={cn(
+        "flex flex-wrap items-start gap-6 rounded-xl border bg-background p-4",
+        className
+      )}
     >
       <div className="flex shrink-0 flex-col gap-1">
         <span className="text-sm text-muted-foreground">Showing</span>
@@ -76,7 +79,7 @@ function DashboardFilterMenu({
                       key={option.value}
                       value={option.value}
                       className={cn(
-                        "focus-visible:ring-ring/50 h-7 rounded-full px-3 text-sm whitespace-nowrap outline-none transition-colors focus-visible:ring-[3px]",
+                        "focus-visible:ring-ring/50 h-7 rounded-full px-3 text-sm whitespace-nowrap outline-none transition-colors focus-visible:ring-3",
                         active
                           ? "bg-foreground text-background"
                           : "border border-border-secondary bg-background text-text-tertiary hover:bg-accent"
