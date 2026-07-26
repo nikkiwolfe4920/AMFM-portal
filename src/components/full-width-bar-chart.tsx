@@ -24,7 +24,7 @@ function FullWidthBarChart({ data, className }: FullWidthBarChartProps) {
       ) : (
         data.map((item) => (
           <div key={item.label} className="flex items-center gap-2">
-            <span className="w-[74px] shrink-0 text-sm font-semibold text-text-secondary">
+            <span className="w-full-width-bar-label shrink-0 text-sm font-semibold text-text-secondary">
               {item.label}
             </span>
             <div className="h-6 flex-1">
@@ -33,7 +33,7 @@ function FullWidthBarChart({ data, className }: FullWidthBarChartProps) {
                 style={{ width: `${(item.value / max) * 100}%` }}
               />
             </div>
-            <span className="w-10 shrink-0 text-right text-xs font-semibold tracking-[0.24px] text-foreground/70">
+            <span className="w-10 shrink-0 text-right text-xs font-semibold tracking-label text-foreground/70">
               {item.value}%
             </span>
           </div>

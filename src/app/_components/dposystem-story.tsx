@@ -587,7 +587,7 @@ export function DposystemStory() {
           onScroll={handleScroll}
           onKeyDown={handleKeyDown}
           tabIndex={0}
-          className="flex h-[min(70vh,560px)] snap-x snap-mandatory overflow-x-auto scroll-smooth [scrollbar-width:none] outline-none motion-reduce:scroll-auto focus-visible:ring-ring/50 focus-visible:ring-[3px] [&::-webkit-scrollbar]:hidden"
+          className="flex h-[min(70vh,560px)] snap-x snap-mandatory overflow-x-auto scroll-smooth [scrollbar-width:none] outline-none motion-reduce:scroll-auto focus-visible:ring-ring/50 focus-visible:ring-3 [&::-webkit-scrollbar]:hidden"
         >
           {SLIDES.map((slide, index) => (
             <div

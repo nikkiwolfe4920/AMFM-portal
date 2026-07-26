@@ -7,3 +7,21 @@
  * tokens once a Figma reference introduces one — don't hand-roll a
  * transition duration at a call site in the meantime.
  */
+
+@utility transition-nav-content {
+  transition-property: max-width, opacity, padding, gap;
+}
+
+@utility transition-nav-inset {
+  transition-property: left, right, opacity;
+}
+
+@utility transition-nav-rail {
+  transition-property: width;
+}
+
+@utility transition-control {
+  transition-property: color, box-shadow;
+  transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));
+  transition-duration: var(--tw-duration, var(--default-transition-duration));
+}

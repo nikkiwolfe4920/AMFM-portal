@@ -58,7 +58,7 @@ function PointerCallout({
           width={18}
           height={20}
           unoptimized
-          className="absolute top-1/2 -left-[17px] -translate-y-1/2"
+          className="left-pointer-callout-tail absolute top-1/2 -translate-y-1/2"
         />
       ) : (
         <span

@@ -5,6 +5,7 @@ import { validateExceptionRegistry } from "./exceptions.mjs";
 
 const completeException = {
   id: "fixture-card-gap-7",
+  rule: "no-undocumented-arbitrary-visual-values",
   className: "gap-[7px]",
   filePath: "src/components/example-card.tsx",
   component: "ExampleCard",
@@ -51,9 +52,24 @@ describe("design-system arbitrary-value rule", () => {
 
     expect(validateExceptionRegistry(registry).errors).toEqual([
       expect.objectContaining({
-        rule: "complete-arbitrary-value-exception-metadata",
+        rule: "complete-design-system-exception-metadata",
         id: "fixture-card-gap-7",
         field: "rationale",
+      }),
+    ]);
+  });
+
+  it("fails arbitrary-value exceptions without an explicit checker rule", () => {
+    const registry = {
+      version: 1,
+      exceptions: [{ ...completeException, rule: "" }],
+    };
+
+    expect(validateExceptionRegistry(registry).errors).toEqual([
+      expect.objectContaining({
+        rule: "complete-design-system-exception-metadata",
+        id: "fixture-card-gap-7",
+        field: "rule",
       }),
     ]);
   });
@@ -90,6 +106,34 @@ describe("design-system arbitrary-value rule", () => {
       expect.objectContaining({
         className: "gap-[7px]",
         exceptionId: "fixture-card-gap-7",
+      }),
+    ]);
+  });
+
+  it("does not let one arbitrary-value exception allow multiple identical classes in the same file", () => {
+    const result = scanArbitraryValues({
+      files: [
+        {
+          filePath: "src/components/example-card.tsx",
+          sourceText: [
+            '<div className="grid gap-[7px]" />',
+            '<div className="flex gap-[7px]" />',
+          ].join("\n"),
+        },
+      ],
+      exceptions: [completeException],
+    });
+
+    expect(result.exceptions).toEqual([
+      expect.objectContaining({
+        className: "gap-[7px]",
+        exceptionId: "fixture-card-gap-7",
+      }),
+    ]);
+    expect(result.errors).toEqual([
+      expect.objectContaining({
+        rule: "no-undocumented-arbitrary-visual-values",
+        className: "gap-[7px]",
       }),
     ]);
   });

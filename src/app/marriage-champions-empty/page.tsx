@@ -60,7 +60,7 @@ export default function MarriageChampionsEmptyPage() {
         </BlurOverlay>
 
         <div className="absolute inset-0 flex items-center justify-center p-8">
-          <div className="flex w-full max-w-[560px] flex-col items-center gap-8">
+          <div className="flex w-full max-w-video-player flex-col items-center gap-8">
             <VideoPlayer
               poster="/login-background.jpg"
               title="Recruiting Marriage Champions"

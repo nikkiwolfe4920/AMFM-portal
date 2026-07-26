@@ -77,10 +77,10 @@ export function CourseCard({
           <div className="absolute inset-0 bg-gradient-to-r from-black/80 to-transparent" />
         </div>
         <div className="relative z-10 flex flex-col gap-2">
-          <p className="text-xs font-semibold tracking-[0.24px] text-white/70 uppercase">
+          <p className="text-xs font-semibold tracking-label text-white/70 uppercase">
             {eyebrow}
           </p>
-          <p className="font-display text-display-md leading-[2.375rem] font-light text-white">
+          <p className="font-display text-display-md leading-display-sm font-light text-white">
             {title}
           </p>
         </div>

@@ -60,15 +60,16 @@ describe("HeartChartLinkCard", () => {
     const download = screen.getByRole("button", { name: "Download QR code" });
 
     expect(card).toHaveClass("relative", "items-center", "sm:flex-row");
-    expect(qr).toHaveClass("self-center", "sm:self-auto");
+    expect(qr).toHaveClass("size-16.5", "self-center", "sm:self-auto");
     expect(urlGroup).toHaveClass("w-full", "sm:w-auto");
     expect(actions).toHaveClass(
       "flex",
       "w-full",
       "justify-center",
       "gap-1",
-      "min-[360px]:grid",
-      "min-[360px]:grid-cols-[1fr_auto_1fr]",
+      "xs:grid",
+      "xs:grid-cols-balanced-actions",
+      "xs:gap-2",
       "sm:flex",
       "sm:self-stretch",
       "sm:items-end"

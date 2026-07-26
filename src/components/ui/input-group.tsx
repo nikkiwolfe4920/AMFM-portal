@@ -12,7 +12,7 @@ function InputGroup({ className, addon, ...props }: InputGroupProps) {
     <div
       data-slot="input-group"
       className={cn(
-        "border-input flex w-full items-stretch rounded-md border bg-background shadow-xs transition-[color,box-shadow]",
+        "border-input flex w-full items-stretch rounded-md border bg-background shadow-xs transition-control",
         "has-[:focus-visible]:border-2 has-[:focus-visible]:border-border-brand",
         "has-[[aria-invalid=true]]:border-border-destructive-subtle",
         "has-[:disabled]:bg-muted/50",

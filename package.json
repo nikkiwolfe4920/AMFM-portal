@@ -5,7 +5,9 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "audit:visual": "node scripts/visual-audit/capture.mjs",
     "check:design-system": "node scripts/design-system-check/index.mjs",
+    "check:design-system:full": "node scripts/design-system-check/index.mjs --scope full-source --report-only",
     "start": "next start",
     "lint": "eslint",
     "test": "vitest run"

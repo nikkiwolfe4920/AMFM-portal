@@ -44,7 +44,7 @@ describe("CourseCard", () => {
       "shadow-xs",
       "text-button-outline-fg",
       "gap-1.5",
-      "h-[38px]",
+      "h-9.5",
       "text-sm",
       "[&>svg:not([class*='size-'])]:size-5"
     );

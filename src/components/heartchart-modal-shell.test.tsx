@@ -59,8 +59,8 @@ describe("HeartChartModalShell", () => {
     const dialog = screen.getByRole("dialog", { name: "HeartChart link" });
     const overlay = document.querySelector("[data-slot='dialog-overlay']");
 
-    expect(dialog).toHaveClass("sm:max-w-[800px]");
-    expect(overlay).toHaveClass("bg-overlay/85", "backdrop-blur-[8px]");
+    expect(dialog).toHaveClass("sm:max-w-modal-xl");
+    expect(overlay).toHaveClass("bg-overlay/85", "backdrop-blur-sm");
   });
 
   it("moves initial focus to the modal title instead of the first body control", () => {
@@ -103,8 +103,8 @@ describe("HeartChartModalShell", () => {
 
     const dialog = screen.getByRole("dialog", { name: "Quick Start Guide" });
 
-    expect(dialog).toHaveClass("sm:max-w-[768px]");
-    expect(dialog).toHaveClass("grid-rows-[auto_minmax(0,1fr)_auto]");
+    expect(dialog).toHaveClass("sm:max-w-modal-lg");
+    expect(dialog).toHaveClass("grid-rows-modal-no-divider");
     expect(dialog.querySelector("[data-slot='heartchart-modal-frame']")).not.toBeInTheDocument();
     expect(dialog.querySelector("[data-slot='heartchart-modal-divider']")).not.toBeInTheDocument();
     expect(within(dialog).getByTestId("quick-start-video")).toBeInTheDocument();
@@ -129,8 +129,8 @@ describe("HeartChartModalShell", () => {
       .getByText("Tall chart content")
       .closest("[data-slot='heartchart-modal-body']");
 
-    expect(dialog).toHaveClass("max-h-[calc(100vh-2rem)]", "grid-rows-[auto_auto_minmax(0,1fr)_auto]");
-    expect(frame).toHaveClass("max-h-[calc(100vh-3rem)]", "grid", "grid-rows-[auto_auto_minmax(0,1fr)_auto]");
+    expect(dialog).toHaveClass("max-h-modal-shell", "grid-rows-modal-with-divider");
+    expect(frame).toHaveClass("max-h-modal-frame", "grid", "grid-rows-modal-with-divider");
     expect(body).toHaveClass("min-h-0", "overflow-y-auto");
   });
 });

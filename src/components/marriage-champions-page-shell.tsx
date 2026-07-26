@@ -21,7 +21,7 @@ export function MarriageChampionsPageShell({
       <div className="flex min-w-0 flex-1 flex-col">
         <main className="min-w-0 flex-1 p-8">
           <div className="flex w-full flex-wrap items-center gap-4">
-            <h1 className="font-display text-display-md text-foreground min-w-[320px] shrink-0 font-light">
+            <h1 className="font-display text-display-md text-foreground min-w-80 shrink-0 font-light">
               Our Marriage Champions
             </h1>
             <div className="flex flex-1 justify-end">

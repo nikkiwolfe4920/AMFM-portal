@@ -33,15 +33,15 @@ type HeartChartModalShellProps = Omit<ComponentProps<typeof Dialog>, "children">
 };
 
 const modalSizeClasses: Record<HeartChartModalShellSize, string> = {
-  sm: "sm:max-w-[544px]",
-  md: "sm:max-w-[640px]",
-  lg: "sm:max-w-[768px]",
-  xl: "sm:max-w-[800px]",
+  sm: "sm:max-w-modal-sm",
+  md: "sm:max-w-modal-md",
+  lg: "sm:max-w-modal-lg",
+  xl: "sm:max-w-modal-xl",
 };
 
 const modalGridRowClasses = {
-  withDivider: "grid-rows-[auto_auto_minmax(0,1fr)_auto]",
-  withoutDivider: "grid-rows-[auto_minmax(0,1fr)_auto]",
+  withDivider: "grid-rows-modal-with-divider",
+  withoutDivider: "grid-rows-modal-no-divider",
 };
 
 export function HeartChartModalShell({
@@ -113,13 +113,13 @@ export function HeartChartModalShell({
     <Dialog {...dialogProps}>
       <DialogTrigger asChild>{trigger}</DialogTrigger>
       <DialogContent
-        overlayClassName="bg-overlay/85 backdrop-blur-[8px]"
+        overlayClassName="bg-overlay/85 backdrop-blur-sm"
         onOpenAutoFocus={(event) => {
           event.preventDefault();
           titleRef.current?.focus();
         }}
         className={cn(
-          "max-h-[calc(100vh-2rem)] border-0 p-0 shadow-2xl",
+          "max-h-modal-shell border-0 p-0 shadow-2xl",
           gridRowsClass,
           framed && "p-2",
           modalSizeClasses[size],
@@ -130,7 +130,7 @@ export function HeartChartModalShell({
           <div
             data-slot="heartchart-modal-frame"
             className={cn(
-              "border-border-secondary grid max-h-[calc(100vh-3rem)] overflow-hidden rounded-md border bg-background",
+              "border-border-secondary grid max-h-modal-frame overflow-hidden rounded-md border bg-background",
               gridRowsClass
             )}
           >

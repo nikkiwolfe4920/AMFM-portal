@@ -15,7 +15,7 @@ describe("BlurOverlay", () => {
     const content = document.querySelector("[data-slot='blur-overlay-content']");
 
     expect(root).toHaveAttribute("aria-hidden", "true");
-    expect(content).toHaveClass("pointer-events-none", "blur-[2px]", "select-none");
+    expect(content).toHaveClass("pointer-events-none", "blur-inert-preview", "select-none");
     expect(content).not.toHaveClass("opacity-30");
     expect(screen.getByText("Decorative content")).toBeInTheDocument();
   });

@@ -20,8 +20,13 @@ describe("HeartChartLinkModal", () => {
     fireEvent.click(screen.getByRole("button", { name: "Share Your Link" }));
 
     const dialog = screen.getByRole("dialog", { name: "Share your HeartChart link" });
+    const headerContent = dialog.querySelector(
+      "[data-slot='heartchart-link-modal-header-content']"
+    );
+    const brandPreview = dialog.querySelector("[data-slot='heartchart-brand-preview']");
 
-    expect(dialog).toHaveClass("sm:max-w-[800px]");
+    expect(dialog).toHaveClass("sm:max-w-modal-xl");
+    expect(headerContent).toHaveClass("md:grid-cols-heartchart-link-header");
     expect(within(dialog).getByText(/Share these unique links or QR codes/)).toBeInTheDocument();
     expect(within(dialog).getByText("Quick tip:")).toBeInTheDocument();
     expect(
@@ -35,11 +40,11 @@ describe("HeartChartLinkModal", () => {
       "src",
       expect.stringContaining("/heartchart-link-qr.svg")
     );
-    expect(
-      dialog
-        .querySelector("[data-slot='heartchart-brand-preview']")
-        ?.querySelector("img")
-    ).toHaveAttribute("src", expect.stringContaining("/heartchart-link-phone-preview.png"));
+    expect(brandPreview).toHaveClass("h-55", "w-69");
+    expect(brandPreview?.querySelector("img")).toHaveAttribute(
+      "src",
+      expect.stringContaining("/heartchart-link-phone-preview.png")
+    );
     expect(within(dialog).getByRole("button", { name: "Add a campus" })).toHaveClass(
       "text-sm",
       "py-1.5"

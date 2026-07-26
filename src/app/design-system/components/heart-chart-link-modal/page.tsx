@@ -11,11 +11,11 @@ import {
 import {
   HeartChartLinkCardDemo,
   HeartChartLinkModalDemo,
-} from "../_components/heartchart-link-demos";
+} from "../../_components/heartchart-modal-demos";
 
 const TOKENS = [
   "bg-overlay/85",
-  "backdrop-blur-[8px]",
+  "backdrop-blur-sm",
   "bg-background",
   "bg-secondary",
   "border-border-secondary",
@@ -35,6 +35,10 @@ const TOKENS = [
   "shadow-button-inset",
   "rounded-2xl",
   "rounded-md",
+  "max-w-modal-xl",
+  "max-h-modal-shell",
+  "max-h-modal-frame",
+  "grid-rows-modal-with-divider",
 ];
 
 const STATES = [
@@ -248,7 +252,7 @@ export default function HeartChartLinkModalShowcasePage() {
         <p className="text-muted-foreground text-sm">
           The modal uses the 800px HeartChart shell width on desktop. On narrow
           viewports it follows DialogContent&apos;s{" "}
-          <code className="bg-muted rounded px-1 py-0.5">max-w-[calc(100%-2rem)]</code>{" "}
+          <code className="bg-muted rounded px-1 py-0.5">max-w-dialog-mobile</code>{" "}
           behavior, hides the decorative phone preview, and lets HeartChartLinkCard
           stack its QR preview, URL field, and actions vertically. In that compact
           layout, the QR preview is centered, the URL control stays full-width
@@ -265,9 +269,13 @@ export default function HeartChartLinkModalShowcasePage() {
             download behavior are application concerns and remain caller-owned.
           </li>
           <li>
-            The related Quick Tip, Last 4 Weeks, and Quick Start modal contents are
-            future work; this page documents the first full modal pattern and its
-            reusable shell/card building blocks.
+            The related Quick Tip, Last 4 Weeks, Invite User, and Quick Start
+            modals are implemented and grouped with this modal at{" "}
+            <code className="bg-muted rounded px-1 py-0.5">
+              /design-system/patterns#heartchart-modal-family
+            </code>
+            ; this page remains the deep-dive reference for the HeartChart link
+            modal&apos;s shell/card building blocks.
           </li>
         </ul>
       </Section>

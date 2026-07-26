@@ -1,7 +1,7 @@
 # Full-Source Design-System Sweep Plan
 
-Status: planned  
-Last revised: 2026-07-24  
+Status: in progress
+Last revised: 2026-07-25
 Requested by: Evan C. Navarro  
 Scope: follow-up work after the V1 changed-file governance checker PR  
 
@@ -52,6 +52,32 @@ The goal is not to make code "more compliant" by changing the design. The goal i
 
 Every phase has a pitstop. If a nit, flake, bad claim, false positive, or visual regression is found, it is fixed before moving forward unless it is explicitly classified as out-of-scope with a follow-up owner and reason.
 
+### Current Pitstop Notes
+
+- PR #59 is merged; this sweep branch is based on merge commit `12ff0e440ab990747af17169166a70b09c16fce7`.
+- Full-source report mode and raw-value scanning are implemented and dogfooded.
+- Docs-backed component-map entries were added for existing documented components that were missing implementation mappings.
+- Route-local form/page assemblies were inspected file by file and moved into exact component-contract exclusions instead of broad path allowlisting or blind component-map entries.
+- Current changed-mode checker is green after dogfooding source cleanup in touched files.
+- Current full-source report is green in report-only mode: 0 unresolved errors, 22 allowed exceptions.
+- Resolved source cleanup so far: focus ring arbitrary class, `Button` height classes, `Dialog` mobile gutter/centering, `Checkbox` 4px radius, selected `GlobalNav` spacing/motion classes, `HeartChartModalShell` width/height/grid/8px overlay-blur values, existing `HeartChartLinkCard` / `HeartChartLinkModal` sizing and layout values, form/menu primitive transition/min-width values (`Input`, `InputGroup`, `Select`, `DropdownMenu`), `CardHeader` layout grids, `PhotoBackdrop`, `BlurOverlay`, `VideoPlayer`, `HeartChartSummary`, `WeDoCard`, `CourseCard`, `TopHero`, dashboard chart labels, and shared page-width/shell layout values.
+- Code-reviewer pitstop found checker hardening gaps and they were fixed before PR handoff: component-map docs anchors now must match component identity, visual-value exceptions are single-use per scan, arbitrary class extraction skips obvious prose strings without skipping class constants, common bare Tailwind utilities still allow class-list extraction, and duplicate arbitrary class occurrences are no longer hidden before exception matching.
+- Phase 4 visual baseline harness is now repo-owned under `design-system/audits/visual-comparisons`; generated screenshots/review boards live under ignored `design-system/audits/.generated`.
+- The visual harness compares three sources: Figma reference, baseline code from merge commit `12ff0e440ab990747af17169166a70b09c16fce7`, and current branch code.
+- Pilot targets were expanded to the full July MVP modal set: `heartchart-link-modal`, `invite-user-modal`, `heartchart-quick-tip-modal`, `heartchart-last-four-weeks-modal`, and `heartchart-resources-quick-start-modal`, plus the existing `button-component` control target.
+- Phase 4 pitstop finding: an initial button before/current pixel delta came from animated loading-spinner nondeterminism, not a component styling change. The harness now freezes animations, transitions, and caret rendering before capture.
+- Phase 4 pitstop finding: modal captures for hash-scrolled `/design-system/components#...` targets initially produced blank crops. Root cause was CDP clip-coordinate handling: `getBoundingClientRect()` returned viewport coordinates while `Page.captureScreenshot` clipping required page coordinates for the scrolled page. The harness now adds the scroll offset and clamps against the visible page window; modal targets also wait for unique text before capture.
+- Phase 4 limitation: the `button-component` Figma node currently points to a single primary button reference, not the full button state set.
+- Phase 4 validation: `npm test -- scripts/visual-audit/capture.test.mjs` passes, and `npm run audit:visual -- --before-url http://127.0.0.1:3101 --after-url http://127.0.0.1:3102 --run-id 20260725-july-mvp-modals` completes with generated evidence under ignored `design-system/audits/.generated/visual-comparisons/20260725-july-mvp-modals/`.
+- Five July MVP modal components are now implemented and dogfooded through the checker and visual harness. The Last 4 Weeks chart mismatch found during visual review was fixed before moving forward.
+- Code-reviewer pitstop on the modal/visual bundle found three finish-quality defects and they were fixed before moving forward: Last 4 Weeks carousel controls now change visible tips instead of being no-op buttons, the shared `Select` primitive left-aligns selected values, and the chart x-axis labels no longer contradict the March 23 through April 19 range.
+- Visual-audit evidence remains a human review board, not pixel-parity proof. Figma references are full-frame screenshots, while current modal captures are intentionally clipped to the dialog frame.
+- Full-source score snapshot uses the current checker against both trees: baseline is merge commit `12ff0e440ab990747af17169166a70b09c16fce7`; current is this working tree. "Gate compliance" means scanned files with no unresolved checker errors. "Strict clean" also subtracts files with documented exceptions/variance.
+- Baseline score: 84 scanned files, 164 unresolved errors, 0 documented exceptions; gate compliance 30/84 files (35.7%); strict clean 30/84 files (35.7%).
+- Current score: 100 scanned files, 0 unresolved errors, 22 documented exceptions; gate compliance 100/100 files (100%); strict clean 91/100 files (91.0%).
+- Current documented variance: 2 arbitrary visual exceptions, 15 raw-value provenance/brand exceptions, and 5 route-local component-contract exclusions. The new July MVP modal and Settings modal files add no new documented exceptions.
+- Settings / Church Profile Figma-to-code dogfood record was added under `design-system/audits/figma-to-code/20260725-settings-church-profile.md`. The run fixed real gaps before moving forward: server/client demo boundary, missing mobile settings nav fallback, mobile nav overlap/clipping, ambiguous action accessible names, title autofocus, missing exception-rule enforcement, and loose component-contract exclusion categories.
+
 ## Phase 0: Branch And PR Gate
 
 1. Verify the governance checker PR state from GitHub.
@@ -78,7 +104,7 @@ Pitstop:
 
 Red-first checks:
 
-1. Add a report-only full-source command or test fixture that proves the current changed-file checker does not equal full-source compliance.
+1. Add and run a report-only full-source command, `npm run check:design-system:full`, that proves the current changed-file checker does not equal full-source compliance.
 2. Add failing fixtures for any file shapes in the inventory that the checker does not currently scan but should.
 
 Pitstop:
@@ -106,6 +132,7 @@ Pitstop:
    - CSS declarations such as `gap: 7px`
    - `rgb(...)`, `hsl(...)`, `oklch(...)`, and `color-mix(...)`
    - SVG `fill`, `stroke`, `filter`, and `drop-shadow`
+   - exact rule/value exceptions that should pass only when fully documented and visible in reports
 4. Try to bypass component-contract checks:
    - missing component-map entry
    - wrong `COMPONENTS.md` anchor
@@ -170,6 +197,8 @@ Pitstop:
 
 ## Phase 5: Foundation And Primitive Fixes
 
+Current progress: checker-exposed primitive and foundation drift has been cleaned in source. `Button`, `Dialog`, `Checkbox`, selected `GlobalNav` primitives, `HeartChartModalShell`, `Input`, `InputGroup`, `Select`, `DropdownMenu`, `Card`, blur/photo utilities, and shared layout utilities no longer have unresolved full-source arbitrary-value findings. Visual/Figma fidelity review remains separate from checker compliance.
+
 1. Fix tokens before call sites when the same value appears in multiple places.
 2. Fix `Button`, `Dialog`, `Input`, `Select`, `Card`, and shared layout primitives before composite components.
 3. Preserve Figma sizing and optical alignment; tokenization must not flatten valid design nuance.
@@ -190,6 +219,8 @@ Pitstop:
 - Look forward: re-rank composite fixes based on actual primitive results.
 
 ## Phase 6: Composite Component Fixes
+
+Current progress: checker-exposed composite drift has been cleaned in source. Existing `HeartChartLinkCard`, `HeartChartLinkModal`, `HeartChartSummary`, media/resource components, and dashboard/data-viz label components no longer have unresolved full-source arbitrary-value findings. Visual/Figma fidelity review remains separate from checker compliance.
 
 1. Fix composites one at a time, ordered by dependency and blast radius.
 2. For each component, verify:
@@ -315,4 +346,3 @@ Depends on future state:
 - CI enforcement beyond local script usage.
 - Broad accessibility automation if no current accessibility runner exists.
 - Modal implementation PRs that depend on the audit-proven shell and primitives.
-

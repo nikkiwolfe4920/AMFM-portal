@@ -11,16 +11,19 @@ export function scanArbitraryValues({
   files,
   exceptionRegistry,
   exceptions = [],
+  validateRegistry = true,
 }) {
   const registry = exceptionRegistry ?? {
     version: 1,
     exceptions,
   };
-  const registryValidation = validateExceptionRegistry(registry);
-
+  const registryValidation = validateRegistry
+    ? validateExceptionRegistry(registry)
+    : { errors: [] };
   const errors = [...registryValidation.errors];
   const visibleExceptions = [];
   const registeredExceptions = registry.exceptions ?? [];
+  const usedExceptionIds = new Set();
 
   if (registryValidation.errors.length > 0) {
     return {
@@ -41,12 +44,18 @@ export function scanArbitraryValues({
         className,
         value: classification.value,
       };
-      const exception = findMatchingException(finding, registeredExceptions);
+      const exception = findMatchingException(
+        finding,
+        registeredExceptions,
+        usedExceptionIds
+      );
 
       if (exception) {
+        usedExceptionIds.add(exception.id);
         visibleExceptions.push({
           ...finding,
           exceptionId: exception.id,
+          message: `Allowed exception: ${exception.rationale}`,
         });
       } else {
         errors.push({

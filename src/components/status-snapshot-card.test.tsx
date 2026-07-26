@@ -29,6 +29,15 @@ describe("StatusSnapshotCard", () => {
     expect(icon).toHaveAttribute("src", expect.stringContaining("kids-icon.svg"));
   });
 
+  it("scales variant icons without forcing them into a square box", () => {
+    const { container } = render(<StatusSnapshotCard variant="relationship" title="Relationship Status" data={DATA} />);
+
+    const icon = container.querySelector('img[aria-hidden="true"]');
+    expect(icon).toHaveAttribute("width", "22");
+    expect(icon).toHaveAttribute("height", "20");
+    expect(icon).toHaveClass("h-5", "w-auto");
+  });
+
   it("renders an empty-state message when there is no data", () => {
     render(<StatusSnapshotCard variant="relationship" title="Relationship Status" data={[]} />);
 

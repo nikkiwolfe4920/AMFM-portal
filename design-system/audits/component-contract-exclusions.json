@@ -1,0 +1,75 @@
+{
+  "version": 1,
+  "exclusions": [
+    {
+      "id": "create-profile-form-route-orchestration",
+      "filePath": "src/app/create-profile/_components/create-profile-form.tsx",
+      "component": "CreateProfileForm",
+      "category": "route-orchestration",
+      "source": "Source inspection on 2026-07-25: composes Button, CardContent, CardFooter, InputGroup, Input, Label, Select, and PricingCard for the create-profile route.",
+      "rationale": "CreateProfileForm owns route-local onboarding form state, option lists, and submit behavior while composing documented primitives and PricingCard; it is not a reusable Figma component contract.",
+      "alternatives": "Keep documenting the reusable primitives and PricingCard. Promote a reusable form section only after another route needs the same anatomy.",
+      "blastRadius": "Limited to the create-profile route assembly file.",
+      "owner": "Design system governance",
+      "dateAdded": "2026-07-25",
+      "status": "permanent",
+      "reviewTrigger": "Review if the form anatomy is reused outside create-profile, receives its own Figma component/pattern, or stops composing documented primitives."
+    },
+    {
+      "id": "dashboard-content-route-orchestration",
+      "filePath": "src/app/dashboard/_components/dashboard-content.tsx",
+      "component": "DashboardContent",
+      "category": "route-orchestration",
+      "source": "Source inspection on 2026-07-25: composes HeartChartSummary, WeDoCard, dashboard charts, DashboardFilterMenu, HorizontalTabs, Card, and Button for the dashboard route.",
+      "rationale": "DashboardContent owns page-level dashboard state and section composition over documented dashboard components; it is not a reusable Figma component contract.",
+      "alternatives": "Keep documenting the dashboard cards, charts, filters, tabs, and primitives it composes. Extract a reusable dashboard page shell only after another route proves the same structure.",
+      "blastRadius": "Limited to the dashboard route assembly file.",
+      "owner": "Design system governance",
+      "dateAdded": "2026-07-25",
+      "status": "permanent",
+      "reviewTrigger": "Review if another dashboard-style route reuses this layout or if Figma promotes the page composition into a named pattern."
+    },
+    {
+      "id": "login-form-route-orchestration",
+      "filePath": "src/app/login/_components/login-form.tsx",
+      "component": "LoginForm",
+      "category": "route-orchestration",
+      "source": "Source inspection on 2026-07-25: composes Button, Checkbox, Input, Label, and the forgot-password link for the login route.",
+      "rationale": "LoginForm owns local login form state and submit behavior while composing documented primitives; it is not a reusable Figma component contract.",
+      "alternatives": "Keep documenting Button, Checkbox, Input, and Label. Extract a reusable auth form primitive only if another route shares the same anatomy.",
+      "blastRadius": "Limited to the login route assembly file.",
+      "owner": "Design system governance",
+      "dateAdded": "2026-07-25",
+      "status": "permanent",
+      "reviewTrigger": "Review if the form is reused outside login, receives its own Figma component/pattern, or stops composing documented primitives."
+    },
+    {
+      "id": "signup-card-content-route-orchestration",
+      "filePath": "src/app/signup/_components/signup-card-content.tsx",
+      "component": "SignupCardContent",
+      "category": "route-orchestration",
+      "source": "Source inspection on 2026-07-25: composes HeartChartLogo, Button, GoogleIcon, SignupForm, SignupSuccess, and auth-route links for the signup route.",
+      "rationale": "SignupCardContent owns the route-local signup content switch between form and success state while composing documented pieces; it is not a reusable Figma component contract.",
+      "alternatives": "Keep documenting AuthCard, SignupForm subcomponents, SignupSuccess, HeartChartLogo, GoogleIcon, and Button. Promote a reusable auth card body only after another route needs the same switch.",
+      "blastRadius": "Limited to the signup route content assembly file.",
+      "owner": "Design system governance",
+      "dateAdded": "2026-07-25",
+      "status": "permanent",
+      "reviewTrigger": "Review if the content switch is reused outside signup or Figma defines it as a named component/pattern."
+    },
+    {
+      "id": "signup-form-route-orchestration",
+      "filePath": "src/app/signup/_components/signup-form.tsx",
+      "component": "SignupForm",
+      "category": "route-orchestration",
+      "source": "Source inspection on 2026-07-25: composes Button, Input, Label, PasswordRequirementItem, and native form validation for the signup route.",
+      "rationale": "SignupForm owns route-local account form state, password validation, and success handoff while composing documented primitives and PasswordRequirementItem; it is not a reusable Figma component contract.",
+      "alternatives": "Keep documenting Button, Input, Label, PasswordRequirementItem, and SignupSuccess. Extract a reusable signup form primitive only after another route needs the same behavior and anatomy.",
+      "blastRadius": "Limited to the signup route form assembly file.",
+      "owner": "Design system governance",
+      "dateAdded": "2026-07-25",
+      "status": "permanent",
+      "reviewTrigger": "Review if the form is reused outside signup, receives its own Figma component/pattern, or stops composing documented primitives."
+    }
+  ]
+}

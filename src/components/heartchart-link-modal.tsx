@@ -84,7 +84,7 @@ function HeartChartLinkModalHeader({
   return (
     <div
       data-slot="heartchart-link-modal-header-content"
-      className="grid gap-6 md:grid-cols-[minmax(0,420px)_276px] md:items-stretch md:gap-10"
+      className="grid gap-6 md:grid-cols-heartchart-link-header md:items-stretch md:gap-10"
     >
       <div className="flex min-w-0 flex-col gap-6 pb-8">
         <p className="text-text-tertiary text-sm">
@@ -129,7 +129,7 @@ function HeartChartBrandPreview({ className }: { className?: string }) {
   return (
     <div
       data-slot="heartchart-brand-preview"
-      className={cn("relative h-[220px] w-[276px] overflow-hidden", className)}
+      className={cn("relative h-55 w-69 overflow-hidden", className)}
     >
       <Image
         src={HEARTCHART_LINK_PHONE_PREVIEW_SRC}

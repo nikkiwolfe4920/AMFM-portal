@@ -27,7 +27,7 @@ export function BlurOverlay({ className, children }: BlurOverlayProps) {
     >
       <div
         data-slot="blur-overlay-content"
-        className="pointer-events-none blur-[2px] select-none"
+        className="pointer-events-none blur-inert-preview select-none"
       >
         {children}
       </div>

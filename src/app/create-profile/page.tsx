@@ -16,7 +16,7 @@ export default function CreateProfilePage() {
         <CardHeader className="flex flex-col gap-0 px-6 pt-6">
           <div className="flex w-full items-center gap-4">
             <div className="flex flex-1 flex-col gap-0.5">
-              <CardTitle className="font-display text-display-md leading-[2.5rem] text-foreground font-light">
+              <CardTitle className="font-display text-display-md leading-display-md text-foreground font-light">
                 Create profile
               </CardTitle>
               <CardDescription className="text-text-tertiary">

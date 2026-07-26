@@ -4,64 +4,83 @@ const PAGES = [
   {
     href: "/",
     title: "Home",
-    figma: "— (product copy, no dedicated Figma screen)",
-    builtFrom: "PhotoBackdrop, Button, DposystemLearnMore pattern",
+    figma: "Product copy page; no dedicated Figma screen tracked yet.",
+    composition: "PhotoBackdrop + Button + DposystemLearnMore dialog trigger.",
+    status:
+      "Live route. The learn-more modal pattern is tracked under Patterns, while the homepage itself remains a product page reference.",
   },
   {
     href: "/login",
     title: "Login",
-    figma: 'AMFM Portal — Onboarding/login node 1909:25767',
-    builtFrom:
-      "Auth card pattern (PhotoBackdrop + AuthCard + HeartChartLogo + GoogleIcon + Button/Input/Label/Checkbox)",
+    figma: "AMFM Portal — Onboarding/login node 1909:25767.",
+    composition:
+      "PhotoBackdrop + AuthCard + HeartChartLogo + GoogleIcon + Button/Input/Label/Checkbox.",
+    status: "Live route. Auth composition is tracked as the Auth card pattern.",
   },
   {
     href: "/signup",
     title: "Sign up",
-    figma: 'AMFM Portal — Onboarding/sign up node 1909:25768',
-    builtFrom:
-      "Auth card — sign up pattern (PhotoBackdrop + AuthCard + HeartChartLogo + GoogleIcon + Button/Input/Label). Password requirement checklist from Figma not implemented — see PasswordRequirementItem in COMPONENTS.md (Draft, missing \"met\" state reference).",
+    figma: "AMFM Portal — Onboarding/sign up node 1909:25768.",
+    composition:
+      "PhotoBackdrop + AuthCard + HeartChartLogo + GoogleIcon + Button/Input/Label + PasswordRequirementItem.",
+    status:
+      "Live route. Sign-up default and success states are tracked as Auth card patterns.",
   },
   {
     href: "/create-profile",
     title: "Create profile",
-    figma: 'AMFM Portal — Onboarding/Create Profile node 1909:25769',
-    builtFrom:
-      "PhotoBackdrop + Card (CardHeader/CardAction/CardContent/CardFooter) + HeartChartLogo + Button/Input/Label. Partial implementation — only the Church/Organization name, Location, and Average Weekly Attendance fields are built (plain Input, all Production Ready). The Website field (needs InputGroup), Your role / Your primary goal fields (need Select), the required-field asterisk marker (needs a Label variant), and the entire \"Free Membership\" pricing card (needs BenefitListItem, AmfmLogo, and PricingCard) are not implemented — all are Draft in COMPONENTS.md pending open design questions (a missing display-type-scale foundation, a blocked logo asset, and unconfirmed icon/UX decisions). See COMPONENTS.md for the full list.",
+    figma: "AMFM Portal — Onboarding/Create Profile node 1909:25769.",
+    composition:
+      "PhotoBackdrop + Card + HeartChartLogo + Button/Input/InputGroup/Select/Label + PricingCard.",
+    status:
+      "Live route. Full form-card composition is tracked as the Create profile card pattern.",
   },
   {
     href: "/welcome",
-    title: "Welcome (first-run church admin)",
-    figma: "AMFM Portal — Onboarding/First run church admin node 1909:25772",
-    builtFrom:
-      "PhotoBackdrop (new \"radial\" scrim variant) + a personalized heading (new text-display-lg/text-display-2xl tokens + highlight-gold color) + VideoPlayer (new, Draft) + Button. The background photo reuses public/login-background.jpg rather than a distinct export, and VideoPlayer has no real video source or captions file yet — both flagged in COMPONENTS.md/DESIGN.md's Known gaps. Side navigation is hidden per the Figma frame's own dev annotation.",
+    title: "Welcome",
+    figma: "AMFM Portal — Onboarding/First run church admin node 1909:25772.",
+    composition:
+      "PhotoBackdrop radial scrim + display heading + VideoPlayer + Button.",
+    status:
+      "Live route. Welcome hero is tracked as a reduced-height pattern; video source/captions remain product-owned.",
   },
   {
     href: "/heartchart-resources",
     title: "HeartChart Resources",
-    figma: 'AMFM Portal — "HeartChart Resources" component (node 2361:19280, rendered on-canvas as node 3722:19475)',
-    builtFrom:
-      "GlobalNav + a page <h1> (font-display text-display-md) + TopHero (new, Production Ready) + a 3-step CourseCard pattern (new, Production Ready) inside an ElevatedCard (new, Production Ready) + two more ElevatedCard resource cards (Card's CardHeader/CardTitle/CardDescription/CardAction/CardContent, composed directly on ElevatedCard rather than the flat Card primitive) with ResourceListItem rows (updated to a real download-button treatment, Production Ready) + FooterCta (new, Draft), on the new background-gradient-from/background-gradient-to page-shell tokens. All real copy/icons/token values were pulled from the actual Figma node tree via the Figma MCP. TopHero's congregation-stage photo and CourseCard's per-step video-cover photos are now wired to the real exported assets (public/Featured Training.png, public/Step-1.png, public/Step-2.png, public/Step-3.png). FooterCta's background texture remains blocked by this environment's egress policy (www.figma.com denied) and renders a flat-color placeholder instead — see COMPONENTS.md for its Implementation rules. Resource link destinations remain placeholder routes (\"#\"), the same category of gap already documented for GlobalNav's other nav links.",
+    figma:
+      'AMFM Portal — "HeartChart Resources" component node 2361:19280, rendered as node 3722:19475.',
+    composition:
+      "GlobalNav + page heading + TopHero + CourseCard row + ElevatedCard resource lists + FooterCta.",
+    status:
+      "Live route. Full page composition is tracked as a Patterns entry; resource destinations remain placeholders.",
   },
   {
     href: "/dashboard",
     title: "Our Data Dashboard",
-    figma: 'AMFM Portal — "HeartChart Dashboard / premium" (node 3727:29573)',
-    builtFrom:
-      "GlobalNav + a page <h1> (font-display text-display-md) + a Select-based campus picker + HeartChartSummary paired with WeDoCard (composes PointerCallout for its pull-quote, and two PointerCalloutArrow instances below the pair) inside a Card housing ParticipationVerticalBarCard and two StatusSnapshotCard instances (relationship/kids variants, superseding the retired ParticipationHorizontalBarCard) + a Card composing CommitmentConnectionChart, SnapshotVideoCard, DashboardFilterMenu, and FullWidthBarChart behind HorizontalTabs + two Cards composing PieChartCard (reused 2x) and ScaleChartCard (reused 6x). A data-visualization color palette (chart-pie-*/chart-scale-blue-*/chart-participation-fill-*/chart-status-*/chart-bar-fill-to) was added to DESIGN.md/src/tokens/colors.css to support the chart components. Sample data is representative only (src/app/dashboard/_lib/dashboard-data.ts), not wired to a real backend — see each component's COMPONENTS.md entry for full Figma references, known gaps, and approximations (several components — PointerCalloutArrow, StatusSnapshotCard, ParticipationVerticalBarCard's gridlines — were rebuilt from screenshots pasted in chat rather than a reachable Figma node; the Relationship Health scatter graphic remains CommitmentConnectionChart pending a real replacement image file).",
+    figma: 'AMFM Portal — "HeartChart Dashboard / premium" node 4255:30872.',
+    composition:
+      "GlobalNav + HeartChartSummary + WeDoCard + chart cards + DashboardFilterMenu + HorizontalTabs.",
+    status:
+      "Live route with representative data only. Dashboard chart cleanup from PR #60 is the current baseline; detailed component contracts live in COMPONENTS.md.",
   },
   {
     href: "/marriage-champions",
     title: "Our Marriage Champions",
-    figma: 'AMFM Portal — "Our Marriage Champions / Populated" (node 3724:23444)',
-    builtFrom:
-      "GlobalNav (first real routed consumer — this is the page its own \"Our Marriage Champions\" nav item points to) + a page <h1> (font-display text-display-md) + ElevatedCard housing a Card header (CardTitle/CardDescription + a CardAction row composing Button variant=\"ghost\" with a leading icon and InputGroup with a leading Search icon addon, per the multi-action composition documented on Card) + Table (new, Draft) with per-row Select (Profile type) and StatusTag (new, Draft) instances for the Yes/No/Invited pills. Row delete affordance reuses Button size=\"icon\" variant=\"ghost\". The header's info icon (next to \"Completed MMP\") renders decoratively only — no Tooltip component exists in COMPONENTS.md yet, and one wasn't invented for this pass; see COMPONENTS.md#table Implementation rules. Row/cell data is representative sample data, not wired to a real backend (shared with /marriage-champions-empty via src/lib/team-members.ts).",
+    figma:
+      'AMFM Portal — "Our Marriage Champions / Populated" node 3724:23444.',
+    composition:
+      "MarriageChampionsPageShell + GlobalNav + ElevatedCard + Card header + Table + Select + StatusTag.",
+    status:
+      "Live route with representative team data. Table/status primitives are tracked under Components.",
   },
   {
     href: "/marriage-champions-empty",
     title: "Our Marriage Champions (Empty)",
-    figma: 'AMFM Portal — "Our Marriage Champions / Empty" (node 3724:23167)',
-    builtFrom:
-      "MarriageChampionsPageShell (new, Draft — the GlobalNav + gradient shell + h1/logo header extracted out of /marriage-champions once this page confirmed a second real use site) + ElevatedCard housing a decorative BlurOverlay (new, Draft) wrapping the same Table/StatusTag roster as the Populated page (sans the interactive Select/delete-button cells, which would otherwise be focusable while aria-hidden) + a centered recruiting overlay: VideoPlayer (promoted to src/components, second real use site alongside /welcome), a font-display text-display-lg heading, supporting copy, and a default-variant Button size=\"sm\" with a leading Award icon (\"Invite Marriage Champions\", node 3724:23184 — Award is the closest lucide-react equivalent to Figma's certificate-02 glyph). The invite modal the button opens (Figma node 3724:23382, \"Modal / invite user\") is not implemented — only its trigger button is in scope for this pass. GlobalNav's \"Our Marriage Champions\" nav item still only links to /marriage-champions, so this route won't show as the active nav item — acceptable for a design-system demonstration route, not a real second navigable state.",
+    figma: 'AMFM Portal — "Our Marriage Champions / Empty" node 3724:23167.',
+    composition:
+      "MarriageChampionsPageShell + GlobalNav + ElevatedCard + BlurOverlay + VideoPlayer + Button.",
+    status:
+      "Live demonstration route for the empty state. Invite-user modal is now tracked in the July MVP modal family pattern.",
   },
 ];
 
@@ -69,13 +88,14 @@ export default function PagesIndexPage() {
   return (
     <div className="flex flex-col gap-6 py-8">
       <p className="text-muted-foreground max-w-2xl text-sm">
-        Full screens implemented from Figma. A page isn&apos;t re-rendered
-        inside this shell — that would duplicate routing/layout concerns —
-        follow the link to view it live.
+        Full routed screens implemented from Figma or product copy. Pages show
+        where component and pattern contracts are consumed; modal overlays and
+        other reusable compositions are tracked under Patterns rather than as
+        standalone routes.
       </p>
       <div className="flex flex-col divide-y rounded-lg border">
         {PAGES.map((page) => (
-          <div key={page.href} className="flex flex-col gap-2 p-5">
+          <div key={page.href} className="flex flex-col gap-3 p-5">
             <div className="flex items-center justify-between gap-2">
               <h3 className="text-lg font-semibold">{page.title}</h3>
               <Link
@@ -85,12 +105,26 @@ export default function PagesIndexPage() {
                 View live →
               </Link>
             </div>
-            <p className="text-muted-foreground max-w-3xl text-sm">
-              <span className="font-medium">Figma:</span> {page.figma}
-            </p>
-            <p className="text-muted-foreground max-w-3xl text-sm">
-              <span className="font-medium">Built from:</span> {page.builtFrom}
-            </p>
+            <dl className="flex flex-col gap-2 text-sm">
+              <div className="grid gap-1 sm:grid-cols-4">
+                <dt className="font-medium text-foreground">Figma</dt>
+                <dd className="text-muted-foreground sm:col-span-3">
+                  {page.figma}
+                </dd>
+              </div>
+              <div className="grid gap-1 sm:grid-cols-4">
+                <dt className="font-medium text-foreground">Composition</dt>
+                <dd className="text-muted-foreground sm:col-span-3">
+                  {page.composition}
+                </dd>
+              </div>
+              <div className="grid gap-1 sm:grid-cols-4">
+                <dt className="font-medium text-foreground">Status</dt>
+                <dd className="text-muted-foreground sm:col-span-3">
+                  {page.status}
+                </dd>
+              </div>
+            </dl>
           </div>
         ))}
       </div>

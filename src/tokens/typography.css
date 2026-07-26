@@ -19,9 +19,19 @@
   --font-mono: var(--font-geist-mono);
   --font-display: var(--font-financier-display);
 
+  --tracking-label: 0.015rem;
+  --tracking-stat-value: -0.06rem;
+
   --text-xs--line-height: 1.25rem;
   --text-sm--line-height: 1.375rem;
   --text-base--line-height: 1.625rem;
+
+  --text-chart-label: 0.625rem;
+  --text-chart-label--line-height: 1rem;
+
+  --text-amfm-logo-caption: 0.34375rem;
+  --text-amfm-logo-caption--line-height: 0.4375rem;
+  --text-amfm-logo-caption--letter-spacing: 0.025rem;
 
   --text-display-sm: 1.875rem;
   --text-display-sm--line-height: 2.375rem;
@@ -31,4 +41,13 @@
   --text-display-lg--line-height: 3.125rem;
   --text-display-2xl: 4.5rem;
   --text-display-2xl--line-height: 5.625rem;
+  --text-display-2xl--letter-spacing: -0.09rem;
+}
+
+@utility leading-display-md {
+  line-height: var(--text-display-md--line-height);
+}
+
+@utility leading-display-sm {
+  line-height: var(--text-display-sm--line-height);
 }

@@ -13,7 +13,7 @@ describe("FooterCta", () => {
     );
 
     expect(screen.getByRole("button", { name: "Upgrade to Premium" })).toHaveClass(
-      "h-[42px]",
+      "h-10.5",
       "text-sm",
       "border-button-outline-reversed-border",
       "text-button-outline-reversed-fg",

@@ -21,6 +21,7 @@ import {
 } from "@/components/ui/dialog";
 import { HelperText } from "@/components/ui/helper-text";
 import { Input } from "@/components/ui/input";
+import { InputActionGroup } from "@/components/ui/input-action-group";
 import { InputGroup } from "@/components/ui/input-group";
 import { Label } from "@/components/ui/label";
 import {
@@ -37,6 +38,7 @@ import { PointerCallout } from "@/components/pointer-callout";
 import { PointerCalloutArrow } from "@/components/pointer-callout-arrow";
 import { ParticipationVerticalBarCard } from "@/components/participation-vertical-bar-card";
 import { StatusSnapshotCard } from "@/components/status-snapshot-card";
+import { CommitmentConnectionChart } from "@/components/commitment-connection-chart";
 import {
   HorizontalTabsDemo,
   DashboardFilterMenuDemo,
@@ -53,7 +55,9 @@ import {
   FULL_WIDTH_BAR_CHART_DATA,
   GOD_CONNECTION_PIE,
   KIDS_DATA,
+  RELATIONSHIP_HEALTH_RESPONSE_COUNT,
   RELATIONSHIP_HEALTH_SUMMARY,
+  RELATIONSHIP_HEALTH_ZONE_LABELS,
   RELATIONSHIP_STATUS_DATA,
 } from "@/app/dashboard/_lib/dashboard-data";
 import { AmfmLogo } from "@/app/create-profile/_components/amfm-logo";
@@ -63,6 +67,10 @@ import { SignupSuccess } from "@/app/signup/_components/signup-success";
 import { GlobalNav } from "@/components/global-nav";
 import { VideoPlayer } from "@/components/video-player";
 import { HeartChartModalShell } from "@/components/heartchart-modal-shell";
+import { InfoNote } from "@/components/info-note";
+import { ModalTextSection } from "@/components/modal-text-section";
+import { ParticipationTrendCard } from "@/components/participation-trend-card";
+import { TipCarousel } from "@/components/tip-carousel";
 import { BlurOverlay } from "@/components/blur-overlay";
 import { ResourceListItem } from "@/components/resource-list-item";
 import { ElevatedCard } from "@/components/elevated-card";
@@ -81,9 +89,58 @@ import {
 
 import { ComponentShowcase } from "../_components/showcase";
 import {
+  HeartChartLastFourWeeksModalDemo,
   HeartChartLinkCardDemo,
   HeartChartLinkModalDemo,
-} from "./_components/heartchart-link-demos";
+  HeartChartQuickTipModalDemo,
+  HeartChartResourcesQuickStartModalDemo,
+  InviteUserModalDemo,
+} from "../_components/heartchart-modal-demos";
+import {
+  ChurchProfileSettingsModalDemo,
+  SettingsAssetUploadDemo,
+  SettingsCampusListDemo,
+  SettingsModalShellDemo,
+  SettingsSectionDemo,
+} from "./_components/settings-demos";
+
+const participationTrendDemoPoints = [
+  { label: "Mar 23", value: 1 },
+  { label: "Mar 25", value: 1 },
+  { label: "Mar 27", value: 1 },
+  { label: "Mar 29", value: 3 },
+  { label: "Mar 30", value: 0 },
+  { label: "Apr 1", value: 0 },
+  { label: "Apr 2", value: 3 },
+  { label: "Apr 4", value: 3 },
+  { label: "Apr 5", value: 4 },
+  { label: "Apr 7", value: 3 },
+  { label: "Apr 8", value: 1 },
+  { label: "Apr 10", value: 0 },
+  { label: "Apr 12", value: 2 },
+  { label: "Apr 14", value: 2 },
+  { label: "Apr 16", value: 2 },
+  { label: "Apr 18", value: 1 },
+  { label: "Apr 19", value: 4 },
+];
+
+const tipCarouselDemoItems = [
+  {
+    title: "Start with personal invites",
+    description:
+      "Encourage champions to personally reach out to a few couples or individuals who have not taken HeartChart yet.",
+  },
+  {
+    title: "Use natural moments",
+    description:
+      "In small groups, mentoring, or coaching conversations, ask: Have you taken HeartChart yet?",
+  },
+  {
+    title: "Make it easy in the moment",
+    description:
+      "Have the link or QR code ready so people can complete it right then.",
+  },
+];
 
 export default function ComponentsPage() {
   return (
@@ -275,6 +332,48 @@ export default function ComponentsPage() {
               Website
             </Label>
             <InputGroup id="ds-website" addon="http://" placeholder="yourchurch.com" required />
+          </div>
+        </div>
+      </ComponentShowcase>
+
+      <ComponentShowcase
+        name="InputActionGroup"
+        status="Draft"
+        purpose="Pairs an Input with an attached trailing action button when the action directly operates on the input value."
+        docsAnchor="inputactiongroup"
+        figmaReference="AMFM Portal — Modal/Settings/Church Profile node 3724:20992, add-campus field/action row"
+        tokens={[
+          "border-input",
+          "bg-background",
+          "border-border-brand",
+          "border-border-destructive-subtle",
+          "shadow-xs",
+          "transition-control",
+          "Button default/controlSegment",
+        ]}
+        states={["Default", "Focused", "Disabled", "Action disabled", "Submit action"]}
+      >
+        <div className="grid max-w-sm gap-6">
+          <div className="flex flex-col gap-1.5">
+            <Label htmlFor="ds-campus-action">Campus name</Label>
+            <InputActionGroup
+              id="ds-campus-action"
+              name="campusName"
+              placeholder="Campus name"
+              actionLabel="Add"
+              actionIcon={<Plus aria-hidden="true" />}
+            />
+          </div>
+          <div className="flex flex-col gap-1.5">
+            <Label htmlFor="ds-campus-action-disabled">Campus name</Label>
+            <InputActionGroup
+              id="ds-campus-action-disabled"
+              name="campusNameDisabled"
+              placeholder="Campus name"
+              actionLabel="Add"
+              actionIcon={<Plus aria-hidden="true" />}
+              actionDisabled
+            />
           </div>
         </div>
       </ComponentShowcase>
@@ -589,7 +688,7 @@ export default function ComponentsPage() {
         tokens={[
           "bg-background",
           "bg-overlay/85",
-          "backdrop-blur-[8px]",
+          "backdrop-blur-sm",
           "border-border-secondary",
           "bg-secondary",
           "rounded-2xl",
@@ -650,6 +749,194 @@ export default function ComponentsPage() {
       </ComponentShowcase>
 
       <ComponentShowcase
+        name="SettingsModalShell"
+        status="Draft"
+        purpose="Reusable settings/account modal shell with left navigation, visible title/description header, and scrollable content pane."
+        docsAnchor="settingsmodalshell"
+        figmaReference="AMFM Portal — Modal/Settings/Church Profile node 3724:20992, Settings/Church Profile instance node 3724:21598"
+        tokens={[
+          "bg-overlay/85",
+          "bg-background",
+          "bg-secondary",
+          "border-border-secondary",
+          "text-fg-quaternary",
+          "font-display",
+          "text-display-md",
+          "max-w-modal-settings",
+          "grid-cols-settings-modal",
+          "shadow-card",
+        ]}
+        states={["Closed", "Open", "Active nav", "Scrollable body"]}
+      >
+        <SettingsModalShellDemo />
+      </ComponentShowcase>
+
+      <ComponentShowcase
+        name="SettingsSection"
+        status="Draft"
+        purpose="Reusable settings section molecule: uppercase section label plus rounded secondary panel."
+        docsAnchor="settingssection"
+        figmaReference="AMFM Portal — Modal/Settings/Church Profile node 3724:20992, CHURCH LOGO / BASIC INFORMATION / CAMPUSES section groups"
+        tokens={["bg-secondary", "text-muted-foreground", "tracking-label", "rounded-2xl"]}
+        states={["Default"]}
+      >
+        <SettingsSectionDemo />
+      </ComponentShowcase>
+
+      <ComponentShowcase
+        name="SettingsAssetUpload"
+        status="Draft"
+        purpose="Reusable settings asset-upload row: preview, upload action, remove action, and accepted-file helper copy."
+        docsAnchor="settingsassetupload"
+        figmaReference="AMFM Portal — Modal/Settings/Church Profile node 3724:20992, CHURCH LOGO upload block"
+        tokens={[
+          "bg-secondary",
+          "text-muted-foreground",
+          "Button outline/control",
+          "Button link/inline",
+          "rounded-xs",
+        ]}
+        states={["Default", "Missing callback disabled"]}
+      >
+        <SettingsAssetUploadDemo />
+      </ComponentShowcase>
+
+      <ComponentShowcase
+        name="SettingsCampusList"
+        status="Draft"
+        purpose="Reusable settings campus list rows with edit/remove utility actions."
+        docsAnchor="settingscampuslist"
+        figmaReference="AMFM Portal — Modal/Settings/Church Profile node 3724:20992, CAMPUSES list rows"
+        tokens={[
+          "bg-secondary",
+          "border-border-secondary",
+          "text-foreground",
+          "text-fg-quaternary",
+          "grid-cols-settings-campus-row",
+          "Button ghost/icon",
+        ]}
+        states={["Default", "Disabled actions"]}
+      >
+        <SettingsCampusListDemo />
+      </ComponentShowcase>
+
+      <ComponentShowcase
+        name="ChurchProfileSettingsModal"
+        status="Draft"
+        purpose="Composed Church Profile settings modal pattern built from SettingsModalShell and reusable settings/form molecules."
+        docsAnchor="churchprofilesettingsmodal"
+        figmaReference="AMFM Portal — Modal/Settings/Church Profile node 3724:20992"
+        tokens={[
+          "max-w-modal-settings",
+          "max-w-settings-content",
+          "grid-cols-settings-modal",
+          "grid-cols-settings-field-pair",
+          "grid-cols-settings-address",
+          "bg-secondary",
+          "border-input",
+          "shadow-card",
+        ]}
+        states={["Closed", "Open", "Scrollable form", "Active nav", "Add campus"]}
+      >
+        <ChurchProfileSettingsModalDemo />
+      </ComponentShowcase>
+
+      <ComponentShowcase
+        name="InfoNote"
+        status="Draft"
+        purpose="Reusable low-emphasis informational note with icon, semantic note role, and tokenized secondary surface styling."
+        docsAnchor="infonote"
+        figmaReference="AMFM Portal — Modal / invite user node 3724:23382, informational role note"
+        tokens={[
+          "bg-secondary",
+          "border-border-secondary",
+          "text-text-secondary",
+          "text-foreground",
+        ]}
+        states={["Default", "Custom icon"]}
+      >
+        <InfoNote>
+          <p>
+            Marriage Champions can view HeartChart and AMFM Premium content but cannot
+            change <span className="font-semibold text-foreground">Fellowship of the Parks</span>{" "}
+            profile information or access billing details.
+          </p>
+        </InfoNote>
+      </ComponentShowcase>
+
+      <ComponentShowcase
+        name="ModalTextSection"
+        status="Draft"
+        purpose="Reusable modal body text block: labelled section, optional divider, heading, and stacked supporting copy."
+        docsAnchor="modaltextsection"
+        figmaReference="AMFM Portal — Modal/quick tip node 3727:32459, Growing Momentum body section"
+        tokens={["border-border-secondary", "text-foreground", "text-text-secondary"]}
+        states={["Divided", "Undivided"]}
+      >
+        <div className="max-w-xl">
+          <ModalTextSection title="Growing Momentum">
+            <p>
+              Momentum is on your side—now widen the net. Reinforce it from the
+              platform, equip small group leaders, and follow up midweek.
+            </p>
+            <p>
+              We’ve got simple tools and templates to help you reach those who
+              haven’t jumped in yet.
+            </p>
+          </ModalTextSection>
+        </div>
+      </ComponentShowcase>
+
+      <ComponentShowcase
+        name="ParticipationTrendCard"
+        status="Draft"
+        purpose="Reusable participation metric and inline SVG trend chart block for modal or page surfaces."
+        docsAnchor="participationtrendcard"
+        figmaReference="AMFM Portal — Modal / last 4 weeks node 3727:32514, March 23-April 19 chart block"
+        tokens={[
+          "text-foreground",
+          "text-muted-foreground",
+          "text-fg-quaternary",
+          "border-border-secondary",
+          "fill-primary/10",
+          "stroke-primary",
+        ]}
+        states={["Default", "Edge-aligned x-axis labels"]}
+      >
+        <div className="max-w-2xl">
+          <ParticipationTrendCard
+            dateRange="March 23 – April 19"
+            total={62}
+            totalLabel="Total this month"
+            points={participationTrendDemoPoints}
+            chartAriaLabel="Daily HeartChart completions from March 23 through April 19."
+            xAxisLabels={["Mar 23", "Mar 30", "Apr 5", "Apr 12", "Apr 19"]}
+          />
+        </div>
+      </ComponentShowcase>
+
+      <ComponentShowcase
+        name="TipCarousel"
+        status="Draft"
+        purpose="Reusable two-card guidance carousel with semantic article cards, labelled region, dots, and shared icon buttons."
+        docsAnchor="tipcarousel"
+        figmaReference="AMFM Portal — Modal / last 4 weeks node 3727:32514, invitation tip cards"
+        tokens={[
+          "bg-background",
+          "border-border-secondary",
+          "text-foreground",
+          "text-text-secondary",
+          "bg-primary",
+          "bg-muted",
+        ]}
+        states={["First page", "Next", "Previous", "Single-page disabled controls"]}
+      >
+        <div className="max-w-2xl">
+          <TipCarousel items={tipCarouselDemoItems} ariaLabel="HeartChart invitation tips" />
+        </div>
+      </ComponentShowcase>
+
+      <ComponentShowcase
         name="HeartChartLinkCard"
         status="Draft"
         purpose="Reusable HeartChart URL and QR action card: QR preview, labelled read-only URL field, copy action, share action, and download-QR action."
@@ -682,7 +969,7 @@ export default function ComponentsPage() {
         figmaReference="AMFM Portal — HeartChart link Modal node 1903:19737; earlier component reference node 3724:20579"
         tokens={[
           "bg-overlay/85",
-          "backdrop-blur-[8px]",
+          "backdrop-blur-sm",
           "bg-background",
           "bg-secondary",
           "border-border-secondary",
@@ -706,12 +993,96 @@ export default function ComponentsPage() {
       </ComponentShowcase>
 
       <ComponentShowcase
+        name="InviteUserModal"
+        status="Draft"
+        purpose="July MVP invite-team modal composed from the shared modal shell plus Input, Select, Label, and Button primitives."
+        docsAnchor="inviteusermodal"
+        figmaReference="AMFM Portal — Modal / invite user node 3724:23382"
+        tokens={[
+          "bg-overlay/85",
+          "bg-background",
+          "bg-secondary",
+          "border-border-secondary",
+          "text-text-tertiary",
+          "text-text-secondary",
+          "border-input",
+          "shadow-xs",
+        ]}
+        states={["Closed", "Open", "Empty email", "Selected role", "Footer actions"]}
+      >
+        <InviteUserModalDemo />
+      </ComponentShowcase>
+
+      <ComponentShowcase
+        name="HeartChartQuickTipModal"
+        status="Draft"
+        purpose="July MVP HeartChart quick-tip modal with video, content copy, and a resource CTA footer."
+        docsAnchor="heartchartquicktipmodal"
+        figmaReference="AMFM Portal — Modal/quick tip node 3727:32459"
+        tokens={[
+          "bg-overlay/85",
+          "bg-background",
+          "border-border-secondary",
+          "text-foreground",
+          "text-text-secondary",
+          "shadow-2xl",
+        ]}
+        states={["Closed", "Open", "Video poster", "Footer CTA"]}
+      >
+        <HeartChartQuickTipModalDemo />
+      </ComponentShowcase>
+
+      <ComponentShowcase
+        name="HeartChartLastFourWeeksModal"
+        status="Draft"
+        purpose="July MVP HeartChart participation trend modal with accessible chart summary and reusable tip-card structure."
+        docsAnchor="heartchartlastfourweeksmodal"
+        figmaReference="AMFM Portal — Modal / last 4 weeks node 3727:32514"
+        tokens={[
+          "bg-overlay/85",
+          "bg-background",
+          "border-border-secondary",
+          "text-foreground",
+          "text-text-secondary",
+          "text-muted-foreground",
+          "bg-primary/10",
+          "bg-muted",
+        ]}
+        states={["Closed", "Open", "Trend chart", "Tip cards", "Carousel controls"]}
+      >
+        <HeartChartLastFourWeeksModalDemo />
+      </ComponentShowcase>
+
+      <ComponentShowcase
+        name="HeartChartResourcesQuickStartModal"
+        status="Draft"
+        purpose="July MVP HeartChart Resources quick-start video modal proving the shell's plain no-frame/no-divider variant."
+        docsAnchor="heartchartresourcesquickstartmodal"
+        figmaReference="AMFM Portal — HeartChart Resources / Quick Start Guide modal node 3727:32687"
+        tokens={[
+          "bg-overlay/85",
+          "bg-background",
+          "grid-rows-modal-no-divider",
+          "shadow-2xl",
+        ]}
+        states={["Closed", "Open", "Video poster", "No frame", "No divider"]}
+      >
+        <HeartChartResourcesQuickStartModalDemo />
+      </ComponentShowcase>
+
+      <ComponentShowcase
         name="PhotoBackdrop"
         status="Production Ready"
         purpose="Full-bleed background photo + dark scrim shared by any onboarding-style surface built on the same Figma photo background — now with two scrim treatments."
         docsAnchor="photobackdrop"
         figmaReference='AMFM Portal — Onboarding/login node 1909:25767 ("flat" scrim); Onboarding/First run church admin node 1909:25772 ("radial" scrim, /welcome)'
-        tokens={["bg-overlay", "backdrop-blur-[20px]", "backdrop-blur-[8px]"]}
+        tokens={[
+          "bg-login-photo",
+          "bg-overlay",
+          "backdrop-blur-photo",
+          "backdrop-blur-sm",
+          "bg-photo-backdrop-radial-scrim",
+        ]}
         states={["flat scrim (default)", "radial scrim"]}
       >
         {/* PhotoBackdrop itself is min-h-screen by design (full-bleed page
@@ -723,8 +1094,8 @@ export default function ComponentsPage() {
           <div className="flex flex-col gap-2">
             <span className="text-muted-foreground font-mono text-xs">scrim=&quot;flat&quot;</span>
             <div className="relative h-56 overflow-hidden rounded-lg">
-              <div className="absolute inset-0 bg-[url('/login-background.jpg')] bg-cover bg-center backdrop-blur-[20px]" />
-              <div className="bg-overlay absolute inset-0 opacity-85 backdrop-blur-[8px]" />
+              <div className="bg-login-photo absolute inset-0 bg-cover bg-center backdrop-blur-photo" />
+              <div className="bg-overlay absolute inset-0 opacity-85 backdrop-blur-sm" />
               <p className="text-nav-foreground absolute inset-0 flex items-center justify-center text-center text-sm font-medium">
                 /login, /signup,
                 <br />
@@ -735,8 +1106,8 @@ export default function ComponentsPage() {
           <div className="flex flex-col gap-2">
             <span className="text-muted-foreground font-mono text-xs">scrim=&quot;radial&quot;</span>
             <div className="relative h-56 overflow-hidden rounded-lg">
-              <div className="absolute inset-0 bg-[url('/login-background.jpg')] bg-cover bg-center" />
-              <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(10,13,18,0.7)_0%,rgba(10,13,18,0.9)_100%)]" />
+              <div className="bg-login-photo absolute inset-0 bg-cover bg-center" />
+              <div className="bg-photo-backdrop-radial-scrim absolute inset-0" />
               <p className="text-nav-foreground absolute inset-0 flex items-center justify-center text-sm font-medium">
                 /welcome
               </p>
@@ -831,7 +1202,7 @@ export default function ComponentsPage() {
         status="Draft"
         purpose="Church-wide WeDo (couples relationship app) engagement snapshot — the counterpart card to HeartChartSummary, pairing a daily couple-activity stat with a qualitative pull-quote and entry points into results/sharing."
         docsAnchor="wedocard"
-        figmaReference='AMFM Portal — node 3727:29573 ("HeartChart Dashboard / premium"), _Summary Data region, right-hand instance'
+        figmaReference='AMFM Portal — node 4255:30872 ("HeartChart Dashboard / premium"), _Summary Data region, right-hand instance'
         tokens={[
           "wedo-brand",
           "shadow-card",
@@ -849,7 +1220,7 @@ export default function ComponentsPage() {
           coupleCount={363}
           quote="When it comes to being a listener in our relationship, I would rate myself: Excellent — I give full attention and seek to understand."
           highlightedPhrase="being a listener"
-          nextPulseLabel="2d 10h"
+          nextPulseLabel="2d 16h"
         />
       </ComponentShowcase>
 
@@ -858,7 +1229,7 @@ export default function ComponentsPage() {
         status="Draft"
         purpose="Speech-bubble-style container with a visible directional pointer, used to anchor a short quote or contextual note to a specific piece of content — the shared primitive behind WeDoCard's pull-quote."
         docsAnchor="pointercallout"
-        figmaReference='AMFM Portal — node 3727:29573, nested inside the WeDoCard instance (_Summary Data region); "left-diagonal" tail confirmed against node 4255:30880'
+        figmaReference='AMFM Portal — node 4255:30872, nested inside the WeDoCard instance (_Summary Data region); "left-diagonal" tail confirmed against node 4255:30880'
         tokens={["border-border-secondary", "rounded-lg", "bg-muted"]}
         states={["top", "right", "bottom", "left", "left-diagonal"]}
       >
@@ -888,7 +1259,7 @@ export default function ComponentsPage() {
         status="Draft"
         purpose="Small curved-arrow and serif caption pairing HeartChartSummary with WeDoCard on the dashboard — a plain arrow-and-text caption, distinct from the bordered PointerCallout speech bubble despite the similar name."
         docsAnchor="pointercalloutarrow"
-        figmaReference={null}
+        figmaReference="AMFM Portal — parent frame node 4255:30872, connecting caption row between HeartChartSummary and WeDoCard; exact caption child node not independently verified as a stable standalone node"
         tokens={["font-display", "text-lg", "text-foreground"]}
         states={["left", "right"]}
       >
@@ -905,10 +1276,9 @@ export default function ComponentsPage() {
           />
         </div>
         <p className="text-muted-foreground mt-4 text-xs">
-          No COMPONENTS.md entry exists yet for this component (it is rendered live on
-          /dashboard, between HeartChartSummary/WeDoCard and the Participation Profile
-          card) — flagging the documentation gap here rather than fabricating a
-          docsAnchor/Figma reference.
+          Parent-frame/screenshot verified against the live dashboard node; keep exact
+          arrow placement marked as a child-layer verification gap until Figma exposes a
+          stable caption-row node.
         </p>
       </ComponentShowcase>
 
@@ -917,7 +1287,7 @@ export default function ComponentsPage() {
         status="Draft"
         purpose="Presents a single categorical distribution as a labeled vertical bar chart inside a bordered sub-panel — one of three peer widgets inside the Bedford Campus Participation Profile card."
         docsAnchor="participationverticalbarcard"
-        figmaReference='AMFM Portal — node 3727:29573, "Bedford Campus Participation Profile" card, first column ("Age Groups")'
+        figmaReference='AMFM Portal — node 4255:30872, "Bedford Campus Participation Profile" card, first column ("Age Groups")'
         tokens={[
           "border",
           "border-border-secondary",
@@ -965,7 +1335,7 @@ export default function ComponentsPage() {
         status="Draft"
         purpose="Horizontal gradient-pill bar list for a single categorical distribution — replaces the removed ParticipationHorizontalBarCard for the Relationship Status and Kids dashboard tiles."
         docsAnchor="statussnapshotcard"
-        figmaReference={null}
+        figmaReference='AMFM Portal — parent frame node 4255:30872, "Bedford Campus Participation Profile" card, Relationship Status and Kids columns; exact variant gradients/bar-width curve are parent-frame/screenshot verified'
         tokens={[
           "border",
           "border-border-secondary",
@@ -986,10 +1356,9 @@ export default function ComponentsPage() {
           <StatusSnapshotCard variant="kids" title="Kids" data={KIDS_DATA} />
         </div>
         <p className="text-muted-foreground mt-4 text-xs">
-          No COMPONENTS.md entry exists yet for this component, and its gradient
-          tokens/source frame are screenshot-derived, not pixel-verified against a
-          reachable Figma node (see the component&apos;s own source comments) —
-          flagging both gaps here rather than fabricating a Figma reference.
+          Parent-frame/screenshot verified against the live dashboard node; keep exact
+          gradient stops and width scaling marked as child-layer verification gaps until
+          stable variant nodes are available.
         </p>
       </ComponentShowcase>
 
@@ -998,7 +1367,7 @@ export default function ComponentsPage() {
         status="Draft"
         purpose="Pill-shaped segmented control that switches a card's displayed audience — confirmed used 4 times on the dashboard, always inside a Card's CardHeader/CardAction slot."
         docsAnchor="horizontaltabs"
-        figmaReference='AMFM Portal — node 3727:29573, 4 confirmed instances ("Relationship Health", "Spiritual Snapshot", "Top 3 Caution Flags", "Top 3 Expressed Needs" card headers)'
+        figmaReference='AMFM Portal — node 4255:30872, 4 confirmed instances ("Relationship Health", "Spiritual Snapshot", "Top 3 Caution Flags", "Top 3 Expressed Needs" card headers)'
         tokens={[
           "border-border-secondary",
           "bg-muted",
@@ -1012,11 +1381,34 @@ export default function ComponentsPage() {
       </ComponentShowcase>
 
       <ComponentShowcase
+        name="CommitmentConnectionChart"
+        status="Draft"
+        purpose="Static, Figma-verified Commitment × Connection scattergram for the Relationship Health dashboard card; exposes a semantic response-count summary while preserving the hand-labelled Figma graphic."
+        docsAnchor="commitmentconnectionchart"
+        figmaReference='AMFM Portal — parent frame node 4255:30872, "Relationship Health for Bedford Campus" card; raster asset child source node 4255:30881'
+        tokens={[
+          "w-full",
+          "text-foreground",
+          "text-text-tertiary",
+          "bg-background",
+        ]}
+        states={["Static Figma asset", "Accessible response summary"]}
+      >
+        <div className="mx-auto max-w-2xl">
+          <CommitmentConnectionChart
+            responseCount={RELATIONSHIP_HEALTH_RESPONSE_COUNT}
+            highlightedZone={RELATIONSHIP_HEALTH_SUMMARY.highlightedZone}
+            zoneLabels={RELATIONSHIP_HEALTH_ZONE_LABELS}
+          />
+        </div>
+      </ComponentShowcase>
+
+      <ComponentShowcase
         name="DashboardFilterMenu"
         status="Draft"
         purpose="Demographic filter row (Gender, Relationship Status, Years in Relationship, Kids, Age) that narrows CommitmentConnectionChart and FullWidthBarChart — each group is an independent single-select pill radiogroup."
         docsAnchor="dashboardfiltermenu"
-        figmaReference={`AMFM Portal — node 3727:29573, below the "Relationship Health for Bedford Campus" card's chart, above FullWidthBarChart`}
+        figmaReference={`AMFM Portal — node 4255:30872, below the "Relationship Health for Bedford Campus" card's chart, above FullWidthBarChart`}
         tokens={["border-border-secondary", "bg-foreground", "text-background", "text-text-tertiary", "bg-accent"]}
         states={["Inactive pill", "Active/selected pill"]}
       >
@@ -1028,7 +1420,7 @@ export default function ComponentsPage() {
         status="Draft"
         purpose="Short contextual video preview explaining the currently-highlighted relationship-health zone, alongside a 'Next Ministry Steps' call to action."
         docsAnchor="snapshotvideocard"
-        figmaReference='AMFM Portal — node 3727:29573, "Relationship Health for Bedford Campus" card, right column (paired with CommitmentConnectionChart)'
+        figmaReference='AMFM Portal — node 4255:30872, "Relationship Health for Bedford Campus" card, right column (paired with CommitmentConnectionChart)'
         tokens={[
           "from-nav-surface-from",
           "to-nav-surface-to",
@@ -1058,7 +1450,7 @@ export default function ComponentsPage() {
         status="Draft"
         purpose="Ranked, full-bleed horizontal bar chart companion to CommitmentConnectionChart, breaking the relationship-health zones into a percentage-labeled bar list."
         docsAnchor="fullwidthbarchart"
-        figmaReference='AMFM Portal — node 3727:29573 ("Relationship Health for Bedford Campus" card, below DashboardFilterMenu); bar-fill gradient confirmed via direct node pull on node 1243:23077 ("BarLineChart")'
+        figmaReference='AMFM Portal — node 4255:30872 ("Relationship Health for Bedford Campus" card, below DashboardFilterMenu); bar-fill gradient confirmed via direct node pull on node 1243:23077 ("BarLineChart")'
         tokens={["from-primary", "chart-bar-fill-to", "text-text-secondary", "text-foreground"]}
         states={["Default", "Empty"]}
       >
@@ -1076,7 +1468,7 @@ export default function ComponentsPage() {
         status="Draft"
         purpose="Multi-segment donut chart tile with a headline center stat and a text legend — confirmed reused twice in the Spiritual Snapshot card with different data and color families."
         docsAnchor="piechartcard"
-        figmaReference='AMFM Portal — node 3727:29573, "Spiritual Snapshot for Bedford Campus" card (2 confirmed instances: faith journey, connection to God)'
+        figmaReference='AMFM Portal — node 4255:30872, "Spiritual Snapshot for Bedford Campus" card (2 confirmed instances: faith journey, connection to God)'
         tokens={[
           "chart-pie-purple-700",
           "chart-pie-purple-500",
@@ -1109,7 +1501,7 @@ export default function ComponentsPage() {
         status="Draft"
         purpose="Presents a single metric as a headline percentage plus a horizontal 0–100% scale plotting the church's value against a National Average marker — confirmed reused 6 times across two cards."
         docsAnchor="scalechartcard"
-        figmaReference='AMFM Portal — node 3727:29573, "Top 3 Caution Flags for Bedford Campus" and "Top 3 Expressed Needs for Bedford Campus" cards (Figma layer "Scale chart/Default")'
+        figmaReference='AMFM Portal — node 4255:30872, "Top 3 Caution Flags for Bedford Campus" and "Top 3 Expressed Needs for Bedford Campus" cards (Figma layer "Scale chart/Default")'
         tokens={[
           "chart-scale-blue-700",
           "chart-scale-blue-400",
@@ -1156,7 +1548,7 @@ export default function ComponentsPage() {
           "Account menu open",
         ]}
       >
-        <div className="bg-nav-bg flex h-[950px] items-start rounded-xl p-6">
+        <div className="bg-nav-bg flex h-global-nav-demo items-start rounded-xl p-6">
           <GlobalNav activeHref="/marriage-champions" />
         </div>
         <p className="text-muted-foreground mt-4 text-xs">
@@ -1187,14 +1579,22 @@ export default function ComponentsPage() {
         purpose="Plays an embedded video with a branded poster/paused state and a persistent scrubber control bar — introduced for the /welcome first-run screen's introduction video, now also used on /marriage-champions-empty's recruiting overlay."
         docsAnchor="videoplayer"
         figmaReference='AMFM Portal — node 1894:16438 ("Video player 16:9"), within Onboarding/First run church admin (node 1909:25772)'
-        tokens={["bg-overlay/30", "backdrop-blur-[8px]", "backdrop-blur-[4px]", "rounded-2xl", "border-black/10"]}
+        tokens={[
+          "bg-overlay/30",
+          "backdrop-blur-sm",
+          "backdrop-blur-xs",
+          "shadow-media-card",
+          "rounded-2xl",
+          "border-black/10",
+        ]}
         states={["Paused (poster)", "Playing", "Muted", "Seeking", "Fullscreen"]}
       >
         <VideoPlayer poster="/login-background.jpg" title="Sample video player" className="max-w-md" />
         <p className="text-muted-foreground mt-4 text-xs">
           Real <code className="bg-muted rounded px-1 py-0.5">&lt;video&gt;</code> element with
-          working play/pause/seek/mute/fullscreen — no real video file or captions track has been
-          supplied yet, so playback has no source (see{" "}
+          source-backed play/pause/seek/mute/fullscreen controls. No real video file or captions
+          track has been supplied yet, so this gallery preview is poster-only and exposes no active
+          media controls (see{" "}
           <code className="bg-muted rounded px-1 py-0.5">COMPONENTS.md#videoplayer</code> for the
           full list of open items). View live at{" "}
           <Link href="/welcome" className="text-text-brand hover:underline">
@@ -1293,7 +1693,7 @@ export default function ComponentsPage() {
         purpose="Renders real content as an inert, faded backdrop behind a centered empty-state call-to-action — used on /marriage-champions-empty to preview the Team Members table without making it interactive."
         docsAnchor="bluroverlay"
         figmaReference='AMFM Portal — "Our Marriage Champions / Empty" (node 3724:23167), "image 54" backdrop layer (node 3724:23178)'
-        tokens={["blur-[2px]", "bg-background"]}
+        tokens={["blur-inert-preview", "bg-background"]}
         states={["Default (only state — static, non-interactive)"]}
       >
         <div className="overflow-hidden rounded-lg border">

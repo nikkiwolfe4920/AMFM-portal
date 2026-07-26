@@ -17,8 +17,10 @@ interface WeDoCardProps {
   highlightedPhrase?: string;
   /** Attribution line under the quote, e.g. "Your Current WeDo Pulse". */
   quoteSource?: string;
-  /** Countdown copy rendered as "Next Pulse in {nextPulseLabel}", e.g. "2d 10h". Omitted entirely if not provided. */
+  /** Countdown copy rendered as "Next Pulse in {nextPulseLabel}", e.g. "2d 16h". Omitted entirely if not provided. */
   nextPulseLabel?: string;
+  /** `constrained` matches the standalone component reference; `fluid` lets a parent layout own width. */
+  width?: "constrained" | "fluid";
   onSeeResults?: () => void;
   onShareCode?: () => void;
   className?: string;
@@ -34,13 +36,18 @@ function WeDoCard({
   highlightedPhrase,
   quoteSource = "Your Current WeDo Pulse",
   nextPulseLabel,
+  width = "constrained",
   onSeeResults,
   onShareCode,
   className,
 }: WeDoCardProps) {
   return (
     <ElevatedCard
-      className={cn("w-full max-w-[564px]", className)}
+      className={cn(
+        "w-full",
+        width === "constrained" && "max-w-heartchart-card",
+        className
+      )}
       innerClassName="flex h-full flex-col gap-6 px-4 py-5"
     >
       <div className="flex w-full items-start justify-between gap-4">
@@ -62,7 +69,7 @@ function WeDoCard({
       <div className="flex flex-wrap items-stretch gap-4">
         <div className="flex flex-col gap-2">
           <div className="flex items-end gap-2">
-            <span className="text-5xl leading-10 font-semibold tracking-[-0.96px] text-wedo-brand">
+            <span className="text-5xl leading-10 font-semibold tracking-stat-value text-wedo-brand">
               {coupleCount.toLocaleString()}
             </span>
             <span className="pb-0.5 text-base text-muted-foreground">
@@ -72,9 +79,9 @@ function WeDoCard({
           <p className="text-base font-semibold text-muted-foreground">
             Active in the app today
           </p>
-          {/* Figma's illustration is wider-than-tall (~223x156, not square) —
-              aspect-[223/156] + object-contain reproduces that proportion
-              responsively instead of copying Figma's fixed absolute position. */}
+          {/* Figma's illustration is wider-than-tall (~223x156, not square);
+              the named aspect/max-width utilities keep that reusable geometry
+              centralized instead of leaving bracketed Figma values in JSX. */}
           <Image
             src="/We-do.png"
             alt=""
@@ -82,7 +89,7 @@ function WeDoCard({
             width={990}
             height={874}
             unoptimized
-            className="mt-auto aspect-[223/156] w-full max-w-[223px] shrink-0 object-contain"
+            className="mt-auto aspect-wedo-illustration w-full max-w-wedo-illustration shrink-0 object-contain"
           />
         </div>
 
@@ -97,7 +104,7 @@ function WeDoCard({
               &ldquo;
             </span>
             <div className="flex flex-col gap-1.5">
-              <p className="text-xs font-semibold tracking-[0.24px] text-text-tertiary uppercase">
+              <p className="text-xs font-semibold tracking-label text-text-tertiary uppercase">
                 Most of your couples say...
               </p>
               <p className="text-base text-foreground">

@@ -17,7 +17,7 @@ export default function DashboardPage() {
       <div className="flex min-w-0 flex-1 flex-col">
         <main className="min-w-0 flex-1 p-8">
           <div className="flex w-full flex-wrap items-center justify-between gap-4">
-            <h1 className="font-display text-display-md min-w-[240px] shrink-0 font-light text-foreground">
+            <h1 className="font-display text-display-md min-w-60 shrink-0 font-light text-foreground">
               Our Data Dashboard
             </h1>
 

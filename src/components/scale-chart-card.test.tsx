@@ -17,7 +17,9 @@ describe("ScaleChartCard", () => {
     expect(
       screen.getByText("Lack a strong support system?")
     ).toBeInTheDocument();
-    expect(screen.getByText(/National Average: 35%/)).toBeInTheDocument();
+    expect(screen.getByText(/National Average: 35%/).parentElement).toHaveClass(
+      "text-chart-label"
+    );
   });
 
   it("always renders the 'Why does this matter?' action, even without a handler", () => {

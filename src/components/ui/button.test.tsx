@@ -9,7 +9,7 @@ describe("Button", () => {
     render(<Button>Log in</Button>);
 
     expect(screen.getByRole("button", { name: "Log in" })).toHaveClass(
-      "h-[46px]",
+      "h-11.5",
       "text-base",
       "px-4",
       "py-2"
@@ -20,7 +20,7 @@ describe("Button", () => {
     render(<Button size="sm">Small</Button>);
 
     expect(screen.getByRole("button", { name: "Small" })).toHaveClass(
-      "h-[42px]",
+      "h-10.5",
       "text-sm",
       "px-3",
       "py-2"
@@ -32,7 +32,7 @@ describe("Button", () => {
     render(<Button size="compact">Compact</Button>);
 
     expect(screen.getByRole("button", { name: "Compact" })).toHaveClass(
-      "h-[38px]",
+      "h-9.5",
       "text-sm",
       "px-3",
       "py-1.5"
@@ -69,7 +69,7 @@ describe("Button", () => {
       "text-sm"
     );
     expect(screen.getByRole("button", { name: "Forgot password" })).not.toHaveClass(
-      "h-[46px]",
+      "h-11.5",
       "px-4",
       "py-2",
       "text-base"
@@ -134,7 +134,7 @@ describe("Button", () => {
     expect(screen.getByRole("button", { name: "See How It Works" })).toHaveClass(
       "[&>svg:not([class*='size-'])]:size-5",
       "gap-1.5",
-      "h-[38px]",
+      "h-9.5",
       "text-sm"
     );
   });
@@ -148,7 +148,7 @@ describe("Button", () => {
     );
 
     expect(screen.getByRole("button", { name: "Get Started" })).toHaveClass(
-      "h-[50px]",
+      "h-12.5",
       "text-base",
       "px-6",
       "py-2.5"

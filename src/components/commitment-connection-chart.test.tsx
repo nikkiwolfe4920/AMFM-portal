@@ -5,9 +5,9 @@ import { CommitmentConnectionChart } from "./commitment-connection-chart";
 
 describe("CommitmentConnectionChart", () => {
   it("renders the highlighted zone and every zone label as real text", () => {
-    render(
+    const { container } = render(
       <CommitmentConnectionChart
-        dataPoints={[{ commitment: 60, connection: 55 }]}
+        responseCount={1}
         highlightedZone="Steady"
         zoneLabels={{ thriving: "Thriving", broken: "Broken" }}
       />
@@ -16,18 +16,25 @@ describe("CommitmentConnectionChart", () => {
     expect(screen.getByText("Steady")).toBeInTheDocument();
     expect(screen.getByText("Thriving")).toBeInTheDocument();
     expect(screen.getByText("Broken")).toBeInTheDocument();
+    expect(container.querySelector("[data-slot='commitment-connection-chart']")).toHaveAttribute(
+      "role",
+      "img"
+    );
   });
 
-  it("marks the scatter plot SVG as decorative", () => {
+  it("uses the verified Figma scattergram asset with an accessible chart summary", () => {
     const { container } = render(
       <CommitmentConnectionChart
-        dataPoints={[]}
+        responseCount={1}
         highlightedZone="Steady"
         zoneLabels={{ thriving: "Thriving" }}
       />
     );
 
-    const svg = container.querySelector("svg");
-    expect(svg).toHaveAttribute("aria-hidden", "true");
+    const chart = container.querySelector("[data-slot='commitment-connection-chart']");
+    const image = screen.getByAltText("");
+
+    expect(chart).toHaveAccessibleName(/1 plotted response/i);
+    expect(image).toHaveAttribute("src", "/relationship-health-scattergram.png");
   });
 });

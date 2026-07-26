@@ -74,6 +74,24 @@ function runChecker(root) {
   });
 }
 
+function runFullSourceReport(root) {
+  return spawnSync(
+    process.execPath,
+    [checkerCliPath, "--scope", "full-source", "--report-only", "--json"],
+    {
+      cwd: root,
+      encoding: "utf8",
+    }
+  );
+}
+
+function runCheckerWithArgs(root, args) {
+  return spawnSync(process.execPath, [checkerCliPath, ...args], {
+    cwd: root,
+    encoding: "utf8",
+  });
+}
+
 function parseJson(stdout) {
   return JSON.parse(stdout);
 }
@@ -81,6 +99,7 @@ function parseJson(stdout) {
 function completeException(overrides = {}) {
   return {
     id: "dogfood-card-gap-7",
+    rule: "no-undocumented-arbitrary-visual-values",
     className: "gap-[7px]",
     filePath: "src/components/dogfood-card.tsx",
     component: "DogfoodCard",
@@ -92,6 +111,25 @@ function completeException(overrides = {}) {
     dateAdded: "2026-07-24",
     status: "temporary",
     promotionTrigger: "Remove after CLI dogfood proof remains covered by another integration test.",
+    ...overrides,
+  };
+}
+
+function completeRawValueException(overrides = {}) {
+  return {
+    id: "dogfood-card-white-inline-color",
+    rule: "no-raw-hex-design-values",
+    value: "#ffffff",
+    filePath: "src/components/dogfood-card.tsx",
+    component: "DogfoodCard",
+    source: "CLI fixture source for raw-value exception coverage.",
+    rationale: "Fixture proves raw-value exceptions stay explicit and visible in CLI output.",
+    alternatives: "Use a semantic token for product UI styling; this fixture is intentionally exceptional.",
+    blastRadius: "Dogfood fixture only.",
+    owner: "Design system governance",
+    dateAdded: "2026-07-25",
+    status: "temporary",
+    promotionTrigger: "Remove if CLI raw-value exception coverage moves to a more realistic fixture.",
     ...overrides,
   };
 }
@@ -152,6 +190,38 @@ describe("design-system checker CLI dogfood", () => {
     ]);
   });
 
+  it("passes a complete raw-value exception but keeps it visible in JSON output", () => {
+    const root = makeDogfoodRepo();
+    writeDogfoodComponent(
+      root,
+      'export function DogfoodCard() { return <div style={{ color: "#ffffff" }} />; }\n'
+    );
+    fs.writeFileSync(
+      path.join(root, "design-system/audits/exceptions.json"),
+      JSON.stringify(
+        {
+          version: 1,
+          exceptions: [completeRawValueException()],
+        },
+        null,
+        2
+      )
+    );
+
+    const result = runChecker(root);
+    const report = parseJson(result.stdout);
+
+    expect(result.status).toBe(0);
+    expect(report.errors).toEqual([]);
+    expect(report.exceptions).toEqual([
+      expect.objectContaining({
+        rule: "no-raw-hex-design-values",
+        value: "#ffffff",
+        exceptionId: "dogfood-card-white-inline-color",
+      }),
+    ]);
+  });
+
   it("fails a changed production component without a component-map implementation entry", () => {
     const root = makeDogfoodRepo();
     fs.writeFileSync(
@@ -199,7 +269,7 @@ describe("design-system checker CLI dogfood", () => {
     expect(result.status).toBe(1);
     expect(report.errors).toEqual([
       expect.objectContaining({
-        rule: "complete-arbitrary-value-exception-metadata",
+        rule: "complete-design-system-exception-metadata",
         field: "rationale",
       }),
     ]);
@@ -235,5 +305,40 @@ describe("design-system checker CLI dogfood", () => {
         exceptionId: "dogfood-card-gap-7",
       }),
     ]);
+  });
+
+  it("reports full-source findings without failing the process in report-only mode", () => {
+    const root = makeDogfoodRepo();
+    writeDogfoodComponent(
+      root,
+      'export function DogfoodCard() { return <div className="gap-[7px]" />; }\n'
+    );
+    git(root, ["add", "src/components/dogfood-card.tsx"]);
+    git(root, ["commit", "-m", "add dogfood card"]);
+
+    const result = runFullSourceReport(root);
+    const report = parseJson(result.stdout);
+
+    expect(result.status).toBe(0);
+    expect(report.mode).toBe("full-source");
+    expect(report.sourceFilesScanned).toEqual(["src/components/dogfood-card.tsx"]);
+    expect(report.errors).toEqual([
+      expect.objectContaining({
+        rule: "no-undocumented-arbitrary-visual-values",
+        className: "gap-[7px]",
+      }),
+    ]);
+  });
+
+  it("prints a concise error for unsupported scopes", () => {
+    const root = makeDogfoodRepo();
+
+    const result = runCheckerWithArgs(root, ["--scope", "everything"]);
+
+    expect(result.status).toBe(1);
+    expect(result.stderr).toContain(
+      'Unsupported design-system check scope: everything. Use "changed" or "full-source".'
+    );
+    expect(result.stderr).not.toContain("at runDesignSystemCheck");
   });
 });

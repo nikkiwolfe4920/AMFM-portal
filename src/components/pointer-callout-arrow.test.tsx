@@ -44,4 +44,15 @@ describe("PointerCalloutArrow", () => {
 
     expect(container.querySelector('img[aria-hidden="true"]')).toHaveAttribute("alt", "");
   });
+
+  it("preserves the SVG asset ratio when scaling the decorative arrow", () => {
+    const { container } = render(
+      <PointerCalloutArrow side="left" emphasis="HeartChart" text="shows your people where they are." />
+    );
+
+    const arrow = container.querySelector('img[aria-hidden="true"]');
+    expect(arrow).toHaveAttribute("width", "59");
+    expect(arrow).toHaveAttribute("height", "58");
+    expect(arrow).toHaveClass("h-11", "w-auto");
+  });
 });

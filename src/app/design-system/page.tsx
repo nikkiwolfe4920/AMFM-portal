@@ -76,7 +76,7 @@ export default function DesignSystemOverviewPage() {
           <Link
             key={section.href}
             href={section.href}
-            className="focus-visible:ring-ring/50 flex flex-col gap-2 rounded-lg border p-5 outline-none hover:bg-accent/50 focus-visible:ring-[3px]"
+            className="focus-visible:ring-ring/50 flex flex-col gap-2 rounded-lg border p-5 outline-none hover:bg-accent/50 focus-visible:ring-3"
           >
             <h3 className="text-lg font-semibold">{section.title}</h3>
             <p className="text-muted-foreground text-sm">

@@ -4,6 +4,31 @@ import { describe, expect, it, vi } from "vitest";
 import { HeartChartSummary } from "./heartchart-summary";
 
 describe("HeartChartSummary", () => {
+  it("defaults to the constrained standalone card width", () => {
+    const { container } = render(
+      <HeartChartSummary
+        percentage={58}
+        completedCount={230}
+        totalAttenders={800}
+      />
+    );
+
+    expect(container.firstElementChild).toHaveClass("max-w-heartchart-card");
+  });
+
+  it("can render fluid width when the parent grid owns sizing", () => {
+    const { container } = render(
+      <HeartChartSummary
+        width="fluid"
+        percentage={58}
+        completedCount={230}
+        totalAttenders={800}
+      />
+    );
+
+    expect(container.firstElementChild).not.toHaveClass("max-w-heartchart-card");
+  });
+
   it("uses the shared outline Button contract for summary actions", () => {
     render(
       <HeartChartSummary
@@ -18,7 +43,7 @@ describe("HeartChartSummary", () => {
 
     for (const name of ["Quick Tip", "Last 4 Weeks", "Share Your Link"]) {
       expect(screen.getByRole("button", { name })).toHaveClass(
-        "h-[38px]",
+        "h-9.5",
         "text-sm",
         "border-button-outline-border",
         "text-button-outline-fg",

@@ -54,7 +54,7 @@ function ScaleChartCard({
             style={{ left: `${clampedAverage}%` }}
           />
         </div>
-        <div className="flex items-center justify-between text-xs font-medium tracking-[0.24px] text-muted-foreground">
+        <div className="flex items-center justify-between text-chart-label font-medium tracking-label text-muted-foreground">
           <span>0%</span>
           <span>National Average: {clampedAverage}%</span>
           <span>100%</span>
