@@ -1698,7 +1698,7 @@ export default function ComponentsPage() {
         purpose="Renders real content as an inert, faded backdrop behind a centered empty-state call-to-action — used on /marriage-champions-empty to preview the Team Members table, and on /dashboard-empty to preview the live DashboardContent composition, without making either interactive."
         docsAnchor="bluroverlay"
         figmaReference='AMFM Portal — "Our Marriage Champions / Empty" (node 3724:23167), "image 54" backdrop layer (node 3724:23178); also "Data Dashboard Empty State" (node 3899:27502)'
-        tokens={["blur-inert-preview", "bg-background"]}
+        tokens={["blur-inert-preview", "bg-radial", "from-background", "via-background", "to-background/0"]}
         states={["Default (only state — static, non-interactive)"]}
       >
         <div className="overflow-hidden rounded-lg border">

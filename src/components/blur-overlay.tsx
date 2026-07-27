@@ -7,10 +7,10 @@ interface BlurOverlayProps extends React.PropsWithChildren {
 }
 
 /**
- * Renders `children` as an inert, faded backdrop — blurred,
- * fading to the surrounding surface color toward the bottom — so real
- * content reads as "there, but not yet actionable" behind a centered
- * empty-state call-to-action, rather than being hidden outright.
+ * Renders `children` as an inert, faded backdrop — blurred, fading to the
+ * surrounding surface color via a centered radial vignette — so real content
+ * reads as "there, but not yet actionable" behind a centered empty-state
+ * call-to-action, rather than being hidden outright.
  *
  * Always decorative: the wrapped content is `aria-hidden` and
  * non-interactive (`pointer-events-none`) — never nest a real control a
@@ -31,7 +31,7 @@ export function BlurOverlay({ className, children }: BlurOverlayProps) {
       >
         {children}
       </div>
-      <div className="from-background/0 to-background pointer-events-none absolute inset-0 bg-gradient-to-b" />
+      <div className="from-background via-background to-background/0 pointer-events-none absolute inset-0 bg-radial via-60%" />
     </div>
   );
 }
