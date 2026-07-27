@@ -124,16 +124,17 @@ Use these scale utilities, not arbitrary `rounded-[Npx]` values, so a future cha
 - **Scale**: use Tailwind's default type scale (`text-xs`, `text-sm`, `text-base`, `text-lg`, `text-xl`, `text-2xl`, `text-3xl`, …) rather than one-off `text-[Npx]` values. Pair size with an explicit weight (`font-medium`, `font-semibold`) and, for headings, `tracking-tight`.
 - **Label tracking**: use `tracking-label` for Figma's recurring 0.24px uppercase label spacing (`0.015rem`, used on `text-xs` labels such as GlobalNav section headings and dashboard filter labels). Do not reintroduce `tracking-[0.24px]` at call sites; if a label needs a different sourced spacing, document why before adding another tracking token or exception.
 - **Chart labels**: use `text-chart-label` for recurring 10px chart axis/category/range labels. This is smaller than the normal `text-xs` UI scale and is reserved for compact data-visualization labels, not general interface copy.
-- **Display scale** (`font-display` only, never paired with `font-sans`): two sizes, both defined in `src/tokens/typography.css` with fixed pixel line-heights, matching the two display headings on the `Onboarding/Create Profile` Figma frame:
+- **Display scale** (`font-display` only, never paired with `font-sans`): defined in `src/tokens/typography.css` with fixed pixel line-heights:
 
   | Utility | Size | Line-height | Weight (Figma) | Used for |
   |---|---|---|---|---|
+  | `text-display-xs` | 24px | 32px | `font-light` (300) | The dashboard's "Top 3 Caution Flags"/"Top 3 Expressed Needs" card header supporting-text line (e.g. "These are the top three concerning issues for the couples in your care:") |
   | `text-display-sm` | 30px | 38px | `font-normal` (400) | `PricingCard`'s "Free Membership" title |
   | `text-display-md` | 36px | 40px | `font-light` (300) | `Card`'s `CardTitle` on `/create-profile` ("Create profile") |
   | `text-display-lg` | 48px | 50px | `font-light` (300) | The `/welcome` first-run screen's subheading ("Let's get {church} ready to strengthen relationships.") |
   | `text-display-2xl` | 72px | 90px | `font-light` (300) | The `/welcome` first-run screen's main heading ("Welcome, {name}.") |
 
-  Always pair `text-display-sm`/`text-display-md`/`text-display-lg`/`text-display-2xl` with `font-display` and the Figma-specified weight (`font-light` or `font-normal`) — these sizes don't apply to `font-sans` content. `text-display-2xl` owns its Figma-specified `-1.44px` letter spacing inside the type token; do not add a duplicate call-site tracking utility.
+  Always pair `text-display-xs`/`text-display-sm`/`text-display-md`/`text-display-lg`/`text-display-2xl` with `font-display` and the Figma-specified weight (`font-light` or `font-normal`) — these sizes don't apply to `font-sans` content. `text-display-2xl` owns its Figma-specified `-1.44px` letter spacing inside the type token; do not add a duplicate call-site tracking utility. Any new display-scale token must also be added to `src/lib/utils.ts`'s `extendTailwindMerge` `font-size` group — see `COMPONENTS.md#card`'s Implementation rules for why `cn()` silently drops unregistered display sizes when paired with a text-color utility.
 
   **Provenance note**: `text-display-2xl`'s values come directly from Figma's own named `display-2xl` size/line-height variables on the `/welcome` heading node — the strongest-sourced of the four sizes. `text-display-lg`'s 48px/50px is read off the same node's inline export values; the file's style catalogue lists a named "Display lg/Light" style but the export didn't expose its exact number directly, so treat this one as a close reproduction, not a variable-sourced exact confirmation, until spot-checked directly against Figma.
 

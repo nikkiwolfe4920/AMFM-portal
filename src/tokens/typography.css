@@ -10,8 +10,9 @@
  *
  * --font-display is Figma's actual "Financier Display" face (Klim Type
  * Foundry), loaded at its light (300), regular (400), medium (500), bold
- * (700), and black (900) static weights. Use only for the display-sm/
- * display-md/display-lg/display-2xl scale below — never as a body font.
+ * (700), and black (900) static weights. Use only for the display-xs/
+ * display-sm/display-md/display-lg/display-2xl scale below — never as a
+ * body font.
  */
 
 @theme inline {
@@ -33,6 +34,8 @@
   --text-amfm-logo-caption--line-height: 0.4375rem;
   --text-amfm-logo-caption--letter-spacing: 0.025rem;
 
+  --text-display-xs: 1.5rem;
+  --text-display-xs--line-height: 2rem;
   --text-display-sm: 1.875rem;
   --text-display-sm--line-height: 2.375rem;
   --text-display-md: 2.25rem;

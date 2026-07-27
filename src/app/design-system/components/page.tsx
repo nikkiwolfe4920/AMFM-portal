@@ -1367,7 +1367,7 @@ export default function ComponentsPage() {
         status="Draft"
         purpose="Pill-shaped segmented control that switches a card's displayed audience — confirmed used 4 times on the dashboard, always inside a Card's CardHeader/CardAction slot."
         docsAnchor="horizontaltabs"
-        figmaReference='AMFM Portal — node 4255:30872, 4 confirmed instances ("Relationship Health", "Spiritual Snapshot", "Top 3 Caution Flags", "Top 3 Expressed Needs" card headers); "Spiritual Snapshot" instance confirmed at node 4255:30885/30887 — tabs sit directly beside the title (gap-16, no space-between), not pushed to the header’s far edge'
+        figmaReference='AMFM Portal — node 4255:30872, 4 confirmed instances ("Relationship Health", "Spiritual Snapshot", "Top 3 Caution Flags" (4255:30892), "Top 3 Expressed Needs" (4255:30894) card headers) — all 4 now confirmed matching: tabs sit directly beside the title (gap-16, no space-between), not pushed to the header’s far edge; "Top 3 Caution Flags"/"Top 3 Expressed Needs" previously had a stray sm:justify-between bug, fixed to match'
         tokens={[
           "border-border-secondary",
           "bg-muted",
@@ -1502,7 +1502,7 @@ export default function ComponentsPage() {
         status="Draft"
         purpose="Presents a single metric as a headline percentage plus a horizontal 0–100% scale plotting the church's value against a National Average marker — confirmed reused 6 times across two cards."
         docsAnchor="scalechartcard"
-        figmaReference='AMFM Portal — node 4255:30872, "Top 3 Caution Flags for Bedford Campus" and "Top 3 Expressed Needs for Bedford Campus" cards (Figma layer "Scale chart/Default")'
+        figmaReference='AMFM Portal — node 4255:30872, "Top 3 Caution Flags for Bedford Campus" (4255:30892) and "Top 3 Expressed Needs for Bedford Campus" (4255:30894) cards (Figma layer "Scale chart/Default") — National Average label now floats above the track (was mistakenly in the bottom caption row); "Why does this matter?" now uses PlayCircle in text-text-tertiary (was a bare Play triangle in the brand link color)'
         tokens={[
           "chart-scale-blue-700",
           "chart-scale-blue-400",
@@ -1512,6 +1512,9 @@ export default function ComponentsPage() {
           "border",
           "text-foreground",
           "text-muted-foreground",
+          "text-chart-label",
+          "tracking-label",
+          "text-text-tertiary",
         ]}
         states={["Default"]}
       >

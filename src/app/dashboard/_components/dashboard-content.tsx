@@ -220,7 +220,7 @@ export function DashboardContent() {
       </Card>
 
       <Card>
-        <CardHeader className="flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <CardHeader className="flex flex-col items-start gap-4 sm:flex-row sm:items-center">
           <CardTitle>Top 3 Caution Flags for Bedford Campus</CardTitle>
           <CardAction>
             <HorizontalTabs
@@ -230,8 +230,9 @@ export function DashboardContent() {
             />
           </CardAction>
         </CardHeader>
+        <div className="mx-6 border-t border-border-secondary" />
         <CardContent>
-          <p className="mb-4 text-sm text-muted-foreground">
+          <p className="mb-10 font-display text-display-xs font-light text-foreground">
             These are the top three concerning issues for the couples in
             your care:
           </p>
@@ -244,7 +245,7 @@ export function DashboardContent() {
       </Card>
 
       <Card>
-        <CardHeader className="flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <CardHeader className="flex flex-col items-start gap-4 sm:flex-row sm:items-center">
           <CardTitle>Top 3 Expressed Needs for Bedford Campus</CardTitle>
           <CardAction>
             <HorizontalTabs
@@ -254,8 +255,9 @@ export function DashboardContent() {
             />
           </CardAction>
         </CardHeader>
+        <div className="mx-6 border-t border-border-secondary" />
         <CardContent>
-          <p className="mb-4 text-sm text-muted-foreground">
+          <p className="mb-10 font-display text-display-xs font-light text-foreground">
             These are the three areas where your couples are currently
             asking for help:
           </p>

@@ -1191,7 +1191,7 @@
     ]
   },
   "HorizontalTabs": {
-    "figmaComponent": "AMFM Portal — node 4255:30872, dashboard card header tab instances; \"Spiritual Snapshot\" instance header layout (tabs beside title, no space-between) confirmed at node 4255:30885/4255:30887",
+    "figmaComponent": "AMFM Portal — node 4255:30872, dashboard card header tab instances; \"Spiritual Snapshot\" instance header layout (tabs beside title, no space-between) confirmed at node 4255:30885/4255:30887; \"Top 3 Caution Flags\"/\"Top 3 Expressed Needs\" instances (4255:30892/4255:30894) previously had a stray sm:justify-between bug, fixed to match this same beside-title layout",
     "documentation": "COMPONENTS.md#horizontaltabs",
     "implementation": "src/components/ui/tabs.tsx",
     "figmaSources": [
@@ -1208,6 +1208,22 @@
         "nodeId": "4255:30885",
         "name": "HorizontalTabs \"Spiritual Snapshot\" card-wrapper/header layout (4255:30885)",
         "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=4255-30885&m=dev",
+        "role": "supporting-reference",
+        "lastVerified": "2026-07-27"
+      },
+      {
+        "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",
+        "nodeId": "4255:30892",
+        "name": "HorizontalTabs \"Top 3 Caution Flags for Bedford Campus\" card instance (4255:30892)",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=4255-30892&m=dev",
+        "role": "supporting-reference",
+        "lastVerified": "2026-07-27"
+      },
+      {
+        "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",
+        "nodeId": "4255:30894",
+        "name": "HorizontalTabs \"Top 3 Expressed Needs for Bedford Campus\" card instance (4255:30894)",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=4255-30894&m=dev",
         "role": "supporting-reference",
         "lastVerified": "2026-07-27"
       }
@@ -1335,7 +1351,7 @@
     ]
   },
   "ScaleChartCard": {
-    "figmaComponent": "AMFM Portal — node 4255:30872, Top 3 Caution Flags and Top 3 Expressed Needs scale chart instances",
+    "figmaComponent": "AMFM Portal — node 4255:30872, Top 3 Caution Flags (card instance 4255:30892) and Top 3 Expressed Needs (card instance 4255:30894) scale chart instances",
     "documentation": "COMPONENTS.md#scalechartcard",
     "implementation": "src/components/scale-chart-card.tsx",
     "figmaSources": [
@@ -1346,6 +1362,22 @@
         "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=4255-30872&m=dev",
         "role": "primary-reference",
         "lastVerified": "2026-07-25"
+      },
+      {
+        "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",
+        "nodeId": "4255:30892",
+        "name": "ScaleChartCard \"Top 3 Caution Flags for Bedford Campus\" card instance (4255:30892)",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=4255-30892&m=dev",
+        "role": "primary-reference",
+        "lastVerified": "2026-07-27"
+      },
+      {
+        "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",
+        "nodeId": "4255:30894",
+        "name": "ScaleChartCard \"Top 3 Expressed Needs for Bedford Campus\" card instance (4255:30894)",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=4255-30894&m=dev",
+        "role": "primary-reference",
+        "lastVerified": "2026-07-27"
       }
     ]
   },
