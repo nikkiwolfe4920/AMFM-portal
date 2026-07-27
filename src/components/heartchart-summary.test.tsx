@@ -68,4 +68,17 @@ describe("HeartChartSummary", () => {
       "text-text-tertiary"
     );
   });
+
+  it("mirrors the donut ring so its value arc sweeps counter-clockwise from 12 o'clock, matching Figma", () => {
+    const { container } = render(
+      <HeartChartSummary
+        percentage={58}
+        completedCount={230}
+        totalAttenders={800}
+      />
+    );
+
+    const donutSvg = container.querySelector("svg");
+    expect(donutSvg).toHaveClass("rotate-90", "-scale-x-100");
+  });
 });
