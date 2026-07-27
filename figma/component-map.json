@@ -1145,32 +1145,32 @@
     ]
   },
   "ParticipationVerticalBarCard": {
-    "figmaComponent": "AMFM Portal — node 4255:30872, Bedford Campus Participation Profile card, Age Groups column",
+    "figmaComponent": "AMFM Portal — node 4255:30880 (\"_Summary Data\" → \"BarLineChart/Summary\" → \"Statistic snapshot\", Age Groups column), pixel-verified via Figma MCP get_design_context + get_metadata",
     "documentation": "COMPONENTS.md#participationverticalbarcard",
     "implementation": "src/components/participation-vertical-bar-card.tsx",
     "figmaSources": [
       {
         "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",
-        "nodeId": "4255:30872",
-        "name": "ParticipationVerticalBarCard Figma reference (4255:30872)",
-        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=4255-30872&m=dev",
+        "nodeId": "4255:30880",
+        "name": "ParticipationVerticalBarCard Figma reference (4255:30880)",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=4255-30880&m=dev",
         "role": "primary-reference",
-        "lastVerified": "2026-07-25"
+        "lastVerified": "2026-07-27"
       }
     ]
   },
   "StatusSnapshotCard": {
-    "figmaComponent": "AMFM Portal — node 4255:30872, Bedford Campus Participation Profile card, Relationship Status and Kids columns",
+    "figmaComponent": "AMFM Portal — node 4255:30880 (\"_Summary Data\" → \"BarLineChart/Summary\" → \"Statistic snapshot\", Relationship Status and Kids columns), pixel-verified via Figma MCP get_design_context + get_metadata",
     "documentation": "COMPONENTS.md#statussnapshotcard",
     "implementation": "src/components/status-snapshot-card.tsx",
     "figmaSources": [
       {
         "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",
-        "nodeId": "4255:30872",
-        "name": "StatusSnapshotCard Figma reference (4255:30872)",
-        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=4255-30872&m=dev",
+        "nodeId": "4255:30880",
+        "name": "StatusSnapshotCard Figma reference (4255:30880)",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=4255-30880&m=dev",
         "role": "primary-reference",
-        "lastVerified": "2026-07-25"
+        "lastVerified": "2026-07-27"
       }
     ]
   },

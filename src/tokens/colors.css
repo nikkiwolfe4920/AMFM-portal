@@ -135,23 +135,27 @@
   --chart-scale-blue-50: oklch(0.922 0.014 213.1); /* Colors/Blue/50, #dbe8eb */
   --chart-scale-blue-25: oklch(0.986 0.003 197.105); /* Colors/Blue/25, #f8fbfb */
   /* Participation bar fill (Age Groups vertical bar chart) — a two-stop
-   * top-to-bottom gradient (was a single flat tone before the bars were
-   * confirmed against Figma's real gradient fill), distinct from
-   * --background-gradient-from (utility-yellow-50, #f5eee0, the page shell
-   * background) at a slightly deeper tier of the same Figma yellow scale.
-   * Parent-frame/screenshot verified against dashboard node 4255:30872; exact
-   * child-layer stops have not been independently pixel-sampled from a stable
-   * component node — see DESIGN.md Known gaps. */
-  --chart-participation-fill-from: oklch(0.864 0.07 83.088); /* ~utility-yellow-200, #e9cf9e */
-  --chart-participation-fill-to: oklch(0.956 0.026 87.853); /* ~utility-yellow-50, #f8f0dd */
+   * top-to-bottom gradient. Pixel-verified via Figma MCP `get_design_context`
+   * + `get_metadata` on node 4255:30880 ("BarLineChart/Summary" → "Statistic
+   * snapshot" → "Complete Activity" bar fill): exact hex stops
+   * utility-yellow-100 → utility-yellow-50, converted to oklch via the
+   * standard sRGB→OKLab pipeline used throughout this file. */
+  --chart-participation-fill-from: oklch(0.919 0.047 82.028); /* utility-yellow-100, #f4e2c2 */
+  --chart-participation-fill-to: oklch(0.951 0.020 84.590); /* utility-yellow-50, #f5eee0 */
+  /* Age Groups bar value label (the "%" text drawn above each bar) — a
+   * distinct brand tint from --primary (the app's button/accent terracotta,
+   * utility-brand-600-ish), confirmed by the same node 4255:30880 pull. */
+  --chart-participation-value: oklch(0.694 0.096 43.933); /* utility-brand-400, #cf896b */
   /* Status Snapshot horizontal bar variants (Relationship Status / Kids) — each
-   * a left-to-right two-stop gradient, distinct per variant. Parent-frame/
-   * screenshot verified against dashboard node 4255:30872; exact child-layer
-   * stops and bar-width geometry have not been independently pixel-sampled. */
-  --chart-status-relationship-from: oklch(0.89 0.016 130.435); /* sage-gray, #d7ddd2 */
-  --chart-status-relationship-to: oklch(0.963 0.004 121.561); /* #f2f3f0 */
-  --chart-status-kids-from: oklch(0.885 0.019 306.639); /* lavender-gray, #dcd6e3 */
-  --chart-status-kids-to: oklch(0.964 0.006 308.395); /* #f4f2f6 */
+   * a right-to-left two-stop gradient (solid color at the bar's leading/right
+   * edge, fading to white at the label end). Pixel-verified via the same
+   * 4255:30880 pull (`_statistic-item` → "Bar fill" → "bar"): the gradient's
+   * light stop is Figma's literal `colors/background/bg-primary` (pure
+   * white), so there is no separate "-to" token per variant — the component
+   * fades `to-background` directly, which also fixes a dark-mode bug the
+   * old fixed near-white "-to" tokens had (they never inverted with .dark). */
+  --chart-status-relationship-from: oklch(0.928 0.011 136.561); /* utility-green-50, #e4e9e2 */
+  --chart-status-kids-from: oklch(0.934 0.012 313.214); /* utility-purple-50, #ece7ef */
   /* BarLineChart's (FullWidthBarChart) bar fill — confirmed via direct Figma
    * node pull (node 1243:23077) as a two-stop gradient at 80% opacity, from
    * utility-brand-600 (exact match to the existing --primary token, reused
@@ -312,10 +316,9 @@
   --color-chart-scale-blue-25: var(--chart-scale-blue-25);
   --color-chart-participation-fill-from: var(--chart-participation-fill-from);
   --color-chart-participation-fill-to: var(--chart-participation-fill-to);
+  --color-chart-participation-value: var(--chart-participation-value);
   --color-chart-status-relationship-from: var(--chart-status-relationship-from);
-  --color-chart-status-relationship-to: var(--chart-status-relationship-to);
   --color-chart-status-kids-from: var(--chart-status-kids-from);
-  --color-chart-status-kids-to: var(--chart-status-kids-to);
   --color-chart-bar-fill-to: var(--chart-bar-fill-to);
   --color-wedo-brand: var(--wedo-brand);
   --color-sidebar: var(--sidebar);
