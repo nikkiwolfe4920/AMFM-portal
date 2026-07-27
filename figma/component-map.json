@@ -1101,7 +1101,7 @@
     ]
   },
   "BlurOverlay": {
-    "figmaComponent": "AMFM Portal — \"Our Marriage Champions / Empty\" (node 3724:23167), \"image 54\" backdrop layer (node 3724:23178); also \"Data Dashboard Empty State\" (node 3899:27502), where Figma's flattened backdrop image (node 2026:41512) is deliberately reproduced as a live blurred DashboardContent instead of a raster asset",
+    "figmaComponent": "AMFM Portal — \"Our Marriage Champions / Empty\" (node 3724:23167), \"image 54\" backdrop layer (node 3724:23178, linear bottom fade); also \"Data Dashboard Empty State\" (node 3899:27502) → instance 3727:29364 (\"HeartChart Dashboard / No data\"), \"image 53\" backdrop layer (node 2026:41512, 8px blur + centered radial white vignette — the reference for this component's fade mask), deliberately reproduced as a live blurred DashboardContent instead of a raster asset",
     "documentation": "COMPONENTS.md#bluroverlay",
     "implementation": "src/components/blur-overlay.tsx",
     "figmaSources": [
@@ -1127,6 +1127,22 @@
         "name": "BlurOverlay Figma reference — Data Dashboard Empty State (3899:27502)",
         "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=3899-27502&m=dev",
         "role": "supporting-reference",
+        "lastVerified": "2026-07-27"
+      },
+      {
+        "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",
+        "nodeId": "3727:29364",
+        "name": "BlurOverlay Figma reference — HeartChart Dashboard / No data instance (3727:29364)",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=3727-29364&m=dev",
+        "role": "supporting-reference",
+        "lastVerified": "2026-07-27"
+      },
+      {
+        "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",
+        "nodeId": "2026:41512",
+        "name": "BlurOverlay Figma reference — \"image 53\" backdrop layer with radial vignette (2026:41512)",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=2026-41512&m=dev",
+        "role": "primary-reference",
         "lastVerified": "2026-07-27"
       }
     ]

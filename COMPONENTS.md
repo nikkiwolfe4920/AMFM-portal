@@ -3122,7 +3122,7 @@ Live on `/marriage-champions` and `/marriage-champions-empty` (via `MarriageCham
 
 **Status**: Draft
 **Source**: `src/components/blur-overlay.tsx`
-**Figma**: AMFM Portal file, "Our Marriage Champions / Empty" (node `3724:23167`), "image 54" backdrop layer (node `3724:23178`); also "Data Dashboard Empty State" (node `3899:27502`), where Figma's flattened backdrop image (node `2026:41512`) is deliberately reproduced as a live blurred `DashboardContent` instead — see Implementation rules
+**Figma**: AMFM Portal file, "Our Marriage Champions / Empty" (node `3724:23167`), "image 54" backdrop layer (node `3724:23178`, linear fade); also "Data Dashboard Empty State" (node `3899:27502`), "image 53" backdrop layer (node `2026:41512`, 8px blur + centered radial white vignette — the reference for this component's radial fade mask), deliberately reproduced as a live blurred `DashboardContent` instead of Figma's flattened raster — see Implementation rules
 
 ### Purpose
 
@@ -3130,7 +3130,7 @@ Renders its `children` as an inert, faded backdrop — blurred and fading into t
 
 ### Anatomy
 
-Single wrapping `<div>` (`aria-hidden`, `relative`, `overflow-hidden`) containing: the blurred inert `children` (`blur-inert-preview pointer-events-none select-none`) plus an absolutely-positioned fade mask (`bg-gradient-to-b from-background/0 to-background`) covering the full area.
+Single wrapping `<div>` (`aria-hidden`, `relative`, `overflow-hidden`) containing: the blurred inert `children` (`blur-inert-preview pointer-events-none select-none`) plus an absolutely-positioned fade mask (`bg-radial from-background via-background via-60% to-background/0`) covering the full area — a centered radial vignette, not a top-to-bottom linear fade.
 
 ### Variants
 
@@ -3150,7 +3150,7 @@ interface BlurOverlayProps extends React.PropsWithChildren {
 
 ### Design tokens used
 
-`blur-inert-preview` (2px custom effect token), `bg-background` (fade-mask end color — see Implementation rules for why this diverges from Figma's hardcoded white). Child opacity is intentionally not lowered: a browser accessibility audit flagged the previous `opacity-30` treatment because visible text inside the decorative preview no longer met contrast, while the blur + fade mask already communicates the inactive state.
+`blur-inert-preview` (2px custom effect token), `bg-radial` (Tailwind v4 radial-gradient utility) with `from-background`/`via-background`/`to-background/0` stops (`bg-background` — same fade-mask end color as before, now applied as a centered vignette instead of a linear one; see Implementation rules for why this diverges from Figma's hardcoded white). Child opacity is intentionally not lowered: a browser accessibility audit flagged the previous `opacity-30` treatment because visible text inside the decorative preview no longer met contrast, while the blur + fade mask already communicates the inactive state.
 
 ### Accessibility requirements
 
@@ -3166,6 +3166,7 @@ None of its own — sizing/layout is entirely driven by `children` and the call 
 
 - A visual-only wrapper with no embedded business logic, matching `Table`'s convention — the call site owns what content gets blurred.
 - Fades to `bg-background`, not Figma's literal hardcoded white — keeps the effect theme-aware (correct in `.dark`) since the wrapping `ElevatedCard` itself uses the same token; see `DESIGN.md`'s "Blur overlay" foundation for the full rationale.
+- The fade mask is a centered radial vignette (`bg-radial from-background via-background via-60% to-background/0`), not a linear one — both `/dashboard-empty` and `/marriage-champions-empty` render their empty-state heading/CTA centered over the blurred backdrop (`absolute inset-0 flex items-center justify-center`), so a vignette keeps that exact spot fully opaque regardless of where in the blurred content it happens to land, rather than only fading near one edge. Matches `/dashboard-empty`'s own Figma reference (node `2026:41512`), which layers an equivalent radial white vignette over its flattened backdrop image; see `DESIGN.md`'s "Blur overlay" foundation for why this is a shared standardization rather than a per-route variant.
 - Don't reach for this to build a real disabled/loading state on an interactive component (e.g. a form mid-submit) — that's a job for the native `disabled` attribute / a real loading state per `DESIGN.md`'s Interaction principles, not this decorative wrapper.
 - **`/dashboard-empty` wraps a live component, not a flattened image.** Figma's own "Data Dashboard Empty State" frame composites the blurred backdrop as a single exported raster image (node `2026:41512`) rather than live components. The implementation deliberately deviates from that: it wraps the real `DashboardContent` component (see `COMPONENTS.md#dashboardcontent`) so the backdrop always reflects the actual composed dashboard instead of a frozen screenshot that would drift from the real cards over time — same class of deliberate token/asset substitution as this component's `bg-background` fade-mask deviation above.
 
