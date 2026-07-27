@@ -55,4 +55,24 @@ describe("PointerCalloutArrow", () => {
     expect(arrow).toHaveAttribute("height", "58");
     expect(arrow).toHaveClass("h-11", "w-auto");
   });
+
+  it("renders the emphasized phrase at regular weight in the foreground color", () => {
+    render(
+      <PointerCalloutArrow side="left" emphasis="HeartChart" text="shows your people where they are." />
+    );
+
+    const emphasis = screen.getByText("HeartChart");
+    expect(emphasis).toHaveClass("font-normal", "text-foreground");
+  });
+
+  it("renders the trailing text at light weight in the muted tertiary color", () => {
+    render(
+      <PointerCalloutArrow side="left" emphasis="HeartChart" text="shows your people where they are." />
+    );
+
+    const text = screen.getByText("shows your people where they are.");
+    expect(text).toHaveClass("font-light");
+    const paragraph = text.closest("p");
+    expect(paragraph).toHaveClass("text-text-tertiary", "text-xl", "leading-display-sm");
+  });
 });
