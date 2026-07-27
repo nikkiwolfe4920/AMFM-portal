@@ -1191,7 +1191,7 @@
     ]
   },
   "HorizontalTabs": {
-    "figmaComponent": "AMFM Portal — node 4255:30872, dashboard card header tab instances; \"Spiritual Snapshot\" instance header layout (tabs beside title, no space-between) confirmed at node 4255:30885/4255:30887; \"Top 3 Caution Flags\"/\"Top 3 Expressed Needs\" instances (4255:30892/4255:30894) previously had a stray sm:justify-between bug, fixed to match this same beside-title layout",
+    "figmaComponent": "AMFM Portal — node 4255:30872, dashboard card header tab instances; \"Spiritual Snapshot\" instance header layout (tabs beside title, no space-between) confirmed at node 4255:30885/4255:30887; \"Top 3 Caution Flags\"/\"Top 3 Expressed Needs\" instances (4255:30892/4255:30894) previously had a stray sm:justify-between bug, fixed to match this same beside-title layout; \"Relationship Health for Bedford Campus\" instance (4255:30881) also had its tabs grouped inside CardAction alongside the \"Understanding your data\" action, pushing both to the far edge — fixed by grouping the title+tabs together instead, leaving only the action in CardAction",
     "documentation": "COMPONENTS.md#horizontaltabs",
     "implementation": "src/components/ui/tabs.tsx",
     "figmaSources": [
@@ -1201,7 +1201,7 @@
         "name": "HorizontalTabs Figma reference (4255:30872)",
         "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=4255-30872&m=dev",
         "role": "primary-reference",
-        "lastVerified": "2026-07-25"
+        "lastVerified": "2026-07-27"
       },
       {
         "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",
@@ -1256,7 +1256,7 @@
     ]
   },
   "SnapshotVideoCard": {
-    "figmaComponent": "AMFM Portal — node 4255:30872, Relationship Health for Bedford Campus card, right-column Quick Snapshot card; video thumbnail cropped from node 4255:30881 into public/relationship-health-snapshot-video.png",
+    "figmaComponent": "AMFM Portal — node 4255:30872, Relationship Health for Bedford Campus card, right-column Quick Snapshot card; video thumbnail cropped from node 4255:30881 into public/relationship-health-snapshot-video.png; zone-headline sentence confirmed two-tone (brand-colored lead-in stat + default-foreground remainder), not a single flat color — split into zoneHeadlineStat/zoneHeadlineDescription props",
     "documentation": "COMPONENTS.md#snapshotvideocard",
     "implementation": "src/components/snapshot-video-card.tsx",
     "assets": [
@@ -1269,7 +1269,7 @@
         "name": "SnapshotVideoCard Figma reference (4255:30872)",
         "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=4255-30872&m=dev",
         "role": "primary-reference",
-        "lastVerified": "2026-07-25"
+        "lastVerified": "2026-07-27"
       },
       {
         "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",
@@ -1277,12 +1277,12 @@
         "name": "SnapshotVideoCard thumbnail asset source (4255:30881)",
         "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=4255-30881&m=dev",
         "role": "asset-reference",
-        "lastVerified": "2026-07-25"
+        "lastVerified": "2026-07-27"
       }
     ]
   },
   "DashboardFilterMenu": {
-    "figmaComponent": "AMFM Portal — node 4255:30881 (\"Scattergram\" section instance, \"sidebar container\" sub-node), dashboard filter groups below the relationship-health chart",
+    "figmaComponent": "AMFM Portal — node 4255:30881 (\"Scattergram\" section instance, \"sidebar container\" sub-node), dashboard filter groups below the relationship-health chart; option lists for Relationship Status/Years in Relationship/Kids/Age corrected against a full-resolution screenshot of this node (see COMPONENTS.md#dashboardfiltermenu for the exact before/after lists)",
     "documentation": "COMPONENTS.md#dashboardfiltermenu",
     "implementation": "src/app/dashboard/_components/dashboard-filter-menu.tsx",
     "figmaSources": [
@@ -1300,7 +1300,7 @@
         "name": "DashboardFilterMenu Figma reference — parent page frame (4255:30872)",
         "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=4255-30872&m=dev",
         "role": "context-reference",
-        "lastVerified": "2026-07-25"
+        "lastVerified": "2026-07-27"
       }
     ]
   },
