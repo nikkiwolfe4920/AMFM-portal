@@ -48,7 +48,11 @@
 }
 
 @utility grid-cols-dashboard-participation {
-  grid-template-columns: minmax(0, 5fr) minmax(0, 3fr) minmax(0, 3fr);
+  /* 2:1:1 — pixel-verified via Figma MCP get_metadata on node 4255:30880:
+   * the three "Statistic snapshot" columns resolve to 592px / 288px / 288px
+   * inside a 1200px content row (a 12-col grid, spans of 6/3/3), not the
+   * previous 5:3:3 screenshot guess. */
+  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr) minmax(0, 1fr);
 }
 
 @utility grid-cols-dashboard-relationship-health {

@@ -20,25 +20,39 @@ const VARIANT_ICON: Record<
   kids: { src: "/kids-icon.svg", width: 22, height: 21 },
 };
 
+/**
+ * "to" stop is Figma's literal `colors/background/bg-primary` (pure white)
+ * for both variants, so it fades `to-background` directly rather than a
+ * fixed per-variant near-white token — see the token comment in
+ * src/tokens/colors.css for why.
+ */
 const VARIANT_GRADIENT: Record<StatusSnapshotVariant, string> = {
-  relationship: "from-chart-status-relationship-from to-chart-status-relationship-to",
-  kids: "from-chart-status-kids-from to-chart-status-kids-to",
+  relationship: "from-chart-status-relationship-from to-background",
+  kids: "from-chart-status-kids-from to-background",
 };
 
 /**
- * Minimum bar-length floor so low percentages still render as a visible
- * bar rather than an invisible sliver — screenshot-derived ratio, not a
- * pixel-verified Figma value (the source frame isn't reachable via this
- * environment's Figma connection); see COMPONENTS.md's Implementation rules.
+ * Bar-width scaling — pixel-verified via Figma MCP get_metadata on node
+ * 4255:30880 (`_statistic-item` → "Bar fill" → "bar", 240px-wide rows across
+ * both the Relationship Status and Kids columns). Each row's bar is scaled
+ * relative to its own list's max value, floored at MIN_WIDTH_PERCENT and
+ * capped at MAX_WIDTH_PERCENT (the list's own max value never reaches the
+ * row's full width — Figma reserves a fixed 40px/240px = 1/6 gap even for
+ * the largest bar). Fit against all 11 rows across both variants (Married
+ * 42%→200px, K-5th Grade 38%→200px, down to Engaged 3%→75px) with ~1-2px
+ * average error — see COMPONENTS.md's Implementation rules for the fit.
  */
-const MIN_WIDTH_PERCENT = 35;
+const MIN_WIDTH_PERCENT = 28;
+const MAX_WIDTH_PERCENT = (5 / 6) * 100;
 
 /**
- * Horizontal gradient-pill bar list for a single categorical distribution —
- * two variants confirmed from screenshots: Relationship Status (sage-gray
- * gradient) and Kids (lavender gradient). Replaces the older, generic
- * `ParticipationHorizontalBarCard` for these two dashboard tiles — see
- * COMPONENTS.md#statussnapshotcard.
+ * Horizontal bar list for a single categorical distribution — two variants
+ * pixel-verified against Figma node 4255:30880: Relationship Status
+ * (sage-gray gradient) and Kids (lavender gradient). Each bar spans the
+ * row's full height with rounded corners on the trailing (right) edge only,
+ * fading from its variant color at that leading edge to white at the label
+ * end. Replaces the older, generic `ParticipationHorizontalBarCard` for
+ * these two dashboard tiles — see COMPONENTS.md#statussnapshotcard.
  */
 function StatusSnapshotCard({
   variant,
@@ -50,7 +64,7 @@ function StatusSnapshotCard({
   const max = Math.max(...data.map((item) => item.value), 1);
 
   return (
-    <div className={cn("flex h-full flex-col gap-6 rounded-xl border p-6", className)}>
+    <div className={cn("flex h-full flex-col gap-4 rounded-md border p-6", className)}>
       <div className="flex items-center gap-2">
         <Image
           src={icon.src}
@@ -61,38 +75,33 @@ function StatusSnapshotCard({
           unoptimized
           className="h-5 w-auto shrink-0"
         />
-        <span className="text-base font-bold text-foreground">{title}</span>
+        <span className="text-sm font-semibold text-foreground">{title}</span>
       </div>
 
       {data.length === 0 ? (
         <p className="text-sm text-muted-foreground">No data yet.</p>
       ) : (
-        <div className="flex flex-1 flex-col">
-          {data.map((item, index) => {
+        <div className="flex flex-1 flex-col border-t border-border-secondary">
+          {data.map((item) => {
             const widthPercent =
-              MIN_WIDTH_PERCENT + (item.value / max) * (100 - MIN_WIDTH_PERCENT);
+              MIN_WIDTH_PERCENT + (item.value / max) * (MAX_WIDTH_PERCENT - MIN_WIDTH_PERCENT);
             return (
               <div
                 key={item.label}
-                className={cn(
-                  "flex items-center justify-between gap-3 py-3",
-                  index !== data.length - 1 && "border-b border-border-secondary"
-                )}
+                className="relative flex items-center justify-between gap-3 border-b border-border-secondary py-3"
               >
-                <div className="relative flex h-12 flex-1 items-center overflow-hidden rounded-full">
-                  <div
-                    aria-hidden="true"
-                    className={cn(
-                      "absolute inset-y-0 left-0 rounded-full bg-gradient-to-r",
-                      VARIANT_GRADIENT[variant]
-                    )}
-                    style={{ width: `${widthPercent}%` }}
-                  />
-                  <span className="relative pl-4 text-sm text-foreground">
-                    {item.label}
-                  </span>
-                </div>
-                <span className="shrink-0 text-sm font-bold text-foreground">
+                <div
+                  aria-hidden="true"
+                  className={cn(
+                    "absolute inset-y-0 left-0 rounded-r-md bg-gradient-to-l",
+                    VARIANT_GRADIENT[variant]
+                  )}
+                  style={{ width: `${widthPercent}%` }}
+                />
+                <span className="relative tracking-label text-xs text-text-secondary">
+                  {item.label}
+                </span>
+                <span className="relative shrink-0 text-xs font-semibold tracking-label text-text-secondary">
                   {item.value}%
                 </span>
               </div>

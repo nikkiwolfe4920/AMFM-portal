@@ -3399,7 +3399,7 @@ Rendered live on `/dashboard`, between the hero card row and the "Bedford Campus
 
 **Status**: Draft (implemented; rendered on `/dashboard`)
 **Source**: `src/components/participation-vertical-bar-card.tsx`
-**Figma**: AMFM Portal file, node `4255:30872`, "Bedford Campus Participation Profile" card, first column ("Age Groups") for the card shell/bars; exact gridline/gradient values are parent-frame/screenshot verified, not independently pixel-sampled from a stable child component node.
+**Figma**: AMFM Portal file, node `4255:30880` ("_Summary Data" → "BarLineChart/Summary" → "Statistic snapshot", first column, "Age Groups"). Pixel-verified via Figma MCP `get_design_context` + `get_metadata`: card dimensions, gridline count/spacing, bar rounding, and gradient stops all trace to real child-node measurements — not screenshot guesses.
 
 ### Purpose
 
@@ -3433,12 +3433,12 @@ interface ParticipationVerticalBarCardProps {
 
 ### Design tokens used
 
-- Card shell: `rounded-xl border` with `p-6 gap-6` (bumped up from an earlier `rounded-md border p-4 gap-4` — the confirmed Figma card is more generously padded than the original pass assumed).
-- Title: `text-base font-bold` (up from `text-sm font-semibold`).
-- Bar fill: `bg-gradient-to-b from-chart-participation-fill-from to-chart-participation-fill-to` — a top-to-bottom two-stop gradient, replacing the single flat `chart-participation-fill` token (which no longer exists in `src/tokens/colors.css`; it was split into this `-from`/`-to` pair once the real gradient fill was confirmed). Bar rounding is `rounded-t-md` (up from `rounded-t-sm`).
-- Value label (above each bar): `text-sm font-bold text-primary` — the app's brand terracotta accent, replacing an earlier small muted-text treatment, so the value reads as the emphasized element per bar.
+- Card shell: `rounded-md border` with `p-6 gap-4` — pixel-verified against node `4255:30880`: the card's own radius is Figma's `spacing-2` (8px = `radius-md`), and the header-to-content gap is `spacing-xl` (16px = `gap-4`), not the earlier `rounded-xl`/`gap-6` guess.
+- Title: `text-sm font-semibold text-foreground` — matches Figma's "Text sm/Semibold" style (14px/22px), not the earlier `text-base font-bold` guess. `text-sm`'s line-height token already resolves to 22px (`src/tokens/typography.css`), so no extra override is needed.
+- Bar fill: `bg-gradient-to-b from-chart-participation-fill-from to-chart-participation-fill-to` — a top-to-bottom two-stop gradient. Both stops are pixel-sampled from node `4255:30880`'s "Complete Activity" bar fill (utility-yellow-100 → utility-yellow-50). Bar rounding is `rounded-t-md`.
+- Value label (above each bar): `text-sm font-bold text-chart-participation-value` — a dedicated token (utility-brand-400, `#cf896b`) sampled from the same node; distinct from `--primary` (the app's button/accent terracotta), which is a different, more saturated brand shade.
 - Category label (below each bar): `text-chart-label font-medium text-foreground` — uses the compact data-visualization label token from `DESIGN.md`, not general UI `text-sm`.
-- Gridlines: 4 rows of `border-t border-border-secondary`, absolutely positioned behind the bar area via a `grid` with `gridTemplateRows: repeat(4, minmax(0, 1fr))` — parent-frame/screenshot verified (see Implementation rules), not independently sourced from a stable child node pull.
+- Gridlines: 6 hairlines (5 equal bands) of `border-t border-border-secondary`, absolutely positioned behind the bar area via `flex flex-col justify-between` — pixel-verified against node `4255:30880`'s `Chart&Axis` → `xLines` (6 `Line` children, not 4).
 
 ### Accessibility requirements
 
@@ -3446,15 +3446,15 @@ Chart is a visual read of numeric data already rendered as real on-bar value/cat
 
 ### Responsive behavior
 
-Renders as the wider first column in the dashboard Participation Profile row at desktop width (alongside two narrower `StatusSnapshotCard` instances). The parent composition owns this ratio via `grid-cols-dashboard-participation` (5:3:3) so the component stays reusable and does not bake dashboard-specific width math into its own API. No mobile Figma reference confirmed — mobile stacks to one column per `DESIGN.md`'s grid rules.
+Renders as the wider first column in the dashboard Participation Profile row at desktop width (alongside two narrower `StatusSnapshotCard` instances). The parent composition owns this ratio via `grid-cols-dashboard-participation` (2:1:1, pixel-verified — see Implementation rules) so the component stays reusable and does not bake dashboard-specific width math into its own API. No mobile Figma reference confirmed — mobile stacks to one column per `DESIGN.md`'s grid rules.
 
 ### Implementation rules
 
 - Share a single underlying chart-rendering approach (SVG/CSS, not a raster image) with `FullWidthBarChart` if their visual language is confirmed to match — do not build two independent bar-chart implementations without checking first.
 - Bars are hand-built with CSS (gradient-filled `div`s sized by percentage height), not a fetched/rasterized asset, so they can respond to arbitrary data, matching `HeartChartSummary`'s existing precedent.
-- **The 4 horizontal gridlines behind the bars are parent-frame/screenshot verified.** The dashboard parent frame resolves at `4255:30872`, but the exact gridline child layer still has not been independently pulled as a stable node — do not treat `GRIDLINE_ROWS = 4` as an independently pixel-sampled Figma value without a stable child-node reference.
+- **The 6 horizontal gridlines behind the bars are pixel-verified.** Node `4255:30880`'s `Chart&Axis` → `xLines` resolves to 6 evenly-spaced `Line` children (5 equal bands) via Figma MCP `get_metadata` — `GRIDLINE_COUNT = 6` traces directly to that child-node geometry, not a screenshot estimate.
 - **Icon is now a real `next/image`** (`/age-group-icon.svg`, 23×17) passed in from the call site (`src/app/dashboard/_components/dashboard-content.tsx`), rather than a generic Lucide icon — the component itself still just accepts `icon: React.ReactNode` and renders whatever it's given, so this is a call-site change, not an API change.
-- **Dashboard width ratio belongs to the parent composition.** `src/app/dashboard/_components/dashboard-content.tsx` wraps this card and its two `StatusSnapshotCard` siblings in `data-slot="dashboard-participation-profile-grid"` with `lg:grid-cols-dashboard-participation`, a named spacing utility sourced from the full `4255:30872` dashboard frame. Do not replace it with equal `lg:grid-cols-3` or an inline bracketed grid template.
+- **Dashboard width ratio belongs to the parent composition.** `src/app/dashboard/_components/dashboard-content.tsx` wraps this card and its two `StatusSnapshotCard` siblings in `data-slot="dashboard-participation-profile-grid"` with `lg:grid-cols-dashboard-participation`, a named spacing utility. Pixel-verified against node `4255:30880`: the three "Statistic snapshot" columns resolve to 592px/288px/288px inside a 1200px row (12-col grid, 6/3/3 spans), i.e. a 2:1:1 ratio — not the earlier 5:3:3 guess. Do not replace it with equal `lg:grid-cols-3` or an inline bracketed grid template.
 
 ### Visual examples
 
@@ -3466,7 +3466,7 @@ Rendered live on `/dashboard`'s "Bedford Campus Participation Profile" card (Age
 
 **Status**: Draft
 **Source**: `src/components/status-snapshot-card.tsx`
-**Figma**: AMFM Portal file, parent frame node `4255:30872`, "Bedford Campus Participation Profile" card, "Relationship Status" and "Kids" columns. The parent dashboard frame resolves through Figma MCP; exact variant bar gradients and width-scaling remain parent-frame/screenshot verified rather than independently pixel-sampled from stable child component nodes.
+**Figma**: AMFM Portal file, node `4255:30880` ("_Summary Data" → "BarLineChart/Summary" → "Statistic snapshot", "Relationship Status" and "Kids" columns). Pixel-verified via Figma MCP `get_design_context` + `get_metadata`: row height (44px), bar geometry/rounding, gradient direction/stops, divider placement, and the bar-width scaling curve all trace to real child-node measurements (`_statistic-item`, "Bar fill", "bar").
 
 **Supersedes `ParticipationHorizontalBarCard`** (`src/components/participation-horizontal-bar-card.tsx`), which has been deleted from the codebase along with its test file. That entry documented a generic icon/label/horizontal-bar-list shape for the "Relationship Status" and "Kids" widgets; this Figma-to-code cleanup pass replaced both with `StatusSnapshotCard`, a purpose-built, variant-driven component with confirmed per-variant iconography and gradient treatment. There is no remaining use site for the old component's shape — do not resurrect it as a third generic bar-list component without a confirmed new use case.
 
@@ -3476,7 +3476,7 @@ Presents a single categorical distribution ("Relationship Status" or "Kids") as 
 
 ### Anatomy
 
-Icon + label header (`next/image` icon + title) → list of rows, each a thick (`h-12`) rounded-full gradient-pill bar with the row label overlaid on top-left (`pl-4`) and the bold value percentage at the far right, separated by `border-b border-border-secondary` dividers between rows (not after the last row).
+Icon + label header (`next/image` icon + title) → list of rows, each a full-row-height bar (rounded on the trailing/right edge only, `rounded-r-md`) with the row label at the far left and the bold value percentage at the far right — both rendered above the bar via normal DOM/stacking order, not `pl-4` offset, since the bar's gradient fades to white at the label end — separated by `border-b border-border-secondary` dividers after every row plus a `border-t` once on the list container (so the first row also reads as bordered top and bottom, matching Figma).
 
 ### Variants
 
@@ -3506,10 +3506,10 @@ interface StatusSnapshotCardProps {
 
 ### Design tokens used
 
-- Card shell: `rounded-xl border p-6 gap-6` — matches `ParticipationVerticalBarCard`'s sibling card shell exactly, so the three widgets in the "Participation Profile" row read as one consistent set.
-- Title: `text-base font-bold`, matching `ParticipationVerticalBarCard`.
-- Bar pill: `bg-gradient-to-r` per variant — `"relationship"` uses new tokens `chart-status-relationship-from`/`chart-status-relationship-to` (sage-gray); `"kids"` uses new tokens `chart-status-kids-from`/`chart-status-kids-to` (lavender-gray). Both are two-stop left-to-right gradients, added to `src/tokens/colors.css` in this pass. Row label/value text is `text-sm text-foreground` / `text-sm font-bold text-foreground`.
-- Row divider: `border-b border-border-secondary`.
+- Card shell: `rounded-md border p-6 gap-4` — matches `ParticipationVerticalBarCard`'s sibling card shell exactly (both pixel-verified against node `4255:30880`), so the three widgets in the "Participation Profile" row read as one consistent set.
+- Title: `text-sm font-semibold text-foreground`, matching `ParticipationVerticalBarCard`.
+- Bar: `bg-gradient-to-l` per variant — `"relationship"` uses `chart-status-relationship-from` (sage-gray, utility-green-50); `"kids"` uses `chart-status-kids-from` (lavender-gray, utility-purple-50). Both fade `to-background` (pure white) — Figma's literal `colors/background/bg-primary` stop, not a separate near-white `-to` token per variant (that also fixes a dark-mode bug the old fixed tokens had). Direction is right-to-left: solid color at the bar's leading/right edge, fading to white at the label end. Row label is `text-xs tracking-label text-text-secondary`; value is `text-xs font-semibold tracking-label text-text-secondary` — both match Figma's "Text xs/Medium" and "Text xs/Semibold" styles (12px/20px, 0.24px tracking = the existing `tracking-label` token).
+- Row divider: `border-b border-border-secondary` after every row, plus one `border-t border-border-secondary` on the list container (not per-row) so only one top rule is drawn.
 
 ### Accessibility requirements
 
@@ -3517,15 +3517,17 @@ Each bar's label and value are real DOM text (`pl-4` label overlaid on the bar, 
 
 ### Responsive behavior
 
-Renders as one of the two narrower columns in the dashboard Participation Profile row at desktop width (alongside the wider `ParticipationVerticalBarCard`). The parent composition owns this ratio via `grid-cols-dashboard-participation` (5:3:3) so the component stays reusable and does not bake dashboard-specific width math into its own API. No mobile Figma reference confirmed — mobile stacks to one column per `DESIGN.md`'s grid rules.
+Renders as one of the two narrower columns in the dashboard Participation Profile row at desktop width (alongside the wider `ParticipationVerticalBarCard`). The parent composition owns this ratio via `grid-cols-dashboard-participation` (2:1:1, pixel-verified — see Implementation rules) so the component stays reusable and does not bake dashboard-specific width math into its own API. No mobile Figma reference confirmed — mobile stacks to one column per `DESIGN.md`'s grid rules.
 
 ### Implementation rules
 
-- The parent dashboard frame is node `4255:30872`; do not invent a more specific child node ID until Figma exposes a stable one for each variant.
-- **Bar width uses a documented approximation, not pure proportional scaling**: `MIN_WIDTH_PERCENT = 35`, and each row's rendered width is `35 + (value / max) * (100 - 35)` percent. This floor exists because the parent-frame screenshot shows bars that are visibly longer than a pure `(value / max) * 100` scaling would produce — even a low-percentage row (e.g. "Engaged" at 3%) renders as a clearly visible bar, not a near-invisible sliver. This is a screenshot-derived heuristic, not an independently pixel-sampled Figma value; revisit once stable child-node geometry is available.
+- The reference frame is node `4255:30880`; both variants' `_statistic-item` rows resolve to a stable 240px-wide, 44px-tall child node via `get_metadata`.
+- **Row height (44px) is fixed and intrinsic**: `py-3` (12px top/bottom padding, `spacing-lg`) plus `text-xs`'s 20px line-height account for the full 44px with border-box sizing — no explicit height is set, matching how Figma's own "inside" strokes don't add to the row's box size.
+- **Bar geometry**: each bar is `absolute inset-y-0 left-0 rounded-r-md` — full row height, rounded only on the trailing (right) edge — not a centered `h-12 rounded-full` pill. This was corrected once `get_metadata` resolved the row's real height (44px, not a padded 48px pill).
+- **Bar width uses a documented, pixel-fit approximation, not pure proportional scaling**: `MIN_WIDTH_PERCENT = 28`, `MAX_WIDTH_PERCENT = 83.33` (`5/6 * 100`), and each row's rendered width is `28 + (value / localMax) * (83.33 - 28)` percent, where `localMax` is the largest value in that card's own dataset. `MAX_WIDTH_PERCENT` is exact — Figma reserves a fixed 40px/240px (1/6) gap even for the largest bar in both variants (Married 42%→200px and K-5th Grade 38%→200px both hit exactly 5/6 of the row width). `MIN_WIDTH_PERCENT` is a best-fit floor across all 11 rows in both variants (average error ~1-2px, worst case ~5px on "Remarried") — a genuine improvement on the previous `MIN=35`/`MAX=100` guess (which put Married's bar at the row's full width; Figma's real max bar stops at 5/6).
 - Icon renders via `next/image` (`unoptimized`), scaled with `h-5 w-auto` so each SVG preserves its intrinsic ratio while matching `ParticipationVerticalBarCard`'s visual icon height.
-- Card shell/title styling deliberately mirrors `ParticipationVerticalBarCard` exactly (`rounded-xl border p-6 gap-6`, `text-base font-bold` title) so the three "Participation Profile" widgets read as one set — do not let the two drift apart without a confirmed reason.
-- **Dashboard width ratio belongs to the parent composition.** `src/app/dashboard/_components/dashboard-content.tsx` wraps this card and its `ParticipationVerticalBarCard` sibling in `data-slot="dashboard-participation-profile-grid"` with `lg:grid-cols-dashboard-participation`, a named spacing utility sourced from the full `4255:30872` dashboard frame. Do not replace it with equal `lg:grid-cols-3` or an inline bracketed grid template.
+- Card shell/title styling deliberately mirrors `ParticipationVerticalBarCard` exactly (`rounded-md border p-6 gap-4`, `text-sm font-semibold` title) so the three "Participation Profile" widgets read as one set — do not let the two drift apart without a confirmed reason.
+- **Dashboard width ratio belongs to the parent composition.** `src/app/dashboard/_components/dashboard-content.tsx` wraps this card and its `ParticipationVerticalBarCard` sibling in `data-slot="dashboard-participation-profile-grid"` with `lg:grid-cols-dashboard-participation`, a named spacing utility. Pixel-verified against node `4255:30880` (see `ParticipationVerticalBarCard`'s Implementation rules for the exact pixel math). Do not replace it with equal `lg:grid-cols-3` or an inline bracketed grid template.
 
 ### Visual examples
 

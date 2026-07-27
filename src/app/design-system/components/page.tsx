@@ -1287,13 +1287,13 @@ export default function ComponentsPage() {
         status="Draft"
         purpose="Presents a single categorical distribution as a labeled vertical bar chart inside a bordered sub-panel — one of three peer widgets inside the Bedford Campus Participation Profile card."
         docsAnchor="participationverticalbarcard"
-        figmaReference='AMFM Portal — node 4255:30872, "Bedford Campus Participation Profile" card, first column ("Age Groups")'
+        figmaReference='AMFM Portal — node 4255:30880, "Bedford Campus Participation Profile" card, first column ("Age Groups"); pixel-verified via Figma MCP get_metadata'
         tokens={[
           "border",
           "border-border-secondary",
           "chart-participation-fill-from",
           "chart-participation-fill-to",
-          "text-primary",
+          "chart-participation-value",
           "text-foreground",
         ]}
         states={["Default", "Empty"]}
@@ -1333,17 +1333,16 @@ export default function ComponentsPage() {
       <ComponentShowcase
         name="StatusSnapshotCard"
         status="Draft"
-        purpose="Horizontal gradient-pill bar list for a single categorical distribution — replaces the removed ParticipationHorizontalBarCard for the Relationship Status and Kids dashboard tiles."
+        purpose="Horizontal bar list for a single categorical distribution — each bar spans the row's full height with a rounded trailing edge, replacing the removed ParticipationHorizontalBarCard for the Relationship Status and Kids dashboard tiles."
         docsAnchor="statussnapshotcard"
-        figmaReference='AMFM Portal — parent frame node 4255:30872, "Bedford Campus Participation Profile" card, Relationship Status and Kids columns; exact variant gradients/bar-width curve are parent-frame/screenshot verified'
+        figmaReference='AMFM Portal — node 4255:30880, "Bedford Campus Participation Profile" card, Relationship Status and Kids columns; pixel-verified via Figma MCP get_metadata (row height, bar geometry, and gradient stops)'
         tokens={[
           "border",
           "border-border-secondary",
           "chart-status-relationship-from",
-          "chart-status-relationship-to",
           "chart-status-kids-from",
-          "chart-status-kids-to",
-          "text-foreground",
+          "background",
+          "text-text-secondary",
         ]}
         states={["relationship", "kids"]}
       >
@@ -1356,9 +1355,9 @@ export default function ComponentsPage() {
           <StatusSnapshotCard variant="kids" title="Kids" data={KIDS_DATA} />
         </div>
         <p className="text-muted-foreground mt-4 text-xs">
-          Parent-frame/screenshot verified against the live dashboard node; keep exact
-          gradient stops and width scaling marked as child-layer verification gaps until
-          stable variant nodes are available.
+          Pixel-verified against Figma node 4255:30880 via MCP get_metadata: row height,
+          bar geometry (rounded trailing edge only), gradient direction/stops, and the
+          bar-width scaling curve all trace to real child-node measurements.
         </p>
       </ComponentShowcase>
 
