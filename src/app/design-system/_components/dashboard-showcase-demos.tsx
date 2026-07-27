@@ -3,7 +3,7 @@
 import * as React from "react";
 
 import { HorizontalTabs } from "@/components/ui/tabs";
-import { DashboardFilterMenu } from "@/app/dashboard/_components/dashboard-filter-menu";
+import { DashboardFilterMenu } from "@/components/dashboard-filter-menu";
 
 /**
  * Small client-boundary wrappers for gallery demos that need local

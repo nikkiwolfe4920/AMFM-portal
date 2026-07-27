@@ -1032,7 +1032,7 @@
     ]
   },
   "FooterCta": {
-    "figmaComponent": "AMFM Portal — \"Footer CTA\" component (node 1909:25789) — background texture asset blocked, renders a flat bg-primary fill",
+    "figmaComponent": "AMFM Portal — \"Footer CTA\" component (node 1909:25789) — background texture asset blocked, renders a flat bg-primary fill; also instanced on \"Data Dashboard Empty State\" (node 3899:27502)",
     "documentation": "COMPONENTS.md#footercta",
     "implementation": "src/components/footer-cta.tsx",
     "figmaSources": [
@@ -1043,6 +1043,14 @@
         "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=1909-25789&m=dev",
         "role": "primary-reference",
         "lastVerified": "2026-07-25"
+      },
+      {
+        "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",
+        "nodeId": "3899:27502",
+        "name": "FooterCta Figma reference — Data Dashboard Empty State (3899:27502)",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=3899-27502&m=dev",
+        "role": "supporting-reference",
+        "lastVerified": "2026-07-27"
       }
     ]
   },
@@ -1093,7 +1101,7 @@
     ]
   },
   "BlurOverlay": {
-    "figmaComponent": "AMFM Portal — \"Our Marriage Champions / Empty\" (node 3724:23167), \"image 54\" backdrop layer (node 3724:23178)",
+    "figmaComponent": "AMFM Portal — \"Our Marriage Champions / Empty\" (node 3724:23167), \"image 54\" backdrop layer (node 3724:23178); also \"Data Dashboard Empty State\" (node 3899:27502), where Figma's flattened backdrop image (node 2026:41512) is deliberately reproduced as a live blurred DashboardContent instead of a raster asset",
     "documentation": "COMPONENTS.md#bluroverlay",
     "implementation": "src/components/blur-overlay.tsx",
     "figmaSources": [
@@ -1112,6 +1120,37 @@
         "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=3724-23178&m=dev",
         "role": "supporting-reference",
         "lastVerified": "2026-07-25"
+      },
+      {
+        "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",
+        "nodeId": "3899:27502",
+        "name": "BlurOverlay Figma reference — Data Dashboard Empty State (3899:27502)",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=3899-27502&m=dev",
+        "role": "supporting-reference",
+        "lastVerified": "2026-07-27"
+      }
+    ]
+  },
+  "DashboardContent": {
+    "figmaComponent": "AMFM Portal — node 4255:30872 (\"HeartChart Dashboard / premium\") for the composition itself; also rendered (blurred, decorative) behind node 3899:27502 (\"Data Dashboard Empty State\" → instance 3727:29364, \"HeartChart Dashboard / No data\")",
+    "documentation": "COMPONENTS.md#dashboardcontent",
+    "implementation": "src/components/dashboard-content.tsx",
+    "figmaSources": [
+      {
+        "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",
+        "nodeId": "4255:30872",
+        "name": "DashboardContent Figma reference (4255:30872)",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=4255-30872&m=dev",
+        "role": "primary-reference",
+        "lastVerified": "2026-07-27"
+      },
+      {
+        "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",
+        "nodeId": "3899:27502",
+        "name": "DashboardContent Figma reference — Data Dashboard Empty State (3899:27502)",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=3899-27502&m=dev",
+        "role": "supporting-reference",
+        "lastVerified": "2026-07-27"
       }
     ]
   },
@@ -1284,7 +1323,7 @@
   "DashboardFilterMenu": {
     "figmaComponent": "AMFM Portal — node 4255:30881 (\"Scattergram\" section instance, \"sidebar container\" sub-node), dashboard filter groups below the relationship-health chart; option lists for Relationship Status/Years in Relationship/Kids/Age corrected against a full-resolution screenshot of this node (see COMPONENTS.md#dashboardfiltermenu for the exact before/after lists)",
     "documentation": "COMPONENTS.md#dashboardfiltermenu",
-    "implementation": "src/app/dashboard/_components/dashboard-filter-menu.tsx",
+    "implementation": "src/components/dashboard-filter-menu.tsx",
     "figmaSources": [
       {
         "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",
@@ -1299,7 +1338,7 @@
         "nodeId": "4255:30872",
         "name": "DashboardFilterMenu Figma reference — parent page frame (4255:30872)",
         "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=4255-30872&m=dev",
-        "role": "context-reference",
+        "role": "supporting-reference",
         "lastVerified": "2026-07-27"
       }
     ]

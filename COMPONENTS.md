@@ -945,7 +945,7 @@ Rendered at `/design-system/components#coursecard` and live (all 3 steps) on `/h
 
 ### Purpose
 
-Full-bleed banner prompting a free-tier account to upgrade to Premium — a heading plus a single CTA, used at the bottom of `/heartchart-resources` and (per the component library's `instanceCount`) the HeartChart Dashboard "No data" state.
+Full-bleed banner prompting a free-tier account to upgrade to Premium — a heading plus a single CTA, used at the bottom of `/heartchart-resources` and `/dashboard-empty` (the HeartChart Dashboard "No data" state).
 
 ### Anatomy
 
@@ -990,7 +990,7 @@ Not yet evidenced against a Figma mobile/tablet frame. Content wraps (`flex-wrap
 
 ### Visual examples
 
-Rendered at `/design-system/components#footercta` and live at the bottom of `/heartchart-resources`.
+Rendered at `/design-system/components#footercta` and live at the bottom of `/heartchart-resources` and `/dashboard-empty`.
 
 ---
 
@@ -2548,7 +2548,7 @@ interface HeartChartSummaryProps {
 ### Responsive behavior
 
 - Defaults to the constrained standalone reference width (`width="constrained"`, `max-w-heartchart-card`) for component-gallery usage and one-off embeds.
-- Uses `width="fluid"` on `/dashboard` (`src/app/dashboard/_components/dashboard-content.tsx`) so the parent two-column grid owns the card width, matching the live dashboard frame (`4255:30872`/`4255:30880`) where `HeartChartSummary` and `WeDoCard` fill their grid columns instead of keeping the narrower standalone cap.
+- Uses `width="fluid"` on `/dashboard` (`src/components/dashboard-content.tsx`) so the parent two-column grid owns the card width, matching the live dashboard frame (`4255:30872`/`4255:30880`) where `HeartChartSummary` and `WeDoCard` fill their grid columns instead of keeping the narrower standalone cap.
 - Internal rows wrap (`flex-wrap`) for narrower containers; exact mobile/tablet Figma spacing for this dashboard card remains unconfirmed, so do not add breakpoint-specific visual changes without a mobile reference or browser evidence.
 
 ### Implementation rules
@@ -3122,11 +3122,11 @@ Live on `/marriage-champions` and `/marriage-champions-empty` (via `MarriageCham
 
 **Status**: Draft
 **Source**: `src/components/blur-overlay.tsx`
-**Figma**: AMFM Portal file, "Our Marriage Champions / Empty" (node `3724:23167`), "image 54" backdrop layer (node `3724:23178`)
+**Figma**: AMFM Portal file, "Our Marriage Champions / Empty" (node `3724:23167`), "image 54" backdrop layer (node `3724:23178`); also "Data Dashboard Empty State" (node `3899:27502`), where Figma's flattened backdrop image (node `2026:41512`) is deliberately reproduced as a live blurred `DashboardContent` instead — see Implementation rules
 
 ### Purpose
 
-Renders its `children` as an inert, faded backdrop — blurred and fading into the surrounding surface color — so real content reads as "there, but not yet actionable" behind a centered empty-state call-to-action, instead of being hidden outright. Used on `/marriage-champions-empty` to preview the Team Members table's shape without making it interactive. See `DESIGN.md`'s "Blur overlay" foundation for the token-level treatment.
+Renders its `children` as an inert, faded backdrop — blurred and fading into the surrounding surface color — so real content reads as "there, but not yet actionable" behind a centered empty-state call-to-action, instead of being hidden outright. Used on `/marriage-champions-empty` to preview the Team Members table's shape, and on `/dashboard-empty` to preview the live `DashboardContent` composition, without making either interactive. See `DESIGN.md`'s "Blur overlay" foundation for the token-level treatment.
 
 ### Anatomy
 
@@ -3156,7 +3156,7 @@ interface BlurOverlayProps extends React.PropsWithChildren {
 
 - Always `aria-hidden="true"` on the outer wrapper — the wrapped content is never meant to be reachable by assistive tech.
 - Always `pointer-events-none` on the blurred content — a sighted mouse/touch user must not be able to click into it either.
-- **Never wrap a real, currently-reachable interactive control** (e.g. a focusable `<button>`/`<Select>`) — an element that's still in the tab order while its container is `aria-hidden` is an accessibility violation (a hidden-but-focusable trap). `/marriage-champions-empty`'s decorative table preview intentionally renders `Table`/`StatusTag` (static markup) but omits the Populated page's `Select`/delete-`Button` cells for this reason.
+- **Never wrap a real, currently-reachable interactive control** (e.g. a focusable `<button>`/`<Select>`) — an element that's still in the tab order while its container is `aria-hidden` is an accessibility violation (a hidden-but-focusable trap). `/marriage-champions-empty`'s decorative table preview intentionally renders `Table`/`StatusTag` (static markup) but omits the Populated page's `Select`/delete-`Button` cells for this reason. `/dashboard-empty` wraps the full `DashboardContent` composition instead — its interactive controls (`HorizontalTabs`, `DashboardFilterMenu`, `Button`s) are real focusable elements, but they inherit this wrapper's `aria-hidden`/`pointer-events-none` treatment the same way, so none of them stay reachable.
 
 ### Responsive behavior
 
@@ -3167,16 +3167,71 @@ None of its own — sizing/layout is entirely driven by `children` and the call 
 - A visual-only wrapper with no embedded business logic, matching `Table`'s convention — the call site owns what content gets blurred.
 - Fades to `bg-background`, not Figma's literal hardcoded white — keeps the effect theme-aware (correct in `.dark`) since the wrapping `ElevatedCard` itself uses the same token; see `DESIGN.md`'s "Blur overlay" foundation for the full rationale.
 - Don't reach for this to build a real disabled/loading state on an interactive component (e.g. a form mid-submit) — that's a job for the native `disabled` attribute / a real loading state per `DESIGN.md`'s Interaction principles, not this decorative wrapper.
+- **`/dashboard-empty` wraps a live component, not a flattened image.** Figma's own "Data Dashboard Empty State" frame composites the blurred backdrop as a single exported raster image (node `2026:41512`) rather than live components. The implementation deliberately deviates from that: it wraps the real `DashboardContent` component (see `COMPONENTS.md#dashboardcontent`) so the backdrop always reflects the actual composed dashboard instead of a frozen screenshot that would drift from the real cards over time — same class of deliberate token/asset substitution as this component's `bg-background` fade-mask deviation above.
 
 ### Visual examples
 
-Rendered at `/design-system/foundations#blur-overlay` and `/design-system/components#bluroverlay`, and live on `/marriage-champions-empty`.
+Rendered at `/design-system/foundations#blur-overlay` and `/design-system/components#bluroverlay`, and live on `/marriage-champions-empty` and `/dashboard-empty`.
 
 ---
 
 ## Dashboard components (HeartChart Dashboard)
 
-The 11 entries below were added from the design system audit of the Figma "HeartChart Dashboard / premium" frame (current live node `4255:30872`; older reference `3727:29573` moved), then implemented on `/dashboard` (`src/app/dashboard/page.tsx`, composed via `src/app/dashboard/_components/dashboard-content.tsx`). Status/Source lines below now point at real code; sample data lives in `src/app/dashboard/_lib/dashboard-data.ts` (representative, not wired to a real backend — same caveat as `src/lib/team-members.ts`). **Node-ID caveat**: several nested instance IDs inside this frame do not resolve reliably when queried in isolation during the audit (a scoping quirk of this file's deeply-nested instances, not a tooling failure on the top-level frame) — visual implementation should be verified against full-resolution screenshots and the confirmed top-level frame metadata unless a stable component-node URL is available.
+The 11 entries below were added from the design system audit of the Figma "HeartChart Dashboard / premium" frame (current live node `4255:30872`; older reference `3727:29573` moved), then implemented on `/dashboard` (`src/app/dashboard/page.tsx`, composed via `src/components/dashboard-content.tsx`). Status/Source lines below now point at real code; sample data lives in `src/lib/dashboard-data.ts` (representative, not wired to a real backend — same caveat as `src/lib/team-members.ts`). **Node-ID caveat**: several nested instance IDs inside this frame do not resolve reliably when queried in isolation during the audit (a scoping quirk of this file's deeply-nested instances, not a tooling failure on the top-level frame) — visual implementation should be verified against full-resolution screenshots and the confirmed top-level frame metadata unless a stable component-node URL is available.
+
+---
+
+## DashboardContent
+
+**Status**: Draft (page composition; not a visual primitive — no variants/states of its own)
+**Source**: `src/components/dashboard-content.tsx`
+**Figma**: AMFM Portal file, node `4255:30872` ("HeartChart Dashboard / premium") for the composition itself; also rendered (blurred, decorative) behind node `3899:27502` ("Data Dashboard Empty State" → instance `3727:29364`, "HeartChart Dashboard / No data")
+
+### Purpose
+
+Owns the dashboard's page-level content state (audience-tab selections, filter values) and composes the 11 documented dashboard card/chart/tab components above into the full "Our Data Dashboard" body. Promoted from `/dashboard`'s route-private `_components` folder to `src/components` once `/dashboard-empty` confirmed a second real use site rendering this exact composition — same promotion rule already documented for `VideoPlayer`, `FellowshipOfTheParksLogo`, `MarriageChampionsPageShell`, and `DashboardFilterMenu`, not assumed preemptively for a single route.
+
+### Anatomy
+
+Composes `HeartChartSummary`, `WeDoCard`, `PointerCalloutArrow`, `Card`/`CardHeader`/`CardTitle`/`CardAction`/`CardContent`, `ParticipationVerticalBarCard`, `StatusSnapshotCard`, `HorizontalTabs`, `Button`, `CommitmentConnectionChart`, `SnapshotVideoCard`, `DashboardFilterMenu`, `FullWidthBarChart`, `PieChartCard`, and `ScaleChartCard` — see each component's own entry for its anatomy. This component only owns their layout and shared state, not their own markup.
+
+### Variants
+
+None — a single fixed composition; the only per-render difference is the representative data supplied by `src/lib/dashboard-data.ts`.
+
+### States
+
+None of its own beyond the internal `useState` selections (audience tabs, filter values) already documented on the composed components above.
+
+### Properties / API
+
+```ts
+function DashboardContent(): React.JSX.Element
+```
+
+No props — renders representative data from `src/lib/dashboard-data.ts` internally (see Implementation rules).
+
+### Design tokens used
+
+None directly — delegates entirely to the composed components' own tokens.
+
+### Accessibility requirements
+
+None of its own — delegated to the composed components.
+
+### Responsive behavior
+
+None of its own — delegated to the composed components' own responsive grids (`grid-cols-dashboard-participation`, `grid-cols-dashboard-relationship-health`, etc. — see `DESIGN.md`).
+
+### Implementation rules
+
+- Owns page-level `useState` for the `HorizontalTabs` audience selections and `DashboardFilterMenu`'s filter values; the composed card/chart components stay stateless/presentational.
+- `/dashboard-empty` renders this component verbatim inside `BlurOverlay` rather than a flattened Figma export image, so the "your dashboard comes to life" preview always reflects the real composed dashboard rather than a frozen screenshot — see `BlurOverlay`'s Implementation rules and `DESIGN.md`'s "Blur overlay" foundation. The wrapping `ElevatedCard` panel clamps to `h-dashboard-empty-preview` (720px, matching Figma's fixed "Summary" card) with `overflow-hidden`, since this component's live composition is many times taller than Figma's cropped preview — without the clamp, the empty-state CTA would sit above thousands of pixels of blurred content instead of Figma's compact card.
+- Do not fork a second copy of this composition for the empty state — both routes must render byte-identical dashboard content, differing only in whether it's the live interactive page or a `BlurOverlay`-wrapped decorative backdrop.
+
+### Visual examples
+
+Rendered live on `/dashboard` (interactive) and `/dashboard-empty` (blurred, decorative, behind the empty-state CTA); tested at `src/components/dashboard-content.test.tsx`. Not separately rendered at `/design-system/components` — it's page-level composition, not a visual primitive with states/variants to demo; see `/design-system/pages` for both routes' entries.
 
 ---
 
@@ -3387,7 +3442,7 @@ Not yet evidenced against a mobile Figma reference — the dashboard's call site
 ### Implementation rules
 
 - The caption row is node `4255:30880` → `"Frame 525"` → `"Pointer Call-out"` (×2) — pixel-verified via `get_metadata` + `get_design_context`, not parent-frame/screenshot-verified as in an earlier pass.
-- Two instances are rendered side by side on `/dashboard`, between the `HeartChartSummary`/`WeDoCard` hero row and the "Bedford Campus Participation Profile" card, at the call site in `src/app/dashboard/_components/dashboard-content.tsx` — not inside `HeartChartSummary` or `WeDoCard` themselves, matching this file's existing precedent (see `WeDoCard`'s own note on the prior single-caption-row version) that page-level connective copy between two cards belongs at the page/route level, not folded into either card component.
+- Two instances are rendered side by side on `/dashboard`, between the `HeartChartSummary`/`WeDoCard` hero row and the "Bedford Campus Participation Profile" card, at the call site in `src/components/dashboard-content.tsx` — not inside `HeartChartSummary` or `WeDoCard` themselves, matching this file's existing precedent (see `WeDoCard`'s own note on the prior single-caption-row version) that page-level connective copy between two cards belongs at the page/route level, not folded into either card component.
 - Colocated at `src/components` (not route-colocated under `_components`) since it composes with both `HeartChartSummary` and `WeDoCard`, which already live there — matches those two components' existing app-level placement per `CLAUDE.md`'s structure guidance.
 - Figma's source composition pins the decorative arrow at a fixed pixel offset specific to this exact sentence/frame width (a manually-placed layer, not part of the text's auto-layout flow) — that offset does not generalize to arbitrary `emphasis`/`text` values or a fluid-width column, so it is intentionally not reproduced as a hardcoded absolute position here. The arrow instead sits beside the text via `flex items-center gap-3`, preserving the verified asset size (59×58, matching the exported SVG's own intrinsic dimensions) and reading order.
 
@@ -3455,8 +3510,8 @@ Renders as the wider first column in the dashboard Participation Profile row at 
 - Share a single underlying chart-rendering approach (SVG/CSS, not a raster image) with `FullWidthBarChart` if their visual language is confirmed to match — do not build two independent bar-chart implementations without checking first.
 - Bars are hand-built with CSS (gradient-filled `div`s sized by percentage height), not a fetched/rasterized asset, so they can respond to arbitrary data, matching `HeartChartSummary`'s existing precedent.
 - **The 6 horizontal gridlines behind the bars are pixel-verified.** Node `4255:30880`'s `Chart&Axis` → `xLines` resolves to 6 evenly-spaced `Line` children (5 equal bands) via Figma MCP `get_metadata` — `GRIDLINE_COUNT = 6` traces directly to that child-node geometry, not a screenshot estimate.
-- **Icon is now a real `next/image`** (`/age-group-icon.svg`, 23×17) passed in from the call site (`src/app/dashboard/_components/dashboard-content.tsx`), rather than a generic Lucide icon — the component itself still just accepts `icon: React.ReactNode` and renders whatever it's given, so this is a call-site change, not an API change.
-- **Dashboard width ratio belongs to the parent composition.** `src/app/dashboard/_components/dashboard-content.tsx` wraps this card and its two `StatusSnapshotCard` siblings in `data-slot="dashboard-participation-profile-grid"` with `lg:grid-cols-dashboard-participation`, a named spacing utility. Pixel-verified against node `4255:30880`: the three "Statistic snapshot" columns resolve to 592px/288px/288px inside a 1200px row (12-col grid, 6/3/3 spans), i.e. a 2:1:1 ratio — not the earlier 5:3:3 guess. Do not replace it with equal `lg:grid-cols-3` or an inline bracketed grid template.
+- **Icon is now a real `next/image`** (`/age-group-icon.svg`, 23×17) passed in from the call site (`src/components/dashboard-content.tsx`), rather than a generic Lucide icon — the component itself still just accepts `icon: React.ReactNode` and renders whatever it's given, so this is a call-site change, not an API change.
+- **Dashboard width ratio belongs to the parent composition.** `src/components/dashboard-content.tsx` wraps this card and its two `StatusSnapshotCard` siblings in `data-slot="dashboard-participation-profile-grid"` with `lg:grid-cols-dashboard-participation`, a named spacing utility. Pixel-verified against node `4255:30880`: the three "Statistic snapshot" columns resolve to 592px/288px/288px inside a 1200px row (12-col grid, 6/3/3 spans), i.e. a 2:1:1 ratio — not the earlier 5:3:3 guess. Do not replace it with equal `lg:grid-cols-3` or an inline bracketed grid template.
 
 ### Visual examples
 
@@ -3529,7 +3584,7 @@ Renders as one of the two narrower columns in the dashboard Participation Profil
 - **Bar width uses a documented, pixel-fit approximation, not pure proportional scaling**: `MIN_WIDTH_PERCENT = 28`, `MAX_WIDTH_PERCENT = 83.33` (`5/6 * 100`), and each row's rendered width is `28 + (value / localMax) * (83.33 - 28)` percent, where `localMax` is the largest value in that card's own dataset. `MAX_WIDTH_PERCENT` is exact — Figma reserves a fixed 40px/240px (1/6) gap even for the largest bar in both variants (Married 42%→200px and K-5th Grade 38%→200px both hit exactly 5/6 of the row width). `MIN_WIDTH_PERCENT` is a best-fit floor across all 11 rows in both variants (average error ~1-2px, worst case ~5px on "Remarried") — a genuine improvement on the previous `MIN=35`/`MAX=100` guess (which put Married's bar at the row's full width; Figma's real max bar stops at 5/6).
 - Icon renders via `next/image` (`unoptimized`), scaled with `h-5 w-auto` so each SVG preserves its intrinsic ratio while matching `ParticipationVerticalBarCard`'s visual icon height.
 - Card shell/title styling deliberately mirrors `ParticipationVerticalBarCard` exactly (`rounded-md border p-6 gap-4`, `text-sm font-semibold` title) so the three "Participation Profile" widgets read as one set — do not let the two drift apart without a confirmed reason.
-- **Dashboard width ratio belongs to the parent composition.** `src/app/dashboard/_components/dashboard-content.tsx` wraps this card and its `ParticipationVerticalBarCard` sibling in `data-slot="dashboard-participation-profile-grid"` with `lg:grid-cols-dashboard-participation`, a named spacing utility. Pixel-verified against node `4255:30880` (see `ParticipationVerticalBarCard`'s Implementation rules for the exact pixel math). Do not replace it with equal `lg:grid-cols-3` or an inline bracketed grid template.
+- **Dashboard width ratio belongs to the parent composition.** `src/components/dashboard-content.tsx` wraps this card and its `ParticipationVerticalBarCard` sibling in `data-slot="dashboard-participation-profile-grid"` with `lg:grid-cols-dashboard-participation`, a named spacing utility. Pixel-verified against node `4255:30880` (see `ParticipationVerticalBarCard`'s Implementation rules for the exact pixel math). Do not replace it with equal `lg:grid-cols-3` or an inline bracketed grid template.
 
 ### Visual examples
 
@@ -3738,10 +3793,10 @@ Sits beside `CommitmentConnectionChart` at desktop width inside `grid-cols-dashb
 ### Implementation rules
 
 - **No `VideoCard` component exists in this codebase** — despite this pattern's working name, there is no component by that name to reuse. The two existing candidates were `VideoPlayer` (`src/components/video-player.tsx`, a full native `<video>` element with source-backed controls and static poster-only mode when `src` is omitted) and `CourseCard`'s internal video-cover treatment (a static thumbnail + play glyph + heading, no scrubber). **Implemented using the `CourseCard`-style static-preview pattern** (not `VideoPlayer`'s source-backed control surface), since the Figma reference is a static dashboard preview. The preview is non-interactive unless `onPlay` is supplied, at which point it becomes a labelled `<button>`. The thumbnail is no longer a gradient placeholder; it is cropped from the verified `4255:30881` `Scattergram` screenshot into `public/relationship-health-snapshot-video.png`.
-- **`zoneTitle`/`zoneHeadline` header block absorbed from the page.** This content used to be rendered manually by `src/app/dashboard/_components/dashboard-content.tsx` as a sibling `<div>` next to `SnapshotVideoCard`, not part of the component. It's now rendered by the component itself (conditionally, only when either prop is supplied) so the whole "Quick Snapshot" card corresponds to one Figma frame instead of being split across a page-level wrapper and the component.
+- **`zoneTitle`/`zoneHeadline` header block absorbed from the page.** This content used to be rendered manually by `src/components/dashboard-content.tsx` as a sibling `<div>` next to `SnapshotVideoCard`, not part of the component. It's now rendered by the component itself (conditionally, only when either prop is supplied) so the whole "Quick Snapshot" card corresponds to one Figma frame instead of being split across a page-level wrapper and the component.
 - **New `title` heading between the video and the description.** Previously `title` only surfaced via the video button's `aria-label` and a now-removed on-video corner caption; there was no visible `title` text in the card body. A `<p className="text-sm font-semibold text-foreground">{title}</p>` was added between the video and the description paragraph so the title is visible as real body text, matching the Figma reference.
 - **"Next Ministry Steps" action corrected**: was `variant="default"` (filled) and `self-start`; now uses the shared outline button styling at `self-end`, with a trailing `ArrowRight` icon (`lucide-react`) added — matching the outline-button convention already established by every other dashboard action button (`HeartChartSummary`, `WeDoCard`) and Figma's actual bottom-right-anchored placement. It is a real `Button` only when `onNextSteps` is supplied; otherwise it renders as a non-focusable visual reference.
-- **`zoneHeadline` split into `zoneHeadlineStat`/`zoneHeadlineDescription`**: previously a single `zoneHeadline` string prop rendered the whole sentence in one color/weight. Figma's real treatment colors only the lead-in stat (e.g. "292 people (46%)") in the brand color, with the rest of the sentence in the default foreground color — splitting the sentence with a regex/string-parse inside the component would be fragile business logic for presentation-only markup, so the two parts are now separate props supplied directly by the data source (`RELATIONSHIP_HEALTH_SUMMARY.headlineStat`/`.headlineDescription` in `src/app/dashboard/_lib/dashboard-data.ts`), matching how every other pre-split dashboard stat (e.g. `HeartChartSummary`) is already modeled as discrete fields rather than one sentence to parse.
+- **`zoneHeadline` split into `zoneHeadlineStat`/`zoneHeadlineDescription`**: previously a single `zoneHeadline` string prop rendered the whole sentence in one color/weight. Figma's real treatment colors only the lead-in stat (e.g. "292 people (46%)") in the brand color, with the rest of the sentence in the default foreground color — splitting the sentence with a regex/string-parse inside the component would be fragile business logic for presentation-only markup, so the two parts are now separate props supplied directly by the data source (`RELATIONSHIP_HEALTH_SUMMARY.headlineStat`/`.headlineDescription` in `src/lib/dashboard-data.ts`), matching how every other pre-split dashboard stat (e.g. `HeartChartSummary`) is already modeled as discrete fields rather than one sentence to parse.
 
 ### Visual examples
 
@@ -3751,8 +3806,8 @@ Rendered live on `/dashboard`'s "Relationship Health for Bedford Campus" card, a
 
 ## DashboardFilterMenu
 
-**Status**: Draft (implemented; rendered on `/dashboard`)
-**Source**: `src/app/dashboard/_components/dashboard-filter-menu.tsx` (route-colocated per `CLAUDE.md`'s colocation rule, since no second dashboard-style route exists yet to justify promoting it to `src/components`; revisit once a second real use site appears, matching `PricingCard`'s precedent)
+**Status**: Draft (implemented; rendered on `/dashboard` and `/dashboard-empty`)
+**Source**: `src/components/dashboard-filter-menu.tsx` (promoted from `src/app/dashboard/_components` once `/dashboard-empty` confirmed a second real use site — same promotion rule already applied to `VideoPlayer`/`FellowshipOfTheParksLogo`/`MarriageChampionsPageShell`)
 **Figma**: AMFM Portal file, node `4255:30881` ("Scattergram" section instance, "sidebar container" sub-node), below the "Relationship Health for Bedford Campus" card's chart, above `FullWidthBarChart`; the section's parent page frame is node `4255:30872`
 
 ### Purpose
@@ -3810,7 +3865,7 @@ interface DashboardFilterMenuProps {
 - Stat block: `text-3xl leading-none font-bold` for the count, `text-sm text-muted-foreground` for the "Showing"/"of {total} people" lines.
 - Divider: `h-32 w-px bg-border-secondary`, `hidden` below `sm` — new, sits between the stat block and the first filter group. There is still no divider between each filter group (unchanged from before — this addition is only between the stat block and the groups).
 - Layout gaps: `gap-6` outer row, `gap-x-16 gap-y-4` between/within filter groups — `gap-x-16` approximates a confirmed ~60.5px Figma gap, rounded to the nearest Tailwind scale step (not an exact pixel match).
-- Per-group chip wrap width (`wrapClassName`, applied to the `RadioGroup.Root`): exact-pixel `max-w-[Npx]` matching each group's confirmed Figma column width — Gender `max-w-[62px]`, Relationship Status `max-w-[185px]`, Years in Relationship `max-w-[164px]`, Kids `max-w-[135px]`, Age `max-w-[231px]`, set in `DASHBOARD_FILTER_GROUPS` (`src/app/dashboard/_lib/dashboard-data.ts`). Uses `max-w-` rather than a hard `w-` so the column shrinks further on viewports narrower than its Figma width instead of overflowing its parent card.
+- Per-group chip wrap width (`wrapClassName`, applied to the `RadioGroup.Root`): exact-pixel `max-w-[Npx]` matching each group's confirmed Figma column width — Gender `max-w-[62px]`, Relationship Status `max-w-[185px]`, Years in Relationship `max-w-[164px]`, Kids `max-w-[135px]`, Age `max-w-[231px]`, set in `DASHBOARD_FILTER_GROUPS` (`src/lib/dashboard-data.ts`). Uses `max-w-` rather than a hard `w-` so the column shrinks further on viewports narrower than its Figma width instead of overflowing its parent card.
 
 ### Accessibility requirements
 
@@ -3829,7 +3884,7 @@ interface DashboardFilterMenuProps {
 
 ### Visual examples
 
-Rendered live on `/dashboard`'s "Relationship Health for Bedford Campus" card, below the chart row; tested at `src/app/dashboard/_components/dashboard-filter-menu.test.tsx`.
+Rendered live on `/dashboard`'s and `/dashboard-empty`'s "Relationship Health for Bedford Campus" card, below the chart row; tested at `src/components/dashboard-filter-menu.test.tsx`.
 
 ---
 

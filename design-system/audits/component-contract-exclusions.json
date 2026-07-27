@@ -16,20 +16,6 @@
       "reviewTrigger": "Review if the form anatomy is reused outside create-profile, receives its own Figma component/pattern, or stops composing documented primitives."
     },
     {
-      "id": "dashboard-content-route-orchestration",
-      "filePath": "src/app/dashboard/_components/dashboard-content.tsx",
-      "component": "DashboardContent",
-      "category": "route-orchestration",
-      "source": "Source inspection on 2026-07-25: composes HeartChartSummary, WeDoCard, dashboard charts, DashboardFilterMenu, HorizontalTabs, Card, and Button for the dashboard route.",
-      "rationale": "DashboardContent owns page-level dashboard state and section composition over documented dashboard components; it is not a reusable Figma component contract.",
-      "alternatives": "Keep documenting the dashboard cards, charts, filters, tabs, and primitives it composes. Extract a reusable dashboard page shell only after another route proves the same structure.",
-      "blastRadius": "Limited to the dashboard route assembly file.",
-      "owner": "Design system governance",
-      "dateAdded": "2026-07-25",
-      "status": "permanent",
-      "reviewTrigger": "Review if another dashboard-style route reuses this layout or if Figma promotes the page composition into a named pattern."
-    },
-    {
       "id": "login-form-route-orchestration",
       "filePath": "src/app/login/_components/login-form.tsx",
       "component": "LoginForm",
