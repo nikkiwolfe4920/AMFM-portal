@@ -564,6 +564,14 @@
         "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=1670-36610&m=dev",
         "role": "supporting-reference",
         "lastVerified": "2026-07-25"
+      },
+      {
+        "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",
+        "nodeId": "4255:30880",
+        "name": "HeartChartSummary live dashboard instance (4255:30880, \"_Summary Data\" → \"HeartChart Summary\")",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=4255-30880&m=dev",
+        "role": "supporting-reference",
+        "lastVerified": "2026-07-27"
       }
     ]
   },

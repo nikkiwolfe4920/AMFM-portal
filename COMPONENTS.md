@@ -2471,9 +2471,9 @@ Rendered on `/` via `DposystemLearnMore`; referenced at `/design-system/patterns
 
 ## HeartChartSummary
 
-**Status**: Draft
+**Status**: Draft (implemented and live on `/dashboard`; remaining gaps are the no-0%-design and unconfirmed-mobile items under Known gaps, not the component itself)
 **Source**: `src/components/heartchart-summary.tsx`
-**Figma**: AMFM Portal file, node `1993:36348` ("HeartChart Summary" component set — "Growing" `1640:23457`/`1670:36217`, "Low" `1670:36549`, "Exceptional" `1670:36610` variants) — see `figma/figma-links.md`
+**Figma**: AMFM Portal file, node `1993:36348` ("HeartChart Summary" component set — "Growing" `1640:23457`/`1670:36217`, "Low" `1670:36549`, "Exceptional" `1670:36610` variants) — see `figma/figma-links.md`. Also pixel-verified against the live dashboard composition at node `4255:30880` ("_Summary Data" → "HeartChart Summary" instance: 58%, 1,512 of 2,800 attenders, "Strong" level), which is the exact instance `/dashboard` renders via `HEART_CHART_SUMMARY`.
 
 ### Purpose
 
@@ -2547,7 +2547,7 @@ interface HeartChartSummaryProps {
 ### Responsive behavior
 
 - Defaults to the constrained standalone reference width (`width="constrained"`, `max-w-heartchart-card`) for component-gallery usage and one-off embeds.
-- Uses `width="fluid"` on `/dashboard` so the parent two-column grid owns the card width, matching the live dashboard frame (`4255:30872`) where `HeartChartSummary` and `WeDoCard` fill their grid columns instead of keeping the narrower standalone cap.
+- Uses `width="fluid"` on `/dashboard` (`src/app/dashboard/_components/dashboard-content.tsx`) so the parent two-column grid owns the card width, matching the live dashboard frame (`4255:30872`/`4255:30880`) where `HeartChartSummary` and `WeDoCard` fill their grid columns instead of keeping the narrower standalone cap.
 - Internal rows wrap (`flex-wrap`) for narrower containers; exact mobile/tablet Figma spacing for this dashboard card remains unconfirmed, so do not add breakpoint-specific visual changes without a mobile reference or browser evidence.
 
 ### Implementation rules
@@ -2559,13 +2559,13 @@ interface HeartChartSummaryProps {
 - Reuse `Button` (`variant="outline" size="compact"`) for the three 38px action buttons rather than hand-rolling button markup or applying local color overrides — shared `Button` owns the compact geometry, 20px icon slot, icon/text gap, semantic outline colors, border/shadow/focus/hover treatment, and dark-mode fallback.
 - Icons: `lucide-react`'s `Lightbulb`, `TrendingUp`, `QrCode` for Quick Tip / Last 4 Weeks / Share Your Link respectively (matching `iconLibrary` in `components.json`) — Figma's own icon names are `lightbulb-02`, `line-chart-up-02`, `qr-code-01`; these are the closest stable `lucide-react` equivalents, not pixel-identical to Figma's icon set (same category of approximation as `GoogleIcon`).
 - Donut chart is a hand-built SVG (stroke-based ring, not a fetched/rasterized asset) so it can respond to an arbitrary `percentage` value — Figma's version is a set of pre-rendered PNGs per sample state, which can't generalize to real data. Track ring uses `stroke-border-secondary` (confirmed an exact match — see `DESIGN.md` Known gaps); the value arc's stroke is a per-instance SVG `<linearGradient>` (id generated via `React.useId()` so multiple donuts on one page don't collide) rather than a flat `stroke-status-success`/`stroke-status-warning`, reusing the same two-stop gradient pair as `ParticipationScale`'s active segment for the derived tone — see Design tokens used above; the center percentage label uses `text-muted-foreground` (see Design tokens used above for why not Figma's literal `text-secondary-700`). Marked `aria-hidden` (see Accessibility).
-- Single use site today (no consuming dashboard route yet) — colocated at `src/components` rather than a route's `_components` because it's an app-level (not route-specific) business component per `CLAUDE.md`'s structure guidance, and is expected to be consumed by a future dashboard route. Internal helpers (the donut renderer, the scale bar) are kept as unexported functions in the same file rather than extracted, per `CLAUDE.md`'s anti-premature-abstraction guidance — extract to shared primitives only once a second real chart/scale-bar use case appears.
+- Now has two real use sites — the `/design-system/components/heart-chart` gallery (sample states) and the live `/dashboard` route (`dashboard-content.tsx`, `width="fluid"`, real `HEART_CHART_SUMMARY` data) — colocated at `src/components` rather than a route's `_components` because it's an app-level (not route-specific) business component per `CLAUDE.md`'s structure guidance. Internal helpers (the donut renderer, the scale bar) are kept as unexported functions in the same file rather than extracted, per `CLAUDE.md`'s anti-premature-abstraction guidance — extract to shared primitives only once a second real chart/scale-bar use case appears.
 - Don't skip the `Known gaps` items above (no dark-mode tokens, approximated donut track color, no 0%-state design, unverified responsive behavior) when promoting this component out of `Draft` — resolve them for real or get explicit product sign-off to ship without them.
 - The outer shell (`p-2 shadow-card rounded-2xl` wrapping an inner bordered `rounded-md` panel) is the same nested-card shape as `AuthCard`, built locally rather than importing/extending it — `AuthCard` is intentionally route-colocated and fixed-width for the auth surface specifically, and (being fixed-light) uses `border-black/10` for its inner hairline where this component uses the theme-aware `border` instead (see the token-choice note above). This is now the *second* real instance of the nested-shell shape; if a third appears, extract it into a shared primitive (e.g. under `src/components`) instead of a third copy-paste.
 
 ### Visual examples
 
-Rendered at `/design-system/components#heartchartsummary` (Low / Growing / Exceptional sample states), with a dedicated showcase page at `/design-system/components/heart-chart` (props table, accessibility notes, responsive behavior, and Figma reference in full). Not yet rendered in a real dashboard route — no such route exists in the app yet.
+Rendered at `/design-system/components#heartchartsummary` (Low / Growing / Exceptional sample states), with a dedicated showcase page at `/design-system/components/heart-chart` (props table, accessibility notes, responsive behavior, and Figma reference in full). Also rendered live on `/dashboard` (top-left of the "HeartChart shows your people where they are" / "WeDo helps them get where they want to go" summary row), pixel-verified against Figma node `4255:30880`'s "58%" / "1,512 Individuals" / "of 2,800 attenders" / "Strong" sample instance.
 
 ---
 

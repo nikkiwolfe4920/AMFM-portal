@@ -200,13 +200,14 @@ export default function HeartChartSummaryShowcasePage() {
           source frame is a fixed 564px) — a known follow-up, not a
           deliberate fixed-width decision. The card itself is otherwise
           fluid-width (<code className="bg-muted rounded px-1 py-0.5">w-full</code>)
-          so it can be dropped into a responsive grid once a consuming
-          dashboard route exists.
+          so it drops into a responsive grid — see the live{" "}
+          <code className="bg-muted rounded px-1 py-0.5">width=&quot;fluid&quot;</code>{" "}
+          usage on <code className="bg-muted rounded px-1 py-0.5">/dashboard</code>.
         </p>
       </Section>
 
       <Section title="Figma reference">
-        <FigmaReference reference='AMFM Portal — node 1993:36348 ("HeartChart Summary" component set — Growing 1640:23457/1670:36217, Low 1670:36549, Exceptional 1670:36610 variants)' />
+        <FigmaReference reference='AMFM Portal — node 1993:36348 ("HeartChart Summary" component set — Growing 1640:23457/1670:36217, Low 1670:36549, Exceptional 1670:36610 variants). Also pixel-verified against the live dashboard instance, node 4255:30880 ("_Summary Data" → "HeartChart Summary"), rendered on /dashboard.' />
       </Section>
 
       <p className="text-muted-foreground pb-8 text-xs">
