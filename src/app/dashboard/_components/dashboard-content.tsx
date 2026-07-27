@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import Image from "next/image";
+import { GraduationCap } from "lucide-react";
 
 import { HeartChartSummary } from "@/components/heartchart-summary";
 import { WeDoCard } from "@/components/we-do-card";
@@ -147,14 +148,17 @@ export function DashboardContent() {
 
       <Card>
         <CardHeader className="flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <CardTitle>Relationship Health for Bedford Campus</CardTitle>
-          <CardAction className="flex w-full items-center gap-4 sm:w-auto">
+          <div className="flex flex-col items-start gap-4 sm:flex-row sm:items-center">
+            <CardTitle>Relationship Health for Bedford Campus</CardTitle>
             <HorizontalTabs
               tabs={AUDIENCE_TABS}
               value={relationshipHealthAudience}
               onValueChange={setRelationshipHealthAudience}
             />
-            <Button variant="link" size="inline">
+          </div>
+          <CardAction>
+            <Button variant="link" size="inline" className="text-text-tertiary">
+              <GraduationCap aria-hidden="true" />
               Understanding your data
             </Button>
           </CardAction>
@@ -171,7 +175,8 @@ export function DashboardContent() {
             />
             <SnapshotVideoCard
               zoneTitle={RELATIONSHIP_HEALTH_SUMMARY.highlightedZone}
-              zoneHeadline={RELATIONSHIP_HEALTH_SUMMARY.headline}
+              zoneHeadlineStat={RELATIONSHIP_HEALTH_SUMMARY.headlineStat}
+              zoneHeadlineDescription={RELATIONSHIP_HEALTH_SUMMARY.headlineDescription}
               title="Quick Snapshot"
               description={RELATIONSHIP_HEALTH_SUMMARY.description}
             />

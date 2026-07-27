@@ -9,8 +9,10 @@ interface SnapshotVideoCardProps {
   description: string;
   /** Highlighted-zone name (e.g. "Steady"), rendered above a divider before the video. Omitted entirely if not provided. */
   zoneTitle?: string;
-  /** Zone summary sentence (e.g. "292 people (46%) are Comfortable but coasting"), rendered under zoneTitle. */
-  zoneHeadline?: string;
+  /** Highlighted lead-in of the zone summary sentence (e.g. "292 people (46%)"), rendered in the brand color. Rendered under zoneTitle alongside zoneHeadlineDescription. */
+  zoneHeadlineStat?: string;
+  /** Remainder of the zone summary sentence (e.g. "are Comfortable but coasting"), rendered in the default foreground color immediately after zoneHeadlineStat. */
+  zoneHeadlineDescription?: string;
   onPlay?: () => void;
   onNextSteps?: () => void;
   className?: string;
@@ -33,7 +35,8 @@ function SnapshotVideoCard({
   title,
   description,
   zoneTitle,
-  zoneHeadline,
+  zoneHeadlineStat,
+  zoneHeadlineDescription,
   onPlay,
   onNextSteps,
   className,
@@ -63,13 +66,20 @@ function SnapshotVideoCard({
         className
       )}
     >
-      {(zoneTitle || zoneHeadline) && (
+      {(zoneTitle || zoneHeadlineStat || zoneHeadlineDescription) && (
         <div className="flex flex-col gap-1 border-b pb-6">
           {zoneTitle && (
             <h3 className="text-lg font-semibold text-foreground">{zoneTitle}</h3>
           )}
-          {zoneHeadline && (
-            <p className="text-sm font-medium text-primary">{zoneHeadline}</p>
+          {(zoneHeadlineStat || zoneHeadlineDescription) && (
+            <p className="text-sm font-medium">
+              {zoneHeadlineStat && (
+                <span className="text-primary">{zoneHeadlineStat} </span>
+              )}
+              {zoneHeadlineDescription && (
+                <span className="text-foreground">{zoneHeadlineDescription}</span>
+              )}
+            </p>
           )}
         </div>
       )}

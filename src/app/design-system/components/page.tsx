@@ -1436,7 +1436,8 @@ export default function ComponentsPage() {
             title="Quick Snapshot"
             description={RELATIONSHIP_HEALTH_SUMMARY.description}
             zoneTitle={RELATIONSHIP_HEALTH_SUMMARY.highlightedZone}
-            zoneHeadline={RELATIONSHIP_HEALTH_SUMMARY.headline}
+            zoneHeadlineStat={RELATIONSHIP_HEALTH_SUMMARY.headlineStat}
+            zoneHeadlineDescription={RELATIONSHIP_HEALTH_SUMMARY.headlineDescription}
           />
           <SnapshotVideoCard
             title="Quick Snapshot"

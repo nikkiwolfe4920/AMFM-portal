@@ -3557,9 +3557,11 @@ Segments a card's content by audience — confirmed used 4 times on this single 
 
 Confirmed against node `4255:30887` ("Text and badge"): on the "Spiritual Snapshot" card, the tabs sit directly beside the title (`gap-4`/16px, `items-center`) — the header does **not** use `justify-between` to push the tabs to the opposite edge. `CardHeader`'s `className` override for this instance is `flex flex-col items-start gap-4 sm:flex-row sm:items-center` (no `sm:justify-between`), so `CardTitle` and `CardAction` flow adjacent to each other at the header's start.
 
-**Fixed**: the "Top 3 Caution Flags for Bedford Campus" (node `4255:30892`) and "Top 3 Expressed Needs for Bedford Campus" (node `4255:30894`) instances previously kept a stray `sm:justify-between` on their `CardHeader`, pushing the tabs to the card's far-right edge instead of beside the title — the only two of the four confirmed instances with this bug. Both now use the same `flex flex-col items-start gap-4 sm:flex-row sm:items-center` override as "Spiritual Snapshot", with no `sm:justify-between`.
+**Fixed**: the "Top 3 Caution Flags for Bedford Campus" (node `4255:30892`) and "Top 3 Expressed Needs for Bedford Campus" (node `4255:30894`) instances previously kept a stray `sm:justify-between` on their `CardHeader`, pushing the tabs to the card's far-right edge instead of beside the title. Both now use the same `flex flex-col items-start gap-4 sm:flex-row sm:items-center` override as "Spiritual Snapshot", with no `sm:justify-between`.
 
-### Anatomy
+**Fixed**: the "Relationship Health for Bedford Campus" instance (node `4255:30881`, "Text and actions") is the one confirmed instance that also carries a secondary action ("Understanding your data") in the same header, so it cannot use the plain no-`justify-between` override the other three use — Figma's own layout keeps `sm:justify-between` on the `CardHeader`, but groups `CardTitle` and the tabs together in their own `flex items-center gap-4` wrapper (the first `justify-between` child) so the tabs stay beside the title, while `CardAction` (now just the "Understanding your data" button) is the second child and gets pushed to the header's far edge alone. Previously the tabs were incorrectly grouped inside `CardAction` alongside the button, so both were pushed to the far edge together, away from the title.
+
+**Fixed — "Understanding your data" icon/color**: confirmed against the same node, this action is a `Button variant="link" size="inline"` with a leading `graduation-hat-02` icon (`lucide-react`'s `GraduationCap`, auto-sized to `size-5`/20px by `buttonVariants`) and `text-text-tertiary` (`#535862`) label color — the same "icon + neutral tertiary color" pattern already established by `ScaleChartCard`'s "Why does this matter?" (see that entry's Design tokens used). Previously this button had no icon and used the `link` variant's default `text-text-brand` (terracotta) color, which did not match Figma.
 
 Bordered rounded-rectangle track (`rounded-lg border border-border-secondary p-1`, transparent background) of tab buttons (2 or 3, confirmed both counts on this frame), one marked active (filled pill) at a time. Corrected from an earlier `rounded-full bg-muted p-1` pill-track treatment — Figma's real container is a rounded rectangle with a visible border and no fill, not a filled full pill.
 
@@ -3688,7 +3690,7 @@ Presents a short contextual video ("Quick Snapshot") explaining the currently-hi
 
 ### Anatomy
 
-Bordered card shell (`rounded-xl border bg-background p-6`) → optional zone-summary header block (`border-b pb-6`, rendered only when `zoneTitle` or `zoneHeadline` is supplied: bold `text-lg` zone title + `text-sm font-medium text-primary` zone headline) → video thumbnail using `public/relationship-health-snapshot-video.png` (static preview by default, labelled play button only when `onPlay` is supplied) → `title` heading (`text-sm font-semibold text-foreground`) → supporting description paragraph → shared outline action styling for "Next Ministry Steps" (real `Button` only when `onNextSteps` is supplied).
+Bordered card shell (`rounded-xl border bg-background p-6`) → optional zone-summary header block (`border-b pb-6`, rendered only when `zoneTitle`, `zoneHeadlineStat`, or `zoneHeadlineDescription` is supplied: bold `text-lg` zone title + a `text-sm font-medium` zone headline sentence split into two inline `<span>`s — `zoneHeadlineStat` in `text-primary`, `zoneHeadlineDescription` in `text-foreground`) → video thumbnail using `public/relationship-health-snapshot-video.png` (static preview by default, labelled play button only when `onPlay` is supplied) → `title` heading (`text-sm font-semibold text-foreground`) → supporting description paragraph → shared outline action styling for "Next Ministry Steps" (real `Button` only when `onNextSteps` is supplied).
 
 ### Variants
 
@@ -3710,8 +3712,10 @@ interface SnapshotVideoCardProps {
   description: string;
   /** Highlighted-zone name (e.g. "Steady"), rendered above a divider before the video. Omitted entirely if not provided. */
   zoneTitle?: string;
-  /** Zone summary sentence (e.g. "292 people (46%) are Comfortable but coasting"), rendered under zoneTitle. */
-  zoneHeadline?: string;
+  /** Highlighted lead-in of the zone summary sentence (e.g. "292 people (46%)"), rendered in the brand color. Rendered under zoneTitle alongside zoneHeadlineDescription. */
+  zoneHeadlineStat?: string;
+  /** Remainder of the zone summary sentence (e.g. "are Comfortable but coasting"), rendered in the default foreground color immediately after zoneHeadlineStat. */
+  zoneHeadlineDescription?: string;
   onPlay?: () => void;
   onNextSteps?: () => void;
   className?: string;
@@ -3721,11 +3725,11 @@ No public video-source prop exists yet; this design-system pass renders the stat
 
 ### Design tokens used
 
-Card shell uses `rounded-xl border bg-background p-6`, matching the right-column Figma card. The header block uses `border-b`, `text-lg` (zone title), and `text-sm font-medium text-primary` (zone headline). The thumbnail is the Figma-cropped `public/relationship-health-snapshot-video.png`; the CTA uses shared `Button variant="outline" size="compact"`.
+Card shell uses `rounded-xl border bg-background p-6`, matching the right-column Figma card. The header block uses `border-b`, `text-lg` (zone title), and `text-sm font-medium` on the zone headline `<p>`, with `text-primary` on the `zoneHeadlineStat` span and `text-foreground` on the `zoneHeadlineDescription` span — corrected from an earlier single-tone `text-primary` applied to the whole sentence, which did not match Figma's two-tone treatment (only the lead-in stat is brand-colored; the rest of the sentence is the default foreground color). The thumbnail is the Figma-cropped `public/relationship-health-snapshot-video.png`; the CTA uses shared `Button variant="outline" size="compact"`.
 
 ### Accessibility requirements
 
-The thumbnail becomes a real `<button>` with `aria-label="Play {title} video"` only when `onPlay` is provided; otherwise it is a non-focusable visual preview (`aria-hidden`) so the design-system render does not expose a dead control. The thumbnail image itself is decorative (`alt=""`). The zone-summary header renders as a real `<h3>` (`zoneTitle`) plus a `<p>` (`zoneHeadline`), so it reaches assistive tech as ordinary text, not baked into the thumbnail image.
+The thumbnail becomes a real `<button>` with `aria-label="Play {title} video"` only when `onPlay` is provided; otherwise it is a non-focusable visual preview (`aria-hidden`) so the design-system render does not expose a dead control. The thumbnail image itself is decorative (`alt=""`). The zone-summary header renders as a real `<h3>` (`zoneTitle`) plus a `<p>` containing two plain `<span>`s (`zoneHeadlineStat`, `zoneHeadlineDescription`), so it reaches assistive tech as one ordinary sentence, not baked into the thumbnail image.
 
 ### Responsive behavior
 
@@ -3737,6 +3741,7 @@ Sits beside `CommitmentConnectionChart` at desktop width inside `grid-cols-dashb
 - **`zoneTitle`/`zoneHeadline` header block absorbed from the page.** This content used to be rendered manually by `src/app/dashboard/_components/dashboard-content.tsx` as a sibling `<div>` next to `SnapshotVideoCard`, not part of the component. It's now rendered by the component itself (conditionally, only when either prop is supplied) so the whole "Quick Snapshot" card corresponds to one Figma frame instead of being split across a page-level wrapper and the component.
 - **New `title` heading between the video and the description.** Previously `title` only surfaced via the video button's `aria-label` and a now-removed on-video corner caption; there was no visible `title` text in the card body. A `<p className="text-sm font-semibold text-foreground">{title}</p>` was added between the video and the description paragraph so the title is visible as real body text, matching the Figma reference.
 - **"Next Ministry Steps" action corrected**: was `variant="default"` (filled) and `self-start`; now uses the shared outline button styling at `self-end`, with a trailing `ArrowRight` icon (`lucide-react`) added — matching the outline-button convention already established by every other dashboard action button (`HeartChartSummary`, `WeDoCard`) and Figma's actual bottom-right-anchored placement. It is a real `Button` only when `onNextSteps` is supplied; otherwise it renders as a non-focusable visual reference.
+- **`zoneHeadline` split into `zoneHeadlineStat`/`zoneHeadlineDescription`**: previously a single `zoneHeadline` string prop rendered the whole sentence in one color/weight. Figma's real treatment colors only the lead-in stat (e.g. "292 people (46%)") in the brand color, with the rest of the sentence in the default foreground color — splitting the sentence with a regex/string-parse inside the component would be fragile business logic for presentation-only markup, so the two parts are now separate props supplied directly by the data source (`RELATIONSHIP_HEALTH_SUMMARY.headlineStat`/`.headlineDescription` in `src/app/dashboard/_lib/dashboard-data.ts`), matching how every other pre-split dashboard stat (e.g. `HeartChartSummary`) is already modeled as discrete fields rather than one sentence to parse.
 
 ### Visual examples
 
@@ -3760,7 +3765,14 @@ Bordered shell (`rounded-xl border bg-background p-4`) → a 3-line stacked "Sho
 
 ### Variants
 
-None evidenced — 5 groups with varying option counts (confirmed range: 2–8 options), same shape. Each group's `wrapClassName` (a `max-w-[Npx]` cap matching its Figma column width) is data, not a visual variant — see Properties/API.
+None evidenced — 5 groups with varying option counts (confirmed range: 3–11 options), same shape. Each group's `wrapClassName` (a `max-w-[Npx]` cap matching its Figma column width) is data, not a visual variant — see Properties/API.
+
+**Fixed — option lists corrected against node `4255:30881`'s `sidebar container`**: two groups (Relationship Status, Kids) were missing an option, and two (Years in Relationship, Age) used entirely different range boundaries than Figma. Confirmed via a full-resolution screenshot of the node (`get_design_context`'s code traversal truncates before reaching this sub-node, since it fully expands the much larger "Graphic" scattergram sibling first — the chip labels are read from the rendered screenshot, not generated code):
+  - **Relationship Status** (6 options, was 5): All, Married, **Remarried**, Dating, Engaged, Living together — `Remarried` was missing.
+  - **Years in Relationship** (9 options, was 5): All, 0-2, 3-5, 6-10, 11-20, 21-30, 31-40, 41-50, 51+ — was All, 0-5, 6-10, 11-30, 31+ (coarser, non-matching bucket boundaries).
+  - **Kids** (6 options, was 5): All, None, 0-5, **K-5th**, **6th-12th**, Adult Children — was All, None, 0-5, `6-12` (Figma's grade bands are two separate options, not one merged `6-12` range); note this now matches the labels already used by the unrelated `KIDS_DATA` bar-chart dataset (`None`/`0-5 Years`/`K-5th Grade`/`6th-12th Grade`/`Adult Children`), which was already correct.
+  - **Age** (11 options, was 6): All, Under 18, 18-24, 25-30, 31-40, 41-50, 51-60, 61-70, 71-80, 81-90, 91+ — was All, 18-30, 31-40, 41-50, 51-60, 61+ (coarser, non-matching bucket boundaries). The final three (71-80/81-90/91+) render at identical chip widths at the resolution retrievable in this environment (Figma asset downloads are network-policy-blocked here, and the screenshot tool's native render resolution was the ceiling); confirmed with the requester rather than guessed.
+  - **Gender** (3 options, unchanged: All, Male, Female) was already correct.
 
 ### States
 

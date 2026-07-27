@@ -65,7 +65,8 @@ export const RELATIONSHIP_HEALTH_RESPONSE_COUNT = 1309;
 
 export const RELATIONSHIP_HEALTH_SUMMARY = {
   highlightedZone: "Steady",
-  headline: "292 people (46%) are Comfortable but coasting",
+  headlineStat: "292 people (46%)",
+  headlineDescription: "are Comfortable but coasting",
   description:
     "These individuals report a moderate level of connection and commitment. Their relationship may not feel distressed, but it may not feel especially alive either. This is often where couples coast without realizing it.",
 };
@@ -192,8 +193,9 @@ export const DASHBOARD_FILTER_GROUPS = [
     options: [
       { label: "All", value: "all" },
       { label: "Married", value: "married" },
-      { label: "Engaged", value: "engaged" },
+      { label: "Remarried", value: "remarried" },
       { label: "Dating", value: "dating" },
+      { label: "Engaged", value: "engaged" },
       { label: "Living together", value: "living-together" },
     ],
   },
@@ -202,10 +204,14 @@ export const DASHBOARD_FILTER_GROUPS = [
     wrapClassName: "max-w-[164px]",
     options: [
       { label: "All", value: "all" },
-      { label: "0-5", value: "0-5" },
+      { label: "0-2", value: "0-2" },
+      { label: "3-5", value: "3-5" },
       { label: "6-10", value: "6-10" },
-      { label: "11-30", value: "11-30" },
-      { label: "31+", value: "31-plus" },
+      { label: "11-20", value: "11-20" },
+      { label: "21-30", value: "21-30" },
+      { label: "31-40", value: "31-40" },
+      { label: "41-50", value: "41-50" },
+      { label: "51+", value: "51-plus" },
     ],
   },
   {
@@ -215,7 +221,8 @@ export const DASHBOARD_FILTER_GROUPS = [
       { label: "All", value: "all" },
       { label: "None", value: "none" },
       { label: "0-5", value: "0-5" },
-      { label: "6-12", value: "6-12" },
+      { label: "K-5th", value: "k-5th" },
+      { label: "6th-12th", value: "6th-12th" },
       { label: "Adult Children", value: "adult-children" },
     ],
   },
@@ -224,11 +231,16 @@ export const DASHBOARD_FILTER_GROUPS = [
     wrapClassName: "max-w-[231px]",
     options: [
       { label: "All", value: "all" },
-      { label: "18-30", value: "18-30" },
+      { label: "Under 18", value: "under-18" },
+      { label: "18-24", value: "18-24" },
+      { label: "25-30", value: "25-30" },
       { label: "31-40", value: "31-40" },
       { label: "41-50", value: "41-50" },
       { label: "51-60", value: "51-60" },
-      { label: "61+", value: "61-plus" },
+      { label: "61-70", value: "61-70" },
+      { label: "71-80", value: "71-80" },
+      { label: "81-90", value: "81-90" },
+      { label: "91+", value: "91-plus" },
     ],
   },
 ];
