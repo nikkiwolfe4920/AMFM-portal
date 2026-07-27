@@ -63,10 +63,11 @@ Index into `COMPONENTS.md`'s component entries. Full contracts (anatomy, variant
 | HorizontalTabs | [HorizontalTabs](../../COMPONENTS.md#horizontaltabs) | `src/components/ui/tabs.tsx` | Draft |
 | CommitmentConnectionChart | [CommitmentConnectionChart](../../COMPONENTS.md#commitmentconnectionchart) | `src/components/commitment-connection-chart.tsx` | Draft |
 | SnapshotVideoCard | [SnapshotVideoCard](../../COMPONENTS.md#snapshotvideocard) | `src/components/snapshot-video-card.tsx` | Draft |
-| DashboardFilterMenu | [DashboardFilterMenu](../../COMPONENTS.md#dashboardfiltermenu) | `src/app/dashboard/_components/dashboard-filter-menu.tsx` | Draft |
+| DashboardFilterMenu | [DashboardFilterMenu](../../COMPONENTS.md#dashboardfiltermenu) | `src/components/dashboard-filter-menu.tsx` | Draft |
 | FullWidthBarChart | [FullWidthBarChart](../../COMPONENTS.md#fullwidthbarchart) | `src/components/full-width-bar-chart.tsx` | Draft |
 | PieChartCard | [PieChartCard](../../COMPONENTS.md#piechartcard) | `src/components/pie-chart-card.tsx` | Draft |
 | ScaleChartCard | [ScaleChartCard](../../COMPONENTS.md#scalechartcard) | `src/components/scale-chart-card.tsx` | Draft |
+| DashboardContent | [DashboardContent](../../COMPONENTS.md#dashboardcontent) | `src/components/dashboard-content.tsx` | Draft |
 
 See `figma/component-map.json` for each component's Figma reference and `figma/figma-links.md` for the human-readable version.
 

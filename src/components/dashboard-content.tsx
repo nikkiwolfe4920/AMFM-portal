@@ -39,7 +39,7 @@ import {
   RELATIONSHIP_HEALTH_ZONE_LABELS,
   RELATIONSHIP_STATUS_DATA,
   WE_DO_CARD,
-} from "../_lib/dashboard-data";
+} from "@/lib/dashboard-data";
 
 const AUDIENCE_TABS = [
   { label: "Couples", value: "couples" },

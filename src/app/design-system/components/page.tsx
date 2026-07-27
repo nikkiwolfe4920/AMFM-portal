@@ -59,7 +59,7 @@ import {
   RELATIONSHIP_HEALTH_SUMMARY,
   RELATIONSHIP_HEALTH_ZONE_LABELS,
   RELATIONSHIP_STATUS_DATA,
-} from "@/app/dashboard/_lib/dashboard-data";
+} from "@/lib/dashboard-data";
 import { AmfmLogo } from "@/app/create-profile/_components/amfm-logo";
 import { BenefitListItem } from "@/app/create-profile/_components/benefit-list-item";
 import { PasswordRequirementItem } from "@/app/signup/_components/password-requirement-item";
@@ -600,9 +600,9 @@ export default function ComponentsPage() {
       <ComponentShowcase
         name="FooterCta"
         status="Draft"
-        purpose="Full-bleed banner prompting a free-tier account to upgrade to Premium — used at the bottom of /heartchart-resources."
+        purpose="Full-bleed banner prompting a free-tier account to upgrade to Premium — used at the bottom of /heartchart-resources and /dashboard-empty."
         docsAnchor="footercta"
-        figmaReference='AMFM Portal — "Footer CTA" component (node 1909:25789)'
+        figmaReference='AMFM Portal — "Footer CTA" component (node 1909:25789); also instanced on "Data Dashboard Empty State" (node 3899:27502)'
         tokens={[
           "bg-primary",
           "text-primary-foreground",
@@ -1695,9 +1695,9 @@ export default function ComponentsPage() {
       <ComponentShowcase
         name="BlurOverlay"
         status="Draft"
-        purpose="Renders real content as an inert, faded backdrop behind a centered empty-state call-to-action — used on /marriage-champions-empty to preview the Team Members table without making it interactive."
+        purpose="Renders real content as an inert, faded backdrop behind a centered empty-state call-to-action — used on /marriage-champions-empty to preview the Team Members table, and on /dashboard-empty to preview the live DashboardContent composition, without making either interactive."
         docsAnchor="bluroverlay"
-        figmaReference='AMFM Portal — "Our Marriage Champions / Empty" (node 3724:23167), "image 54" backdrop layer (node 3724:23178)'
+        figmaReference='AMFM Portal — "Our Marriage Champions / Empty" (node 3724:23167), "image 54" backdrop layer (node 3724:23178); also "Data Dashboard Empty State" (node 3899:27502)'
         tokens={["blur-inert-preview", "bg-background"]}
         states={["Default (only state — static, non-interactive)"]}
       >
@@ -1728,6 +1728,11 @@ export default function ComponentsPage() {
           empty-state composition (blurred table + VideoPlayer + heading + primary Button) live at{" "}
           <Link href="/marriage-champions-empty" className="text-text-brand hover:underline">
             /marriage-champions-empty
+          </Link>
+          , and the blurred-dashboard variant (DashboardContent + heading + primary Button + FooterCta)
+          live at{" "}
+          <Link href="/dashboard-empty" className="text-text-brand hover:underline">
+            /dashboard-empty
           </Link>
           .
         </p>

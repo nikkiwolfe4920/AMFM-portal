@@ -262,7 +262,7 @@ export default function FoundationsPage() {
       <Section
         id="blur-overlay"
         title="Blur overlay"
-        description="Renders real content as an inert, blurred backdrop (blur-inert-preview, fading to the surrounding surface color) so it reads as 'there, but not yet actionable' behind a centered empty-state call-to-action — see BlurOverlay in COMPONENTS.md. Introduced for /marriage-champions-empty (Figma node 3724:23178)."
+        description="Renders real content as an inert, blurred backdrop (blur-inert-preview, fading to the surrounding surface color) so it reads as 'there, but not yet actionable' behind a centered empty-state call-to-action — see BlurOverlay in COMPONENTS.md. Introduced for /marriage-champions-empty (Figma node 3724:23178); reused for /dashboard-empty (Figma node 3899:27502), wrapping the real DashboardContent composition instead of Figma's own flattened backdrop image."
       >
         <div className="overflow-hidden rounded-lg border">
           <BlurOverlay>

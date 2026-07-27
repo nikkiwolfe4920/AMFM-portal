@@ -87,6 +87,14 @@
   height: 59.375rem;
 }
 
+@utility h-dashboard-empty-preview {
+  /* Figma's "Data Dashboard Empty State" Summary card (node 3899:27502)
+   * fixes this panel at 720px so its blurred DashboardContent backdrop is a
+   * short, cropped preview behind the centered CTA — not the full natural
+   * height of the live dashboard composition it wraps. */
+  height: 45rem;
+}
+
 @utility max-w-heartchart-card {
   max-width: var(--container-heartchart-card);
 }

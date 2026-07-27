@@ -64,6 +64,15 @@ const PAGES = [
       "Live route with representative data only. Dashboard chart cleanup from PR #60 is the current baseline; detailed component contracts live in COMPONENTS.md.",
   },
   {
+    href: "/dashboard-empty",
+    title: "Our Data Dashboard (Empty)",
+    figma: 'AMFM Portal — "Data Dashboard Empty State" node 3899:27502, instance "HeartChart Dashboard / No data" (3727:29364).',
+    composition:
+      "GlobalNav + FellowshipOfTheParksLogo + ElevatedCard + BlurOverlay (wrapping the real DashboardContent composition) + Button + FooterCta.",
+    status:
+      "Live demonstration route for the empty state. Share CTA has no route-level share behavior yet — see DESIGN.md Known gaps.",
+  },
+  {
     href: "/marriage-champions",
     title: "Our Marriage Champions",
     figma:
