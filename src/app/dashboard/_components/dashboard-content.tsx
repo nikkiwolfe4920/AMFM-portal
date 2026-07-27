@@ -193,7 +193,7 @@ export function DashboardContent() {
       </h2>
 
       <Card>
-        <CardHeader className="flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <CardHeader className="flex flex-col items-start gap-4 sm:flex-row sm:items-center">
           <CardTitle>Spiritual Snapshot for Bedford Campus</CardTitle>
           <CardAction>
             <HorizontalTabs
@@ -204,7 +204,7 @@ export function DashboardContent() {
           </CardAction>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+          <div className="grid grid-cols-1 items-start gap-x-6 gap-y-4 md:grid-cols-2">
             <PieChartCard
               title={FAITH_JOURNEY_PIE.title}
               centerStat={FAITH_JOURNEY_PIE.centerStat}
