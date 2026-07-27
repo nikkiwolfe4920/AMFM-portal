@@ -1265,17 +1265,25 @@
     ]
   },
   "FullWidthBarChart": {
-    "figmaComponent": "AMFM Portal — node 4255:30872, full-width relationship-health bar chart below DashboardFilterMenu",
+    "figmaComponent": "AMFM Portal — Figma's \"BarLineChart\" master component (node 1243:23077), instanced in the \"Relationship Health for Bedford Campus\" card below DashboardFilterMenu",
     "documentation": "COMPONENTS.md#fullwidthbarchart",
     "implementation": "src/components/full-width-bar-chart.tsx",
     "figmaSources": [
       {
         "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",
-        "nodeId": "4255:30872",
-        "name": "FullWidthBarChart Figma reference (4255:30872)",
-        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=4255-30872&m=dev",
+        "nodeId": "1243:23077",
+        "name": "FullWidthBarChart / \"BarLineChart\" master component (1243:23077)",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=1243-23077&m=dev",
         "role": "primary-reference",
-        "lastVerified": "2026-07-25"
+        "lastVerified": "2026-07-27"
+      },
+      {
+        "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",
+        "nodeId": "4255:30881",
+        "name": "FullWidthBarChart in-context instance, \"Relationship Health for Bedford Campus\" card (4255:30881)",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=4255-30881&m=dev",
+        "role": "supporting-reference",
+        "lastVerified": "2026-07-27"
       }
     ]
   },

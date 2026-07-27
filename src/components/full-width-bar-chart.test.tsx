@@ -20,6 +20,24 @@ describe("FullWidthBarChart", () => {
     expect(screen.getByText("3%")).toBeInTheDocument();
   });
 
+  it("renders a top percentage axis scaled to 6 nice intervals above the max value", () => {
+    render(
+      <FullWidthBarChart
+        data={[
+          { label: "Strong", value: 23 },
+          { label: "Broken", value: 3 },
+        ]}
+      />
+    );
+
+    // max 23 -> step 5 -> axis 0/5%/10%/15%/20%/25%/30%, matching the
+    // confirmed Figma reference (node 1243:23077) for this same dataset.
+    expect(screen.getByText("0")).toBeInTheDocument();
+    for (const tick of ["5%", "10%", "15%", "20%", "25%", "30%"]) {
+      expect(screen.getByText(tick)).toBeInTheDocument();
+    }
+  });
+
   it("renders an empty-state message when there is no data", () => {
     render(<FullWidthBarChart data={[]} />);
 
