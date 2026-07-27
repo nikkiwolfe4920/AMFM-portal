@@ -183,13 +183,27 @@ function ParticipationDonut({
 
   return (
     <div className="relative size-heartchart-donut shrink-0" aria-hidden>
-      <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} className="-rotate-90">
+      {/* Figma's value arc sweeps counter-clockwise from 12 o'clock (confirmed on node
+          1670:36549's 1% sample, where the sliver sits just left of top) — the opposite
+          chirality from the browser's default clockwise circle-dash convention. rotate-90
+          brings the start point back to 12 o'clock after -scale-x-100 mirrors the sweep
+          direction; -rotate-90 alone (no mirror) sweeps clockwise instead. */}
+      <svg
+        width={size}
+        height={size}
+        viewBox={`0 0 ${size} ${size}`}
+        className="rotate-90 -scale-x-100"
+      >
         <defs>
           {/* Figma's value arc is a gradient, not a flat stroke — reusing the
               same two-stop pair ParticipationScale's active segment already
               uses for this tone, so the ring and the scale bar read as one
               consistent color story. */}
-          <linearGradient id={gradientId} x1="0%" y1="0%" x2="0%" y2="100%">
+          {/* x1/x2 run local-right-to-left (not top-to-bottom) so the gradient still
+              reads top-to-bottom on screen once the ring's rotate-90/-scale-x-100
+              mirror above is applied — see the comment on the <svg> for why that
+              mirror exists. */}
+          <linearGradient id={gradientId} x1="100%" y1="50%" x2="0%" y2="50%">
             {tone === "success" ? (
               <>
                 <stop offset="0%" className="[stop-color:var(--color-status-success-strong)]" />

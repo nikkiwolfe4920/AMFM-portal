@@ -521,7 +521,7 @@
     "implementation": "src/app/_components/dposystem-story.tsx"
   },
   "HeartChartSummary": {
-    "figmaComponent": "AMFM Portal — node 1993:36348 (\"HeartChart Summary\" component set: Growing 1640:23457/1670:36217, Low 1670:36549, Exceptional 1670:36610)",
+    "figmaComponent": "AMFM Portal — node 1993:36348 (\"HeartChart Summary\" component set: Growing 1640:23457/1670:36217, Low 1670:36549, Exceptional 1670:36610); donut ring geometry re-verified 2026-07-27 against the Low (1%) and live-dashboard (58%, node 4255:30880) samples — Figma's value arc sweeps counter-clockwise from 12 o'clock, corrected in code via a horizontal mirror rather than rotation alone",
     "documentation": "COMPONENTS.md#heartchartsummary",
     "implementation": "src/components/heartchart-summary.tsx",
     "figmaSources": [
@@ -531,7 +531,7 @@
         "name": "HeartChartSummary Figma reference (1993:36348)",
         "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=1993-36348&m=dev",
         "role": "primary-reference",
-        "lastVerified": "2026-07-25"
+        "lastVerified": "2026-07-27"
       },
       {
         "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",
@@ -539,7 +539,7 @@
         "name": "HeartChartSummary Figma reference (1640:23457)",
         "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=1640-23457&m=dev",
         "role": "supporting-reference",
-        "lastVerified": "2026-07-25"
+        "lastVerified": "2026-07-27"
       },
       {
         "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",
@@ -547,7 +547,7 @@
         "name": "HeartChartSummary Figma reference (1670:36217)",
         "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=1670-36217&m=dev",
         "role": "supporting-reference",
-        "lastVerified": "2026-07-25"
+        "lastVerified": "2026-07-27"
       },
       {
         "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",
@@ -555,7 +555,7 @@
         "name": "HeartChartSummary Figma reference (1670:36549)",
         "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=1670-36549&m=dev",
         "role": "supporting-reference",
-        "lastVerified": "2026-07-25"
+        "lastVerified": "2026-07-27"
       },
       {
         "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",
@@ -563,7 +563,7 @@
         "name": "HeartChartSummary Figma reference (1670:36610)",
         "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=1670-36610&m=dev",
         "role": "supporting-reference",
-        "lastVerified": "2026-07-25"
+        "lastVerified": "2026-07-27"
       },
       {
         "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",
