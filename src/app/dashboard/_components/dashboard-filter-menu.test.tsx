@@ -64,4 +64,17 @@ describe("DashboardFilterMenu", () => {
 
     expect(onChange).toHaveBeenCalledWith("Gender", "male");
   });
+
+  it("caps a group's chip row to its wrapClassName so options stack instead of flowing in one row", () => {
+    render(
+      <DashboardFilterMenu
+        groups={[{ ...GROUPS[0], wrapClassName: "max-w-[62px]" }]}
+        onChange={vi.fn()}
+        resultCount={100}
+        totalCount={200}
+      />
+    );
+
+    expect(screen.getByRole("radiogroup")).toHaveClass("max-w-[62px]");
+  });
 });

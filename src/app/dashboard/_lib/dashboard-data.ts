@@ -179,6 +179,7 @@ export const EXPRESSED_NEEDS_DATA = [
 export const DASHBOARD_FILTER_GROUPS = [
   {
     label: "Gender",
+    wrapClassName: "max-w-[62px]",
     options: [
       { label: "All", value: "all" },
       { label: "Male", value: "male" },
@@ -187,6 +188,7 @@ export const DASHBOARD_FILTER_GROUPS = [
   },
   {
     label: "Relationship Status",
+    wrapClassName: "max-w-[185px]",
     options: [
       { label: "All", value: "all" },
       { label: "Married", value: "married" },
@@ -197,6 +199,7 @@ export const DASHBOARD_FILTER_GROUPS = [
   },
   {
     label: "Years in Relationship",
+    wrapClassName: "max-w-[164px]",
     options: [
       { label: "All", value: "all" },
       { label: "0-5", value: "0-5" },
@@ -207,6 +210,7 @@ export const DASHBOARD_FILTER_GROUPS = [
   },
   {
     label: "Kids",
+    wrapClassName: "max-w-[135px]",
     options: [
       { label: "All", value: "all" },
       { label: "None", value: "none" },
@@ -217,6 +221,7 @@ export const DASHBOARD_FILTER_GROUPS = [
   },
   {
     label: "Age",
+    wrapClassName: "max-w-[231px]",
     options: [
       { label: "All", value: "all" },
       { label: "18-30", value: "18-30" },

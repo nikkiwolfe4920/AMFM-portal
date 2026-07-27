@@ -1282,16 +1282,24 @@
     ]
   },
   "DashboardFilterMenu": {
-    "figmaComponent": "AMFM Portal — node 4255:30872, dashboard filter groups below the relationship-health chart",
+    "figmaComponent": "AMFM Portal — node 4255:30881 (\"Scattergram\" section instance, \"sidebar container\" sub-node), dashboard filter groups below the relationship-health chart",
     "documentation": "COMPONENTS.md#dashboardfiltermenu",
     "implementation": "src/app/dashboard/_components/dashboard-filter-menu.tsx",
     "figmaSources": [
       {
         "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",
-        "nodeId": "4255:30872",
-        "name": "DashboardFilterMenu Figma reference (4255:30872)",
-        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=4255-30872&m=dev",
+        "nodeId": "4255:30881",
+        "name": "DashboardFilterMenu Figma reference — sidebar container (4255:30881)",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=4255-30881&m=dev",
         "role": "primary-reference",
+        "lastVerified": "2026-07-27"
+      },
+      {
+        "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",
+        "nodeId": "4255:30872",
+        "name": "DashboardFilterMenu Figma reference — parent page frame (4255:30872)",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=4255-30872&m=dev",
+        "role": "context-reference",
         "lastVerified": "2026-07-25"
       }
     ]

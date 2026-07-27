@@ -3748,7 +3748,7 @@ Rendered live on `/dashboard`'s "Relationship Health for Bedford Campus" card, a
 
 **Status**: Draft (implemented; rendered on `/dashboard`)
 **Source**: `src/app/dashboard/_components/dashboard-filter-menu.tsx` (route-colocated per `CLAUDE.md`'s colocation rule, since no second dashboard-style route exists yet to justify promoting it to `src/components`; revisit once a second real use site appears, matching `PricingCard`'s precedent)
-**Figma**: AMFM Portal file, node `4255:30872`, below the "Relationship Health for Bedford Campus" card's chart, above `FullWidthBarChart`
+**Figma**: AMFM Portal file, node `4255:30881` ("Scattergram" section instance, "sidebar container" sub-node), below the "Relationship Health for Bedford Campus" card's chart, above `FullWidthBarChart`; the section's parent page frame is node `4255:30872`
 
 ### Purpose
 
@@ -3756,11 +3756,11 @@ Lets an admin narrow `CommitmentConnectionChart` and `FullWidthBarChart` by demo
 
 ### Anatomy
 
-Bordered shell (`rounded-xl border bg-background p-4`) → a 3-line stacked "Showing" stat block ("Showing" / large bold result count / "of {total} people") → a vertical divider (hidden below `sm`) → 5 filter groups, each: a sentence-case group label + a row of independent pill chips (e.g. Gender: All / Male / Female), one chip active per group. Corrected from an earlier pass that rendered the summary as one sentence and each group's chips inside a single shared `bg-muted rounded-full p-1` pill container — Figma's real treatment has no shared pill background per group; each chip is its own independent pill.
+Bordered shell (`rounded-xl border bg-background p-4`) → a 3-line stacked "Showing" stat block ("Showing" / large bold result count / "of {total} people") → a vertical divider (hidden below `sm`) → 5 filter groups laid out side by side, each: a sentence-case group label + its options wrapped into a fixed-width stacked block of independent pill chips (e.g. Gender: All / Male / Female each on their own line), one chip active per group. Corrected from an earlier pass that rendered the summary as one sentence and each group's chips inside a single shared `bg-muted rounded-full p-1` pill container — Figma's real treatment has no shared pill background per group; each chip is its own independent pill. Also corrected from a second pass where each group's chips flowed in one unconstrained row (only wrapping if the whole row ran out of space) — Figma's `sidebar container` gives every group its own fixed column width (confirmed per-group: Gender 62px, Relationship Status 185px, Years in Relationship 164px, Kids 135px, Age 231px), so options wrap into a stacked, multi-line block within that column regardless of how much horizontal space the page has.
 
 ### Variants
 
-None evidenced — 5 groups with varying option counts (confirmed range: 2–8 options), same shape.
+None evidenced — 5 groups with varying option counts (confirmed range: 2–8 options), same shape. Each group's `wrapClassName` (a `max-w-[Npx]` cap matching its Figma column width) is data, not a visual variant — see Properties/API.
 
 ### States
 
@@ -3780,6 +3780,8 @@ interface DashboardFilterMenuProps {
     label: string;
     options: { label: string; value: string }[];
     value: string;
+    /** Caps the chip row to this group's Figma column width so options wrap into a stacked block instead of one flowing row; shrinks further on narrow viewports. Omit to let chips flow unconstrained. */
+    wrapClassName?: string;
   }[];
   onChange: (group: string, value: string) => void;
   resultCount: number;
@@ -3796,6 +3798,7 @@ interface DashboardFilterMenuProps {
 - Stat block: `text-3xl leading-none font-bold` for the count, `text-sm text-muted-foreground` for the "Showing"/"of {total} people" lines.
 - Divider: `h-32 w-px bg-border-secondary`, `hidden` below `sm` — new, sits between the stat block and the first filter group. There is still no divider between each filter group (unchanged from before — this addition is only between the stat block and the groups).
 - Layout gaps: `gap-6` outer row, `gap-x-16 gap-y-4` between/within filter groups — `gap-x-16` approximates a confirmed ~60.5px Figma gap, rounded to the nearest Tailwind scale step (not an exact pixel match).
+- Per-group chip wrap width (`wrapClassName`, applied to the `RadioGroup.Root`): exact-pixel `max-w-[Npx]` matching each group's confirmed Figma column width — Gender `max-w-[62px]`, Relationship Status `max-w-[185px]`, Years in Relationship `max-w-[164px]`, Kids `max-w-[135px]`, Age `max-w-[231px]`, set in `DASHBOARD_FILTER_GROUPS` (`src/app/dashboard/_lib/dashboard-data.ts`). Uses `max-w-` rather than a hard `w-` so the column shrinks further on viewports narrower than its Figma width instead of overflowing its parent card.
 
 ### Accessibility requirements
 
@@ -3804,7 +3807,7 @@ interface DashboardFilterMenuProps {
 
 ### Responsive behavior
 
-5 groups in a row will not fit a mobile viewport — chips wrap (`flex-wrap`) rather than overflowing, and the stat-block divider hides below `sm`; exact mobile spacing is not yet evidenced against a mobile Figma reference.
+5 groups in a row will not fit a mobile viewport — the whole-row container (`flex flex-wrap`) wraps each group onto its own line rather than overflowing, and the stat-block divider hides below `sm`. Within each group, chips wrap inside that group's fixed `max-w-[Npx]` column (see Design tokens used) at every breakpoint, including desktop — this is the confirmed Figma behavior, not a mobile-only fallback. Exact mobile spacing (gaps, padding) beyond the wrap mechanics is not yet evidenced against a mobile Figma reference.
 
 ### Implementation rules
 
