@@ -1448,10 +1448,10 @@ export default function ComponentsPage() {
       <ComponentShowcase
         name="FullWidthBarChart"
         status="Draft"
-        purpose="Ranked, full-bleed horizontal bar chart companion to CommitmentConnectionChart, breaking the relationship-health zones into a percentage-labeled bar list."
+        purpose="Ranked, full-bleed horizontal bar chart companion to CommitmentConnectionChart, breaking the relationship-health zones into a percentage-labeled bar list with a top axis and dashed reference gridlines."
         docsAnchor="fullwidthbarchart"
-        figmaReference='AMFM Portal — node 4255:30872 ("Relationship Health for Bedford Campus" card, below DashboardFilterMenu); bar-fill gradient confirmed via direct node pull on node 1243:23077 ("BarLineChart")'
-        tokens={["from-primary", "chart-bar-fill-to", "text-text-secondary", "text-foreground"]}
+        figmaReference='AMFM Portal — Figma "BarLineChart" master component, node 1243:23077, confirmed via a direct node pull (top axis, dashed gridlines, per-bar label position, bar-fill gradient); instanced in the "Relationship Health for Bedford Campus" card (node 4255:30881), below DashboardFilterMenu'
+        tokens={["from-primary", "chart-bar-fill-to", "text-text-secondary", "text-foreground", "text-chart-label", "tracking-label", "text-muted-foreground", "border-border-secondary"]}
         states={["Default", "Empty"]}
       >
         <div className="flex flex-col gap-8">

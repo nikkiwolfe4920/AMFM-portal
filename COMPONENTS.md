@@ -3815,7 +3815,7 @@ Rendered live on `/dashboard`'s "Relationship Health for Bedford Campus" card, b
 
 **Status**: Draft (implemented; rendered on `/dashboard`)
 **Source**: `src/components/full-width-bar-chart.tsx`
-**Figma**: AMFM Portal file, Figma's "BarLineChart", node `1243:23077` (bottom of the "Relationship Health for Bedford Campus" card, below `DashboardFilterMenu`) — **this node was confirmed via a direct Figma MCP pull**, unlike several other Dashboard components in this section that were rebuilt from pasted screenshots because their linked nodes didn't resolve in this environment; treat this entry's token/geometry values as confirmed, not approximated.
+**Figma**: AMFM Portal file, Figma's "BarLineChart", node `1243:23077` (bottom of the "Relationship Health for Bedford Campus" card, below `DashboardFilterMenu`) — **this node was confirmed via a direct Figma MCP pull**, unlike several other Dashboard components in this section that were rebuilt from pasted screenshots because their linked nodes didn't resolve in this environment; treat this entry's token/geometry values as confirmed, not approximated. The live in-context instance (same 13-zone dataset, same top axis/gridlines) is at node `4255:30881`.
 
 ### Purpose
 
@@ -3823,7 +3823,7 @@ The detailed, full-width companion to `CommitmentConnectionChart` — breaks the
 
 ### Anatomy
 
-Y-axis category labels (fixed `w-full-width-bar-label` column, ranked zone list, confirmed order in the reference screenshot: Thriving, Strong, Steady, Hopeful, Reliable, Fickle, Tentative, Stuck, Detached, Shallow, Estranged, Frayed, Broken) → a flat `h-6` bar, rounded only on its leading/value end (`rounded-r-sm`) → inline percentage label at each bar's end. Corrected from an earlier pass that rendered each bar as a `rounded-full` pill inside a `bg-muted` track — the confirmed node shows a flat bar with no surrounding track, rounded only on the value end. Row gap widened from `gap-3` to `gap-6`.
+Top percentage axis (`yAxisTop`: `0`, then 5%-step labels — see Implementation rules for the tick algorithm) offset above a Y-axis category label column (fixed `w-full-width-bar-label` column, ranked zone list, confirmed order: Thriving, Strong, Steady, Hopeful, Reliable, Fickle, Tentative, Stuck, Detached, Shallow, Estranged, Frayed, Broken) and a chart area (`Graphi&Grid`) containing: dashed vertical gridlines at each non-zero tick (`xLines`, `border-dashed`) behind a solid boundary line at 0% (`xLines`'s distinct last-index asset) → a flat `h-6` bar per row, rounded only on its leading/value end (`rounded-r-sm`), width proportional to the top axis scale (not the raw per-row max) → a percentage label positioned immediately after each bar's own fill end (not in a fixed trailing column — confirmed against the node's rotated `DataLabel` position, which sits right at the bar's value, not at a shared right-aligned edge).
 
 ### Variants
 
@@ -3833,7 +3833,7 @@ None evidenced.
 
 | State | Behavior |
 |---|---|
-| Default | Data-driven read of caller-supplied `data`. |
+| Default | Data-driven read of caller-supplied `data`; axis/gridlines/bar widths all derive from it. |
 | Empty | Not evidenced in Figma — needed once the filter menu can produce a zero-result set; must be added before shipping. |
 
 ### Properties / API
@@ -3847,13 +3847,15 @@ interface FullWidthBarChartProps {
 
 ### Design tokens used
 
-- Bar fill: `bg-gradient-to-r from-primary to-chart-bar-fill-to opacity-80` — a confirmed two-stop gradient at 80% opacity, replacing an earlier flat `bg-primary`. `chart-bar-fill-to` is a brand-new token (`#683b27`, `oklch(0.403 0.071 44.248)`, added to `src/tokens/colors.css`) confirmed via this node's direct Figma pull — **this resolves a previously-documented `DESIGN.md` Known-gap** that flagged this exact bar color as "not reliably resolvable"; if that Known-gap language is still quoted anywhere else in this file, treat it as stale.
-- Row label column: `w-full-width-bar-label text-sm font-semibold text-text-secondary` — corrected from an earlier `w-24 text-xs text-muted-foreground` (both the fixed width and the type treatment are now confirmed against the node, not estimated).
-- Value label: `text-xs font-semibold tracking-label text-foreground/70` — corrected from an earlier `text-xs font-medium text-foreground`; uses the shared label-tracking token instead of a bracketed Figma value.
+- Bar fill: `bg-gradient-to-r from-primary to-chart-bar-fill-to opacity-80` — a confirmed two-stop gradient at 80% opacity. `chart-bar-fill-to` (`#683b27`, `oklch(0.403 0.071 44.248)`, `src/tokens/colors.css`) confirmed via this node's direct Figma pull — **this resolves a previously-documented `DESIGN.md` Known-gap** that flagged this exact bar color as "not reliably resolvable"; if that Known-gap language is still quoted anywhere else in this file, treat it as stale.
+- Row label column: `w-full-width-bar-label text-sm font-semibold text-text-secondary` — pixel-confirmed against the node (the same 74px column also anchors the top axis's leading spacer and the gridline overlay's offset).
+- Value label: `text-xs font-semibold tracking-label text-foreground/70` — an exact match to the node's `DataLabel` (`rgba(0,0,0,0.7)` over `foreground`, `tracking-label` = the node's confirmed 0.24px letter-spacing).
+- Top axis tick labels: `text-chart-label font-medium tracking-label text-muted-foreground` — `muted-foreground` (`#717680`) is an exact hex match to the node's `text-quaternary (500)`.
+- Gridlines: `border-border-secondary` (`#e9eaeb`, dashed for every non-zero tick, solid for the 0% boundary line) — an exact match to the node's `xLines` line assets, pixel-inspected via a scoped Figma screenshot rather than approximated.
 
 ### Accessibility requirements
 
-Same "text label carries the meaning, chart is decorative" pattern as every other chart component in this section.
+Same "text label carries the meaning, chart is decorative" pattern as every other chart component in this section — the top axis and category labels are real text (in the accessibility tree), while the gridline overlay is `aria-hidden` and `pointer-events-none`.
 
 ### Responsive behavior
 
@@ -3861,13 +3863,14 @@ Full-bleed width at desktop in the reference frame — not yet evidenced against
 
 ### Implementation rules
 
+- Top axis scale: pick the smallest step from `[5, 10, 15, 20, 25, 50, 100]` whose 6 intervals reach the data's max value (`AXIS_STEP_CANDIDATES`/`AXIS_TICK_COUNT` in the component) — pixel-verified against node `1243:23077`, whose `yAxisTop` renders `0/5%/10%/15%/20%/25%/30%` (step 5) for this exact dataset's max value of 23%. Bar widths are computed against this axis max, not the raw per-call `data` max, so bar length stays proportionally correct against the printed scale.
 - Share an underlying horizontal-bar rendering primitive with `StatusSnapshotCard` if their visual treatment is confirmed close enough (same bar/label anatomy at different scale) — evaluate at implementation time rather than assuming two independent components are needed. (This superseded `ParticipationHorizontalBarCard`, this entry's original point of comparison — see `StatusSnapshotCard`'s entry.)
 - The zone list here (13 entries) is more granular than `CommitmentConnectionChart`'s quadrant labels (fewer, coarser zone names) — confirm directly against Figma whether these represent the same taxonomy at two granularities or two genuinely different label sets before implementation; do not assume without checking.
 - Node `1243:23077` is confirmed reachable and pixel-verifiable directly — re-pull it for any further refinement instead of relying on the reference screenshot alone.
 
 ### Visual examples
 
-Rendered live on `/dashboard`'s "Relationship Health for Bedford Campus" card, below `DashboardFilterMenu`; tested at `src/components/full-width-bar-chart.test.tsx`.
+Rendered live on `/dashboard`'s "Relationship Health for Bedford Campus" card, below `DashboardFilterMenu`; tested at `src/components/full-width-bar-chart.test.tsx`; also rendered at `/design-system/components`.
 
 ---
 
