@@ -124,6 +124,16 @@
   aspect-ratio: 223 / 156;
 }
 
+@utility aspect-top-hero {
+  /* Figma's "Featured Training" outer frame is a fixed 1352x512 (confirmed
+   * via get_metadata on nodes 4194:25820 and 3926:27019/3926:27022,
+   * reduces to 169:64) — a fluid aspect-ratio reproduces that proportion at
+   * every viewport width, unlike a fixed h-128, which let the background
+   * photo's object-cover crop flip from top/bottom to left/right on
+   * narrower screens and clip the HeartChart QR screen on the right. */
+  aspect-ratio: 169 / 64;
+}
+
 @utility max-w-wedo-illustration {
   max-width: 13.9375rem;
 }

@@ -20,8 +20,9 @@ interface TopHeroProps {
 /**
  * Full-bleed photo hero for a dashboard page's featured training/promo
  * banner — see COMPONENTS.md#tophero. Figma: AMFM Portal, "Featured
- * Training" component (node 4194:25820, superseding node 2318:26997), used
- * on the HeartChart Resources page as the "Let's prepare for your
+ * Training" component (node 4194:25820, superseding node 2318:26997; also
+ * placed as node 3926:27022 in the HeartChart Resources page composition),
+ * used on the HeartChart Resources page as the "Let's prepare for your
  * HeartChart Weekend" banner.
  */
 export function TopHero({
@@ -34,7 +35,7 @@ export function TopHero({
 }: TopHeroProps) {
   return (
     <ElevatedCard
-      className={cn("h-128", className)}
+      className={cn("aspect-top-hero min-h-88", className)}
       innerClassName="flex overflow-hidden border-white/30"
       background={
         <>
