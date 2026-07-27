@@ -1044,6 +1044,7 @@ Fluid width by default (fills its container); no built-in breakpoint behavior �
 - ~~The `Onboarding/Create Profile` Figma frame specifies a title/description in a serif "Financier Display" font not yet defined in `DESIGN.md`~~ **Resolved**: `DESIGN.md`'s Typography system now defines `font-display`/`text-display-md`, rendering the real, licensed `Financier Display` face (self-hosted via `next/font/local`, replacing the earlier `Fraunces` Google Fonts substitute). `/create-profile`'s `CardTitle` renders `font-display text-display-md leading-display-md font-light text-foreground` (was `text-3xl font-semibold tracking-tight`); `CardDescription` renders `text-text-tertiary` (was the generic `text-muted-foreground`, a different gray — Figma's description color resolves to the `text-tertiary` token, `#535862`, exactly).
 - **`/create-profile`'s content column widened**: the Figma frame places a `368px`-wide `PricingCard` beside the form fields (`gap-[40px]`/`gap-10`), so the page's `Card` call site now uses `max-w-4xl` (was `max-w-2xl`) to fit both columns without cramping the fields column; below `lg`, the two columns stack (fields, then `PricingCard`) per `DESIGN.md`'s mobile-first layout rules — no Figma mobile reference exists for this frame, so the stacking behavior is a deliberate application of the general grid rules, not a pixel-sourced breakpoint.
 - **Multi-action `CardAction` composition (see Variants)**: when `CardAction` holds more than one control, lay them out with `flex items-center gap-*` (stacking `flex-col` below `sm`) at the call site. Implemented on `/marriage-champions`: because this composition also needs to stack vertically below `sm` (unlike every prior single-accessory `CardAction` use, which never needed responsive behavior), that page's `CardHeader` overrides the primitive's default `grid` layout with `flex flex-col gap-4 ... sm:flex-row sm:items-start sm:justify-between` at the call site, wrapping `CardTitle`/`CardDescription` in a plain `div` — `CardAction`'s own base classes (`col-start-2 row-span-2 ...`) are grid-only positioning utilities that become harmless no-ops once the parent is a flex container, so no change to `CardHeader`/`CardAction` themselves was needed. Verified in a real browser at 390px/834px/1512px widths — see `Table`'s Responsive behavior above for the same page's other breakpoint verification.
+- **Header divider + display-scale supporting text** (confirmed on `/dashboard`'s "Top 3 Caution Flags for Bedford Campus", Figma node `4255:30892`, and "Top 3 Expressed Needs for Bedford Campus", Figma node `4255:30894`): both cards need a full-width rule between the `CardHeader` (title + `HorizontalTabs`) and a `font-display text-display-xs font-light` intro line ("These are the top three concerning issues for the couples in your care:") before the data-card grid. Per the `border-b`/padding-conflict rule above, the divider is a plain sibling `div` (`mx-6 border-t border-border-secondary`) placed between `CardHeader` and `CardContent` — not a `border-b` class on `CardHeader` itself — and the intro line moved from a small `text-sm text-muted-foreground` paragraph into `CardContent` styled with the new `text-display-xs` token (see `DESIGN.md` Typography), since it was previously rendered as de-emphasized body copy instead of the Figma-specified display-serif line.
 
 ### Visual examples
 
@@ -3556,6 +3557,8 @@ Segments a card's content by audience — confirmed used 4 times on this single 
 
 Confirmed against node `4255:30887` ("Text and badge"): on the "Spiritual Snapshot" card, the tabs sit directly beside the title (`gap-4`/16px, `items-center`) — the header does **not** use `justify-between` to push the tabs to the opposite edge. `CardHeader`'s `className` override for this instance is `flex flex-col items-start gap-4 sm:flex-row sm:items-center` (no `sm:justify-between`), so `CardTitle` and `CardAction` flow adjacent to each other at the header's start.
 
+**Fixed**: the "Top 3 Caution Flags for Bedford Campus" (node `4255:30892`) and "Top 3 Expressed Needs for Bedford Campus" (node `4255:30894`) instances previously kept a stray `sm:justify-between` on their `CardHeader`, pushing the tabs to the card's far-right edge instead of beside the title — the only two of the four confirmed instances with this bug. Both now use the same `flex flex-col items-start gap-4 sm:flex-row sm:items-center` override as "Spiritual Snapshot", with no `sm:justify-between`.
+
 ### Anatomy
 
 Bordered rounded-rectangle track (`rounded-lg border border-border-secondary p-1`, transparent background) of tab buttons (2 or 3, confirmed both counts on this frame), one marked active (filled pill) at a time. Corrected from an earlier `rounded-full bg-muted p-1` pill-track treatment — Figma's real container is a rounded rectangle with a visible border and no fill, not a filled full pill.
@@ -3947,7 +3950,7 @@ Rendered live on `/dashboard`'s "Spiritual Snapshot for Bedford Campus" card (2 
 
 **Status**: Draft (implemented; "Why does this matter?" always renders — see Implementation rules)
 **Source**: `src/components/scale-chart-card.tsx`
-**Figma**: AMFM Portal file, node `4255:30872`, "Top 3 Caution Flags for Bedford Campus" and "Top 3 Expressed Needs for Bedford Campus" cards — 6 confirmed instances total (3 per card), Figma layer name "Scale chart/Default"
+**Figma**: AMFM Portal file, node `4255:30872`, "Top 3 Caution Flags for Bedford Campus" (card instance node `4255:30892`) and "Top 3 Expressed Needs for Bedford Campus" (card instance node `4255:30894`) cards — 6 confirmed instances total (3 per card), Figma layer name "Scale chart/Default"; both card instances re-pulled directly (not just via the parent frame) and re-verified 2026-07-27
 
 ### Purpose
 
@@ -3955,7 +3958,9 @@ Presents a single metric as a headline percentage plus a short question/descript
 
 ### Anatomy
 
-Center-aligned column: big percentage stat → question/description line (e.g. "Lack a strong support system?") → horizontal 0%–100% gradient scale track with a National Average tick and the church's own value fill → a 0%/"National Average: N%"/100% caption row → a leading-icon "Why does this matter?" link. Corrected from an earlier left-aligned layout — the whole card is now `text-center items-center`.
+Center-aligned column: big percentage stat → question/description line (e.g. "Lack a strong support system?") → horizontal 0%–100% gradient scale track with a "N% National Average" label + tick floating above it and the church's own value fill inside it → a fixed 0%/50%/100% caption row below → a leading-icon "Why does this matter?" link. Corrected from an earlier left-aligned layout — the whole card is now `text-center items-center`.
+
+**Fixed**: the "N% National Average" label previously lived in the bottom caption row (as "National Average: N%", replacing the caption's middle "50%" value) instead of above the track — a mismatch against Figma's "National average" sub-layer, which stacks a label + tick *above* the bar, not a caption-row restatement below it. The label now renders as its own absolutely-positioned element anchored to `bottom-full` of the track, horizontally centered on the same `left: {nationalAverage}%` position as the tick (both use `-translate-x-1/2`), and the caption row underneath is back to the fixed `0% / 50% / 100%` scale markers Figma actually shows.
 
 ### Variants
 
@@ -3989,14 +3994,15 @@ This is a near-total visual rewrite from the previously-documented placeholder s
 - Question/description text: `text-base font-semibold text-foreground` — corrected from an earlier `text-sm text-muted-foreground`; the question now reads as a higher-emphasis heading, not de-emphasized supporting copy.
 - Track: `h-6 bg-gradient-to-r from-chart-scale-blue-25 to-chart-scale-blue-50` — corrected from a flat `h-2 bg-chart-scale-blue-50` (both taller and now a two-stop gradient).
 - Fill bar (this church's value): `bg-gradient-to-r from-chart-scale-blue-400 to-chart-scale-blue-100` — corrected from a flat `bg-chart-scale-blue-400`.
-- National Average marker: `h-10 w-1.5 bg-foreground` — corrected from a much smaller `h-3 w-0.5`.
-- Caption row (0% / National Average / 100%): `text-chart-label font-medium tracking-label` — corrected from `text-[10px]` with no explicit tracking and from a later bracketed `tracking-[0.24px]` drift; see `DESIGN.md`'s chart-label and label-tracking rules.
+- National Average marker: `h-10 w-1.5 -translate-x-1/2 bg-foreground` — corrected from a much smaller `h-3 w-0.5`, then corrected again to add `-translate-x-1/2` so the 6px tick is centered on its `left: {nationalAverage}%` position rather than left-anchored to it.
+- National Average label (above the track): `text-chart-label font-semibold tracking-label text-muted-foreground`, `absolute bottom-full mb-1.5 -translate-x-1/2 whitespace-nowrap`, same `left: {nationalAverage}%` position as the tick — corrected from being rendered inside the bottom caption row (see Anatomy). `font-semibold` (not the caption row's `font-medium`) matches Figma's distinct "Text xs/Semibold" style for this label vs. "Text xs/Medium" for the caption row.
+- Caption row (0% / 50% / 100%): `text-chart-label font-medium tracking-label` — corrected from `text-[10px]` with no explicit tracking and from a later bracketed `tracking-[0.24px]` drift; see `DESIGN.md`'s chart-label and label-tracking rules. The middle value is a fixed `50%`, not a restated national average (see Anatomy).
 - Card padding/layout: `px-8 pt-6 pb-8 gap-6`, center-aligned (`text-center items-center`) — corrected from `p-4 gap-3`, left-aligned.
-- "Why does this matter?" link: a leading `Play` icon (`lucide-react`) was added before the link text — new, was text-only before.
+- "Why does this matter?" link: a leading `PlayCircle` icon (`lucide-react`) in `text-text-tertiary` (`#535862`) — corrected from a bare `Play` triangle (no circle) in the brand-colored `text-text-brand` link default; Figma's icon is the combined "play-circle" glyph and the link text/icon color is the neutral tertiary tone, not the brand accent.
 
 ### Accessibility requirements
 
-The scale is a labeled range/gauge with two data points (this value, national average). Both the headline percentage and the "National Average: N%" caption are real DOM text (not implied by tick/marker position alone) — confirmed in the current implementation, not just planned.
+The scale is a labeled range/gauge with two data points (this value, national average). Both the headline percentage and the "N% National Average" label are real DOM text (not implied by tick/marker position alone) — confirmed in the current implementation, not just planned.
 
 ### Responsive behavior
 
@@ -4004,7 +4010,7 @@ Renders 3-up in a grid at desktop width in the reference frame (matching `Partic
 
 ### Implementation rules
 
-- The "Why does this matter?" link may trigger `PointerCallout` as an interactive/on-demand variant — this was not confirmed in this pass (see `PointerCallout`'s Variants section). Confirm the actual interaction model directly against Figma before deciding whether this link opens a popover, navigates, or does something else; do not assume. It currently renders as `Button variant="link" size="inline"` with a leading `Play` icon and no wired navigation.
+- The "Why does this matter?" link may trigger `PointerCallout` as an interactive/on-demand variant — this was not confirmed in this pass (see `PointerCallout`'s Variants section). Confirm the actual interaction model directly against Figma before deciding whether this link opens a popover, navigates, or does something else; do not assume. It currently renders as `Button variant="link" size="inline" className="text-text-tertiary"` with a leading `PlayCircle` icon and no wired navigation.
 - Re-pull the "Scale chart" Figma component set directly (select the node on canvas, not via a page-level frame pull) before finalizing this component's variant list — this audit's tooling could not resolve that sub-component in isolation (see the node-ID caveat above), so the `Default`-only variant list here should be treated as the current confirmed floor, not a claim that no other variants exist.
 - **"Why does this matter?" always renders**, regardless of whether `onWhyDoesThisMatter` is supplied — matching `HeartChartSummary`'s established precedent that a documented action renders even without a wired handler, rather than disappearing from the layout. `/dashboard`'s 6 instances currently pass no handler (no real destination content exists yet for this link).
 - Treat every Design tokens value above as a correction from a prior placeholder pass, not as newly-added polish — if a future audit finds yet another mismatch against Figma, update this entry again rather than assuming the current values are final.

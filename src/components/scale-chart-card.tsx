@@ -1,4 +1,4 @@
-import { Play } from "lucide-react";
+import { PlayCircle } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -44,25 +44,36 @@ function ScaleChartCard({
 
       <div className="flex w-full flex-col gap-1.5">
         <div className="relative h-6 w-full rounded-md bg-gradient-to-r from-chart-scale-blue-25 to-chart-scale-blue-50">
+          <span
+            className="absolute bottom-full mb-1.5 -translate-x-1/2 text-chart-label font-semibold tracking-label whitespace-nowrap text-muted-foreground"
+            style={{ left: `${clampedAverage}%` }}
+          >
+            {clampedAverage}% National Average
+          </span>
           <div
             className="absolute inset-y-0 left-0 rounded-md bg-gradient-to-r from-chart-scale-blue-400 to-chart-scale-blue-100"
             style={{ width: `${clampedValue}%` }}
           />
           <span
             aria-hidden="true"
-            className="absolute top-1/2 h-10 w-1.5 -translate-y-1/2 bg-foreground"
+            className="absolute top-1/2 h-10 w-1.5 -translate-x-1/2 -translate-y-1/2 bg-foreground"
             style={{ left: `${clampedAverage}%` }}
           />
         </div>
         <div className="flex items-center justify-between text-chart-label font-medium tracking-label text-muted-foreground">
           <span>0%</span>
-          <span>National Average: {clampedAverage}%</span>
+          <span>50%</span>
           <span>100%</span>
         </div>
       </div>
 
-      <Button variant="link" size="inline" onClick={onWhyDoesThisMatter}>
-        <Play />
+      <Button
+        variant="link"
+        size="inline"
+        className="text-text-tertiary"
+        onClick={onWhyDoesThisMatter}
+      >
+        <PlayCircle />
         Why does this matter?
       </Button>
     </div>
