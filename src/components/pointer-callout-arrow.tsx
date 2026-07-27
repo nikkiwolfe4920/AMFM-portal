@@ -3,9 +3,9 @@ import Image from "next/image";
 import { cn } from "@/lib/utils";
 
 interface PointerCalloutArrowProps {
-  /** Leading emphasized word/phrase, rendered bold (e.g. "HeartChart"). */
+  /** Leading emphasized word/phrase, rendered in the foreground color at regular weight (e.g. "HeartChart"). */
   emphasis: string;
-  /** Rest of the sentence, rendered at regular weight. */
+  /** Rest of the sentence, rendered at light weight in the muted tertiary color. */
   text: string;
   /**
    * Which side the curved arrow renders on. `"left"` points up-left and
@@ -44,8 +44,9 @@ function PointerCalloutArrow({
         unoptimized
         className="h-11 w-auto shrink-0"
       />
-      <p className="font-display text-lg text-foreground">
-        <span className="font-bold">{emphasis}</span> {text}
+      <p className="font-display text-xl leading-display-sm text-text-tertiary">
+        <span className="font-normal text-foreground">{emphasis}</span>{" "}
+        <span className="font-light">{text}</span>
       </p>
     </div>
   );

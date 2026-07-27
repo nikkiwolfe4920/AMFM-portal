@@ -97,16 +97,18 @@ export function DashboardContent() {
           nextPulseLabel={WE_DO_CARD.nextPulseLabel}
         />
       </div>
-      <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+      <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:gap-12">
         <PointerCalloutArrow
           side="left"
           emphasis="HeartChart"
           text="shows your people where they are."
+          className="lg:flex-1"
         />
         <PointerCalloutArrow
           side="right"
           emphasis="WeDo"
           text="helps them get where they want to go."
+          className="lg:flex-1"
         />
       </div>
 

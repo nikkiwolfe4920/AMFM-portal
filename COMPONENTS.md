@@ -3333,7 +3333,7 @@ Rendered live on `/dashboard`, inside `WeDoCard`'s pull-quote (using the `"left-
 
 **Status**: Draft
 **Source**: `src/components/pointer-callout-arrow.tsx`
-**Figma**: AMFM Portal file, parent frame node `4255:30872`, connecting caption row between `HeartChartSummary` and `WeDoCard`. The parent dashboard frame now resolves through Figma MCP; the original child node for the caption row still has not been independently verified as a stable standalone node, so exact arrow placement remains parent-frame/screenshot verified.
+**Figma**: AMFM Portal file, node `4255:30880` (`"_Summary Data"` → `"Frame 525"` → `"Pointer Call-out"` ×2, one per side), pixel-verified via Figma MCP `get_metadata` + `get_design_context` — the caption row resolves to a stable child node, not just the parent-frame/screenshot-verified approximation used in an earlier pass.
 
 ### Purpose
 
@@ -3360,9 +3360,9 @@ None — a static, non-interactive caption. No hover/focus/disabled state applie
 
 ```ts
 interface PointerCalloutArrowProps {
-  /** Leading emphasized word/phrase, rendered bold (e.g. "HeartChart"). */
+  /** Leading emphasized word/phrase, rendered in the foreground color at regular weight (e.g. "HeartChart"). */
   emphasis: string;
-  /** Rest of the sentence, rendered at regular weight. */
+  /** Rest of the sentence, rendered at light weight in the muted tertiary color. */
   text: string;
   /** Which side the curved arrow renders on. */
   side: "left" | "right";
@@ -3372,22 +3372,23 @@ interface PointerCalloutArrowProps {
 
 ### Design tokens used
 
-`font-display`, `text-lg`, `text-foreground` — the display serif family already used elsewhere for headline-weight copy (e.g. the dashboard's "Key Insights" `h2`), not a new token. No color/border/background tokens are involved — the component has no visual chrome beyond the arrow image and text.
+`font-display`, `text-xl` (20px), `leading-display-sm` (38px — the existing display-sm line-height utility, reused rather than adding a new one), `text-text-tertiary` (`#535862`, applied to the trailing sentence), `text-foreground` (`#181d27`, applied to the emphasis word only), `font-normal`/`font-light` — pixel-verified against node `4255:30880`'s `"Pointer Call-out"` text node: the emphasis word is Financier Display **Regular** (400) in the foreground color, the rest of the sentence is Financier Display **Light** (300) in the tertiary text color, both at 20px/38px. This corrects an earlier pass that rendered the whole sentence at `text-lg`/`text-foreground` with only a bold/non-bold distinction (no size, line-height, or color split).
 
 ### Accessibility requirements
 
 - Both arrow assets (`/Arrowup-left.svg`, `/Arrowup-right.svg`) are decorative (`alt=""`, `aria-hidden="true"`) — the caption text alone carries the full meaning, so nothing is lost to assistive tech if the image doesn't load or isn't announced.
-- `emphasis` and `text` render as plain adjacent text (bold + regular weight) inside one `<p>`, not two separate elements with a manufactured gap — screen readers read it as one continuous sentence, matching the visual reading order for both `side` values (the `flex-row-reverse` on `"right"` only reorders the arrow relative to the text visually; the underlying DOM order of `emphasis` before `text` is unchanged, so reading order stays correct regardless of `side`).
+- `emphasis` and `text` render as plain adjacent text (regular + light weight, foreground + tertiary color) inside one `<p>`, not two separate elements with a manufactured gap — screen readers read it as one continuous sentence, matching the visual reading order for both `side` values (the `flex-row-reverse` on `"right"` only reorders the arrow relative to the text visually; the underlying DOM order of `emphasis` before `text` is unchanged, so reading order stays correct regardless of `side`). The tertiary color (`#535862` on the light background) still clears WCAG AA for this size of text.
 
 ### Responsive behavior
 
-Not yet evidenced against a mobile Figma reference (see the provenance gap above) — the dashboard's call site stacks the two instances vertically (`flex-col`) below `lg` and lays them out `flex-row` with `justify-between` at `lg` and above; this stacking behavior was verified in-browser but exact mobile spacing is unconfirmed.
+Not yet evidenced against a mobile Figma reference — the dashboard's call site stacks the two instances vertically (`flex-col gap-3`) below `lg`, and at `lg` and above lays them out `flex-row items-start gap-12` with each instance taking equal width (`lg:flex-1`), matching node `4255:30880`'s `"Frame 525"` row (`gap-[48px] items-start`, two `flex-[1_0_0]` columns) rather than the earlier `justify-between` guess. Exact mobile spacing remains unconfirmed.
 
 ### Implementation rules
 
-- The parent dashboard frame is node `4255:30872`; do not invent a more specific child node ID until Figma exposes a stable one. Treat exact arrow placement as parent-frame/screenshot verified, not independently pixel-sampled from a child component node.
+- The caption row is node `4255:30880` → `"Frame 525"` → `"Pointer Call-out"` (×2) — pixel-verified via `get_metadata` + `get_design_context`, not parent-frame/screenshot-verified as in an earlier pass.
 - Two instances are rendered side by side on `/dashboard`, between the `HeartChartSummary`/`WeDoCard` hero row and the "Bedford Campus Participation Profile" card, at the call site in `src/app/dashboard/_components/dashboard-content.tsx` — not inside `HeartChartSummary` or `WeDoCard` themselves, matching this file's existing precedent (see `WeDoCard`'s own note on the prior single-caption-row version) that page-level connective copy between two cards belongs at the page/route level, not folded into either card component.
 - Colocated at `src/components` (not route-colocated under `_components`) since it composes with both `HeartChartSummary` and `WeDoCard`, which already live there — matches those two components' existing app-level placement per `CLAUDE.md`'s structure guidance.
+- Figma's source composition pins the decorative arrow at a fixed pixel offset specific to this exact sentence/frame width (a manually-placed layer, not part of the text's auto-layout flow) — that offset does not generalize to arbitrary `emphasis`/`text` values or a fluid-width column, so it is intentionally not reproduced as a hardcoded absolute position here. The arrow instead sits beside the text via `flex items-center gap-3`, preserving the verified asset size (59×58, matching the exported SVG's own intrinsic dimensions) and reading order.
 
 ### Visual examples
 

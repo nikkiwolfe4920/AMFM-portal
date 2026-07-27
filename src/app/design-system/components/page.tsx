@@ -1259,8 +1259,8 @@ export default function ComponentsPage() {
         status="Draft"
         purpose="Small curved-arrow and serif caption pairing HeartChartSummary with WeDoCard on the dashboard — a plain arrow-and-text caption, distinct from the bordered PointerCallout speech bubble despite the similar name."
         docsAnchor="pointercalloutarrow"
-        figmaReference="AMFM Portal — parent frame node 4255:30872, connecting caption row between HeartChartSummary and WeDoCard; exact caption child node not independently verified as a stable standalone node"
-        tokens={["font-display", "text-lg", "text-foreground"]}
+        figmaReference='AMFM Portal — node 4255:30880 ("_Summary Data" → "Frame 525" → "Pointer Call-out" ×2), pixel-verified via Figma MCP get_metadata + get_design_context'
+        tokens={["font-display", "text-xl", "leading-display-sm", "text-foreground", "text-text-tertiary"]}
         states={["left", "right"]}
       >
         <div className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
@@ -1276,9 +1276,10 @@ export default function ComponentsPage() {
           />
         </div>
         <p className="text-muted-foreground mt-4 text-xs">
-          Parent-frame/screenshot verified against the live dashboard node; keep exact
-          arrow placement marked as a child-layer verification gap until Figma exposes a
-          stable caption-row node.
+          Text size/weight/color and the row&apos;s layout are pixel-verified against the
+          &quot;Pointer Call-out&quot; child node; the decorative arrow&apos;s exact pixel offset in
+          Figma is specific to this frame&apos;s fixed width and isn&apos;t reproduced literally — see
+          COMPONENTS.md&apos;s Implementation rules for this component.
         </p>
       </ComponentShowcase>
 

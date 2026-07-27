@@ -1138,17 +1138,17 @@
     ]
   },
   "PointerCalloutArrow": {
-    "figmaComponent": "AMFM Portal — parent frame node 4255:30872, connecting caption row between HeartChartSummary and WeDoCard; parent-frame/screenshot verified because the exact caption child node has not been independently verified as a stable standalone node",
+    "figmaComponent": "AMFM Portal — node 4255:30880 (\"_Summary Data\" → \"Frame 525\" → \"Pointer Call-out\" ×2), pixel-verified via Figma MCP get_metadata + get_design_context: the caption row resolves to a stable child node (no longer just parent-frame/screenshot verified) with an explicit 48px row gap, and each caption's text node pixel-traces to Financier Display 20px/38px line-height, with the emphasis word at regular (400) weight in the foreground color and the trailing phrase at light (300) weight in the tertiary text color — not the earlier bold/text-lg/single-color guess.",
     "documentation": "COMPONENTS.md#pointercalloutarrow",
     "implementation": "src/components/pointer-callout-arrow.tsx",
     "figmaSources": [
       {
         "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",
-        "nodeId": "4255:30872",
-        "name": "PointerCalloutArrow Figma reference (4255:30872)",
-        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=4255-30872&m=dev",
+        "nodeId": "4255:30880",
+        "name": "PointerCalloutArrow Figma reference (4255:30880, \"_Summary Data\" → \"Pointer Call-out\")",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=4255-30880&m=dev",
         "role": "primary-reference",
-        "lastVerified": "2026-07-25"
+        "lastVerified": "2026-07-27"
       }
     ]
   },
