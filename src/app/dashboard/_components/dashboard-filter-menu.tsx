@@ -8,6 +8,8 @@ interface FilterGroup {
   label: string;
   options: { label: string; value: string }[];
   value: string;
+  /** Caps the chip row to this group's Figma column width so options wrap into a stacked block instead of one flowing row; shrinks further on narrow viewports. Omit to let chips flow unconstrained. */
+  wrapClassName?: string;
 }
 
 interface DashboardFilterMenuProps {
@@ -70,7 +72,10 @@ function DashboardFilterMenu({
                 value={group.value}
                 onValueChange={(value) => onChange(group.label, value)}
                 aria-labelledby={labelId}
-                className="flex flex-wrap items-center gap-1"
+                className={cn(
+                  "flex flex-wrap items-start gap-1",
+                  group.wrapClassName
+                )}
               >
                 {group.options.map((option) => {
                   const active = option.value === group.value;
