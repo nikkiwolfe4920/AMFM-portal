@@ -23,7 +23,9 @@ interface PieChartCardProps {
 
 /**
  * Multi-segment donut chart tile with a headline center stat and a text
- * legend — see COMPONENTS.md#piechartcard. The surrounding
+ * legend — see COMPONENTS.md#piechartcard. Owns its own bordered/padded
+ * shell (matching ScaleChartCard's precedent for grid tiles nested inside a
+ * Card's content, per Figma node 4255:30890/30891). The surrounding
  * All/Couples/Singles HorizontalTabs live on the parent Card's header (per
  * Card's existing multi-control CardAction pattern), not inside this tile.
  */
@@ -43,7 +45,12 @@ function PieChartCard({ title, centerStat, segments, className }: PieChartCardPr
   }, []);
 
   return (
-    <div className={cn("flex flex-col items-center gap-6", className)}>
+    <div
+      className={cn(
+        "flex flex-col items-center gap-6 rounded-md border p-8",
+        className
+      )}
+    >
       <h3 className="sr-only">{title}</h3>
 
       <div className="flex flex-col items-center gap-3">

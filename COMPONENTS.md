@@ -3546,11 +3546,15 @@ Deleted from the codebase (`src/components/participation-horizontal-bar-card.tsx
 
 **Status**: Draft (implemented; a real ARIA-controls/tabpanel linkage is not wired — see Implementation rules)
 **Source**: `src/components/ui/tabs.tsx`
-**Figma**: AMFM Portal file, node `4255:30872` — 4 confirmed instances: "Relationship Health for Bedford Campus" card header (2-tab: Couples/Singles), "Spiritual Snapshot for Bedford Campus" card header (3-tab: All/Couples/Singles), "Top 3 Caution Flags for Bedford Campus" card header (2-tab: Couples/Singles), "Top 3 Expressed Needs for Bedford Campus" card header (2-tab: Couples/Singles)
+**Figma**: AMFM Portal file, node `4255:30872` — 4 confirmed instances: "Relationship Health for Bedford Campus" card header (2-tab: Couples/Singles), "Spiritual Snapshot for Bedford Campus" card header (3-tab: All/Couples/Singles), "Top 3 Caution Flags for Bedford Campus" card header (2-tab: Couples/Singles), "Top 3 Expressed Needs for Bedford Campus" card header (2-tab: Couples/Singles); "Spiritual Snapshot" instance's header layout confirmed at node `4255:30885`/`4255:30887`
 
 ### Purpose
 
 Segments a card's content by audience — confirmed used 4 times on this single frame, always inside a `Card`'s `CardHeader`/`CardAction` slot, matching `Card`'s already-documented "`CardAction` may contain more than one control" guidance.
+
+### Header layout (per-instance)
+
+Confirmed against node `4255:30887` ("Text and badge"): on the "Spiritual Snapshot" card, the tabs sit directly beside the title (`gap-4`/16px, `items-center`) — the header does **not** use `justify-between` to push the tabs to the opposite edge. `CardHeader`'s `className` override for this instance is `flex flex-col items-start gap-4 sm:flex-row sm:items-center` (no `sm:justify-between`), so `CardTitle` and `CardAction` flow adjacent to each other at the header's start.
 
 ### Anatomy
 
@@ -3878,7 +3882,7 @@ Rendered live on `/dashboard`'s "Relationship Health for Bedford Campus" card, b
 
 **Status**: Draft (implemented; the surrounding tabs live on the parent `Card`, not this tile — see Anatomy)
 **Source**: `src/components/pie-chart-card.tsx`
-**Figma**: AMFM Portal file, node `4255:30872`, "Spiritual Snapshot for Bedford Campus" card — 2 confirmed instances ("9% of people are new to following Jesus", "31% of people occasionally feel connected to God")
+**Figma**: AMFM Portal file, node `4255:30872`, "Spiritual Snapshot for Bedford Campus" card — 2 confirmed instances ("9% of people are new to following Jesus", "31% of people occasionally feel connected to God"); card-wrapper/header confirmed at node `4255:30885`/`4255:30887`, per-tile "Pie chart" cell shell confirmed at node `4255:30890`/`4255:30891`
 
 ### Purpose
 
@@ -3886,7 +3890,7 @@ Presents a proportional breakdown as a donut/pie chart with a bold headline find
 
 ### Anatomy
 
-Visually-hidden `title` heading (`sr-only`, no visible per-chart title in Figma — the visible "Spiritual Snapshot for Bedford Campus" title and its `HorizontalTabs` (confirmed 3-tab "All/Couples/Singles") belong to the *parent* `Card`'s header, per `Card`'s existing multi-control `CardAction` pattern — not to this tile) → donut chart, 240px diameter (center: bold headline text) → legend list (color swatch pill + bolded value + label per segment, confirmed 4 segments per instance).
+Bordered, padded card shell (`rounded-md border p-8`, matching `ScaleChartCard`'s precedent for grid tiles nested inside a `Card`'s content — confirmed against Figma's per-tile "Pie chart" cell, node `4255:30890`/`4255:30891`) wrapping: visually-hidden `title` heading (`sr-only`, no visible per-chart title in Figma — the visible "Spiritual Snapshot for Bedford Campus" title and its `HorizontalTabs` (confirmed 3-tab "All/Couples/Singles") belong to the *parent* `Card`'s header, per `Card`'s existing multi-control `CardAction` pattern — not to this tile) → donut chart, 240px diameter (center: bold headline text) → legend list (color swatch pill + bolded value + label per segment, confirmed 4 segments per instance).
 
 ### Variants
 
@@ -3918,6 +3922,7 @@ interface PieChartCardProps {
 - Center stat: `font-display text-display-md font-light`, `max-w-pie-center-stat` — corrected from an earlier `text-sm font-medium`, `max-w-60`; the headline stat is meant to read as a large display-weight statement, not small body text.
 - Legend swatch: `h-6 w-10 rounded-3xl` pill — corrected from an earlier `size-2.5 rounded-full` dot. `rounded-3xl` is Tailwind's built-in 24px radius, matching the sourced pill radius without a bracketed class.
 - Legend row layout: `flex items-baseline gap-1`, bold value then label, both `text-foreground` — corrected from an earlier spread layout (`flex-1` pushing the value to the far side of the label, label in `text-muted-foreground`); Figma's real legend keeps the value and label tightly grouped together at equal emphasis, not visually separated with one de-emphasized.
+- Card shell: `rounded-md border p-8` — added to match Figma's per-tile "Pie chart" cell (border, 32px padding, 8px radius), reusing the same unqualified `border` token `ScaleChartCard`'s own tile shell uses, rather than introducing a new border-color token for Figma's `border-secondary_alt` alias.
 
 ### Accessibility requirements
 

@@ -1367,7 +1367,7 @@ export default function ComponentsPage() {
         status="Draft"
         purpose="Pill-shaped segmented control that switches a card's displayed audience — confirmed used 4 times on the dashboard, always inside a Card's CardHeader/CardAction slot."
         docsAnchor="horizontaltabs"
-        figmaReference='AMFM Portal — node 4255:30872, 4 confirmed instances ("Relationship Health", "Spiritual Snapshot", "Top 3 Caution Flags", "Top 3 Expressed Needs" card headers)'
+        figmaReference='AMFM Portal — node 4255:30872, 4 confirmed instances ("Relationship Health", "Spiritual Snapshot", "Top 3 Caution Flags", "Top 3 Expressed Needs" card headers); "Spiritual Snapshot" instance confirmed at node 4255:30885/30887 — tabs sit directly beside the title (gap-16, no space-between), not pushed to the header’s far edge'
         tokens={[
           "border-border-secondary",
           "bg-muted",
@@ -1466,9 +1466,9 @@ export default function ComponentsPage() {
       <ComponentShowcase
         name="PieChartCard"
         status="Draft"
-        purpose="Multi-segment donut chart tile with a headline center stat and a text legend — confirmed reused twice in the Spiritual Snapshot card with different data and color families."
+        purpose="Multi-segment donut chart tile with a headline center stat and a text legend — confirmed reused twice in the Spiritual Snapshot card with different data and color families. Owns its own bordered/padded card shell, matching Figma's per-tile 'Pie chart' cell."
         docsAnchor="piechartcard"
-        figmaReference='AMFM Portal — node 4255:30872, "Spiritual Snapshot for Bedford Campus" card (2 confirmed instances: faith journey, connection to God)'
+        figmaReference='AMFM Portal — node 4255:30872, "Spiritual Snapshot for Bedford Campus" card (2 confirmed instances: faith journey, connection to God); card-wrapper and per-tile shell confirmed at node 4255:30885 (header/tabs) and 4255:30890/30891 (pie chart tiles)'
         tokens={[
           "chart-pie-purple-700",
           "chart-pie-purple-500",
@@ -1479,6 +1479,7 @@ export default function ComponentsPage() {
           "chart-pie-green-300",
           "chart-pie-green-100",
           "border-border-secondary",
+          "border",
         ]}
         states={["Purple palette", "Green palette"]}
       >
