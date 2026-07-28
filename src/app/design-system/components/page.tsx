@@ -32,6 +32,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { GoogleIcon } from "@/app/login/_components/google-icon";
+import { ChartScaleMarker } from "@/components/chart-scale-marker";
 import { HeartChartSummary } from "@/components/heartchart-summary";
 import { WeDoCard } from "@/components/we-do-card";
 import { PointerCallout } from "@/components/pointer-callout";
@@ -1164,6 +1165,25 @@ export default function ComponentsPage() {
           Hand-authored text approximation — the real exported asset is blocked by this
           environment&apos;s network policy (see <code className="bg-muted rounded px-1 py-0.5">COMPONENTS.md#amfmlogo</code>).
         </p>
+      </ComponentShowcase>
+
+      <ComponentShowcase
+        name="ChartScaleMarker"
+        status="Draft"
+        purpose="Downward triangle + thin vertical stem marking a reference point on a horizontal 0–100% scale track — the shared marker glyph behind both HeartChartSummary's participation-level indicator and ScaleChartCard's National Average marker."
+        docsAnchor="chartscalemarker"
+        figmaReference='AMFM Portal — "Marker" vector asset shared by the HeartChart Summary component set (node 1993:36348) and the Scale chart National Average marker (node 4255:30892, "Text and marker" group) — both resolve to the same triangle-topped-line asset'
+        tokens={["bg-muted-foreground", "bottom-heartchart-marker", "w-heartchart-marker-stem"]}
+        states={["Default"]}
+      >
+        <div className="flex w-72 flex-col gap-8 pt-4">
+          <div className="relative h-6 w-full rounded-md bg-muted">
+            <ChartScaleMarker position={20} />
+          </div>
+          <div className="relative h-6 w-full rounded-md bg-muted">
+            <ChartScaleMarker position={65} />
+          </div>
+        </div>
       </ComponentShowcase>
 
       <ComponentShowcase

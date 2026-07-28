@@ -2470,6 +2470,65 @@ Rendered on `/` via `DposystemLearnMore`; referenced at `/design-system/patterns
 
 ---
 
+## ChartScaleMarker
+
+**Status**: Draft (extracted 2026-07-28 from `HeartChartSummary`'s inline marker so `ScaleChartCard` reuses the same glyph instead of its own flat-bar tick — see Implementation rules)
+**Source**: `src/components/chart-scale-marker.tsx`
+**Figma**: AMFM Portal — the "Marker" vector asset used by both the HeartChart Summary component set (node `1993:36348`) and the Scale chart's "National average" sub-layer (node `4255:30892`, "Text and marker" group; re-pulled via `get_design_context` 2026-07-28) resolve to the same triangle-topped-line shape once rendered — the Scale chart instance renders it very small (a `6×40px` bounding box, rotated 90°) so it can read as a bare dot+line at a glance, but it is the same asset, not a distinct marker design.
+
+### Purpose
+
+A small, decorative indicator marking a single reference point on a horizontal 0–100% scale track (a participation level, a national average, or any future single-value scale annotation) — extracted as a shared primitive once a second real scale-bar use case (`ScaleChartCard`) needed the exact same marker `HeartChartSummary`'s `ParticipationScale` already implemented.
+
+### Anatomy
+
+A `w-3` positioning wrapper (`absolute`, `-translate-x-1/2` to center on `position`) containing a centered column: a downward-pointing CSS triangle (`border-x-6 border-t-8 border-x-transparent border-t-muted-foreground`) atop a thin vertical stem (`w-heartchart-marker-stem bg-muted-foreground`, `flex-1` so it fills the wrapper's remaining height). The wrapper spans `-top-2` (8px above its positioning parent) to `bottom-heartchart-marker` (3px above the parent's bottom edge), so the triangle sits just above the track and the stem descends into it without poking out the bottom.
+
+### Variants
+
+None — a single fixed glyph. Color/tone is not configurable (always `muted-foreground`, matching both current call sites); add a `tone` prop only if a real use case needs a different color, don't speculate one in now.
+
+### States
+
+| State | Behavior |
+|---|---|
+| Default | Purely presentational; position is the only input. No interactive states — always `aria-hidden`. |
+
+### Properties / API
+
+```ts
+interface ChartScaleMarkerProps {
+  /** Position along the track, as a 0–100 percentage from the left edge. */
+  position: number;
+  className?: string;
+}
+```
+
+Callers position it inside a `relative`-positioned track container; it does not compute its own position (see `HeartChartSummary`'s `getMarkerPosition`, which places a marker at a position *within* an active quarter-segment rather than at a flat percentage — that math is call-site-specific business logic and intentionally stays out of this shared primitive).
+
+### Design tokens used
+
+`bg-muted-foreground`/`border-t-muted-foreground` (triangle + stem color — same theme-aware token in both call sites, see `HeartChartSummary`'s note on why `text-muted-foreground` over fixed-light tokens on a themed dashboard surface), `bottom-heartchart-marker` (3px bottom inset), `w-heartchart-marker-stem` (1.5px stem width) — both named utilities in `src/tokens/spacing.css`, kept under their original `heartchart-*` names rather than renamed to a generic `chart-marker-*` name in this change, since the values themselves didn't change and a rename would touch `DESIGN.md`'s named-utility list and every existing reference for no visual benefit; revisit the name only if a third, unrelated consumer makes the `heartchart` prefix actively confusing.
+
+### Accessibility requirements
+
+Always `aria-hidden="true"` — the value it marks (a percentage, a national average) must already be rendered as real text by the caller (see `HeartChartSummary` and `ScaleChartCard`'s own Accessibility requirements); this glyph is a supplementary visual cue only, never the sole carrier of the value.
+
+### Responsive behavior
+
+Sizing is entirely relative to its positioning parent (percentage-based `left`, fixed small pixel dimensions for the triangle/stem) — no breakpoint-specific behavior of its own; scales naturally with whatever width the caller's track renders at.
+
+### Implementation rules
+
+- **Reuse before creating**: this shipped as a straight extraction of `HeartChartSummary`'s existing inline marker markup, not a redesign — `ScaleChartCard` previously implemented its own, different-looking marker (a plain centered `h-10 w-1.5 bg-foreground` vertical bar), which was the actual defect this component fixes. Both call sites now render byte-identical marker markup via this component; do not let them drift apart again by patching one inline instead of here.
+- If a future scale-bar chart needs a marker that visually diverges from this one (different color, no stem, a pin/dot shape), confirm that against its own Figma reference first — don't assume this component's shape generalizes to every future scale/gauge without checking.
+
+### Visual examples
+
+Rendered live at `/design-system/components#chartscalemarker` (two standalone positions on plain tracks), and as part of `HeartChartSummary` (`/design-system/components#heartchartsummary`, `/dashboard`) and `ScaleChartCard` (`/design-system/components#scalechartcard`, `/dashboard`'s "Top 3 Caution Flags"/"Top 3 Expressed Needs" cards). Tested at `src/components/chart-scale-marker.test.tsx`.
+
+---
+
 ## HeartChartSummary
 
 **Status**: Draft (implemented and live on `/dashboard`; remaining gaps are the no-0%-design and unconfirmed-mobile items under Known gaps, not the component itself)
@@ -2488,7 +2547,7 @@ Church-wide HeartChart participation snapshot for an admin dashboard: how many i
   - Stat row: donut chart (percentage in its center) + big stat number/"Individual(s)" label + supporting attendee-count sentence
   - Participation scale panel (muted sub-panel):
     - Eyebrow label ("CHURCH-WIDE PARTICIPATION LEVEL")
-    - Segmented scale bar — 4 fixed labeled segments (Early / Active / Strong / Exceptional), one highlighted per participation level, with a marker (downward triangle + a thin vertical stem into the bar, matching Figma's two-part marker asset) positioned within the active segment per `percentage`'s place in that level's range
+    - Segmented scale bar — 4 fixed labeled segments (Early / Active / Strong / Exceptional), one highlighted per participation level, with a shared `ChartScaleMarker` positioned within the active segment per `percentage`'s place in that level's range
     - Action row — three `Button` (`variant="outline" size="compact"`) instances: "Quick Tip" (lightbulb), "Last 4 Weeks" (trending line), "Share Your Link" (QR code)
 
 ### Variants
@@ -2560,11 +2619,11 @@ interface HeartChartSummaryProps {
 - **`percentage` drives derived participation level, not a caller-set `state` prop.** Figma's component exposes the level as a manually chosen variant, but its own dev annotations document the exact thresholds (0 / 1–44 / 45–74 / 75+) that produce it — deriving from `percentage` is a single source of truth and can't drift out of sync the way two independently-set props could.
 - **`percentage` is independent of `completedCount`/`totalAttenders`** — don't compute it as `completedCount / totalAttenders`. Figma's own content annotation says percentage is "of HeartCharts completed divided by the total number of people in the church," a different (larger) denominator than the "attenders" figure shown in the supporting sentence, and the "Exceptional" example shows `completedCount` (2,912) exceeding `totalAttenders` (2,800) while `percentage` still caps at 100 — treat all three as independent caller-supplied numbers, cap `percentage` display at 100 defensively, and pluralize "Individual"/"Individuals" off of `completedCount` rather than requiring a separate label prop.
 - **Marker position is computed as a position *within the active quarter-segment*, not a flat `percentage`% of the full bar.** Figma's own three sample states (1% / 58% / 100%) place their marker at pixel offsets that only make sense once you notice each maps to *where that value falls inside its level's own range* (1–44 for Low, 45–74 for Growing, 75–100 for Exceptional), scaled into that level's 25%-wide quarter of the bar — e.g. 1% (the very start of Low's range) lands exactly on the Active segment's left edge, not 1% across the whole bar. A flat `left: ${percentage}%` mapping reproduces the Growing/Exceptional samples closely enough to look "roughly right" but places Low's marker deep inside the *Early* segment while the *Active* segment is the one highlighted — a visible mismatch between the marker and the segment it's supposed to point at. `getMarkerPosition(percentage, level)` reproduces Figma's actual per-sample offsets (verified against Figma's own metadata pixel values) via `(segmentIndex + (percentage − levelMin) / (levelMax − levelMin)) × 25`, using the same thresholds as `getParticipationLevel`/`LEVEL_RANGES` — a single source of truth, and still a continuous formula (not Figma's fixed per-variant pixel offsets), so it keeps working for any `percentage`, not just the three sample values.
-- **Marker shape is a downward triangle plus a thin vertical stem** (`bg-muted-foreground`) spanning from just above the bar down into it, matching Figma's "Marker" vector asset (a triangle-topped line, not a bare triangle) — a bare CSS triangle with no stem read as visually incomplete next to Figma's reference.
+- **Marker glyph is the shared `ChartScaleMarker`** (downward triangle plus a thin vertical stem, `bg-muted-foreground`), matching Figma's "Marker" vector asset (a triangle-topped line, not a bare triangle) — see `ChartScaleMarker`'s own entry for its anatomy/tokens. This component owns only `getMarkerPosition` (deriving *where* the marker sits); the marker's own shape now lives in the shared primitive, extracted 2026-07-28 once `ScaleChartCard` needed the identical glyph (see `ChartScaleMarker` Implementation rules).
 - Reuse `Button` (`variant="outline" size="compact"`) for the three 38px action buttons rather than hand-rolling button markup or applying local color overrides — shared `Button` owns the compact geometry, 20px icon slot, icon/text gap, semantic outline colors, border/shadow/focus/hover treatment, and dark-mode fallback.
 - Icons: `lucide-react`'s `Lightbulb`, `TrendingUp`, `QrCode` for Quick Tip / Last 4 Weeks / Share Your Link respectively (matching `iconLibrary` in `components.json`) — Figma's own icon names are `lightbulb-02`, `line-chart-up-02`, `qr-code-01`; these are the closest stable `lucide-react` equivalents, not pixel-identical to Figma's icon set (same category of approximation as `GoogleIcon`).
 - Donut chart is a hand-built SVG (stroke-based ring, not a fetched/rasterized asset) so it can respond to an arbitrary `percentage` value — Figma's version is a set of pre-rendered PNGs per sample state, which can't generalize to real data. Track ring uses `stroke-border-secondary` (confirmed an exact match — see `DESIGN.md` Known gaps); the value arc's stroke is a per-instance SVG `<linearGradient>` (id generated via `React.useId()` so multiple donuts on one page don't collide) rather than a flat `stroke-status-success`/`stroke-status-warning`, reusing the same two-stop gradient pair as `ParticipationScale`'s active segment for the derived tone — see Design tokens used above; the center percentage label uses `text-muted-foreground` (see Design tokens used above for why not Figma's literal `text-secondary-700`). Marked `aria-hidden` (see Accessibility).
-- Now has two real use sites — the `/design-system/components/heart-chart` gallery (sample states) and the live `/dashboard` route (`dashboard-content.tsx`, `width="fluid"`, real `HEART_CHART_SUMMARY` data) — colocated at `src/components` rather than a route's `_components` because it's an app-level (not route-specific) business component per `CLAUDE.md`'s structure guidance. Internal helpers (the donut renderer, the scale bar) are kept as unexported functions in the same file rather than extracted, per `CLAUDE.md`'s anti-premature-abstraction guidance — extract to shared primitives only once a second real chart/scale-bar use case appears.
+- Now has two real use sites — the `/design-system/components/heart-chart` gallery (sample states) and the live `/dashboard` route (`dashboard-content.tsx`, `width="fluid"`, real `HEART_CHART_SUMMARY` data) — colocated at `src/components` rather than a route's `_components` because it's an app-level (not route-specific) business component per `CLAUDE.md`'s structure guidance. The donut renderer and scale bar (`ParticipationDonut`/`ParticipationScale`) remain unexported functions local to this file, per `CLAUDE.md`'s anti-premature-abstraction guidance — only the marker glyph itself was pulled out, into `ChartScaleMarker`, once `ScaleChartCard` needed the identical shape; the donut and segmented-bar layout stay local until a second real consumer needs those too.
 - Don't skip the `Known gaps` items above (no dark-mode tokens, approximated donut track color, no 0%-state design, unverified responsive behavior) when promoting this component out of `Draft` — resolve them for real or get explicit product sign-off to ship without them.
 - The outer shell (`p-2 shadow-card rounded-2xl` wrapping an inner bordered `rounded-md` panel) is the same nested-card shape as `AuthCard`, built locally rather than importing/extending it — `AuthCard` is intentionally route-colocated and fixed-width for the auth surface specifically, and (being fixed-light) uses `border-black/10` for its inner hairline where this component uses the theme-aware `border` instead (see the token-choice note above). This is now the *second* real instance of the nested-shell shape; if a third appears, extract it into a shared primitive (e.g. under `src/components`) instead of a third copy-paste.
 
@@ -4025,7 +4084,7 @@ Rendered live on `/dashboard`'s "Spiritual Snapshot for Bedford Campus" card (2 
 
 **Status**: Draft (implemented; "Why does this matter?" always renders — see Implementation rules)
 **Source**: `src/components/scale-chart-card.tsx`
-**Figma**: AMFM Portal file, node `4255:30872`, "Top 3 Caution Flags for Bedford Campus" (card instance node `4255:30892`) and "Top 3 Expressed Needs for Bedford Campus" (card instance node `4255:30894`) cards — 6 confirmed instances total (3 per card), Figma layer name "Scale chart/Default"; both card instances re-pulled directly (not just via the parent frame) and re-verified 2026-07-27
+**Figma**: AMFM Portal file, node `4255:30872`, "Top 3 Caution Flags for Bedford Campus" (card instance node `4255:30892`) and "Top 3 Expressed Needs for Bedford Campus" (card instance node `4255:30894`) cards — 6 confirmed instances total (3 per card), Figma layer name "Scale chart/Default"; both card instances re-pulled directly (not just via the parent frame) and re-verified 2026-07-27 and 2026-07-28 (marker re-audit, see Design tokens used)
 
 ### Purpose
 
@@ -4033,7 +4092,7 @@ Presents a single metric as a headline percentage plus a short question/descript
 
 ### Anatomy
 
-Center-aligned column: big percentage stat → question/description line (e.g. "Lack a strong support system?") → horizontal 0%–100% gradient scale track with a "N% National Average" label + tick floating above it and the church's own value fill inside it → a fixed 0%/50%/100% caption row below → a leading-icon "Why does this matter?" link. Corrected from an earlier left-aligned layout — the whole card is now `text-center items-center`.
+Center-aligned column: big percentage stat → question/description line (e.g. "Lack a strong support system?") → horizontal 0%–100% gradient scale track with a "N% National Average" label floating above it, a shared `ChartScaleMarker` at that same position, and the church's own value fill inside the track → a fixed 0%/50%/100% caption row below → a leading-icon "Why does this matter?" link. Corrected from an earlier left-aligned layout — the whole card is now `text-center items-center`.
 
 **Fixed**: the "N% National Average" label previously lived in the bottom caption row (as "National Average: N%", replacing the caption's middle "50%" value) instead of above the track — a mismatch against Figma's "National average" sub-layer, which stacks a label + tick *above* the bar, not a caption-row restatement below it. The label now renders as its own absolutely-positioned element anchored to `bottom-full` of the track, horizontally centered on the same `left: {nationalAverage}%` position as the tick (both use `-translate-x-1/2`), and the caption row underneath is back to the fixed `0% / 50% / 100%` scale markers Figma actually shows.
 
@@ -4069,7 +4128,7 @@ This is a near-total visual rewrite from the previously-documented placeholder s
 - Question/description text: `text-base font-semibold text-foreground` — corrected from an earlier `text-sm text-muted-foreground`; the question now reads as a higher-emphasis heading, not de-emphasized supporting copy.
 - Track: `h-6 bg-gradient-to-r from-chart-scale-blue-25 to-chart-scale-blue-50` — corrected from a flat `h-2 bg-chart-scale-blue-50` (both taller and now a two-stop gradient).
 - Fill bar (this church's value): `bg-gradient-to-r from-chart-scale-blue-400 to-chart-scale-blue-100` — corrected from a flat `bg-chart-scale-blue-400`.
-- National Average marker: `h-10 w-1.5 -translate-x-1/2 bg-foreground` — corrected from a much smaller `h-3 w-0.5`, then corrected again to add `-translate-x-1/2` so the 6px tick is centered on its `left: {nationalAverage}%` position rather than left-anchored to it.
+- National Average marker: the shared `ChartScaleMarker` (`position={clampedAverage}`) — corrected 2026-07-28 from a local `h-10 w-1.5 -translate-x-1/2 bg-foreground` plain vertical bar, which visually mismatched `HeartChartSummary`'s participation-level marker on the same dashboard despite both being "a single-value marker on a 0–100% scale track." Re-pulling this card's own Figma reference (node `4255:30892`) confirmed its "Marker" vector asset is the same triangle-topped-line shape `HeartChartSummary` already implements, just rendered at a much smaller scale (a `6×40px` bounding box) — so this correction is a Figma-fidelity fix, not only a cross-component consistency preference. See `ChartScaleMarker`'s own entry for the glyph's anatomy/tokens.
 - National Average label (above the track): `text-chart-label font-semibold tracking-label text-muted-foreground`, `absolute bottom-full mb-1.5 -translate-x-1/2 whitespace-nowrap`, same `left: {nationalAverage}%` position as the tick — corrected from being rendered inside the bottom caption row (see Anatomy). `font-semibold` (not the caption row's `font-medium`) matches Figma's distinct "Text xs/Semibold" style for this label vs. "Text xs/Medium" for the caption row.
 - Caption row (0% / 50% / 100%): `text-chart-label font-medium tracking-label` — corrected from `text-[10px]` with no explicit tracking and from a later bracketed `tracking-[0.24px]` drift; see `DESIGN.md`'s chart-label and label-tracking rules. The middle value is a fixed `50%`, not a restated national average (see Anatomy).
 - Card padding/layout: `px-8 pt-6 pb-8 gap-6`, center-aligned (`text-center items-center`) — corrected from `p-4 gap-3`, left-aligned.
@@ -4089,6 +4148,7 @@ Renders 3-up in a grid at desktop width in the reference frame (matching `Partic
 - Re-pull the "Scale chart" Figma component set directly (select the node on canvas, not via a page-level frame pull) before finalizing this component's variant list — this audit's tooling could not resolve that sub-component in isolation (see the node-ID caveat above), so the `Default`-only variant list here should be treated as the current confirmed floor, not a claim that no other variants exist.
 - **"Why does this matter?" always renders**, regardless of whether `onWhyDoesThisMatter` is supplied — matching `HeartChartSummary`'s established precedent that a documented action renders even without a wired handler, rather than disappearing from the layout. `/dashboard`'s 6 instances currently pass no handler (no real destination content exists yet for this link).
 - Treat every Design tokens value above as a correction from a prior placeholder pass, not as newly-added polish — if a future audit finds yet another mismatch against Figma, update this entry again rather than assuming the current values are final.
+- **National Average marker reuses `ChartScaleMarker`** rather than a local marker implementation — do not reintroduce a bespoke bar/tick/pin here even if a future Figma re-pull shows a slightly different pixel offset; adjust `ChartScaleMarker` (or the `position` value passed to it) instead of forking a second marker implementation, per `CLAUDE.md`'s "Prefer Extension Over Duplication."
 
 ### Visual examples
 
