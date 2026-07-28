@@ -1194,7 +1194,7 @@
     ]
   },
   "WeDoCard": {
-    "figmaComponent": "AMFM Portal — node 4255:30872 (\"HeartChart Dashboard / premium\"), \"_Summary Data\" region, right-hand instance; couple illustration exported as public/We-do.png and rendered via aspect-wedo-illustration/max-w-wedo-illustration; decorative quotation mark re-verified against a direct get_design_context pull of node 4255:30880 — it is anchored to the pull-quote paragraph itself, not the whole PointerCallout box or its label",
+    "figmaComponent": "AMFM Portal — node 4255:30872 (\"HeartChart Dashboard / premium\"), \"_Summary Data\" region, right-hand instance; couple illustration exported as public/We-do.png and rendered via aspect-wedo-illustration/max-w-wedo-illustration; decorative quotation mark re-verified against a direct get_design_context pull of node 4255:30880 — it is anchored directly in front of the pull-quote paragraph's first word, not the whole PointerCallout box or its label, and the pull-quote itself renders as plain text with no surrounding quote punctuation, matching Figma's source",
     "documentation": "COMPONENTS.md#wedocard",
     "implementation": "src/components/we-do-card.tsx",
     "figmaSources": [
