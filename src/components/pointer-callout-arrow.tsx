@@ -30,7 +30,12 @@ function PointerCalloutArrow({
   return (
     <div
       className={cn(
-        "flex items-center gap-3",
+        // Figma anchors both captions toward the gap between the two hero
+        // cards, not their outer edges — `justify-end` packs "left" to the
+        // right of its column and, combined with `flex-row-reverse` below,
+        // packs "right" to the left of its column, so the pair reads as
+        // hugging the inner seam rather than mirroring outward.
+        "flex items-center gap-3 lg:justify-end",
         side === "right" && "flex-row-reverse text-right",
         className
       )}

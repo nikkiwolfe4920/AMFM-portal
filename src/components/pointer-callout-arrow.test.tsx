@@ -75,4 +75,20 @@ describe("PointerCalloutArrow", () => {
     const paragraph = text.closest("p");
     expect(paragraph).toHaveClass("text-text-tertiary", "text-xl", "leading-display-sm");
   });
+
+  it("packs toward the inner seam between the two hero cards on both sides", () => {
+    const { container: left } = render(
+      <PointerCalloutArrow side="left" emphasis="HeartChart" text="shows your people where they are." />
+    );
+    const { container: right } = render(
+      <PointerCalloutArrow side="right" emphasis="WeDo" text="helps them get where they want to go." />
+    );
+
+    // `justify-end` packs "left" to the right of its column and, combined
+    // with `flex-row-reverse`, packs "right" to the left of its column —
+    // both hug the gap between HeartChartSummary and WeDoCard rather than
+    // mirroring outward toward the page edges (matches Figma node 4255:30880).
+    expect(left.firstElementChild).toHaveClass("lg:justify-end");
+    expect(right.firstElementChild).toHaveClass("lg:justify-end", "flex-row-reverse");
+  });
 });

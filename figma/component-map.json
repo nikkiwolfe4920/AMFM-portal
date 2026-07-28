@@ -1240,7 +1240,7 @@
     ]
   },
   "PointerCalloutArrow": {
-    "figmaComponent": "AMFM Portal — node 4255:30880 (\"_Summary Data\" → \"Frame 525\" → \"Pointer Call-out\" ×2), pixel-verified via Figma MCP get_metadata + get_design_context: the caption row resolves to a stable child node (no longer just parent-frame/screenshot verified) with an explicit 48px row gap, and each caption's text node pixel-traces to Financier Display 20px/38px line-height, with the emphasis word at regular (400) weight in the foreground color and the trailing phrase at light (300) weight in the tertiary text color — not the earlier bold/text-lg/single-color guess.",
+    "figmaComponent": "AMFM Portal — node 4255:30880 (\"_Summary Data\" → \"Frame 525\" → \"Pointer Call-out\" ×2), pixel-verified via Figma MCP get_metadata + get_design_context: the caption row resolves to a stable child node (no longer just parent-frame/screenshot verified) with an explicit 48px row gap, and each caption's text node pixel-traces to Financier Display 20px/38px line-height, with the emphasis word at regular (400) weight in the foreground color and the trailing phrase at light (300) weight in the tertiary text color — not the earlier bold/text-lg/single-color guess. Re-verified via get_design_context on node 4255:30872 (\"HeartChart Dashboard / premium\") → \"_Summary Data\": the left \"Pointer Call-out\" column uses `items-end` and the right one uses `items-start`, both of which pack their content toward the shared inner seam between the two hero cards rather than the outer page edges — corrected a bug where both instances packed outward instead.",
     "documentation": "COMPONENTS.md#pointercalloutarrow",
     "implementation": "src/components/pointer-callout-arrow.tsx",
     "figmaSources": [
@@ -1250,7 +1250,7 @@
         "name": "PointerCalloutArrow Figma reference (4255:30880, \"_Summary Data\" → \"Pointer Call-out\")",
         "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=4255-30880&m=dev",
         "role": "primary-reference",
-        "lastVerified": "2026-07-27"
+        "lastVerified": "2026-07-28"
       }
     ]
   },
