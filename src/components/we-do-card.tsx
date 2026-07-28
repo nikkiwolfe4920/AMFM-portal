@@ -95,21 +95,24 @@ function WeDoCard({
 
         <div className="flex min-w-0 flex-1 flex-col gap-3">
           <PointerCallout pointerPosition="left-diagonal" className="min-w-0 overflow-hidden">
-            {/* Figma's decorative quote mark is a large, low-opacity serif
-                glyph watermarked behind the label, not a small solid icon. */}
-            <span
-              aria-hidden="true"
-              className="pointer-events-none absolute -top-3 -left-1 font-display text-8xl leading-none text-muted-foreground/75 select-none"
-            >
-              &ldquo;
-            </span>
             <div className="flex flex-col gap-1.5">
               <p className="text-xs font-semibold tracking-label text-text-tertiary uppercase">
                 Most of your couples say...
               </p>
-              <p className="text-base text-foreground">
-                &ldquo;{renderQuote(quote, highlightedPhrase)}&rdquo;
-              </p>
+              <div className="relative">
+                {/* Figma's decorative quote mark is a large, low-opacity serif
+                    glyph watermarked behind the pull-quote text itself, not
+                    the label above it, and not a small solid icon. */}
+                <span
+                  aria-hidden="true"
+                  className="pointer-events-none absolute -top-8 -left-2 font-display text-8xl leading-none text-muted-foreground/75 select-none"
+                >
+                  &ldquo;
+                </span>
+                <p className="relative text-base text-foreground">
+                  &ldquo;{renderQuote(quote, highlightedPhrase)}&rdquo;
+                </p>
+              </div>
               <p className="text-xs text-muted-foreground">Source: {quoteSource}</p>
             </div>
           </PointerCallout>
