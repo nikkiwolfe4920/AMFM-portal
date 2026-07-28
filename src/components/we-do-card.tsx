@@ -101,16 +101,25 @@ function WeDoCard({
               </p>
               <div className="relative">
                 {/* Figma's decorative quote mark is a large, low-opacity serif
-                    glyph watermarked behind the pull-quote text itself, not
-                    the label above it, and not a small solid icon. */}
+                    glyph watermarked directly in front of the pull-quote's
+                    first word (not the label above it, and not a small solid
+                    icon). Its ink sits near the top of the 96px line box, so
+                    `-top-1.5` nudges it down to the text's cap height rather
+                    than the label; `indent-8` on the paragraph reserves a
+                    gutter on the quote's first line only (mirroring Figma's
+                    own leading-space approach), so the glyph doesn't overlap
+                    the "W" it sits in front of. No surrounding quote
+                    punctuation is rendered — the glyph plus the "Most of your
+                    couples say..." label above already convey this is a
+                    quote, matching Figma's plain-text pull-quote. */}
                 <span
                   aria-hidden="true"
-                  className="pointer-events-none absolute -top-8 -left-2 font-display text-8xl leading-none text-muted-foreground/75 select-none"
+                  className="pointer-events-none absolute -top-1.5 -left-1 font-display text-8xl leading-none text-muted-foreground/75 select-none"
                 >
                   &ldquo;
                 </span>
-                <p className="relative text-base text-foreground">
-                  &ldquo;{renderQuote(quote, highlightedPhrase)}&rdquo;
+                <p className="relative indent-8 text-base text-foreground">
+                  {renderQuote(quote, highlightedPhrase)}
                 </p>
               </div>
               <p className="text-xs text-muted-foreground">Source: {quoteSource}</p>
