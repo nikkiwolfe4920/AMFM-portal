@@ -520,6 +520,29 @@
     "documentation": "COMPONENTS.md#dposystemstory",
     "implementation": "src/app/_components/dposystem-story.tsx"
   },
+  "ChartScaleMarker": {
+    "figmaComponent": "AMFM Portal — shared \"Marker\" vector asset: the HeartChart Summary component set (node 1993:36348, Growing/Low/Exceptional variants) and the Scale chart's \"National average\" sub-layer (node 4255:30892, \"Text and marker\" group) both resolve to the same triangle-topped-line shape; the Scale chart instance renders it inside a 6x40px bounding box (rotated 90 degrees), much smaller than HeartChartSummary's rendering, which reads as a bare dot+line at a glance but is the same asset",
+    "documentation": "COMPONENTS.md#chartscalemarker",
+    "implementation": "src/components/chart-scale-marker.tsx",
+    "figmaSources": [
+      {
+        "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",
+        "nodeId": "1993:36348",
+        "name": "ChartScaleMarker Figma reference via HeartChart Summary component set (1993:36348)",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=1993-36348&m=dev",
+        "role": "primary-reference",
+        "lastVerified": "2026-07-28"
+      },
+      {
+        "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",
+        "nodeId": "4255:30892",
+        "name": "ChartScaleMarker Figma reference via ScaleChartCard's \"Text and marker\" group (4255:30892)",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=4255-30892&m=dev",
+        "role": "supporting-reference",
+        "lastVerified": "2026-07-28"
+      }
+    ]
+  },
   "HeartChartSummary": {
     "figmaComponent": "AMFM Portal — node 1993:36348 (\"HeartChart Summary\" component set: Growing 1640:23457/1670:36217, Low 1670:36549, Exceptional 1670:36610); donut ring geometry re-verified 2026-07-28 against the live-dashboard 58% sample (node 4255:30880) — ring is a thick 24px/90px stroke with flat (butt) caps, not the previous thin 10px rounded-cap stroke, and the success gradient runs light-to-dark along the sweep (previously reversed)",
     "documentation": "COMPONENTS.md#heartchartsummary",

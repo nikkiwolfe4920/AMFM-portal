@@ -1,5 +1,6 @@
 import { PlayCircle } from "lucide-react";
 
+import { ChartScaleMarker } from "@/components/chart-scale-marker";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -54,11 +55,7 @@ function ScaleChartCard({
             className="absolute inset-y-0 left-0 rounded-md bg-gradient-to-r from-chart-scale-blue-400 to-chart-scale-blue-100"
             style={{ width: `${clampedValue}%` }}
           />
-          <span
-            aria-hidden="true"
-            className="absolute top-1/2 h-10 w-1.5 -translate-x-1/2 -translate-y-1/2 bg-foreground"
-            style={{ left: `${clampedAverage}%` }}
-          />
+          <ChartScaleMarker position={clampedAverage} />
         </div>
         <div className="flex items-center justify-between text-chart-label font-medium tracking-label text-muted-foreground">
           <span>0%</span>

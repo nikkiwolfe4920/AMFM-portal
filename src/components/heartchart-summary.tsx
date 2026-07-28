@@ -2,6 +2,7 @@ import * as React from "react";
 import { Lightbulb, QrCode, TrendingUp } from "lucide-react";
 
 import { HeartChartLogo } from "@/app/login/_components/heartchart-logo";
+import { ChartScaleMarker } from "@/components/chart-scale-marker";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -259,16 +260,7 @@ function ParticipationScale({
 
   return (
     <div className="relative flex h-9 w-full items-start">
-      <div
-        aria-hidden
-        className="absolute -top-2 bottom-heartchart-marker z-3 w-3 -translate-x-1/2"
-        style={{ left: `${markerPosition}%` }}
-      >
-        <div className="mx-auto flex h-full w-3 flex-col items-center">
-          <div className="size-0 shrink-0 border-x-6 border-t-8 border-x-transparent border-t-muted-foreground" />
-          <div className="w-heartchart-marker-stem flex-1 bg-muted-foreground" />
-        </div>
-      </div>
+      <ChartScaleMarker position={markerPosition} />
       <div className="relative z-2 flex h-full w-full overflow-hidden rounded-full">
         <div aria-hidden className="pointer-events-none absolute inset-0 rounded-full bg-muted-foreground mix-blend-overlay" />
         {SCALE_SEGMENTS.map((segment, index) => {
