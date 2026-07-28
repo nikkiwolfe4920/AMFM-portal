@@ -176,7 +176,7 @@ function ParticipationDonut({
 }) {
   const gradientId = React.useId();
   const size = 90;
-  const strokeWidth = 10;
+  const strokeWidth = 24;
   const radius = (size - strokeWidth) / 2;
   const circumference = 2 * Math.PI * radius;
   const dashOffset = circumference - (percentage / 100) * circumference;
@@ -206,8 +206,8 @@ function ParticipationDonut({
           <linearGradient id={gradientId} x1="100%" y1="50%" x2="0%" y2="50%">
             {tone === "success" ? (
               <>
-                <stop offset="0%" className="[stop-color:var(--color-status-success-strong)]" />
-                <stop offset="100%" className="[stop-color:var(--color-status-success)]" />
+                <stop offset="0%" className="[stop-color:var(--color-status-success)]" />
+                <stop offset="100%" className="[stop-color:var(--color-status-success-strong)]" />
               </>
             ) : (
               <>
@@ -232,7 +232,6 @@ function ParticipationDonut({
           strokeWidth={strokeWidth}
           strokeDasharray={circumference}
           strokeDashoffset={dashOffset}
-          strokeLinecap="round"
           fill="none"
           stroke={`url(#${gradientId})`}
         />
