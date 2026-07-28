@@ -1283,23 +1283,28 @@ export default function ComponentsPage() {
         tokens={["font-display", "text-xl", "leading-display-sm", "text-foreground", "text-text-tertiary"]}
         states={["left", "right"]}
       >
-        <div className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:gap-12">
           <PointerCalloutArrow
             side="left"
             emphasis="HeartChart"
             text="shows your people where they are."
+            className="lg:flex-1"
           />
           <PointerCalloutArrow
             side="right"
             emphasis="WeDo"
             text="helps them get where they want to go."
+            className="lg:flex-1"
           />
         </div>
         <p className="text-muted-foreground mt-4 text-xs">
           Text size/weight/color and the row&apos;s layout are pixel-verified against the
           &quot;Pointer Call-out&quot; child node; the decorative arrow&apos;s exact pixel offset in
           Figma is specific to this frame&apos;s fixed width and isn&apos;t reproduced literally — see
-          COMPONENTS.md&apos;s Implementation rules for this component.
+          COMPONENTS.md&apos;s Implementation rules for this component. The wrapper here matches the
+          real dashboard call site (equal-width <code>lg:flex-1</code> columns) rather than a
+          generic spaced-apart row, so at <code>lg</code> and above both captions visibly pack
+          toward the shared inner seam instead of the outer edges.
         </p>
       </ComponentShowcase>
 
