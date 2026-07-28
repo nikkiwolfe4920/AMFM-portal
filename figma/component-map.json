@@ -1194,7 +1194,7 @@
     ]
   },
   "WeDoCard": {
-    "figmaComponent": "AMFM Portal — node 4255:30872 (\"HeartChart Dashboard / premium\"), \"_Summary Data\" region, right-hand instance; couple illustration exported as public/We-do.png and rendered via aspect-wedo-illustration/max-w-wedo-illustration, decorative quotation mark is the verified large low-opacity display glyph treatment",
+    "figmaComponent": "AMFM Portal — node 4255:30872 (\"HeartChart Dashboard / premium\"), \"_Summary Data\" region, right-hand instance; couple illustration exported as public/We-do.png and rendered via aspect-wedo-illustration/max-w-wedo-illustration; decorative quotation mark re-verified against a direct get_design_context pull of node 4255:30880 — it is anchored to the pull-quote paragraph itself, not the whole PointerCallout box or its label",
     "documentation": "COMPONENTS.md#wedocard",
     "implementation": "src/components/we-do-card.tsx",
     "figmaSources": [
@@ -1205,6 +1205,14 @@
         "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=4255-30872&m=dev",
         "role": "primary-reference",
         "lastVerified": "2026-07-25"
+      },
+      {
+        "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",
+        "nodeId": "4255:30880",
+        "name": "WeDoCard pull-quote + Left-diagonal tail PointerCallout reference (4255:30880)",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=4255-30880&m=dev",
+        "role": "primary-reference",
+        "lastVerified": "2026-07-28"
       }
     ]
   },
@@ -1220,6 +1228,14 @@
         "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=4255-30872&m=dev",
         "role": "primary-reference",
         "lastVerified": "2026-07-25"
+      },
+      {
+        "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",
+        "nodeId": "4255:30880",
+        "name": "PointerCallout left-diagonal tail reference (4255:30880)",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=4255-30880&m=dev",
+        "role": "primary-reference",
+        "lastVerified": "2026-07-28"
       }
     ]
   },
