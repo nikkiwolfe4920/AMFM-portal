@@ -66,7 +66,14 @@ function WeDoCard({
         )}
       </div>
 
-      <div className="flex flex-wrap items-stretch gap-4">
+      {/* `flex-wrap` alone doesn't wrap here: the right column is
+          `flex-1 min-w-0`, so the browser keeps shrinking it rather than
+          dropping it to a new line, squeezing the quote text to ~1
+          char/line on narrow viewports instead of stacking. `flex-col
+          sm:flex-row` (the same stack-then-row pattern already used by
+          HeartChartLinkCard/SettingsAssetUpload) stacks the two columns
+          below `sm` instead. */}
+      <div className="flex flex-col items-stretch gap-4 sm:flex-row">
         <div className="flex flex-col gap-2">
           <div className="flex items-end gap-2">
             <span className="text-5xl leading-10 font-semibold tracking-stat-value text-wedo-brand">
