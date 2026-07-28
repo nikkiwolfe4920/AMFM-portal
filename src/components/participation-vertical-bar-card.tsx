@@ -52,10 +52,10 @@ function ParticipationVerticalBarCard({
 
           {data.map((item) => (
             <div key={item.label} className="relative flex flex-1 flex-col items-center gap-2">
-              <span className="text-sm font-bold text-chart-participation-value">
-                {item.value}%
-              </span>
-              <div className="flex h-32 w-full items-end">
+              <div className="flex h-32 w-full flex-col items-center justify-end gap-0.5">
+                <span className="text-sm font-bold text-chart-participation-value">
+                  {item.value}%
+                </span>
                 <div
                   className="w-full rounded-t-md bg-gradient-to-b from-chart-participation-fill-from to-chart-participation-fill-to"
                   style={{ height: `${(item.value / max) * 100}%` }}
