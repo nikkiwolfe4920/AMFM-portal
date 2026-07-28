@@ -94,7 +94,12 @@ function WeDoCard({
         </div>
 
         <div className="flex min-w-0 flex-1 flex-col gap-3">
-          <PointerCallout pointerPosition="left-diagonal" className="min-w-0 overflow-hidden">
+          {/* No `overflow-hidden` here — the left-diagonal tail is
+              deliberately positioned outside the box's own left edge
+              (`left-pointer-callout-tail`, -17px) to hang off it; clipping
+              overflow hides that tail entirely. `min-w-0` alone is enough to
+              let the quote text wrap inside the flex layout. */}
+          <PointerCallout pointerPosition="left-diagonal" className="min-w-0">
             <div className="flex flex-col gap-1.5">
               <p className="text-xs font-semibold tracking-label text-text-tertiary uppercase">
                 Most of your couples say...
