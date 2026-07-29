@@ -43,6 +43,14 @@ interface NavLinkItem {
   icon: LucideIcon;
   external?: boolean;
   implemented?: boolean;
+  /**
+   * Renders the item as a non-interactive row with a "Coming Soon" badge
+   * instead of a real link — see COMPONENTS.md#globalnav States. Takes
+   * priority over `implemented`/`external`; the badge itself only becomes
+   * visible once the rail is expanded, matching the label's own
+   * reveal-on-open behavior.
+   */
+  comingSoon?: boolean;
 }
 
 /**
@@ -74,6 +82,9 @@ const CHURCH_LINKS: NavLinkItem[] = [
   { label: "Training", href: "/training", icon: BookOpen },
 ];
 
+// "Date Night Kits" is marked `comingSoon` below, per the Figma "Coming Soon"
+// nav-item reference (node 3727:25297) — it renders as a non-interactive row
+// with a "Coming Soon" badge instead of a placeholder link, see NavItem.
 const TOOLS_LINKS: NavLinkItem[] = [
   { label: "Loveology", href: "/loveology", icon: ChevronsRight },
   {
@@ -84,7 +95,7 @@ const TOOLS_LINKS: NavLinkItem[] = [
   },
   { label: "Assessments", href: "/assessments", icon: List },
   { label: "Small Groups", href: "/small-groups", icon: Blend },
-  { label: "Date Night Kits", href: "/date-night-kits", icon: Heart },
+  { label: "Date Night Kits", href: "/date-night-kits", icon: Heart, comingSoon: true },
   { label: "Speaker Collective", href: "/speaker-collective", icon: Users },
   { label: "Counseling Network", href: "/counseling-network", icon: Share2 },
   { label: "WeDo", href: "https://wedowedo.com", icon: HeartHandshake, external: true },
@@ -114,9 +125,10 @@ const FADE_TRANSITION = "transition-opacity duration-300 ease-in-out motion-redu
 const INSET_TRANSITION =
   "transition-nav-inset duration-300 ease-in-out motion-reduce:transition-none";
 
-type RouteStatus = "implemented" | "placeholder" | "external";
+type RouteStatus = "implemented" | "placeholder" | "external" | "coming-soon";
 
 function getRouteStatus(item: NavLinkItem): RouteStatus {
+  if (item.comingSoon) return "coming-soon";
   if (item.external) return "external";
   return item.implemented ? "implemented" : "placeholder";
 }
@@ -428,11 +440,66 @@ function NavItem({
   open: boolean;
   activeHref?: string;
 }) {
-  const { label, href, icon: Icon, external } = item;
+  const { label, href, icon: Icon, external, comingSoon } = item;
   const pathname = usePathname();
-  const active = (activeHref ?? pathname) === href;
+  const active = !comingSoon && (activeHref ?? pathname) === href;
   const routeStatus = getRouteStatus(item);
   const prefetchDisabled = routeStatus === "placeholder";
+
+  const icon = (
+    <Icon
+      aria-hidden="true"
+      className={cn(
+        "size-6 shrink-0",
+        active ? "text-nav-foreground opacity-70" : "text-nav-foreground-muted"
+      )}
+    />
+  );
+
+  const labelSpan = (
+    <span
+      className={cn(
+        "overflow-hidden text-sm font-medium whitespace-nowrap",
+        TRANSITION,
+        active ? "text-nav-foreground" : "text-nav-foreground-muted",
+        open ? "max-w-60 opacity-100" : "max-w-0 opacity-0"
+      )}
+    >
+      {label}
+      {external && <span className="sr-only"> (opens in a new tab)</span>}
+    </span>
+  );
+
+  if (comingSoon) {
+    return (
+      // Not a real `<Link>` — nothing to navigate to yet. `role="link"` +
+      // `aria-disabled` conveys "this used to be a link, now disabled" to
+      // assistive tech (it isn't in the tab order, matching a native
+      // disabled control); `cursor-not-allowed` gives sighted pointer users
+      // the same "not clickable" affordance on hover. See
+      // COMPONENTS.md#globalnav States.
+      <div
+        role="link"
+        aria-disabled="true"
+        data-route-status={routeStatus}
+        className="flex w-full shrink-0 cursor-not-allowed items-center gap-3 rounded-sm px-3 py-2"
+      >
+        <span className="flex min-w-0 flex-1 items-center gap-2">
+          {icon}
+          {labelSpan}
+        </span>
+        <span
+          className={cn(
+            "shrink-0 overflow-hidden",
+            TRANSITION,
+            open ? "max-w-24 opacity-100" : "max-w-0 opacity-0"
+          )}
+        >
+          <NavComingSoonBadge />
+        </span>
+      </div>
+    );
+  }
 
   return (
     <Link
@@ -450,25 +517,18 @@ function NavItem({
           : "hover:bg-white/5"
       )}
     >
-      <Icon
-        aria-hidden="true"
-        className={cn(
-          "size-6 shrink-0",
-          active ? "text-nav-foreground opacity-70" : "text-nav-foreground-muted"
-        )}
-      />
-      <span
-        className={cn(
-          "overflow-hidden text-sm font-medium whitespace-nowrap",
-          TRANSITION,
-          active ? "text-nav-foreground" : "text-nav-foreground-muted",
-          open ? "max-w-60 opacity-100" : "max-w-0 opacity-0"
-        )}
-      >
-        {label}
-        {external && <span className="sr-only"> (opens in a new tab)</span>}
-      </span>
+      {icon}
+      {labelSpan}
     </Link>
+  );
+}
+
+/** "Coming Soon" pill for not-yet-available nav items — see NavItem above. */
+function NavComingSoonBadge() {
+  return (
+    <span className="border-white/20 text-nav-foreground-muted tracking-label inline-flex w-fit items-center justify-center rounded-full border px-2 py-0.5 text-xs font-medium whitespace-nowrap">
+      Coming Soon
+    </span>
   );
 }
 
