@@ -1236,12 +1236,22 @@ export default function ComponentsPage() {
         ]}
         states={["Default"]}
       >
-        <WeDoCard
-          coupleCount={363}
-          quote="When it comes to being a listener in our relationship, I would rate myself: Excellent — I give full attention and seek to understand."
-          highlightedPhrase="being a listener"
-          nextPulseLabel="2d 16h"
-        />
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+          <WeDoCard
+            width="fluid"
+            coupleCount={363}
+            quote="When it comes to being a listener in our relationship, I would rate myself: Excellent — I give full attention and seek to understand."
+            highlightedPhrase="being a listener"
+            nextPulseLabel="2d 16h"
+          />
+        </div>
+        <p className="text-muted-foreground mt-4 text-xs">
+          Wrapped in the same <code>grid grid-cols-1 gap-6 lg:grid-cols-2</code> grid as the real
+          dashboard call site (<code>dashboard-content.tsx</code>), with <code>width=&quot;fluid&quot;</code>{" "}
+          instead of the standalone <code>max-w-heartchart-card</code> cap, so at <code>lg</code> and
+          above this renders at the same width it does on <code>/dashboard</code> (one column of that
+          two-card grid) rather than an arbitrarily narrower gallery width.
+        </p>
       </ComponentShowcase>
 
       <ComponentShowcase
