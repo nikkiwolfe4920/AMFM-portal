@@ -519,7 +519,7 @@ export default function ComponentsPage() {
       <ComponentShowcase
         name="TopHero"
         status="Production Ready"
-        purpose="Full-bleed photo hero for a dashboard page's featured training/promo banner — a two-tone heading, supporting copy, and a video CTA. Fixed 512px height; the photo bleeds to the card's true outer edge with a thin pinstripe border marking the inset."
+        purpose="Full-bleed photo hero for a dashboard page's featured training/promo banner — a two-tone heading, supporting copy, and a video CTA. Fixed 512px height; the photo bleeds to the card's true outer edge with a duo-tone pinstripe (a light ring paired with a dark ring) marking the inset so it reads on all four sides, not just the ones over dark photo content."
         docsAnchor="tophero"
         figmaReference='AMFM Portal — "Featured Training" component (node 4194:25820)'
         tokens={[
@@ -528,6 +528,7 @@ export default function ComponentsPage() {
           "text-nav-foreground-muted",
           "text-display-lg",
           "text-display-2xl",
+          "shadow-photo-pinstripe",
         ]}
         states={["Default"]}
       >
@@ -538,8 +539,10 @@ export default function ComponentsPage() {
           ctaLabel="Watch the Overview"
         />
         <p className="text-muted-foreground mt-4 text-xs">
-          The congregation-stage photo bleeds to the card&apos;s true outer edge behind a pinstripe
-          border, per{" "}
+          The congregation-stage photo bleeds to the card&apos;s true outer edge behind a duo-tone
+          pinstripe border (<code className="bg-muted rounded px-1 py-0.5">shadow-photo-pinstripe</code>
+          {" "}pairs the Figma-specified light ring with a dark one so it reads over any part of the
+          photo), per{" "}
           <code className="bg-muted rounded px-1 py-0.5">COMPONENTS.md#tophero</code>. View live at{" "}
           <Link href="/heartchart-resources" className="text-text-brand hover:underline">
             /heartchart-resources

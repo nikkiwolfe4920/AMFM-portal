@@ -21,9 +21,14 @@ interface TopHeroProps {
  * Full-bleed photo hero for a dashboard page's featured training/promo
  * banner — see COMPONENTS.md#tophero. Figma: AMFM Portal, "Featured
  * Training" component (node 4194:25820, superseding node 2318:26997; also
- * placed as node 3926:27022 in the HeartChart Resources page composition),
- * used on the HeartChart Resources page as the "Let's prepare for your
- * HeartChart Weekend" banner.
+ * placed as node 3926:27019/3926:27022 in the HeartChart Resources page
+ * composition), used on the HeartChart Resources page as the "Let's
+ * prepare for your HeartChart Weekend" banner.
+ *
+ * `shadow-photo-pinstripe` pairs the Figma-specified translucent-white
+ * inset border with a second, darker inset ring one pixel further in — see
+ * COMPONENTS.md#tophero's Implementation rules for why the plain white
+ * border alone reads as missing along the bottom edge.
  */
 export function TopHero({
   eyebrowHeading,
@@ -36,7 +41,7 @@ export function TopHero({
   return (
     <ElevatedCard
       className={cn("aspect-top-hero min-h-88", className)}
-      innerClassName="flex overflow-hidden border-white/30"
+      innerClassName="flex overflow-hidden border-white/30 shadow-photo-pinstripe"
       background={
         <>
           <Image

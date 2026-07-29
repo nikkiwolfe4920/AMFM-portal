@@ -985,7 +985,7 @@
     ]
   },
   "TopHero": {
-    "figmaComponent": "AMFM Portal — \"Featured Training\" component (node 4194:25820, superseding node 2318:26997; also placed as node 3926:27022 in the HeartChart Resources page composition) — background photo wired to public/Featured Training.png, card proportion pinned to aspect-top-hero (169:64) to match Figma's 1352x512 frame at every viewport",
+    "figmaComponent": "AMFM Portal — \"Featured Training\" component (node 4194:25820, superseding node 2318:26997; also placed as node 3926:27019/3926:27022 in the HeartChart Resources page composition) — background photo wired to public/Featured Training.png, card proportion pinned to aspect-top-hero (169:64) to match Figma's 1352x512 frame at every viewport; inner panel's border-white/30 pinstripe (node 3926:27020's rgba(255,255,255,0.3) stroke) paired with shadow-photo-pinstripe, a dark inset ring one pixel further in, since the plain white hairline alone is illegible over the lighter parts of the photo along the bottom edge — verified by rendering the page and sampling pixels, not just reading the Figma export, since the Figma reference itself has the identical low-contrast characteristic against this same photo",
     "documentation": "COMPONENTS.md#tophero",
     "implementation": "src/components/top-hero.tsx",
     "figmaSources": [
@@ -996,6 +996,14 @@
         "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=4194-25820&m=dev",
         "role": "primary-reference",
         "lastVerified": "2026-07-25"
+      },
+      {
+        "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",
+        "nodeId": "3926:27019",
+        "name": "TopHero Figma reference, Featured Training frame (3926:27019)",
+        "url": "https://www.figma.com/design/tg3U3gNcIYMn9aY9JYrIZc/AMFM-Portal?node-id=3926-27019&m=dev",
+        "role": "supporting-reference",
+        "lastVerified": "2026-07-29"
       },
       {
         "fileKey": "tg3U3gNcIYMn9aY9JYrIZc",

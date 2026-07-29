@@ -13,4 +13,5 @@
     inset 0px 0px 0px 1px oklch(0.158 0.012 260.622 / 18%),
     inset 0px -2px 0px 0px oklch(0.158 0.012 260.622 / 5%);
   --shadow-media-card: 0px 16px 32px -4px rgba(0, 0, 0, 0.7);
+  --shadow-photo-pinstripe: inset 0px 0px 0px 2px oklch(0.158 0.012 260.622 / 18%);
 }
