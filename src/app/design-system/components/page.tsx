@@ -1566,7 +1566,7 @@ export default function ComponentsPage() {
         status="Draft"
         purpose="The app's primary left-hand navigation rail — collapses to an 80px icon rail by default and expands to a 296px labeled panel on hover, with a smooth animated morph between the two. In real app-shell pages the expanded panel overlays content instead of pushing it, and stays pinned open above 1600px viewports."
         docsAnchor="globalnav"
-        figmaReference='AMFM Portal — collapsed node 2065:13660 ("Sidebar navigation"), expanded node 3727:25276 ("Content"); the account menu has no Figma node reference, built from a supplied screenshot instead (see Implementation rules)'
+        figmaReference='AMFM Portal — collapsed node 2065:13660 ("Sidebar navigation"), expanded node 3727:25276 ("Content"), expanded NavItem with "Coming Soon" badge node 3727:25297 ("_Nav item base"); the account menu has no Figma node reference, built from a supplied screenshot instead (see Implementation rules)'
         tokens={[
           "bg-nav-surface-from",
           "bg-nav-surface-to",
@@ -1577,6 +1577,7 @@ export default function ComponentsPage() {
           "text-nav-foreground-muted",
           "text-nav-foreground-subtle",
           "bg-nav-success",
+          "border-white/20",
         ]}
         states={[
           "Collapsed (default)",
@@ -1586,6 +1587,7 @@ export default function ComponentsPage() {
           "Hover",
           "Focus",
           "Account menu open",
+          "Coming Soon (expanded only)",
         ]}
       >
         <div className="bg-nav-bg flex h-global-nav-demo items-start rounded-xl p-6">
@@ -1596,7 +1598,11 @@ export default function ComponentsPage() {
           <kbd className="bg-muted rounded px-1 py-0.5">Escape</kbd>, to collapse it again. Click
           the avatar/name at the bottom to open the account menu (Personal Profile, Church
           Profile, Account Settings, Subscription &amp; Billing, Terms &amp; Privacy) — the rail
-          stays expanded while that menu is open. See{" "}
+          stays expanded while that menu is open. &quot;Date Night Kits&quot; (Ministry Tools
+          section) is marked <code className="bg-muted rounded px-1 py-0.5">comingSoon</code> —
+          expand the rail and hover that row to see its &quot;Coming Soon&quot; badge and the{" "}
+          <code className="bg-muted rounded px-1 py-0.5">cursor-not-allowed</code> affordance
+          confirming it isn&apos;t clickable. See{" "}
           <code className="bg-muted rounded px-1 py-0.5">COMPONENTS.md#globalnav</code> for the
           full contract, including why its destination routes are placeholders. This gallery
           instance intentionally renders without the <code className="bg-muted rounded px-1 py-0.5">overlay</code>{" "}

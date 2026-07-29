@@ -34,6 +34,18 @@ describe("GlobalNav", () => {
     );
   });
 
+  it("renders a comingSoon item as a non-interactive row with a Coming Soon badge", () => {
+    render(<GlobalNav defaultOpen />);
+
+    expect(screen.queryByRole("link", { name: "Date Night Kits" })).not.toBeInTheDocument();
+
+    const comingSoonItem = screen.getByText("Date Night Kits").closest('[role="link"]');
+    expect(comingSoonItem).toHaveAttribute("aria-disabled", "true");
+    expect(comingSoonItem).toHaveAttribute("data-route-status", "coming-soon");
+    expect(comingSoonItem).toHaveClass("cursor-not-allowed");
+    expect(screen.getByText("Coming Soon")).toBeInTheDocument();
+  });
+
   it("marks account menu routes as placeholders when the flyout is opened", () => {
     render(<GlobalNav defaultOpen />);
 
